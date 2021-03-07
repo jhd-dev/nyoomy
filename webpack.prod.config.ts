@@ -3,13 +3,16 @@ import webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 import ESLintPlugin from "eslint-webpack-plugin";
+import { CleanWebpackPlugin } from "clean-webpack-plugin";
 
 const config: webpack.Configuration = {
-    mode: "development",
-    output: {
-        publicPath: "/dist/",
-    },
+    mode: "production",
     entry: "./src/index.tsx",
+    output: {
+        path: path.resolve(__dirname, "dist"),
+        filename: "[name].[contenthash].js",
+        publicPath: "",
+    },
     module: {
         rules: [
             {
@@ -42,19 +45,11 @@ const config: webpack.Configuration = {
         new ForkTsCheckerWebpackPlugin({
             async: false,
         }),
-        new webpack.HotModuleReplacementPlugin(),
         new ESLintPlugin({
             extensions: ["js", "jsx", "ts", "tsx"],
         }),
+        new CleanWebpackPlugin(),
     ],
-    devtool: "inline-source-map",
-    devServer: {
-        contentBase: path.join(__dirname, "dist"),
-        historyApiFallback: true,
-        port: 4000,
-        open: true,
-        hot: true
-    },
 };
 
 export default config;

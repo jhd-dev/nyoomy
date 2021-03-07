@@ -19,7 +19,7 @@
   },
   "scripts": {
     "start": "webpack serve --config webpack.dev.config.ts",
-    "build": "react-scripts build",
+    "build": "webpack --config webpack.prod.config.ts",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -53,6 +53,7 @@
     "@typescript-eslint/eslint-plugin": "^4.16.1",
     "@typescript-eslint/parser": "^4.16.1",
     "babel-loader": "^8.2.2",
+    "clean-webpack-plugin": "^3.0.0",
     "eslint": "^7.21.0",
     "eslint-plugin-react": "^7.22.0",
     "eslint-plugin-react-hooks": "^4.2.0",
