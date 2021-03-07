@@ -4,9 +4,9 @@ frontend:
     build:
       commands:
         - npm install
-        - npm run build
+        - npm run dist
   artifacts:
-    baseDirectory: /build/
+    baseDirectory: /dist/
     files:
       - '**/*'
   cache:
