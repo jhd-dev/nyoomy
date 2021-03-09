@@ -3,7 +3,7 @@ import { Controller, Get } from "@overnightjs/core";
 import { Logger } from "@overnightjs/logger";
 import { Request, Response } from "express";
 
-@Controller("*")
+@Controller("/")
 class DevController {
 
     private readonly DEV_MSG = "Server is running in dev mode; no front-end content is being served.";
