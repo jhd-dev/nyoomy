@@ -11,7 +11,7 @@ const config: webpack.Configuration = {
         filename: "[name].js",
         //publicPath: "./public"
     },
-    entry: "./src/index.tsx",
+    entry: "./src/client/index.tsx",
     module: {
         rules: [
             {
