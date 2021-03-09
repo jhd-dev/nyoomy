@@ -7,7 +7,9 @@ import ESLintPlugin from "eslint-webpack-plugin";
 const config: webpack.Configuration = {
     mode: "development",
     output: {
-        publicPath: "/dist/",
+        path: path.resolve(__dirname, "dist"),
+        filename: "[name].js",
+        //publicPath: "./public"
     },
     entry: "./src/index.tsx",
     module: {
@@ -27,17 +29,34 @@ const config: webpack.Configuration = {
                 },
             },
             {
-                test: /\.(png|jpg|gif|svg|css)/i,
-                type: 'asset/resource'
+                test: /\.(css|scss|sass)$/i,
+                use: [
+                    "style-loader",
+                    {
+                        loader: "css-loader",
+                        options: {
+                            importLoaders: 1
+                        }
+                    },
+                    "sass-loader"
+                ]
+            },
+            {
+                test: /\.(png|jpg|gif|svg|ico|json)$/i,
+                type: "asset/resource",
+                //generator: "[file]" // https://webpack.js.org/configuration/output/#outputfilename
             },
         ],
     },
     resolve: {
-        extensions: [".tsx", ".ts", ".js"],
+        extensions: [".tsx", ".ts", ".js", ".scss"],
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: "public/index.html",
+            template: "./public/index.html",
+            //filename: "./dist/index.html",
+            //favicon: "public/favicon.ico",
+            //manifest: "public/manifest.json",
         }),
         new ForkTsCheckerWebpackPlugin({
             async: false,
@@ -53,7 +72,7 @@ const config: webpack.Configuration = {
         historyApiFallback: true,
         port: 4000,
         open: true,
-        hot: true
+        hot: true,
     },
 };
 

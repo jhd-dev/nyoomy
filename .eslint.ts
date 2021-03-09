@@ -1,4 +1,4 @@
-module.exports = {
+const config = {
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 2018,
@@ -24,3 +24,5 @@ module.exports = {
     }
   }
 };
+
+export default config;

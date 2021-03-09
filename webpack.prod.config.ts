@@ -3,16 +3,15 @@ import webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 import ESLintPlugin from "eslint-webpack-plugin";
-import { CleanWebpackPlugin } from "clean-webpack-plugin";
 
 const config: webpack.Configuration = {
     mode: "production",
-    entry: "./src/index.tsx",
     output: {
         path: path.resolve(__dirname, "dist"),
-        filename: "[name].[contenthash].js",
-        publicPath: "",
+        filename: "[name].js",
+        //publicPath: "./public"
     },
+    entry: "./src/index.tsx",
     module: {
         rules: [
             {
@@ -30,26 +29,59 @@ const config: webpack.Configuration = {
                 },
             },
             {
-                test: /\.(png|jpg|gif|svg|css)/i,
-                type: 'asset/resource'
+                test: /\.(css|scss|sass)$/i,
+                use: [
+                    "style-loader",
+                    {
+                        loader: "css-loader",
+                        options: {
+                            importLoaders: 1
+                        }
+                    },
+                    "sass-loader",
+                    {
+                        loader: "postcss-loader",
+                        options: {
+                            postcssOptions: {
+                                config: __dirname + "/postcss.config.js",
+                            },
+                        },
+                    },
+                ],
+            },
+            {
+                test: /\.(png|jpg|gif|svg|ico|json)$/i,
+                type: "asset/resource",
+                //generator: "[file]" // https://webpack.js.org/configuration/output/#outputfilename
             },
         ],
     },
     resolve: {
-        extensions: [".tsx", ".ts", ".js"],
+        extensions: [".tsx", ".ts", ".js", ".scss"],
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: "public/index.html",
+            template: "./public/index.html",
+            //filename: "./dist/index.html",
+            //favicon: "public/favicon.ico",
+            //manifest: "public/manifest.json",
         }),
         new ForkTsCheckerWebpackPlugin({
             async: false,
         }),
+        new webpack.HotModuleReplacementPlugin(),
         new ESLintPlugin({
-            extensions: ["js", "jsx", "ts", "tsx"],
+             extensions: ["js", "jsx", "ts", "tsx"],
         }),
-        new CleanWebpackPlugin(),
     ],
+    devtool: "inline-source-map",
+    devServer: {
+        contentBase: path.join(__dirname, "dist"),
+        historyApiFallback: true,
+        port: 4000,
+        open: true,
+        hot: true
+    },
 };
 
 export default config;
