@@ -11,7 +11,7 @@ class DevController {
     @Get("*")
     notifyDevMode(_req: Request, res: Response) {
         Logger.Imp("Starting in dev mode.");
-        const msg = this.DEV_MSG + process.env.EXPRESS_PORT;
+        const msg = this.DEV_MSG;
         res.send(msg);
     }
 }
