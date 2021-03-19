@@ -2,17 +2,19 @@
 import { Controller, Get } from "@overnightjs/core";
 import { Logger } from "@overnightjs/logger";
 import { Request, Response } from "express";
+import { OK, BAD_REQUEST } from "http-status-codes";
 
-@Controller("/")
+@Controller("")
 class DevController {
 
-    private readonly DEV_MSG = "Server is running in dev mode; no front-end content is being served.";
+    public static readonly DEV_MSG = "Server is running in dev mode; no front-end content is being served.";
 
     @Get("*")
-    notifyDevMode(_req: Request, res: Response) {
+    private notifyDevMode(_req: Request, res: Response): Response {
         Logger.Imp("Starting in dev mode.");
-        const msg = this.DEV_MSG;
-        res.send(msg);
+        const message = DevController.DEV_MSG;
+        return res.status(OK)
+            .json({ message });
     }
 }
 

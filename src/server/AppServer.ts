@@ -9,7 +9,7 @@ import DevController from "./controller/DevController";
 class AppServer extends Server {
 
     private readonly CONTROLLER_TYPES = [AppController];
-    private readonly START_MSG = "Started on port: ";
+    public readonly START_MSG = "Started on port: ";
 
     constructor() {
         super(true);
