@@ -3,8 +3,13 @@
 import * as bodyParser from "body-parser";
 import { Server } from "@overnightjs/core";
 import { Logger } from "@overnightjs/logger";
+import cors from "cors";
+import { graphqlHTTP } from "express-graphql";
+import { createConnection } from "typeorm";
 import AppController from "./controller/AppController";
-import DevController from "./controller/DevController";
+//import DevController from "./controller/DevController";
+import { schema } from "./model/schema";
+import { DB_USERNAME, DB_PASSWORD, DB_NAME } from "./config/env";
 
 class AppServer extends Server {
 
@@ -12,12 +17,15 @@ class AppServer extends Server {
     public readonly START_MSG = "Started on port: ";
 
     constructor() {
-        super(true);
+        super(true); // Always show logs
+        this.app.use(cors());
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: true }));
-        if (process.env.NODE_ENV !== "production") {
+        this.setupDatabaseConnection()
+            .catch(err => Logger.Err(err));
+        /*if (process.env.NODE_ENV !== "production") {
             super.addControllers(new DevController());
-        }
+        }*/
     }
 
     public start(port: number): AppServer {
@@ -36,6 +44,23 @@ class AppServer extends Server {
             controllers.push(new this.CONTROLLER_TYPES[conType]());
         }
         super.addControllers(controllers);
+    }
+
+    private async setupDatabaseConnection(): Promise<void> {
+        console.log(DB_USERNAME, DB_PASSWORD);
+        await createConnection({
+            type: "postgres",
+            database: DB_NAME,
+            username: DB_USERNAME,
+            password: DB_PASSWORD,
+            logging: true,
+            synchronize: false,
+            entities: [],
+        });
+        this.app.use("/graphql", graphqlHTTP({
+            schema,
+            graphiql: true,
+        }));
     }
 }
 

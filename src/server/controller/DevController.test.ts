@@ -26,11 +26,10 @@ describe("DevController", () => {
             ["/", "/public"].forEach(url => {
                 Logger.Imp(url);
                 agent.get(url)
-                    .end((_err, {status, body}) => {
-                        /*if (err) {
+                    .end((err, {status, body}) => {
+                        if (err) {
                             Logger.Err(err, true);
                         }
-                        Logger.Imp("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!!!!!!");*/
                         expect(status).toBe(OK);
                         expect(body).toBeInstanceOf(Object);
                         expect(body.message).toBeDefined();
