@@ -10,6 +10,7 @@ import AppController from "./controller/AppController";
 //import DevController from "./controller/DevController";
 import { schema } from "./model/schema";
 import { DB_USERNAME, DB_PASSWORD, DB_NAME } from "./config/env";
+import { Users } from './model/entities/Users';
 
 class AppServer extends Server {
 
@@ -47,7 +48,6 @@ class AppServer extends Server {
     }
 
     private async setupDatabaseConnection(): Promise<void> {
-        console.log(DB_USERNAME, DB_PASSWORD);
         await createConnection({
             type: "postgres",
             database: DB_NAME,
@@ -55,7 +55,7 @@ class AppServer extends Server {
             password: DB_PASSWORD,
             logging: true,
             synchronize: false,
-            entities: [],
+            entities: [Users],
         });
         this.app.use("/graphql", graphqlHTTP({
             schema,
