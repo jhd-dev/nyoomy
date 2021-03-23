@@ -1,32 +1,27 @@
 import path from "path";
-import webpack from "webpack";
+import { Configuration, HotModuleReplacementPlugin } from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 import ESLintPlugin from "eslint-webpack-plugin";
+import { NODE_ENV } from './src/server/config/env';
 
-const config: webpack.Configuration = {
-    mode: "production",
+const dev = (NODE_ENV === "development");
+
+const config: Configuration = {
+    mode: dev ? "development" : "production",
     output: {
         path: path.resolve(__dirname, "dist"),
         filename: "[name].js",
         //publicPath: "./public"
     },
-    entry: "./src/client/index.tsx",
+    entry: "./src/client/view/index.tsx",
+    watch: true,
     module: {
         rules: [
             {
                 test: /\.(ts|js)x?$/i,
                 exclude: /node_modules/,
-                use: {
-                    loader: "babel-loader",
-                    options: {
-                        presets: [
-                            "@babel/preset-env",
-                            "@babel/preset-react",
-                            "@babel/preset-typescript",
-                        ],
-                    },
-                },
+                loader: "babel-loader",
             },
             {
                 test: /\.(css|scss|sass)$/i,
@@ -36,18 +31,18 @@ const config: webpack.Configuration = {
                         loader: "css-loader",
                         options: {
                             importLoaders: 1
-                        }
+                        },
                     },
                     "sass-loader",
-                    {
+                    ...(dev ? [] : [{
                         loader: "postcss-loader",
                         options: {
                             postcssOptions: {
                                 config: __dirname + "/utils/postcss.config.js",
                             },
                         },
-                    },
-                ],
+                    }]),
+                ]
             },
             {
                 test: /\.(png|jpg|gif|svg|ico|json)$/i,
@@ -69,19 +64,19 @@ const config: webpack.Configuration = {
         new ForkTsCheckerWebpackPlugin({
             async: false,
         }),
-        new webpack.HotModuleReplacementPlugin(),
+        new HotModuleReplacementPlugin(),
         new ESLintPlugin({
-             extensions: ["js", "jsx", "ts", "tsx"],
+            extensions: ["js", "jsx", "ts", "tsx"],
         }),
     ],
     devtool: "inline-source-map",
-    devServer: {
+    /*devServer: {
         contentBase: path.join(__dirname, "dist"),
         historyApiFallback: true,
         port: 4000,
         open: true,
-        hot: true
-    },
+        hot: true,
+    },*/
 };
 
 export default config;
