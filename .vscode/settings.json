@@ -6,5 +6,9 @@
         "overnightjs",
         "postgres",
         "typeorm"
-    ]
+    ],
+    "editor.rulers": [100],
+    "[git-commit]": {
+        "editor.rulers": [50]
+    }
 }
