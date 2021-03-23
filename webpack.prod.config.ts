@@ -43,7 +43,7 @@ const config: webpack.Configuration = {
                         loader: "postcss-loader",
                         options: {
                             postcssOptions: {
-                                config: __dirname + "/postcss.config.js",
+                                config: __dirname + "/utils/postcss.config.js",
                             },
                         },
                     },

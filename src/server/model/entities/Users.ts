@@ -15,7 +15,9 @@ export class Users extends BaseEntity {
     @Column()
     password!: string;
 
-    @Column()
+    @Column({
+        nullable: true,
+    })
     createdAt!: Date;
 
 }

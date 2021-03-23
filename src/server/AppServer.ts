@@ -1,5 +1,5 @@
 //import * as path from "path";
-//import * as express from "express";
+import * as express from "express";
 import * as bodyParser from "body-parser";
 import { Server } from "@overnightjs/core";
 import { Logger } from "@overnightjs/logger";
@@ -22,6 +22,7 @@ class AppServer extends Server {
         this.app.use(cors());
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: true }));
+        this.app.use("/", express.static("dist"));
         this.setupDatabaseConnection()
             .catch(err => Logger.Err(err));
         /*if (process.env.NODE_ENV !== "production") {
@@ -31,7 +32,16 @@ class AppServer extends Server {
 
     public start(port: number): AppServer {
         this.setupControllers();
-        this.app.listen(port, () => this.logStartMsg(port));
+        let listening = false;
+        while (!listening) {
+            try {
+                this.app.listen(port, () => this.logStartMsg(port));
+            } catch (e) {
+                Logger.Err(e);
+                continue;
+            }
+            listening = true;
+        }
         return this;
     }
 
@@ -54,7 +64,7 @@ class AppServer extends Server {
             username: DB_USERNAME,
             password: DB_PASSWORD,
             logging: true,
-            synchronize: false,
+            synchronize: true,
             entities: [Users],
         });
         this.app.use("/graphql", graphqlHTTP({

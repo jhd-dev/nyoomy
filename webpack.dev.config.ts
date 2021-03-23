@@ -1,32 +1,24 @@
 import path from "path";
-import webpack from "webpack";
+import { Configuration, HotModuleReplacementPlugin } from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 import ESLintPlugin from "eslint-webpack-plugin";
 
-const config: webpack.Configuration = {
+const config: Configuration = {
     mode: "development",
     output: {
         path: path.resolve(__dirname, "dist"),
         filename: "[name].js",
         //publicPath: "./public"
     },
-    entry: "./src/client/index.tsx",
+    entry: "./src/client/view/index.tsx",
+    watch: true,
     module: {
         rules: [
             {
                 test: /\.(ts|js)x?$/i,
                 exclude: /node_modules/,
-                use: {
-                    loader: "babel-loader",
-                    options: {
-                        presets: [
-                            "@babel/preset-env",
-                            "@babel/preset-react",
-                            "@babel/preset-typescript",
-                        ],
-                    },
-                },
+                loader: "babel-loader",
             },
             {
                 test: /\.(css|scss|sass)$/i,
@@ -61,19 +53,19 @@ const config: webpack.Configuration = {
         new ForkTsCheckerWebpackPlugin({
             async: false,
         }),
-        new webpack.HotModuleReplacementPlugin(),
+        new HotModuleReplacementPlugin(),
         new ESLintPlugin({
             extensions: ["js", "jsx", "ts", "tsx"],
         }),
     ],
     devtool: "inline-source-map",
-    devServer: {
+    /*devServer: {
         contentBase: path.join(__dirname, "dist"),
         historyApiFallback: true,
         port: 4000,
         open: true,
         hot: true,
-    },
+    },*/
 };
 
 export default config;

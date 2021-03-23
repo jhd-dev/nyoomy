@@ -1,20 +1,18 @@
 import React from 'react';
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import logo from './logo.svg';
 import './App.scss';
+import CreateUser from './components/CreateUser';
 
-class App extends React.Component {
-    render() {
-        async function callExpress() {
-            try {
-                let response = await fetch('/api/say-hello/SeanMaxwell')
-                    .then(res => res.json());
-                alert('Hi this is a response from the backend: ' + response.response);
-            } catch (err) {
-                alert(err);
-            }
-        }
-        console.log(callExpress());
-        return (
+const App: React.FC<any> = () => {
+
+    const client = new ApolloClient({
+        uri: window.location.origin + "/graphql",
+        cache: new InMemoryCache(),
+    });
+
+    return (
+        <ApolloProvider client={client}>
             <div className="App">
                 <header className="App-header">
                     <img src={logo} className="App-logo" alt="logo" />
@@ -30,9 +28,10 @@ class App extends React.Component {
                         Learn React
                     </a>
                 </header>
+                <CreateUser />
             </div>
-        );
-    }
+        </ApolloProvider>
+    );
 }
 
 export default App;

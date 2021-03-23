@@ -1,14 +1,14 @@
-import { OK, BAD_REQUEST } from "http-status-codes";
+import StatusCodes from "http-status-codes";
 import { Controller, Get } from "@overnightjs/core";
 import { Logger } from "@overnightjs/logger";
 import { Request, Response } from "express";
 
-@Controller("api/hello-world")
+@Controller("api")
 class AppController {
 
     public static readonly SUCCESS_MSG = "Hello!";
 
-    @Get(":name")
+    @Get("hello-world:name")
     private sayHello(req: Request, res: Response): Response {
         try {
             const { name } = req.params;
@@ -16,12 +16,12 @@ class AppController {
                 throw Error("User triggered failure.");
             }
             Logger.Info(AppController.SUCCESS_MSG + name);
-            return res.status(OK).json({
+            return res.status(StatusCodes.OK).json({
                 message: AppController.SUCCESS_MSG + name,
             });
         } catch (err) {
             Logger.Err(err, true);
-            return res.status(BAD_REQUEST).json({
+            return res.status(StatusCodes.BAD_REQUEST).json({
                 error: err.message,
             });
         }

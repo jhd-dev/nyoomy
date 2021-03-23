@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@apollo/client": "^3.3.12",
     "@overnightjs/core": "^1.7.5",
     "@overnightjs/logger": "^1.2.0",
     "@testing-library/jest-dom": "^5.11.9",
@@ -15,6 +16,7 @@
     "axios": "^0.21.1",
     "cors": "^2.8.5",
     "cra-template": "1.1.2",
+    "dayjs": "^1.10.4",
     "dotenv": "^8.2.0",
     "express-graphql": "^0.12.0",
     "graphql": "^15.5.0",
@@ -32,12 +34,14 @@
   },
   "scripts": {
     "setup": "npm install",
-    "start": "set NODE_ENV=development && nodemon --config \"./nodemon.json\"",
-    "build": "webpack serve --config webpack.prod.config.ts",
+    "start": "npm run-script watch",
+    "watch": "set NODE_ENV=development && concurrently --names \"CLIENT,SERVER\" \"npm run watch-client\" \"npm run watch-server\"",
+    "watch-server": "nodemon --config \"./utils/nodemon.json\"",
+    "watch-client": "webpack --config webpack.dev.config.ts",
     "test": "set NODE_ENV=test && ts-node ./src/server/main.ts test",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://localhost:5000",
+  "proxy": "http://localhost:4000",
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -64,6 +68,7 @@
     "@babel/preset-typescript": "^7.13.0",
     "@babel/runtime": "^7.13.9",
     "@types/cors": "^2.8.10",
+    "@types/graphql-date": "^1.0.5",
     "@types/jasmine": "^3.6.6",
     "@types/supertest": "^2.0.10",
     "@types/webpack": "^4.41.26",
@@ -74,6 +79,7 @@
     "autoprefixer": "^10.2.5",
     "babel-loader": "^8.2.2",
     "clean-webpack-plugin": "^3.0.0",
+    "concurrently": "^6.0.0",
     "cross-env": "^7.0.3",
     "css-loader": "^5.1.1",
     "cssnano": "^4.1.10",
