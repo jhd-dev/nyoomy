@@ -1,6 +1,7 @@
 import { Logger } from "@overnightjs/logger";
 import AppServer from "./AppServer";
 import { NODE_ENV, PORT } from "./config/env";
+import Jasmine from "jasmine";
 
 main();
 
@@ -24,17 +25,16 @@ function startServer(): void {
 }
 
 function runTests(): void {
-    const Jasmine = require( "jasmine" );
-    const jasmine = new Jasmine();
+    const jasmine = new Jasmine({});
 
     jasmine.loadConfig( {
-                            "spec_dir": "src",
-                            "spec_files": [
-                                "./**/*.test.ts",
-                            ],
-                            "stopSpecOnExpectationFailure": false,
-                            "random": true,
-                        } );
+        "spec_dir": "src",
+        "spec_files": [
+            "./**/*.test.ts",
+        ],
+        "stopSpecOnExpectationFailure": false,
+        "random": true,
+    } );
 
     jasmine.onComplete( ( passed: boolean ) => {
         if ( passed ) {

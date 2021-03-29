@@ -3,12 +3,12 @@ import { Controller, Get } from "@overnightjs/core";
 import { Logger } from "@overnightjs/logger";
 import { Request, Response } from "express";
 
-@Controller("api")
+@Controller("api/hello-world")
 class AppController {
 
     public static readonly SUCCESS_MSG = "Hello!";
 
-    @Get("hello-world:name")
+    @Get(":name")
     private sayHello(req: Request, res: Response): Response {
         try {
             const { name } = req.params;

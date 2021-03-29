@@ -1,5 +1,4 @@
 //import * as supertest from "supertest";
-require("jasmine");
 //import { OK, BAD_REQUEST } from "http-status-codes";
 //import { SuperTest, Test } from "supertest";
 import { Logger } from "@overnightjs/logger";
@@ -7,6 +6,7 @@ import { Server } from "@overnightjs/core";
 
 //import TestServer from "./TestServer";
 import AppServer from "./AppServer";
+require("jasmine");
 //import {async} from "q";
 
 describe("AppServer", () => {

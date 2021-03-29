@@ -5,7 +5,9 @@ import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 import ESLintPlugin from "eslint-webpack-plugin";
 import { NODE_ENV } from './src/server/config/env';
 
-const dev = (NODE_ENV === "development");
+const dev: boolean = (NODE_ENV === "development");
+const prod: boolean = (NODE_ENV === "production");
+const testing: boolean = (NODE_ENV === "test");
 
 const config: Configuration = {
     mode: dev ? "development" : "production",
@@ -15,7 +17,7 @@ const config: Configuration = {
         //publicPath: "./public"
     },
     entry: "./src/client/view/index.tsx",
-    watch: true,
+    watch: !testing,
     module: {
         rules: [
             {
@@ -34,7 +36,7 @@ const config: Configuration = {
                         },
                     },
                     "sass-loader",
-                    ...(dev ? [] : [{
+                    ...(!prod ? [] : [{
                         loader: "postcss-loader",
                         options: {
                             postcssOptions: {
