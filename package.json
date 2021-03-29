@@ -36,7 +36,7 @@
     "setup": "npm install",
     "start": "npm run-script watch",
     "watch": "set NODE_ENV=development && concurrently --names \"CLIENT,SERVER\" \"npm run watch-client\" \"npm run watch-server\"",
-    "watch-server": "nodemon --config \"./utils/nodemon.json\"",
+    "watch-server": "nodemon --config nodemon.json",
     "watch-client": "webpack --config webpack.config.ts",
     "test": "set NODE_ENV=test && ts-node ./src/server/main.ts test",
     "eject": "react-scripts eject"
