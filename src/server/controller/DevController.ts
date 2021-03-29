@@ -1,6 +1,6 @@
 //import { OK, BAD_REQUEST } from "http-status-codes";
 import { Controller, Get } from "@overnightjs/core";
-import { Logger } from "@overnightjs/logger";
+
 import { Request, Response } from "express";
 import { OK, BAD_REQUEST } from "http-status-codes"; //TODO: Replace deprecated properties
 
@@ -11,7 +11,7 @@ class DevController {
 
     @Get("*")
     private notifyDevMode(_req: Request, res: Response): Response {
-        Logger.Imp("Starting in dev mode.");
+        console.log("Starting in dev mode.");
         const message = DevController.DEV_MSG;
         return res.status(OK)
             .json({ message });

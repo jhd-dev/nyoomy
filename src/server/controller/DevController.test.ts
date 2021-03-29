@@ -1,6 +1,6 @@
 import * as supertest from "supertest";
 import { SuperTest, Test } from "supertest";
-import { Logger } from "@overnightjs/logger";
+
 import TestServer from "../TestServer";
 import DevController from "./DevController";
 import {Dictionary} from "express-serve-static-core";
@@ -24,11 +24,11 @@ describe("DevController", () => {
         it(`should respond with the text "${message}"`, done => {
 
             ["/", "/public"].forEach(url => {
-                Logger.Imp(url);
+                console.log(url);
                 agent.get(url)
                     .end((err, {status, body}) => {
                         if (err) {
-                            Logger.Err(err, true);
+                            console.error(err, true);
                         }
                         expect(status).toBe(OK);
                         expect(body).toBeInstanceOf(Object);

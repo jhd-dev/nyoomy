@@ -2,7 +2,7 @@ import * as supertest from "supertest";
 //import {} from "jasmine";
 import { OK, BAD_REQUEST } from "http-status-codes";
 import { SuperTest, Test } from "supertest";
-import { Logger } from "@overnightjs/logger";
+
 import TestServer from "../TestServer";
 import AppController from "./AppController";
 
@@ -30,7 +30,7 @@ describe("AppController", () => {
             agent.get("/api/hello-world/" + name)
                 .end((err, res) => {
                     if (err) {
-                        Logger.Err(err, true);
+                        console.error(err, true);
                     }
                     expect(res.status).toBe(OK);
                     expect(res.body.message).toBe(message);
@@ -44,7 +44,7 @@ describe("AppController", () => {
             agent.get("/api/hello-world/make_it_fail")
                 .end((err, res) => {
                     if (err) {
-                        Logger.Err(err, true);
+                        console.error(err, true);
                     }
                     expect(res.status).toBe(BAD_REQUEST);
                     expect(res.body.error).toBeTruthy();

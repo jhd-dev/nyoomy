@@ -1,13 +1,8 @@
 //import * as supertest from "supertest";
 //import { OK, BAD_REQUEST } from "http-status-codes";
 //import { SuperTest, Test } from "supertest";
-import { Logger } from "@overnightjs/logger";
 import { Server } from "@overnightjs/core";
-
-//import TestServer from "./TestServer";
 import AppServer from "./AppServer";
-require("jasmine");
-//import {async} from "q";
 
 describe("AppServer", () => {
 
@@ -17,9 +12,10 @@ describe("AppServer", () => {
     describe("start", () => {
 
         beforeEach(done => {
-            spyOn(Server.prototype, "addControllers");
-            spyOn(Logger, "Imp");
+            jest.spyOn(Server.prototype, "addControllers");
+            jest.spyOn(console, "info");
             appServer = new AppServer();
+            port ++;
             done();
         });
 
@@ -28,20 +24,20 @@ describe("AppServer", () => {
             done();
         });
 
-        it("should return a Promise containing itself", async () => {
+        it("should return a Promise containing itself", () => {
             const server: AppServer = appServer.start(port);
             expect(appServer).toBe(server);
         });
 
-        it("should register all of its controllers", async () => {
+        it("should register all of its controllers", () => {
             appServer.start(port);
             expect(appServer.addControllers).toHaveBeenCalled();
         });
 
         xit("should notify the user that the server is running and on which port", async () => {
             appServer.start(port);
-            expect(Logger.Imp).toHaveBeenCalled();
-            expect(Logger.Imp).toHaveBeenCalledWith(appServer.START_MSG + port);
+            expect(console.info).toHaveBeenCalled();
+            expect(console.info).toHaveBeenCalledWith(appServer.START_MSG + port);
         });
 
     });

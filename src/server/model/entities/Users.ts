@@ -6,16 +6,16 @@ export class Users extends BaseEntity {
     @PrimaryGeneratedColumn()
     id!: number;
 
-    @Column()
+    @Column("text")
     name!: string;
 
-    @Column()
+    @Column("text")
     username!: string;
 
-    @Column()
+    @Column("text")
     password!: string;
 
-    @Column({
+    @Column("date", {
         nullable: true,
     })
     createdAt!: Date;

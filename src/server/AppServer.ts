@@ -2,7 +2,6 @@
 import * as express from "express";
 import * as bodyParser from "body-parser";
 import { Server } from "@overnightjs/core";
-import { Logger } from "@overnightjs/logger";
 import cors from "cors";
 import { graphqlHTTP } from "express-graphql";
 import { createConnection } from "typeorm";
@@ -24,7 +23,7 @@ class AppServer extends Server {
         this.app.use(bodyParser.urlencoded({ extended: true }));
         this.app.use("/", express.static("dist"));
         this.setupDatabaseConnection()
-            .catch(err => Logger.Err(err));
+            .catch(err => console.error(err));
         /*if (process.env.NODE_ENV !== "production") {
             super.addControllers(new DevController());
         }*/
@@ -37,7 +36,7 @@ class AppServer extends Server {
             try {
                 this.app.listen(port, () => this.logStartMsg(port));
             } catch (e) {
-                Logger.Err(e);
+                console.error(e);
                 continue;
             }
             listening = true;
@@ -46,7 +45,7 @@ class AppServer extends Server {
     }
 
     private logStartMsg(port: number): void {
-        Logger.Imp(this.START_MSG + port);
+        console.log(this.START_MSG + port);
     }
 
     private setupControllers(): void {
@@ -63,7 +62,7 @@ class AppServer extends Server {
             database: DB_NAME,
             username: DB_USERNAME,
             password: DB_PASSWORD,
-            logging: true,
+            logging: false,
             synchronize: true,
             entities: [Users],
         });
