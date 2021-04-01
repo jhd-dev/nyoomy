@@ -1,5 +1,6 @@
 import React from 'react';
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import { ApolloClient, InMemoryCache, ApolloProvider, HttpLink } from '@apollo/client';
+import fetch from 'cross-fetch';
 import logo from './logo.svg';
 import './App.scss';
 import CreateUser from './components/CreateUser';
@@ -7,13 +8,16 @@ import CreateUser from './components/CreateUser';
 const App: React.FC<any> = () => {
 
     const client = new ApolloClient({
-        uri: window.location.origin + "/graphql",
+        link: new HttpLink({
+            uri: window.location.origin + "/graphql",
+            fetch,
+        }),
         cache: new InMemoryCache(),
     });
 
     return (
         <ApolloProvider client={client}>
-            <div className="App">
+            <div data-testid="App" className="App">
                 <header className="App-header">
                     <img src={logo} className="App-logo" alt="logo" />
                     <p>

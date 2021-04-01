@@ -24,18 +24,18 @@ describe("AppServer", () => {
             done();
         });
 
-        it("should return a Promise containing itself", () => {
-            const server: AppServer = appServer.start(port);
+        it("should return a Promise containing itself", async () => {
+            const server: AppServer = await appServer.start(port);
             expect(appServer).toBe(server);
         });
 
-        it("should register all of its controllers", () => {
-            appServer.start(port);
+        it("should register all of its controllers", async () => {
+            await appServer.start(port);
             expect(appServer.addControllers).toHaveBeenCalled();
         });
 
         xit("should notify the user that the server is running and on which port", async () => {
-            appServer.start(port);
+            await appServer.start(port);
             expect(console.info).toHaveBeenCalled();
             expect(console.info).toHaveBeenCalledWith(appServer.START_MSG + port);
         });

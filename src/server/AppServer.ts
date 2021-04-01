@@ -11,7 +11,7 @@ import { schema } from "./model/schema";
 import { DB_USERNAME, DB_PASSWORD, DB_NAME } from "./config/env";
 import { Users } from './model/entities/Users';
 
-class AppServer extends Server {
+export default class AppServer extends Server {
 
     private readonly CONTROLLER_TYPES = [AppController];
     public readonly START_MSG = "Started on port: ";
@@ -22,14 +22,14 @@ class AppServer extends Server {
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: true }));
         this.app.use("/", express.static("dist"));
-        this.setupDatabaseConnection()
-            .catch(err => console.error(err));
         /*if (process.env.NODE_ENV !== "production") {
             super.addControllers(new DevController());
         }*/
     }
 
-    public start(port: number): AppServer {
+    public async start(port: number): Promise<AppServer> {
+        await this.setupDatabaseConnection()
+            .catch(err => console.error(err));
         this.setupControllers();
         let listening = false;
         while (!listening) {
@@ -72,5 +72,3 @@ class AppServer extends Server {
         }));
     }
 }
-
-export default AppServer;

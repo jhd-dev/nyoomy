@@ -1,7 +1,8 @@
-import type {Config} from '@jest/types';
+import type { Config } from '@jest/types';
 import { defaults } from 'jest-config';
 import "reflect-metadata";
 
+// https://jestjs.io/docs/configuration
 const getJestConfig = async (): Promise<Config.InitialOptions> => ({
     verbose: false,
     moduleFileExtensions: [...defaults.moduleFileExtensions, 'ts', 'tsx'],
