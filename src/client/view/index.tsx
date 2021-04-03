@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import fetch from 'cross-fetch';
 import './index.scss';
-import App from './App';
+import { App } from './App';
 import reportWebVitals from './reportWebVitals';
 
 global.fetch = fetch;

@@ -11,6 +11,7 @@ import { User } from '../model/entity/User';
 import { DATABASE_TYPE } from '../../shared/Constants';
 import { IExpressContext } from '../../shared/types';
 import { ApolloServer } from "apollo-server-express";
+import cookieParser from "cookie-parser";
 
 export default class AppServer extends Server {
 
@@ -22,12 +23,10 @@ export default class AppServer extends Server {
         this.app.use(cors({
             credentials: true,
         }));
+        this.app.use(cookieParser())
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: true }));
-        this.app.use("/static", express.static("dist"));
-        /*if (process.env.NODE_ENV !== "production") {
-            super.addControllers(new DevController());
-        }*/
+        this.app.use("/", express.static("dist"));
     }
 
     public async start(port: number): Promise<AppServer> {

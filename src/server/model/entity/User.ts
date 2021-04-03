@@ -40,4 +40,10 @@ export class User extends BaseEntity {
     })
     lastUpdated!: Date;
 
+    @Column("int", {
+        default: 0,
+        nullable: true,
+    })
+    tokenVersion!: number;
+
 }
