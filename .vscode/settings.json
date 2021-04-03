@@ -2,9 +2,12 @@
     "cSpell.words": [
         "GraphQLID",
         "Nyoomy",
+        "fontawesome",
+        "fortawesome",
         "graphiql",
         "overnightjs",
         "postgres",
+        "testid",
         "typeorm"
     ],
     "editor.rulers": [100],

@@ -1,5 +1,6 @@
-import AppServer from "./AppServer";
-import { PORT } from './config/env';
+import "reflect-metadata";
+import AppServer from "./controller/AppServer";
+import { PORT } from '../shared/env';
 
 new AppServer()
     .start(PORT)

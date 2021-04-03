@@ -38,7 +38,7 @@ const CreateUser: React.FC<any> = () => {
                 })}
             >Create user</button>
         </div>
-    )
-}
+    );
+};
 
 export default CreateUser;

@@ -1,29 +1,26 @@
-import StatusCodes from "http-status-codes";
-import { Controller, Get } from "@overnightjs/core";
-
+import { Controller, Post } from "@overnightjs/core";
 import { Request, Response } from "express";
+import { REFRESH_TOKEN_SECRET } from '../../shared/env';
+import { verify } from 'jsonwebtoken';
+import { User } from '../model/entity/User';
+import { createAccessToken } from './auth';
 
-@Controller("api/hello-world")
+@Controller("")
 class AppController {
 
-    public static readonly SUCCESS_MSG = "Hello!";
-
-    @Get(":name")
-    private sayHello(req: Request, res: Response): Response {
+    @Post("/refresh_token")
+    private async refreshToken(req: Request, res: Response): Promise<Response> {
+        const failed = () => res.send({ ok: false, accessToken: "" });
+        const token = req.cookies.jid;
+        if (!token) return failed();
         try {
-            const { name } = req.params;
-            if (name === "make_it_fail") {
-                throw Error("User triggered failure.");
-            }
-            console.info(AppController.SUCCESS_MSG + name);
-            return res.status(StatusCodes.OK).json({
-                message: AppController.SUCCESS_MSG + name,
-            });
+            const payload: any = verify(token, REFRESH_TOKEN_SECRET);
+            const user = await User.findOne({ id: payload.userId });
+            if (!user) return failed();
+            return res.send({ ok: true, accessToken: createAccessToken(user) });
         } catch (err) {
-            console.error(err, true);
-            return res.status(StatusCodes.BAD_REQUEST).json({
-                error: err.message,
-            });
+            console.log(err);
+            return failed();
         }
     }
 

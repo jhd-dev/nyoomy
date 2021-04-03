@@ -1,7 +1,7 @@
 import * as supertest from "supertest";
 import { SuperTest, Test } from "supertest";
 
-import TestServer from "../TestServer";
+import TestServer from "./TestServer";
 import DevController from "./DevController";
 import {Dictionary} from "express-serve-static-core";
 import { OK, BAD_REQUEST } from "http-status-codes";

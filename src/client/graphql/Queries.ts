@@ -1,2 +1,12 @@
-// eslint-disable-next-line import/no-anonymous-default-export
-export default {};
+import { gql } from '@apollo/client';
+
+export const GET_ALL_USERS = gql`
+
+    query getAllUsers {
+        getAllUsers {
+            name,
+            username
+        }
+    }
+
+`;

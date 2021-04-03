@@ -3,7 +3,7 @@ import { Configuration, HotModuleReplacementPlugin } from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 import ESLintPlugin from "eslint-webpack-plugin";
-import { NODE_ENV } from './src/server/config/env';
+import { NODE_ENV } from './src/shared/env';
 
 const dev: boolean = (NODE_ENV === "development");
 const prod: boolean = (NODE_ENV === "production");
