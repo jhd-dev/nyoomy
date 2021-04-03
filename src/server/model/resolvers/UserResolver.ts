@@ -2,7 +2,7 @@ import { compare, hash } from 'bcryptjs';
 import { Resolver, Mutation, Arg, Int, Query, Field, Args, ArgsType, ObjectType, Ctx,
     UseMiddleware, MiddlewareFn } from 'type-graphql';
 import { User } from '../entity/User';
-import { IExpressContext } from '../../../shared/types';
+import { IExpressContext, ContextPayload } from '../../../shared/types';
 import { createAccessToken, createRefreshToken } from '../../controller/auth';
 import { verify } from 'jsonwebtoken';
 import { ACCESS_TOKEN_SECRET } from '../../../shared/env';
@@ -11,6 +11,9 @@ import { ACCESS_TOKEN_SECRET } from '../../../shared/env';
 class LoginResponse {
     @Field()
     accessToken?: string;
+
+    @Field(() => User)
+    user?: User
 }
 
 @ArgsType()
@@ -35,7 +38,7 @@ const isAuth: MiddlewareFn<IExpressContext> = ({ context }, next) => {
 
         const token = authorization.split(" ")[1];
         const payload = verify(token, ACCESS_TOKEN_SECRET);
-        context.payload = payload as any;
+        context.payload = payload as ContextPayload;
         return next();
     } catch (err) {
         console.error(err);
@@ -79,7 +82,29 @@ export class UserResolver {
         res.cookie("jid", createRefreshToken(user));
         return {
             accessToken: createAccessToken(user),
+            user
         };
+    }
+
+    @Mutation(() => Boolean)
+    logout(): boolean {
+        return true;
+    }
+
+    @Query(() => User, { nullable: true })
+    async currentUser(@Ctx() context: IExpressContext): Promise<User | null> {
+        const authorization = context.req.headers["authorization"];
+        if (!authorization) return null;
+
+        try {
+            const token = authorization.split(" ")[1];
+            const payload = verify(token, ACCESS_TOKEN_SECRET) as ContextPayload;
+            context.payload = payload;
+            return await User.findOne(parseInt(payload.userId)) ?? null;
+        } catch (err) {
+            console.log(err);
+            return null;
+        }
     }
 
     @Mutation(() => Boolean)

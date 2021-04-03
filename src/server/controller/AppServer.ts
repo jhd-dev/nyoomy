@@ -24,7 +24,7 @@ export default class AppServer extends Server {
             origin: "http://localhost:4000",
             credentials: true,
         }));
-        this.app.use(cookieParser())
+        this.app.use(cookieParser());
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: true }));
         this.app.use("/", express.static("dist"));
@@ -76,7 +76,10 @@ export default class AppServer extends Server {
                  payload }),
         });
 
-        apolloServer.applyMiddleware({ app: this.app });
+        apolloServer.applyMiddleware({
+            app: this.app,
+            cors: true,
+        });
     }
 
 }

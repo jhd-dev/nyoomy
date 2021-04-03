@@ -6,10 +6,12 @@ export const enum UserRole {
     ADMIN,
 }
 
+export interface ContextPayload {
+    userId: string,
+}
+
 export interface IExpressContext {
     req: Request,
     res: Response,
-    payload?: {
-        userId: string,
-    },
-};
+    payload?: ContextPayload,
+}

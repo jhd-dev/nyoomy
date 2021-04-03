@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { RouteComponentProps } from 'react-router';
-import { useLoginMutation } from '../../generated/graphql';
+import { MeDocument, useLoginMutation, MeQuery } from '../../generated/graphql';
 
 interface IProps extends RouteComponentProps {}
 
@@ -22,6 +22,15 @@ export const LoginPage: React.FC<IProps> = ({ history }) => {
                         username,
                         password,
                     },
+                    update: (store, { data }) => {
+                        if (!data) return null;
+                        store.writeQuery<MeQuery>({
+                            query: MeDocument,
+                            data: {
+                                currentUser: data.login.user,
+                            },
+                        });
+                    }
                 });
                 console.log(response);
                 history.push("/");
