@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useCreateUserMutation } from '../../generated/graphql';
+import { useRegisterMutation } from '../../generated/graphql';
 import { RouteComponentProps } from 'react-router';
 
 interface IProps extends RouteComponentProps {}
@@ -10,7 +10,7 @@ export const RegistrationPage: React.FC<IProps> = ({ history }) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
-    const [createUser, { error }] = useCreateUserMutation();
+    const [register, { error }] = useRegisterMutation();
     if (error) console.error(error);
 
     return (
@@ -18,7 +18,7 @@ export const RegistrationPage: React.FC<IProps> = ({ history }) => {
             className="createUser"
             onSubmit={async (e): Promise<void> => {
                 e.preventDefault();
-                const response = await createUser({
+                const response = await register({
                     variables: {
                         name,
                         username,
@@ -44,15 +44,7 @@ export const RegistrationPage: React.FC<IProps> = ({ history }) => {
                 placeholder="password"
                 onChange={e => setPassword(e.target.value)}
             />
-            <button
-                onClick={() => createUser({
-                    variables: {
-                        name,
-                        username,
-                        password,
-                    },
-                })}
-            >Create user</button>
+            <button type="submit">Create user</button>
         </form>
     );
 };

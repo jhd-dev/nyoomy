@@ -21,6 +21,7 @@ export default class AppServer extends Server {
     constructor() {
         super(true); // Always show logs
         this.app.use(cors({
+            origin: "http://localhost:4000",
             credentials: true,
         }));
         this.app.use(cookieParser())

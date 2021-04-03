@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ApolloClient, InMemoryCache, ApolloProvider, HttpLink } from '@apollo/client';
 import fetch from 'cross-fetch';
 import './App.scss';
@@ -8,6 +8,8 @@ interface IProps {}
 
 export const App: React.FC<IProps> = () => {
 
+    const [loading, setLoading] = useState(true);
+
     const client = new ApolloClient({
         link: new HttpLink({
             uri: window.location.origin + "/graphql",
@@ -16,6 +18,21 @@ export const App: React.FC<IProps> = () => {
         }),
         cache: new InMemoryCache(),
     });
+
+    useEffect(() => {
+        fetch(window.location.origin + "/refresh_token", {
+            method: "POST",
+            credentials: "include",
+        }).then(async x => {
+            const data = await x.json();
+            console.log(data);
+            setLoading(false);
+        });
+    }, []);
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <ApolloProvider client={client}>
