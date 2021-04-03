@@ -54,7 +54,8 @@
       "watch-server": "nodemon --config nodemon.json",
       "watch-client": "webpack --config webpack.config.ts",
       "test": "jest --detectOpenHandles",
-      "eject": "react-scripts eject"
+      "eject": "react-scripts eject",
+      "generate": "graphql-codegen --config codegen.yml"
    },
    "proxy": "http://localhost:4000",
    "eslintConfig": {
@@ -83,6 +84,7 @@
       "@babel/preset-react": "^7.12.13",
       "@babel/preset-typescript": "^7.13.0",
       "@babel/runtime": "^7.13.9",
+      "@graphql-codegen/cli": "1.21.3",
       "@types/bcryptjs": "^2.4.2",
       "@types/cookie-parser": "^1.4.2",
       "@types/cors": "^2.8.10",
@@ -127,6 +129,9 @@
       "typescript": "3.3.3333",
       "webpack": "^5.24.3",
       "webpack-cli": "^4.5.0",
-      "webpack-dev-server": "^3.11.2"
+      "webpack-dev-server": "^3.11.2",
+      "@graphql-codegen/typescript-operations": "1.17.15",
+      "@graphql-codegen/typescript": "1.21.1",
+      "@graphql-codegen/typescript-react-apollo": "2.2.3"
    }
 }

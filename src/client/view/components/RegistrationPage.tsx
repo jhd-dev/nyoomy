@@ -1,18 +1,34 @@
 import React, { useState } from 'react';
-import { useMutation } from '@apollo/client';
-import { CREATE_USER } from '../../graphql/Mutations';
+import { useCreateUserMutation } from '../../generated/graphql';
+import { RouteComponentProps } from 'react-router';
 
-export const RegistrationPage: React.FC<any> = () => {
+interface IProps extends RouteComponentProps {}
+
+export const RegistrationPage: React.FC<IProps> = ({ history }) => {
 
     const [name, setName] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
-    const [createUser, { error }] = useMutation(CREATE_USER);
+    const [createUser, { error }] = useCreateUserMutation();
     if (error) console.error(error);
 
     return (
-        <div className="createUser">
+        <form
+            className="createUser"
+            onSubmit={async (e): Promise<void> => {
+                e.preventDefault();
+                const response = await createUser({
+                    variables: {
+                        name,
+                        username,
+                        password,
+                    },
+                });
+                console.log(response);
+                history.push("/");
+            }}
+        >
             <input
                 type="text"
                 placeholder="name"
@@ -37,6 +53,6 @@ export const RegistrationPage: React.FC<any> = () => {
                     },
                 })}
             >Create user</button>
-        </div>
+        </form>
     );
 };

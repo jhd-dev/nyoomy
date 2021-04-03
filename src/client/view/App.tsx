@@ -4,7 +4,9 @@ import fetch from 'cross-fetch';
 import './App.scss';
 import { Routes } from './components/Routes';
 
-export const App: React.FC<any> = () => {
+interface IProps {}
+
+export const App: React.FC<IProps> = () => {
 
     const client = new ApolloClient({
         link: new HttpLink({

@@ -1,5 +1,7 @@
 import React from 'react';
 
-export const MainPage: React.FC = () => {
+interface IProps {}
+
+export const MainPage: React.FC<IProps> = () => {
     return <></>;
 };

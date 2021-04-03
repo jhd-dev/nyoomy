@@ -4,7 +4,9 @@ import { APP_NAME } from '../../../shared/Constants';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisH, faPlus } from '@fortawesome/free-solid-svg-icons';
 
-const CreateUser: React.FC<any> = () => {
+interface IProps {}
+
+const CreateUser: React.FC<IProps> = () => {
 
     return (
         <nav className="navbar navbar-light bg-light">
