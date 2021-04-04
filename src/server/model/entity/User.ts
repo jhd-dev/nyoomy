@@ -22,13 +22,16 @@ export class User extends BaseEntity {
     name!: string;
 
     @Field()
-    @Column()
+    @Column({
+        unique: true,
+    })
     username!: string;
 
     @Field()
     @Directive('@lowercase')
     @Column({
         nullable: true,
+        unique: true,
     })
     email!: string;
 

@@ -4,75 +4,26 @@ import {
     Mutation,
     Arg,
     Query,
-    Field,
     Args,
-    ArgsType,
-    ObjectType,
     Ctx,
     UseMiddleware,
     MiddlewareFn,
     ID,
 } from 'type-graphql';
 import { User } from '../entity/User';
-import { IExpressContext, ContextPayload } from '../../../shared/types';
+import type { IExpressContext, ContextPayload } from '../../../shared/types';
 import {
     createAccessToken,
     createRefreshToken,
     sendRefreshToken,
-} from '../../controller/auth';
+} from '../../utils/auth';
 import { verify } from 'jsonwebtoken';
 import { ACCESS_TOKEN_SECRET } from '../../../shared/env';
-
-@ObjectType()
-class LoginResponse {
-    @Field()
-    accessToken?: string;
-
-    @Field(() => User)
-    user?: User;
-}
-
-@ObjectType()
-class UniqueFieldTakenError {
-    @Field()
-    taken!: 'email' | 'username';
-}
-
-@ObjectType()
-class RegistrationResponse implements LoginResponse {
-    @Field(() => UniqueFieldTakenError, { nullable: true })
-    error!: UniqueFieldTakenError | null;
-
-    @Field({ nullable: true })
-    accessToken?: string;
-
-    @Field(() => User, { nullable: true })
-    user?: User;
-}
-
-@ArgsType()
-class UserLoginInfo {
-    @Field()
-    usernameOrEmail!: string;
-
-    @Field()
-    password!: string;
-}
-
-@ArgsType()
-class UserRegistrationInfo implements Partial<User> {
-    @Field()
-    name!: string;
-
-    @Field()
-    email!: string;
-
-    @Field()
-    username!: string;
-
-    @Field()
-    password!: string;
-}
+import { UserRegistrationInfo } from './UserRegistrationInfo';
+import { UserLoginInfo } from './UserLoginInfo';
+import { LoginResponse } from './LoginResponse';
+import { RegistrationResponse } from './RegistrationResponse';
+import { validateRegistration } from './validateRegistration';
 
 const isAuth: MiddlewareFn<IExpressContext> = ({ context }, next) => {
     try {
@@ -101,25 +52,27 @@ export class UserResolver {
         @Args() { name, email, username, password }: UserRegistrationInfo
     ): Promise<RegistrationResponse> {
         const hashedPassword = await hash(password, 12);
-        const existingUser = await User.findOne({
-            where: [{ email }, { username }],
+
+        const errors = await validateRegistration({
+            name,
+            email,
+            username,
+            password,
         });
-        if (existingUser) {
+
+        if (errors && errors.length > 0)
             return {
-                error: {
-                    taken: existingUser.email === email ? 'email' : 'username',
-                },
+                errors,
             };
-        }
-        return {
-            error: null,
-            user: await User.create({
-                name,
-                username,
-                email,
-                password: hashedPassword,
-            }).save(),
-        };
+
+        const user = await User.create({
+            name,
+            username,
+            email,
+            password: hashedPassword,
+        }).save();
+
+        return { user };
     }
 
     @Mutation(() => LoginResponse)
@@ -170,6 +123,15 @@ export class UserResolver {
             return null;
         }
     }
+
+    // @Mutation(() => Boolean)
+    // forgotPassword(
+    //     @Arg('email') email: string,
+    //     @Ctx() { req }: IExpressContext
+    // ): boolean {
+    //     const user = User.findOne({ where: { email } });
+    //     return true;
+    // }
 
     @Mutation(() => Boolean)
     async deleteUserById(@Arg('id', () => ID) id: string): Promise<boolean> {

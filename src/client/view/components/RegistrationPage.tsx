@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useRegisterMutation } from '../../generated/graphql';
+import { useRegisterMutation, FieldError } from '../../generated/graphql';
 import { RouteComponentProps } from 'react-router';
 
 interface IProps extends RouteComponentProps {}
@@ -9,8 +9,8 @@ export const RegistrationPage: React.FC<IProps> = ({ history }) => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [usernameTaken, setUsernameTaken] = useState(false);
-    const [emailTaken, setEmailTaken] = useState(false);
+    const fieldErrorsInit: FieldError[] = [];
+    const [fieldErrors, setFieldErrors] = useState(fieldErrorsInit);
 
     const [register, { error }] = useRegisterMutation();
     if (error) console.error(error);
@@ -30,18 +30,8 @@ export const RegistrationPage: React.FC<IProps> = ({ history }) => {
                 });
                 console.log(response);
                 if (!response?.data) return;
-                if (response.data.registerUser?.error) {
-                    switch (response.data.registerUser?.error.taken) {
-                        case 'email':
-                            setEmailTaken(true);
-                            break;
-                        case 'username':
-                            setUsernameTaken(true);
-                            break;
-                        default:
-                            console.error('Unknown registerUser error');
-                            break;
-                    }
+                if (response.data.registerUser?.errors) {
+                    setFieldErrors(response.data.registerUser.errors);
                     return;
                 }
                 history.push('/');
@@ -53,10 +43,20 @@ export const RegistrationPage: React.FC<IProps> = ({ history }) => {
                     type="text"
                     id="name"
                     placeholder="Johnny Appleseed"
-                    onChange={(e) => setName(e.target.value)}
+                    onChange={(e) => {
+                        setName(e.target.value);
+                        setFieldErrors(
+                            fieldErrors.filter((err) => err.field !== 'name')
+                        );
+                    }}
                     required
                     autoFocus
                 />
+                {fieldErrors
+                    .filter((err) => err.field === 'name')
+                    .map((err) => (
+                        <div>{err.message}</div>
+                    ))}
             </label>
             <br />
             <label>
@@ -66,16 +66,18 @@ export const RegistrationPage: React.FC<IProps> = ({ history }) => {
                     id="email"
                     placeholder="address@domain.com"
                     onChange={(e) => {
-                        setEmail(e.target.value);
-                        setEmailTaken(false);
+                        setEmail(e.target.value.toLowerCase());
+                        setFieldErrors(
+                            fieldErrors.filter((err) => err.field !== 'email')
+                        );
                     }}
                     required
                 />
-                {emailTaken && (
-                    <div className="err">
-                        Email address "{email}" is already taken.
-                    </div>
-                )}
+                {fieldErrors
+                    .filter((err) => err.field === 'email')
+                    .map((err) => (
+                        <div>{err.message}</div>
+                    ))}
             </label>
             <br />
             <label>
@@ -86,15 +88,19 @@ export const RegistrationPage: React.FC<IProps> = ({ history }) => {
                     placeholder="johnny123"
                     onChange={(e) => {
                         setUsername(e.target.value);
-                        setUsernameTaken(false);
+                        setFieldErrors(
+                            fieldErrors.filter(
+                                (err) => err.field !== 'username'
+                            )
+                        );
                     }}
                     required
                 />
-                {usernameTaken && (
-                    <div className="err">
-                        Username "@{username}" is already taken.
-                    </div>
-                )}
+                {fieldErrors
+                    .filter((err) => err.field === 'username')
+                    .map((err) => (
+                        <div>{err.message}</div>
+                    ))}
             </label>
             <br />
             <label>
@@ -103,9 +109,21 @@ export const RegistrationPage: React.FC<IProps> = ({ history }) => {
                     type="password"
                     id="password"
                     placeholder="********"
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={(e) => {
+                        setPassword(e.target.value);
+                        setFieldErrors(
+                            fieldErrors.filter(
+                                (err) => err.field !== 'password'
+                            )
+                        );
+                    }}
                     required
                 />
+                {fieldErrors
+                    .filter((err) => err.field === 'password')
+                    .map((err) => (
+                        <div>{err.message}</div>
+                    ))}
             </label>
             <br />
             <button type="submit">Create Account</button>
