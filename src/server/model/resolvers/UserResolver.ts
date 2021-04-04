@@ -3,7 +3,7 @@ import { Resolver, Mutation, Arg, Int, Query, Field, Args, ArgsType, ObjectType,
     UseMiddleware, MiddlewareFn } from 'type-graphql';
 import { User } from '../entity/User';
 import { IExpressContext, ContextPayload } from '../../../shared/types';
-import { createAccessToken, createRefreshToken } from '../../controller/auth';
+import { createAccessToken, createRefreshToken, sendRefreshToken } from '../../controller/auth';
 import { verify } from 'jsonwebtoken';
 import { ACCESS_TOKEN_SECRET } from '../../../shared/env';
 
@@ -79,7 +79,7 @@ export class UserResolver {
 
         // successful login
         if (!res) throw new Error("res not defined");
-        res.cookie("jid", createRefreshToken(user));
+        sendRefreshToken(res, createRefreshToken(user));
         return {
             accessToken: createAccessToken(user),
             user
@@ -90,7 +90,7 @@ export class UserResolver {
     logout(
         @Ctx() { res }: IExpressContext
     ): boolean {
-        res.cookie("jid", "");
+        sendRefreshToken(res, "");
         return true;
     }
 
