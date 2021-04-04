@@ -5,9 +5,8 @@ import { MeDocument, useLoginMutation, MeQuery } from '../../generated/graphql';
 interface IProps extends RouteComponentProps {}
 
 export const LoginPage: React.FC<IProps> = ({ history }) => {
-
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+    const [usernameOrEmail, setUsernameOrEmail] = useState('');
+    const [password, setPassword] = useState('');
 
     const [login, { error }] = useLoginMutation();
     if (error) console.error(error);
@@ -19,7 +18,7 @@ export const LoginPage: React.FC<IProps> = ({ history }) => {
                 e.preventDefault();
                 const response = await login({
                     variables: {
-                        username,
+                        usernameOrEmail,
                         password,
                     },
                     update: (store, { data }) => {
@@ -30,23 +29,29 @@ export const LoginPage: React.FC<IProps> = ({ history }) => {
                                 currentUser: data.login.user,
                             },
                         });
-                    }
+                    },
                 });
                 console.log(response);
-                history.push("/");
+                history.push('/');
             }}
         >
-            <input
-                type="text"
-                placeholder="username"
-                onChange={e => setUsername(e.target.value)}
-            />
-            <input
-                type="password"
-                placeholder="password"
-                onChange={e => setPassword(e.target.value)}
-            />
-            <button type="submit">Create user</button>
+            <label>
+                <span>Username or Email: </span>
+                <input
+                    type="text"
+                    onChange={(e) => setUsernameOrEmail(e.target.value)}
+                    required
+                />
+            </label>
+            <label>
+                <span>Password: </span>
+                <input
+                    type="password"
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                />
+            </label>
+            <button type="submit">Login</button>
         </form>
     );
 };

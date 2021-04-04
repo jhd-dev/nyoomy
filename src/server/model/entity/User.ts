@@ -1,13 +1,19 @@
-import { Field, Int, ObjectType } from "type-graphql";
-import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Field, ObjectType, ID, Directive, Int } from 'type-graphql';
+import {
+    BaseEntity,
+    Column,
+    CreateDateColumn,
+    Entity,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn,
+} from 'typeorm';
 
 @ObjectType()
 @Entity()
 export class User extends BaseEntity {
-
-    @Field(() => Int)
+    @Field(() => ID)
     @PrimaryGeneratedColumn()
-    id!: number;
+    readonly id!: string;
 
     @Field()
     @Column({
@@ -20,6 +26,7 @@ export class User extends BaseEntity {
     username!: string;
 
     @Field()
+    @Directive('@lowercase')
     @Column({
         nullable: true,
     })
@@ -40,10 +47,10 @@ export class User extends BaseEntity {
     })
     lastUpdated!: Date;
 
-    @Column("int", {
+    @Field(() => Int)
+    @Column('int', {
         default: 0,
         nullable: true,
     })
     tokenVersion!: number;
-
 }
