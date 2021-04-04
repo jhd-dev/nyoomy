@@ -32,6 +32,24 @@ class LoginResponse {
     user?: User;
 }
 
+@ObjectType()
+class UniqueFieldTakenError {
+    @Field()
+    taken!: 'email' | 'username';
+}
+
+@ObjectType()
+class RegistrationResponse implements LoginResponse {
+    @Field(() => UniqueFieldTakenError, { nullable: true })
+    error!: UniqueFieldTakenError | null;
+
+    @Field({ nullable: true })
+    accessToken?: string;
+
+    @Field(() => User, { nullable: true })
+    user?: User;
+}
+
 @ArgsType()
 class UserLoginInfo {
     @Field()
@@ -78,18 +96,30 @@ export class UserResolver {
         return await User.find();
     }
 
-    @Mutation(() => User)
+    @Mutation(() => RegistrationResponse)
     async registerUser(
         @Args() { name, email, username, password }: UserRegistrationInfo
-    ): Promise<User> {
+    ): Promise<RegistrationResponse> {
         const hashedPassword = await hash(password, 12);
-        const existingUser = User.findOne({ where: {} });
-        return await User.create({
-            name,
-            username,
-            email,
-            password: hashedPassword,
-        }).save();
+        const existingUser = await User.findOne({
+            where: [{ email }, { username }],
+        });
+        if (existingUser) {
+            return {
+                error: {
+                    taken: existingUser.email === email ? 'email' : 'username',
+                },
+            };
+        }
+        return {
+            error: null,
+            user: await User.create({
+                name,
+                username,
+                email,
+                password: hashedPassword,
+            }).save(),
+        };
     }
 
     @Mutation(() => LoginResponse)

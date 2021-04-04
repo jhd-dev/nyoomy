@@ -9,6 +9,8 @@ export const RegistrationPage: React.FC<IProps> = ({ history }) => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [usernameTaken, setUsernameTaken] = useState(false);
+    const [emailTaken, setEmailTaken] = useState(false);
 
     const [register, { error }] = useRegisterMutation();
     if (error) console.error(error);
@@ -27,11 +29,26 @@ export const RegistrationPage: React.FC<IProps> = ({ history }) => {
                     },
                 });
                 console.log(response);
+                if (!response?.data) return;
+                if (response.data.registerUser?.error) {
+                    switch (response.data.registerUser?.error.taken) {
+                        case 'email':
+                            setEmailTaken(true);
+                            break;
+                        case 'username':
+                            setUsernameTaken(true);
+                            break;
+                        default:
+                            console.error('Unknown registerUser error');
+                            break;
+                    }
+                    return;
+                }
                 history.push('/');
             }}
         >
             <label>
-                <span>Display Name </span>
+                <span>Display Name: </span>
                 <input
                     type="text"
                     id="name"
@@ -43,39 +60,55 @@ export const RegistrationPage: React.FC<IProps> = ({ history }) => {
             </label>
             <br />
             <label>
-                <span>Email Address </span>
+                <span>Email Address: </span>
                 <input
                     type="email"
                     id="email"
                     placeholder="address@domain.com"
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => {
+                        setEmail(e.target.value);
+                        setEmailTaken(false);
+                    }}
                     required
                 />
+                {emailTaken && (
+                    <div className="err">
+                        Email address "{email}" is already taken.
+                    </div>
+                )}
             </label>
             <br />
             <label>
-                <span>Username @</span>
+                <span>Username: @</span>
                 <input
                     type="text"
                     id="username"
                     placeholder="johnny123"
-                    onChange={(e) => setUsername(e.target.value)}
+                    onChange={(e) => {
+                        setUsername(e.target.value);
+                        setUsernameTaken(false);
+                    }}
                     required
                 />
+                {usernameTaken && (
+                    <div className="err">
+                        Username "@{username}" is already taken.
+                    </div>
+                )}
             </label>
             <br />
             <label>
-                <span>Password </span>
+                <span>Password: </span>
                 <input
                     type="password"
                     id="password"
-                    placeholder="password"
+                    placeholder="********"
                     onChange={(e) => setPassword(e.target.value)}
                     required
                 />
             </label>
             <br />
-            <button type="submit">Register</button>
+            <button type="submit">Create Account</button>
         </form>
     );
 };
