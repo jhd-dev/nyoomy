@@ -42,53 +42,53 @@ const requestLink = new ApolloLink((operation, forward): Observable<any> => (
 ));
 
 const client = new ApolloClient({
-  link: ApolloLink.from([
-    new TokenRefreshLink({
-      accessTokenField: "accessToken",
-      isTokenValidOrUndefined: (): boolean => {
-            const token = getAccessToken();
-            if (!token) return true;
+    link: ApolloLink.from([
+        new TokenRefreshLink({
+            accessTokenField: "accessToken",
+            isTokenValidOrUndefined: (): boolean => {
+                const token = getAccessToken();
+                if (!token) return true;
 
-            try {
-                const { exp } = jwtDecode<JwtPayload>(token);
-                return (!!exp && Date.now() < exp * 1000);
-            } catch {
-                return false;
-            }
-      },
-      fetchAccessToken: () => {
-        return fetch(window.location.origin + "/refresh_token", {
-          method: "POST",
-          credentials: "include"
-        });
-      },
-      handleFetch: (accessToken: string): void => {
-        setAccessToken(accessToken);
-      },
-      handleError: (err: any): void => {
-        console.warn("Your refresh token is invalid. Try to relogin");
-        console.error(err);
-      },
-    }),
-    onError(({ graphQLErrors, networkError }) => {
-      console.warn(graphQLErrors);
-      console.warn(networkError);
-    }),
-    requestLink,
-    new HttpLink({
-        uri: window.location.origin + "/graphql",
-        credentials: "include",
-        fetch,
-    }),
-  ]),
-  cache,
+                try {
+                    const { exp } = jwtDecode<JwtPayload>(token);
+                    return (!!exp && Date.now() < exp * 1000);
+                } catch {
+                    return false;
+                }
+            },
+            fetchAccessToken: () => {
+                return fetch(window.location.origin + "/refresh_token", {
+                    method: "POST",
+                    credentials: "include"
+                });
+            },
+            handleFetch: (accessToken: string): void => {
+                setAccessToken(accessToken);
+            },
+            handleError: (err: any): void => {
+                console.warn("Your refresh token is invalid. Try to relogin");
+                console.error(err);
+            },
+        }),
+        onError(({ graphQLErrors, networkError }) => {
+            console.warn(graphQLErrors);
+            console.warn(networkError);
+        }),
+        requestLink,
+        new HttpLink({
+            uri: window.location.origin + "/graphql",
+            credentials: "include",
+            fetch,
+        }),
+    ]),
+    cache,
 });
 
 interface IProps {}
 
 export const App: React.FC<IProps> = () => {
 
-    const [loading, setLoading] = useState(true);
+    const [ loading, setLoading ] = useState(true);
 
     useEffect(() => {
         fetch(window.location.origin + "/refresh_token", {
@@ -97,6 +97,7 @@ export const App: React.FC<IProps> = () => {
         }).then(async x => {
             const { accessToken } = await x.json();
             console.log(accessToken);
+            setAccessToken(accessToken);
             setLoading(false);
         });
     }, []);

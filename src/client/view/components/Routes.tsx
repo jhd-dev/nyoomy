@@ -3,7 +3,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { MainPage } from './MainPage';
 import { RegistrationPage } from './RegistrationPage';
 import { LoginPage } from './LoginPage';
-import Header from './Header';
+import { Header } from './Header';
 
 export const Routes: React.FC = () => {
     return (

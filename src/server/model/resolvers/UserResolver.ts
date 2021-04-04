@@ -13,7 +13,7 @@ class LoginResponse {
     accessToken?: string;
 
     @Field(() => User)
-    user?: User
+    user?: User;
 }
 
 @ArgsType()
@@ -87,12 +87,17 @@ export class UserResolver {
     }
 
     @Mutation(() => Boolean)
-    logout(): boolean {
+    logout(
+        @Ctx() { res }: IExpressContext
+    ): boolean {
+        res.cookie("jid", "");
         return true;
     }
 
     @Query(() => User, { nullable: true })
-    async currentUser(@Ctx() context: IExpressContext): Promise<User | null> {
+    async currentUser(
+        @Ctx() context: IExpressContext
+    ): Promise<User | null> {
         const authorization = context.req.headers["authorization"];
         if (!authorization) return null;
 
