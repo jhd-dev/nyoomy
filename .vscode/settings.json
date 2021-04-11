@@ -2,16 +2,42 @@
     "cSpell.words": [
         "GraphQLID",
         "Nyoomy",
+        "cockroachdb",
         "fontawesome",
         "fortawesome",
         "graphiql",
+        "mariadb",
+        "oper",
         "overnightjs",
         "postgres",
+        "relogin",
+        "sqljs",
         "testid",
         "typeorm"
     ],
     "editor.rulers": [100],
     "[git-commit]": {
         "editor.rulers": [50]
-    }
+    },
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true
+    },
+    "explorerExclude.backup": null,
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 4000,
+            "askForPassword": true,
+            "driver": "PostgreSQL",
+            "name": "MyPGConnection",
+            "username": "postgres",
+            "database": "GraphQLCRUD"
+        }
+    ],
+    "crosshair.enabled": true
 }
