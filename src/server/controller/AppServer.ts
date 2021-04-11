@@ -1,38 +1,38 @@
 //import * as path from "path";
-import * as express from "express";
-import * as bodyParser from "body-parser";
-import { Server } from "@overnightjs/core";
-import cors from "cors";
-import { createConnection } from "typeorm";
-import AppController from "./AppController";
-import getSchema from "../model/getSchema";
-import { DB_USERNAME, DB_PASSWORD, DB_NAME } from "../../shared/env";
+import * as express from 'express';
+import * as bodyParser from 'body-parser';
+import { Server } from '@overnightjs/core';
+import cors from 'cors';
+import { createConnection } from 'typeorm';
+import AppController from './AppController';
+import getSchema from '../model/getSchema';
+import { DB_USERNAME, DB_PASSWORD, DB_NAME } from '../../shared/env';
 import { User } from '../model/entity/User';
-import { DATABASE_TYPE } from '../../shared/Constants';
+import { DATABASE_TYPE } from '../../shared/constants';
 import { IExpressContext } from '../../shared/types';
-import { ApolloServer } from "apollo-server-express";
-import cookieParser from "cookie-parser";
+import { ApolloServer } from 'apollo-server-express';
+import cookieParser from 'cookie-parser';
 
 export default class AppServer extends Server {
-
     private readonly CONTROLLER_TYPES = [AppController];
-    public readonly START_MSG = "Started on port: ";
+    public readonly START_MSG = 'Started on port: ';
 
     constructor() {
         super(true); // Always show logs
-        this.app.use(cors({
-            origin: "http://localhost:4000",
-            credentials: true,
-        }));
+        this.app.use(
+            cors({
+                origin: 'http://localhost:4000',
+                credentials: true,
+            })
+        );
         this.app.use(cookieParser());
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: true }));
-        this.app.use("/", express.static("dist"));
+        this.app.use('/', express.static('dist'));
     }
 
     public async start(port: number): Promise<AppServer> {
-        await this.setupDatabaseConnection()
-            .catch(err => console.error(err));
+        await this.setupDatabaseConnection().catch((err) => console.error(err));
         this.setupControllers();
         let listening = false;
         while (!listening) {
@@ -72,8 +72,11 @@ export default class AppServer extends Server {
 
         const apolloServer = new ApolloServer({
             schema: await getSchema(),
-            context: ({ req, res, payload }: IExpressContext): IExpressContext => ({ req, res,
-                 payload }),
+            context: ({
+                req,
+                res,
+                payload,
+            }: IExpressContext): IExpressContext => ({ req, res, payload }),
         });
 
         apolloServer.applyMiddleware({
@@ -81,5 +84,4 @@ export default class AppServer extends Server {
             cors: true,
         });
     }
-
 }
