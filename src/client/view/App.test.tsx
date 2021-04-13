@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { App } from './App';
 
 test('renders learn react link', () => {
-  render(<App />);
-  const ele = screen.getByTestId("App");
-  expect(ele).toBeDefined();
+    render(<App />);
+    const ele = screen.getByTestId('App');
+    expect(ele).toBeDefined();
 });

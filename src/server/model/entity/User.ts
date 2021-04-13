@@ -12,7 +12,7 @@ import {
 @Entity()
 export class User extends BaseEntity {
     @Field(() => ID)
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn('uuid')
     readonly id!: string;
 
     @Field()
@@ -56,4 +56,9 @@ export class User extends BaseEntity {
         nullable: true,
     })
     tokenVersion!: number;
+
+    @Column({
+        nullable: true,
+    })
+    resetPasswordToken!: string;
 }

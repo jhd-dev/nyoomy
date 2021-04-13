@@ -81,7 +81,7 @@ export const RegistrationPage: React.FC<IProps> = ({ history }) => {
                         (err) => err.field === 'username'
                     )}
                     handleChange={handleChangeBuilder('username', setUsername)}
-                    placeholder="johnny123"
+                    placeholder="johnny_123"
                     required
                 >
                     <InputGroup.Prepend>

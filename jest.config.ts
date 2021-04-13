@@ -3,7 +3,7 @@ import { defaults } from 'jest-config';
 import 'reflect-metadata';
 
 // https://jestjs.io/docs/configuration
-const getJestConfig = async (): Promise<Config.InitialOptions> => ({
+const getJestConfig = (): Config.InitialOptions => ({
     verbose: false,
     moduleFileExtensions: [...defaults.moduleFileExtensions, 'ts', 'tsx'],
     transform: {

@@ -57,6 +57,7 @@ export const LoginPage: React.FC<IProps> = ({ history }) => {
                     required
                 />
                 <Button type="submit">Login</Button>
+                <Button type=""></Button>
             </Container>
         </Form>
     );

@@ -1,4 +1,3 @@
-//import * as path from "path";
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import { Server } from '@overnightjs/core';
@@ -8,7 +7,7 @@ import AppController from './AppController';
 import getSchema from '../model/getSchema';
 import { DB_USERNAME, DB_PASSWORD, DB_NAME } from '../../shared/env';
 import { User } from '../model/entity/User';
-import { DATABASE_TYPE } from '../../shared/constants';
+import { DATABASE_TYPE, PORT } from '../../shared/constants';
 import { IExpressContext } from '../../shared/types';
 import { ApolloServer } from 'apollo-server-express';
 import cookieParser from 'cookie-parser';
@@ -21,7 +20,7 @@ export default class AppServer extends Server {
         super(true); // Always show logs
         this.app.use(
             cors({
-                origin: 'http://localhost:4000',
+                origin: `http://localhost:${PORT}`,
                 credentials: true,
             })
         );
@@ -76,7 +75,11 @@ export default class AppServer extends Server {
                 req,
                 res,
                 payload,
-            }: IExpressContext): IExpressContext => ({ req, res, payload }),
+            }: IExpressContext): IExpressContext => ({
+                req,
+                res,
+                payload,
+            }),
         });
 
         apolloServer.applyMiddleware({

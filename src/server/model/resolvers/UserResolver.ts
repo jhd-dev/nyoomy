@@ -24,15 +24,26 @@ import { UserLoginInfo } from './UserLoginInfo';
 import { LoginResponse } from './LoginResponse';
 import { RegistrationResponse } from './RegistrationResponse';
 import { validateRegistration } from './validateRegistration';
+import { sendEmail } from '../../utils/sendEmail';
 
+/**
+ * Verifies that the client's context has a valid access token.
+ * @const
+ * @type {MiddlewareFn<IExpressContext>}
+ * @throws when the user is not authenticated
+ */
 const isAuth: MiddlewareFn<IExpressContext> = ({ context }, next) => {
     try {
-        const authorization = context.req.headers['authorization'];
+        const authorization: string | undefined =
+            context.req.headers['authorization'];
         if (!authorization) throw new Error('Not authenticated.');
 
-        const token = authorization.split(' ')[1];
-        const payload = verify(token, ACCESS_TOKEN_SECRET);
-        context.payload = payload as ContextPayload;
+        const token: string = authorization.split(' ')[1];
+        const payload: ContextPayload = verify(
+            token,
+            ACCESS_TOKEN_SECRET
+        ) as ContextPayload;
+        context.payload = payload;
         return next();
     } catch (err) {
         console.error(err);
@@ -40,13 +51,29 @@ const isAuth: MiddlewareFn<IExpressContext> = ({ context }, next) => {
     }
 };
 
+/**
+ * GraphQL resolver for the user table.
+ * @export
+ * @class UserResolver
+ */
 @Resolver()
 export class UserResolver {
+    /**
+     * Queries **all** users in the database.
+     * @async
+     * @returns {Promise<User[]>} a list of all users in the database
+     */
     @Query(() => [User])
     async getAllUsers(): Promise<User[]> {
-        return await User.find();
+        return User.find();
     }
 
+    /**
+     * Attempts to add a user to the database,
+     * @param {UserRegistrationInfo} param0 { name, email, username, password }
+     *      @param
+     * @returns {Promise<RegistrationResponse>} the user
+     */
     @Mutation(() => RegistrationResponse)
     async registerUser(
         @Args() { name, email, username, password }: UserRegistrationInfo
@@ -124,14 +151,38 @@ export class UserResolver {
         }
     }
 
-    // @Mutation(() => Boolean)
-    // forgotPassword(
-    //     @Arg('email') email: string,
-    //     @Ctx() { req }: IExpressContext
-    // ): boolean {
-    //     const user = User.findOne({ where: { email } });
-    //     return true;
-    // }
+    @Mutation(() => Boolean)
+    async forgotPassword(@Arg('email') email: string): Promise<boolean> {
+        const user = await User.findOne({ where: { email } });
+        if (!user) return false; // email not in DB
+
+        const token = '';
+
+        await sendEmail(
+            email,
+            'Forgot password',
+            `<a href="http://localhost:4000/reset-password/${token}">Click here to reset your password.</a>`
+        );
+        return true;
+    }
+
+    @Mutation(() => Boolean)
+    async resetPassword(
+        @Arg('email') email: string
+        //@Arg('password') password: string
+    ): Promise<boolean> {
+        const user = await User.findOne({ where: { email } });
+        if (!user) return false; // email not in DB
+
+        const token = '';
+
+        await sendEmail(
+            email,
+            'Forgot password',
+            `<a href="http://localhost:4000/reset-password/${token}">Click here to reset your password.</a>`
+        );
+        return true;
+    }
 
     @Mutation(() => Boolean)
     async deleteUserById(@Arg('id', () => ID) id: string): Promise<boolean> {

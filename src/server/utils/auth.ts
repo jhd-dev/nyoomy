@@ -13,13 +13,17 @@ export const createAccessToken = (user: User): string => {
 };
 
 export const createRefreshToken = (user: User): string => {
-    return sign({ userId: user.id, tokenVersion: user.tokenVersion }, REFRESH_TOKEN_SECRET, {
-        expiresIn: REFRESH_TOKEN_EXPIRATION,
-    });
+    return sign(
+        { userId: user.id, tokenVersion: user.tokenVersion },
+        REFRESH_TOKEN_SECRET,
+        {
+            expiresIn: REFRESH_TOKEN_EXPIRATION,
+        }
+    );
 };
 
-export const sendRefreshToken = (res: Response, token: string) => {
-    res.cookie('jid', token, {
+export const sendRefreshToken = (res: Response, token: string): Response => {
+    return res.cookie(REFRESH_TOKEN_SECRET, token, {
         httpOnly: true,
         path: '/refresh_token',
     });

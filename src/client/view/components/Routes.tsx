@@ -12,10 +12,14 @@ export const Routes: React.FC = () => {
                 <Header />
                 <Switch>
                     <Route exact path="/" component={MainPage} />
-                    <Route exact path="/register" component={RegistrationPage} />
+                    <Route
+                        exact
+                        path="/register"
+                        component={RegistrationPage}
+                    />
                     <Route exact path="/login" component={LoginPage} />
                 </Switch>
             </div>
         </BrowserRouter>
-    )
+    );
 };
