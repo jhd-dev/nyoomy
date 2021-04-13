@@ -1,11 +1,11 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import { MainPage } from './MainPage';
-import { RegistrationPage } from './RegistrationPage';
-import { LoginPage } from './LoginPage';
-import { Header } from './Header';
+import MainPage from './MainPage';
+import RegistrationPage from './RegistrationPage';
+import LoginPage from './LoginPage';
+import Header from '../components/Header';
 
-export const Routes: React.FC = () => {
+const Routes: React.FC = () => {
     return (
         <BrowserRouter>
             <div>
@@ -23,3 +23,5 @@ export const Routes: React.FC = () => {
         </BrowserRouter>
     );
 };
+
+export default Routes;

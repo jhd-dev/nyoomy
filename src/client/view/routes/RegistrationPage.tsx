@@ -6,11 +6,9 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
-import { InputTextField } from './InputTextField';
+import InputTextField from '../components/InputTextField';
 
-interface IProps extends RouteComponentProps {}
-
-export const RegistrationPage: React.FC<IProps> = ({ history }) => {
+const RegistrationPage: React.FC<RouteComponentProps> = ({ history }) => {
     const [name, setName] = useState('');
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -44,7 +42,7 @@ export const RegistrationPage: React.FC<IProps> = ({ history }) => {
         field: string,
         setter: (value: React.SetStateAction<string>) => void
     ): ChangeEventHandler => (e: any): void => {
-        setter(e.target.value);
+        setter(e?.target?.value);
         setFieldErrors(fieldErrors.filter((err) => err.field !== field));
     };
 
@@ -106,3 +104,5 @@ export const RegistrationPage: React.FC<IProps> = ({ history }) => {
         </Form>
     );
 };
+
+export default RegistrationPage;

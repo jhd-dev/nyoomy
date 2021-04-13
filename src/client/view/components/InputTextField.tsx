@@ -17,7 +17,7 @@ interface InputTextFieldProps {
     children?: Partial<Element>;
 }
 
-export const InputTextField: React.FC<InputTextFieldProps> = ({
+const InputTextField: React.FC<InputTextFieldProps> = ({
     field,
     inputType,
     label,
@@ -50,10 +50,15 @@ export const InputTextField: React.FC<InputTextFieldProps> = ({
             </Row>
             {!!errors &&
                 errors.map((err, i) => (
-                    <Form.Control.Feedback type="invalid" key={err.field + i}>
+                    <Form.Control.Feedback
+                        type="invalid"
+                        key={err.field + String(i)}
+                    >
                         {err.message}
                     </Form.Control.Feedback>
                 ))}
         </Form.Group>
     );
 };
+
+export default InputTextField;

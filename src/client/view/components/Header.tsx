@@ -6,9 +6,7 @@ import { Link } from 'react-router-dom';
 import { useMeQuery, useLogoutMutation } from '../../generated/graphql';
 import { setAccessToken } from '../utils/accessToken';
 
-interface IProps {}
-
-export const Header: React.FC<IProps> = () => {
+const Header: React.FC = () => {
     const { data, loading } = useMeQuery({ fetchPolicy: 'network-only' });
     const [logout, { client }] = useLogoutMutation();
 
@@ -24,7 +22,7 @@ export const Header: React.FC<IProps> = () => {
                     onClick={async () => {
                         await logout();
                         setAccessToken('');
-                        await client!.resetStore();
+                        await client.resetStore();
                     }}
                 >
                     Logout
@@ -51,3 +49,5 @@ export const Header: React.FC<IProps> = () => {
         </header>
     );
 };
+
+export default Header;

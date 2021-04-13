@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import fetch from 'cross-fetch';
 import './style/App.scss';
-import { Routes } from './components/Routes';
+import Routes from './routes/Routes';
 import { getAccessToken, setAccessToken } from './utils/accessToken';
 import {
     ApolloClient,

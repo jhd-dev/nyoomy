@@ -4,11 +4,9 @@ import { MeDocument, useLoginMutation, MeQuery } from '../../generated/graphql';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
-import { InputTextField } from './InputTextField';
+import InputTextField from '../components/InputTextField';
 
-interface IProps extends RouteComponentProps {}
-
-export const LoginPage: React.FC<IProps> = ({ history }) => {
+const LoginPage: React.FC<RouteComponentProps> = ({ history }) => {
     const [usernameOrEmail, setUsernameOrEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -43,7 +41,9 @@ export const LoginPage: React.FC<IProps> = ({ history }) => {
                     field="usernameOrEmail"
                     label="Username/Email"
                     inputType="text"
-                    handleChange={(e) => setUsernameOrEmail(e.target.value)}
+                    handleChange={(e: any) =>
+                        setUsernameOrEmail(e.target.value)
+                    }
                     placeholder="Username or Email Address"
                     required
                     autoFocus
@@ -52,7 +52,7 @@ export const LoginPage: React.FC<IProps> = ({ history }) => {
                     field="password"
                     label="Password"
                     inputType="password"
-                    handleChange={(e) => setPassword(e.target.value)}
+                    handleChange={(e: any) => setPassword(e.target.value)}
                     placeholder="********"
                     required
                 />
@@ -62,3 +62,5 @@ export const LoginPage: React.FC<IProps> = ({ history }) => {
         </Form>
     );
 };
+
+export default LoginPage;
