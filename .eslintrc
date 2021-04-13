@@ -1,0 +1,91 @@
+{
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaVersion": 2020,
+        "sourceType": "module"
+    },
+    "env": {
+        "es6": true
+    },
+    "plugins": ["@typescript-eslint", "react-hooks"],
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "prettier/@typescript-eslint",
+        "plugin:prettier/recommended"
+    ],
+    "rules": {
+        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/exhaustive-deps": "warn",
+        "react/prop-types": "off",
+        "max-len": [
+            "warn",
+            {
+                "code": 100,
+                "tabWidth": 4,
+                "ignoreStrings": false
+            }
+        ],
+        "max-classes-per-file": ["warn", 1],
+        "no-eval": "error",
+        "no-invalid-this": [
+            "error",
+            {
+                "capIsConstructor": false
+            }
+        ],
+        "no-return-await": "error",
+        "no-throw-literal": "error",
+        "require-await": "error",
+        "no-unused-expressions": "error",
+        "no-unneeded-ternary": [
+            "error",
+            {
+                "defaultAssignment": false
+            }
+        ],
+        "default-case-last": "error",
+        "default-param-last": "error",
+        "no-param-reassign": "error",
+        "no-shadow": [
+            "error",
+            {
+                "builtInGlobals": true,
+                "hoist": "functions",
+                "allow": ["done"]
+            }
+        ],
+        "no-lonely-if": "warn",
+        "space-unary-ops": [
+            "error",
+            {
+                "words": true,
+                "nonwords": true,
+                "overrides": {
+                    "!": false,
+                    "!!": false
+                }
+            }
+        ],
+        "prefer-rest-params": "error",
+        "no-var": "error",
+        "prefer-arrow-callback": "warn",
+        "@typescript-eslint/typedef": [
+            "warn",
+            "call-signature",
+            "arrow-call-signature",
+            "parameter",
+            "arrow-parameter",
+            "variable-declaration-ignore-function",
+            "member-variable-declaration"
+        ]
+    },
+    "settings": {
+        "react": {
+            "pragma": "React",
+            "version": "detect"
+        }
+    }
+}
