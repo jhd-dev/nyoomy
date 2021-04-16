@@ -5,13 +5,14 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import InputTextField from '../components/InputTextField';
+import { IInputEvent } from '../../../shared/types';
 
 const LoginPage: React.FC<RouteComponentProps> = ({ history }) => {
     const [usernameOrEmail, setUsernameOrEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const [login, { error }] = useLoginMutation();
-    if (error) console.error(error);
+    if (error !== undefined) console.error(error);
 
     const handleSubmit = async (e: FormEvent): Promise<void> => {
         e.preventDefault();
@@ -21,7 +22,7 @@ const LoginPage: React.FC<RouteComponentProps> = ({ history }) => {
                 password,
             },
             update: (store, { data }) => {
-                if (!data) return null;
+                if (data == null) return null;
                 store.writeQuery<MeQuery>({
                     query: MeDocument,
                     data: {
@@ -41,7 +42,7 @@ const LoginPage: React.FC<RouteComponentProps> = ({ history }) => {
                     field="usernameOrEmail"
                     label="Username/Email"
                     inputType="text"
-                    handleChange={(e: any) =>
+                    handleChange={(e: IInputEvent) =>
                         setUsernameOrEmail(e.target.value)
                     }
                     placeholder="Username or Email Address"
@@ -52,7 +53,9 @@ const LoginPage: React.FC<RouteComponentProps> = ({ history }) => {
                     field="password"
                     label="Password"
                     inputType="password"
-                    handleChange={(e: any) => setPassword(e.target.value)}
+                    handleChange={(e: IInputEvent) =>
+                        setPassword(e.target.value)
+                    }
                     placeholder="********"
                     required
                 />

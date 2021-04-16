@@ -35,7 +35,7 @@ export const validateRegistration = async ({
     const existingUser = await User.findOne({
         where: [{ email }, { username }],
     });
-    if (existingUser) {
+    if (existingUser !== undefined) {
         const takenField = existingUser.email === email ? 'email' : 'username';
         const takenFieldCapitalized =
             takenField[0].toUpperCase() + takenField.substring(1);

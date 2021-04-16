@@ -4,14 +4,14 @@ import type { User } from '../entity/User';
 @ArgsType()
 export class UserRegistrationInfo implements Partial<User> {
     @Field()
-    name!: string;
+    public name!: string;
 
     @Field()
-    email!: string;
+    public email!: string;
 
     @Field()
-    username!: string;
+    public username!: string;
 
     @Field()
-    password!: string;
+    public password!: string;
 }

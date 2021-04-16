@@ -13,7 +13,7 @@ const Header: React.FC = () => {
     let userStatus: JSX.Element | null;
     if (loading) {
         userStatus = null;
-    } else if (data && data?.currentUser) {
+    } else if (data?.currentUser != null) {
         userStatus = (
             <div>
                 <div>Logged in as: {data.currentUser.name}</div>

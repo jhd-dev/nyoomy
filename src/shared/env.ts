@@ -1,92 +1,12 @@
-import dotenv from 'dotenv';
-import { NodeEnv, NodeEnvString } from './types';
+/* eslint-ignore @typescript-eslint/no-unnecessary-type-assertions */
 
-dotenv.config();
+import { config } from 'dotenv';
 
-type EnvGetterFunc<T> = (propName: string, required?: boolean) => T | undefined;
+config({
+    path: '.env.local',
+});
 
-/**
- * Returns the enum value for the current node environment based on process.env.NODE_ENV.
- *
- * @exports
- * @static
- * @returns {NodeEnv} the enum value associated with the current node environment
- * @throws {Error} when the value is not recognized as one of "development", "production", or
- * "test"
- */
-export const getNodeEnv = (): NodeEnv => {
-    const s = getEnvString('NODE_ENV', true) as NodeEnvString;
-    switch (s) {
-        case 'development':
-            return NodeEnv.DEVELOPMENT;
-        case 'production':
-            return NodeEnv.PRODUCTION;
-        case 'test':
-            return NodeEnv.TEST;
-        default:
-            throw new Error(`Unrecognized NODE_ENV value "${s}"`);
-    }
-};
-
-/**
- * Reads specified data from the process environment as a string.
- *
- * @exports
- * @static
- * @param {string} propName - the name of the property to query
- * @param {boolean?} required - whether to throw an error in the case that there is no property
- * matching propName
- * @returns {string} the value in the process environment if it exists, or undefined otherwise
- * @throws {Error} when required is true and the property is undefined
- */
-export const getEnvString: EnvGetterFunc<string> = (
-    propName: string,
-    required: boolean = true
-): string | undefined => {
-    const input: string | undefined =
-        propName in process.env ? process.env[propName] : undefined;
-    if (input !== undefined) return input.trim();
-    if (!required) return undefined;
-    throw new Error(`Environmental var ${propName} is missing.`);
-};
-
-/**
- * Reads specified data from the process environment as an integer.
- *
- * @exports
- * @static
- * @param {string} propName - the name of the property to query
- * @param {boolean?} required - whether to throw an error in the case that there is no property
- * matching propName
- * @returns {number} the value in the process environment if it exists, or undefined otherwise
- * @throws {Error} when required is true and the property is undefined
- */
-export const getEnvInt: EnvGetterFunc<number> = (
-    prop: string,
-    required: boolean = true
-): number | undefined => {
-    const s: string | undefined = getEnvString(prop, required);
-    return s === undefined ? s : parseInt(s);
-};
-
-/**
- * Reads specified data from the process environment as a floating point value.
- *
- * @exports
- * @static
- * @param {string} propName - the name of the property to query
- * @param {boolean?} required - whether to throw an error in the case that there is no property
- * matching propName
- * @returns {number} the value in the process environment if it exists, or undefined otherwise
- * @throws {Error} when required is true and the property is undefined
- */
-export const getEnvFloat: EnvGetterFunc<number> = (
-    prop: string,
-    required: boolean = true
-): number | undefined => {
-    const s: string | undefined = getEnvString(prop, required);
-    return s === undefined ? s : parseFloat(s);
-};
+const DEFAULT_PORT = 4000;
 
 /**
  * The enum value associated with the current node environment (NODE_ENV).
@@ -94,7 +14,7 @@ export const getEnvFloat: EnvGetterFunc<number> = (
  * @exports
  * @constant
  */
-export const NODE_ENV: NodeEnv = getNodeEnv();
+export const NODE_ENV: string = process.env.NODE_ENV as string;
 
 /**
  * The port to attempt to host the server on.
@@ -102,7 +22,8 @@ export const NODE_ENV: NodeEnv = getNodeEnv();
  * @exports
  * @constant
  */
-export const PORT: number | undefined = getEnvInt('PORT', false);
+export const PORT: number =
+    process.env.PORT === undefined ? DEFAULT_PORT : parseInt(process.env.PORT);
 
 /**
  * The name of the database used to store the model.
@@ -110,7 +31,7 @@ export const PORT: number | undefined = getEnvInt('PORT', false);
  * @exports
  * @constant
  */
-export const DB_NAME: string = getEnvString('DB_NAME', true) as string;
+export const DB_NAME: string = process.env.DB_NAME as string;
 
 /**
  * The username used for the server to log into the database.
@@ -118,7 +39,7 @@ export const DB_NAME: string = getEnvString('DB_NAME', true) as string;
  * @exports
  * @constant
  */
-export const DB_USERNAME: string = getEnvString('DB_USERNAME', true) as string;
+export const DB_USERNAME: string = process.env.DB_USERNAME as string;
 
 /**
  * The password used for the server to log into the database.
@@ -126,7 +47,7 @@ export const DB_USERNAME: string = getEnvString('DB_USERNAME', true) as string;
  * @exports
  * @constant
  */
-export const DB_PASSWORD: string = getEnvString('DB_PASSWORD', true) as string;
+export const DB_PASSWORD: string = process.env.DB_PASSWORD as string;
 
 /**
  * The secret key used to generate access tokens for user authentication.
@@ -134,10 +55,8 @@ export const DB_PASSWORD: string = getEnvString('DB_PASSWORD', true) as string;
  * @exports
  * @constant
  */
-export const ACCESS_TOKEN_SECRET: string = getEnvString(
-    'ACCESS_TOKEN_SECRET',
-    true
-) as string;
+export const ACCESS_TOKEN_SECRET: string = process.env
+    .ACCESS_TOKEN_SECRET as string;
 
 /**
  * The secret key used to generate refresh tokens for user authentication.
@@ -145,7 +64,5 @@ export const ACCESS_TOKEN_SECRET: string = getEnvString(
  * @exports
  * @constant
  */
-export const REFRESH_TOKEN_SECRET: string = getEnvString(
-    'REFRESH_TOKEN_SECRET',
-    true
-) as string;
+export const REFRESH_TOKEN_SECRET: string = process.env
+    .REFRESH_TOKEN_SECRET as string;

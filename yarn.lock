@@ -2757,6 +2757,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/dotenv-webpack@npm:^7.0.1":
+  version: 7.0.1
+  resolution: "@types/dotenv-webpack@npm:7.0.1"
+  dependencies:
+    "@types/webpack": ^4
+  checksum: 6884109e62c6a14371c132639641b9721e10d77aa5a1aabcbde2fd31f591ef84d8b1b7c83869e97d605b306133958d9fadedf204fa472efd47d3434a011402dd
+  languageName: node
+  linkType: hard
+
 "@types/eslint-scope@npm:^3.7.0":
   version: 3.7.0
   resolution: "@types/eslint-scope@npm:3.7.0"
@@ -2802,7 +2811,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/express@npm:*, @types/express@npm:4.17.11":
+"@types/express@npm:*, @types/express@npm:4.17.11, @types/express@npm:^4.17.11":
   version: 4.17.11
   resolution: "@types/express@npm:4.17.11"
   dependencies:
@@ -2926,13 +2935,6 @@ __metadata:
   dependencies:
     "@types/istanbul-lib-report": "*"
   checksum: 8aee794ea2e8065aa83e0a1017420068d10110f5e67f8473f5751e74462509306c451f79db3856e6848507519bf1d4de7d101daede6539701cc4d74b4646acd9
-  languageName: node
-  linkType: hard
-
-"@types/jasmine@npm:^3.6.6":
-  version: 3.6.9
-  resolution: "@types/jasmine@npm:3.6.9"
-  checksum: 44e5b2af1a8eec71154eb5eb4eb53d15eda3837f0be38836bfe7e0dcb45f427ce09ce295fd82af006ac77fb7a1b571b09a2de16eded36ae2d5a3570e1836a2d3
   languageName: node
   linkType: hard
 
@@ -5079,7 +5081,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"body-parser@npm:1.19.0, body-parser@npm:^1.18.3, body-parser@npm:^1.19.0":
+"body-parser@npm:1.19.0, body-parser@npm:^1.18.3":
   version: 1.19.0
   resolution: "body-parser@npm:1.19.0"
   dependencies:
@@ -5675,6 +5677,13 @@ __metadata:
   version: 0.6.0
   resolution: "cjs-module-lexer@npm:0.6.0"
   checksum: 333671db7fb916d9c569a52fba714a86051881c69a4df784a07cb1dfec2a1796c7bcd7ba46ff9035cccb6e7aaff612a83f6505437c01a5ae14c4ebc6c36f762c
+  languageName: node
+  linkType: hard
+
+"class-transformer@npm:^0.4.0":
+  version: 0.4.0
+  resolution: "class-transformer@npm:0.4.0"
+  checksum: 915db337796f6a4d0c2c09bf1c0214eff01e1247836524fdaa170f0c3457f4b5f9ece1068cdb2667e42e01572aa1b08b9995c298f2956d1c8a84884c8d5ea5ff
   languageName: node
   linkType: hard
 
@@ -10260,25 +10269,6 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"jasmine-core@npm:~3.7.0":
-  version: 3.7.1
-  resolution: "jasmine-core@npm:3.7.1"
-  checksum: dd89c934653b893f2a2c0b5977286177d47343bed37f77ba4b1a6ee7c357f63a5d3040ca540e98f69f3438436d689449c4b3b2e3183cc854dd0cfb5f601206c6
-  languageName: node
-  linkType: hard
-
-"jasmine@npm:^3.6.4":
-  version: 3.7.0
-  resolution: "jasmine@npm:3.7.0"
-  dependencies:
-    glob: ^7.1.6
-    jasmine-core: ~3.7.0
-  bin:
-    jasmine: bin/jasmine.js
-  checksum: 0a7d69988c4bfbedc0057bdfb8ef94447389469085c1ae6e6c1a99020f12bbbc4b9397e8bf1e247c9597431a5514e0812800f249df3f05babc3316d6af98156c
-  languageName: node
-  linkType: hard
-
 "jest-changed-files@npm:^26.6.2":
   version: 26.6.2
   resolution: "jest-changed-files@npm:26.6.2"
@@ -12354,8 +12344,9 @@ fsevents@^1.2.7:
     "@types/cookie-parser": ^1.4.2
     "@types/cors": ^2.8.10
     "@types/cssnano": ^4.0.0
+    "@types/dotenv-webpack": ^7.0.1
+    "@types/express": ^4.17.11
     "@types/graphql-date": ^1.0.5
-    "@types/jasmine": ^3.6.6
     "@types/jest": ^26.0.22
     "@types/jsonwebtoken": ^8.5.1
     "@types/jwt-decode": ^3.1.0
@@ -12385,8 +12376,8 @@ fsevents@^1.2.7:
     babel-loader: ^8.2.2
     babel-plugin-transform-class-properties: ^6.24.1
     bcryptjs: ^2.4.3
-    body-parser: ^1.19.0
     bootstrap: ^4.6.0
+    class-transformer: ^0.4.0
     class-validator: ^0.13.1
     clean-webpack-plugin: ^3.0.0
     concurrently: ^6.0.0
@@ -12411,7 +12402,6 @@ fsevents@^1.2.7:
     graphql-tag: ^2.11.0
     html-webpack-plugin: ^5.2.0
     http-status-codes: ^2.1.4
-    jasmine: ^3.6.4
     jest: ^26.6.3
     jest-transform-stub: ^2.0.0
     jsonwebtoken: ^8.5.1
@@ -12426,7 +12416,6 @@ fsevents@^1.2.7:
     postcss-import: ^14.0.0
     postcss-loader: ^5.1.0
     prettier: ^2.2.1
-    prettier-webpack-plugin: ^1.2.0
     react: ^17.0.1
     react-bootstrap: ^1.5.2
     react-dev-utils: ^11.0.4
@@ -12440,7 +12429,6 @@ fsevents@^1.2.7:
     type-graphql: ^1.1.1
     typeorm: ^0.2.32
     typescript: ^4.2.4
-    web-vitals: ^1.1.0
     webpack: ^5.31.2
     webpack-cli: ^4.5.0
     webpack-dev-server: ^3.11.2
@@ -13863,16 +13851,6 @@ fsevents@^1.2.7:
   dependencies:
     fast-diff: ^1.1.2
   checksum: 6d698b9c8dc28e52c8d69df520cde3410cc06cc40471acf81b4b7c18ca08e73d0efb0f878654985bb02fce4f8d3d64cdf64fe9f3ffad3e1dc7e17b837d4ddcb2
-  languageName: node
-  linkType: hard
-
-"prettier-webpack-plugin@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "prettier-webpack-plugin@npm:1.2.0"
-  peerDependencies:
-    prettier: ^1.0.0
-    webpack: ^4.2.0
-  checksum: 89e68dae73270111133f62f016ba1a06f1740736ab884ea222f4746f59365f4fc081733aec4b69bd8b97e59ed61b37edd4fca95b61ffb726522f316b6160805b
   languageName: node
   linkType: hard
 
@@ -17343,13 +17321,6 @@ typescript@^4.2.4:
   dependencies:
     minimalistic-assert: ^1.0.0
   checksum: 5916a49cb25fc8c70e4e7eb2d01955061132687a79879292fbdee632952f368c12bc5a641d0404794dbc0e3563f8b6e74dda04467b3e96be8bcd0b919bd47a8c
-  languageName: node
-  linkType: hard
-
-"web-vitals@npm:^1.1.0":
-  version: 1.1.1
-  resolution: "web-vitals@npm:1.1.1"
-  checksum: e84e449f46d5bdae9bc3d9d03647e654970bbe7fd448ecc8051ae06bcb869aa29cdcd16486786db416ca7a6e43a2f87e0f66662437ec5679761bcdd753a8c055
   languageName: node
   linkType: hard
 

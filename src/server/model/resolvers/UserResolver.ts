@@ -11,7 +11,7 @@ import {
     ID,
 } from 'type-graphql';
 import { User } from '../entity/User';
-import type { IExpressContext, ContextPayload } from '../../../shared/types';
+import type { IExpressContext, IContextPayload } from '../../../shared/types';
 import {
     createAccessToken,
     createRefreshToken,
@@ -24,7 +24,7 @@ import { UserLoginInfo } from './UserLoginInfo';
 import { LoginResponse } from './LoginResponse';
 import { RegistrationResponse } from './RegistrationResponse';
 import { validateRegistration } from './validateRegistration';
-import { sendEmail } from '../../utils/sendEmail';
+import sendEmail from '../../utils/sendEmail';
 
 /**
  * Verifies that the client's context has a valid access token.
@@ -36,13 +36,14 @@ const isAuth: MiddlewareFn<IExpressContext> = ({ context }, next) => {
     try {
         const authorization: string | undefined =
             context.req.headers['authorization'];
-        if (!authorization) throw new Error('Not authenticated.');
+        if (authorization === undefined || authorization === '')
+            throw new Error('Not authenticated.');
 
         const token: string = authorization.split(' ')[1];
-        const payload: ContextPayload = verify(
+        const payload: IContextPayload = verify(
             token,
             ACCESS_TOKEN_SECRET
-        ) as ContextPayload;
+        ) as IContextPayload;
         context.payload = payload;
         return next();
     } catch (err) {
@@ -64,7 +65,7 @@ export class UserResolver {
      * @returns {Promise<User[]>} a list of all users in the database
      */
     @Query(() => [User])
-    async getAllUsers(): Promise<User[]> {
+    public getAllUsers(): Promise<User[]> {
         return User.find();
     }
 
@@ -75,7 +76,7 @@ export class UserResolver {
      * @returns {Promise<RegistrationResponse>} the user
      */
     @Mutation(() => RegistrationResponse)
-    async registerUser(
+    public async registerUser(
         @Args() { name, email, username, password }: UserRegistrationInfo
     ): Promise<RegistrationResponse> {
         const hashedPassword = await hash(password, 12);
@@ -87,7 +88,7 @@ export class UserResolver {
             password,
         });
 
-        if (errors && errors.length > 0)
+        if (errors.length > 0)
             return {
                 errors,
             };
@@ -103,7 +104,7 @@ export class UserResolver {
     }
 
     @Mutation(() => LoginResponse)
-    async login(
+    public async login(
         @Args() { usernameOrEmail, password }: UserLoginInfo,
         @Ctx() { res }: IExpressContext
     ): Promise<LoginResponse> {
@@ -112,13 +113,13 @@ export class UserResolver {
                 ? { email: usernameOrEmail }
                 : { username: usernameOrEmail },
         });
-        if (!user) throw new Error('User not found.');
+        if (user == null) throw new Error('User not found.');
 
         const isValid = await compare(password, user.password);
         if (!isValid) throw new Error('Incorrect password.');
 
         // successful login
-        if (!res) throw new Error('res not defined');
+        if (res == null) throw new Error('res not defined');
         sendRefreshToken(res, createRefreshToken(user));
         return {
             accessToken: createAccessToken(user),
@@ -127,22 +128,24 @@ export class UserResolver {
     }
 
     @Mutation(() => Boolean)
-    logout(@Ctx() { res }: IExpressContext): boolean {
+    public logout(@Ctx() { res }: IExpressContext): boolean {
         sendRefreshToken(res, '');
         return true;
     }
 
     @Query(() => User, { nullable: true })
-    async currentUser(@Ctx() context: IExpressContext): Promise<User | null> {
+    public async currentUser(
+        @Ctx() context: IExpressContext
+    ): Promise<User | null> {
         const authorization = context.req.headers['authorization'];
-        if (!authorization) return null;
+        if (authorization === undefined || authorization === '') return null;
 
         try {
             const token = authorization.split(' ')[1];
             const payload = verify(
                 token,
                 ACCESS_TOKEN_SECRET
-            ) as ContextPayload;
+            ) as IContextPayload;
             context.payload = payload;
             return (await User.findOne(payload.userId)) ?? null;
         } catch (err) {
@@ -152,40 +155,37 @@ export class UserResolver {
     }
 
     @Mutation(() => Boolean)
-    async forgotPassword(@Arg('email') email: string): Promise<boolean> {
+    public async forgotPassword(@Arg('email') email: string): Promise<boolean> {
         const user = await User.findOne({ where: { email } });
-        if (!user) return false; // email not in DB
+        if (user == null) return false; // email not in DB
 
         const token = '';
 
         await sendEmail(
             email,
             'Forgot password',
-            `<a href="http://localhost:4000/reset-password/${token}">Click here to reset your password.</a>`
+            `<a href="http://localhost:4000/reset-password/${token}">` +
+                'Click here to reset your password.' +
+                '</a>'
         );
         return true;
     }
 
     @Mutation(() => Boolean)
-    async resetPassword(
+    public async resetPassword(
         @Arg('email') email: string
         //@Arg('password') password: string
     ): Promise<boolean> {
         const user = await User.findOne({ where: { email } });
-        if (!user) return false; // email not in DB
+        if (user == null) return false; // email not in DB
 
-        const token = '';
-
-        await sendEmail(
-            email,
-            'Forgot password',
-            `<a href="http://localhost:4000/reset-password/${token}">Click here to reset your password.</a>`
-        );
         return true;
     }
 
     @Mutation(() => Boolean)
-    async deleteUserById(@Arg('id', () => ID) id: string): Promise<boolean> {
+    public async deleteUserById(
+        @Arg('id', () => ID) id: string
+    ): Promise<boolean> {
         try {
             await User.delete(id);
             return true;
@@ -196,9 +196,12 @@ export class UserResolver {
 
     @Mutation(() => Boolean)
     @UseMiddleware(isAuth)
-    async deleteUser(@Ctx() { payload }: IExpressContext): Promise<boolean> {
+    public async deleteUser(
+        @Ctx() { payload }: IExpressContext
+    ): Promise<boolean> {
+        if (payload === undefined || payload.userId === undefined) return false;
         try {
-            await User.delete(payload!.userId);
+            await User.delete(payload.userId);
             return true;
         } catch {
             return false;
@@ -206,14 +209,14 @@ export class UserResolver {
     }
 
     @Mutation(() => Boolean)
-    async updateUserPassword(
+    public async updateUserPassword(
         @Arg('username') username: string,
         @Arg('oldPassword') oldPassword: string,
         @Arg('newPassword') newPassword: string
     ): Promise<boolean> {
         try {
             const user = await User.findOne({ username });
-            if (!user) throw new Error('User does not exist.');
+            if (user == null) throw new Error('User does not exist.');
 
             const actualPassword = user?.password;
             if (oldPassword !== actualPassword)

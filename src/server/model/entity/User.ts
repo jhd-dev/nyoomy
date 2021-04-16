@@ -13,19 +13,19 @@ import {
 export class User extends BaseEntity {
     @Field(() => ID)
     @PrimaryGeneratedColumn('uuid')
-    readonly id!: string;
+    public readonly id!: string;
 
     @Field()
     @Column({
         nullable: true,
     })
-    name!: string;
+    public name!: string;
 
     @Field()
     @Column({
         unique: true,
     })
-    username!: string;
+    public username!: string;
 
     @Field()
     @Directive('@lowercase')
@@ -33,32 +33,32 @@ export class User extends BaseEntity {
         nullable: true,
         unique: true,
     })
-    email!: string;
+    public email!: string;
 
     @Column()
-    password!: string;
+    public password!: string;
 
     @Field()
     @CreateDateColumn({
         nullable: true,
     })
-    createdAt!: Date;
+    public createdAt!: Date;
 
     @Field(() => Date)
     @UpdateDateColumn({
         nullable: true,
     })
-    lastUpdated!: Date;
+    public lastUpdated!: Date;
 
     @Field(() => Int)
     @Column('int', {
         default: 0,
         nullable: true,
     })
-    tokenVersion!: number;
+    public tokenVersion!: number;
 
     @Column({
         nullable: true,
     })
-    resetPasswordToken!: string;
+    public resetPasswordToken!: string;
 }

@@ -1,33 +1,32 @@
-import * as express from 'express';
-import * as bodyParser from 'body-parser';
+import { static as expressStatic, urlencoded, json } from 'express';
 import { Server } from '@overnightjs/core';
 import cors from 'cors';
 import { createConnection } from 'typeorm';
-import AppController from './AppController';
-import getSchema from '../model/getSchema';
-import { DB_USERNAME, DB_PASSWORD, DB_NAME } from '../../shared/env';
-import { User } from '../model/entity/User';
-import { DATABASE_TYPE, PORT } from '../../shared/constants';
-import { IExpressContext } from '../../shared/types';
 import { ApolloServer } from 'apollo-server-express';
 import cookieParser from 'cookie-parser';
+import AppController from './AppController';
+import getSchema from '../model/getSchema';
+import { DB_USERNAME, DB_PASSWORD, DB_NAME, PORT } from '../../shared/env';
+import { User } from '../model/entity/User';
+import { DATABASE_TYPE } from '../../shared/constants';
+import { IExpressContext } from '../../shared/types';
 
 export default class AppServer extends Server {
     private readonly CONTROLLER_TYPES = [AppController];
     public readonly START_MSG = 'Started on port: ';
 
-    constructor() {
+    public constructor() {
         super(true); // Always show logs
         this.app.use(
             cors({
-                origin: `http://localhost:${PORT}`,
+                origin: `http://localhost:${String(PORT)}`,
                 credentials: true,
             })
         );
         this.app.use(cookieParser());
-        this.app.use(bodyParser.json());
-        this.app.use(bodyParser.urlencoded({ extended: true }));
-        this.app.use('/', express.static('dist'));
+        this.app.use(json());
+        this.app.use(urlencoded({ extended: true }));
+        this.app.use('/', expressStatic('dist'));
     }
 
     public async start(port: number): Promise<AppServer> {
@@ -47,14 +46,13 @@ export default class AppServer extends Server {
     }
 
     private logStartMsg(port: number): void {
-        console.log(this.START_MSG + port);
+        console.log(this.START_MSG + String(port));
     }
 
     private setupControllers(): void {
-        const controllers = [];
-        for (const conType in this.CONTROLLER_TYPES) {
-            controllers.push(new this.CONTROLLER_TYPES[conType]());
-        }
+        const controllers = this.CONTROLLER_TYPES.map((controllerType) => {
+            return new controllerType();
+        });
         super.addControllers(controllers);
     }
 

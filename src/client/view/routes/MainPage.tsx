@@ -1,6 +1,6 @@
 import React from 'react';
 
-const MainPage: React.FC<any> = () => {
+const MainPage: React.FC = () => {
     return <></>;
 };
 

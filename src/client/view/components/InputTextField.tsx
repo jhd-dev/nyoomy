@@ -4,12 +4,13 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { FieldError } from '../../generated/graphql';
+import { IInputEvent } from '../../../shared/types';
 
 interface InputTextFieldProps {
     field: string;
     inputType: 'text' | 'email' | 'password';
     label: string | Element;
-    handleChange: (e: any) => void | Promise<void>;
+    handleChange: (e: IInputEvent) => void | Promise<void>;
     errors?: FieldError[];
     placeholder?: string;
     required?: boolean;
@@ -48,7 +49,7 @@ const InputTextField: React.FC<InputTextFieldProps> = ({
                     </InputGroup>
                 </Col>
             </Row>
-            {!!errors &&
+            {errors != null &&
                 errors.map((err, i) => (
                     <Form.Control.Feedback
                         type="invalid"

@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import * as supertest from 'supertest';
 import StatusCodes from 'http-status-codes';
 import { SuperTest, Test } from 'supertest';
@@ -18,7 +21,7 @@ describe('AppController', () => {
 
     describe('refreshToken', () => {
         it("fails if the client's cookie has no refresh token", (done) => {
-            agent
+            void agent
                 .post('/refresh_token')
                 .expect('Content-Type', /json/)
                 .expect(StatusCodes.UNAUTHORIZED, (_err, res) => {
@@ -29,7 +32,7 @@ describe('AppController', () => {
         });
 
         it('fails if the refresh token is invalid', (done) => {
-            agent
+            void agent
                 .post('/refresh_token')
                 .expect('Content-Type', /json/)
                 .expect(StatusCodes.UNAUTHORIZED, (_err, res) => {
@@ -40,11 +43,11 @@ describe('AppController', () => {
         });
 
         it('sends another refresh token if the refresh token is valid', (done) => {
-            agent
+            void agent
                 .post('/refresh_token')
                 .expect('Content-Type', /json/)
                 .expect(StatusCodes.OK, (err, res) => {
-                    if (err) console.error(err);
+                    if (err != null) console.error(err);
                     expect(res.body.ok).toBe(true);
                     expect(res.body.accessToken).toBeTruthy();
                     done();
@@ -55,6 +58,4 @@ describe('AppController', () => {
             done();
         });
     });
-
-    describe('getPasswordResetPage', () => {});
 });

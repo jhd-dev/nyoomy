@@ -1,5 +1,4 @@
-import * as bodyParser from 'body-parser';
-import { Application } from 'express';
+import { Application, json, urlencoded } from 'express';
 import { Server } from '@overnightjs/core';
 import { Controller } from '@overnightjs/core/lib/decorators/types';
 
@@ -7,10 +6,10 @@ import { Controller } from '@overnightjs/core/lib/decorators/types';
  * A Server that acts in unit tests as a stand-in for actually-used server(s).
  */
 export default class TestServer extends Server {
-    constructor() {
+    public constructor() {
         super();
-        this.app.use(bodyParser.json());
-        this.app.use(bodyParser.urlencoded({ extended: true }));
+        this.app.use(json());
+        this.app.use(urlencoded({ extended: true }));
     }
 
     /**

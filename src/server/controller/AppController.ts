@@ -10,26 +10,44 @@ import {
 } from '../utils/auth';
 import { REFRESH_TOKEN_NAME } from '../../shared/constants';
 import { REFRESH_TOKEN_SECRET } from '../../shared/env';
+import type IRequestCookies from '../../shared/types/IRequestCookies';
+import RequestCookies from '../../shared/types/RequestCookies';
+import { ContextPayload, IContextPayload } from '../../shared/types';
+import TypeResolver from '../../shared/utils/TypeResolver';
 
 @Controller('')
 class AppController {
-    /**
-     *
-     * @param {Request} req {Request}
-     * @param {Request} res -
-     * @returns {Promise<Response>}
-     */
     @Post('refresh_token')
     private async refreshToken(req: Request, res: Response): Promise<Response> {
         console.log('REFRESH_TOKEN');
 
-        const token = req.cookies[REFRESH_TOKEN_NAME];
-        if (!token) return this.failAuth(res);
+        const [
+            cookies,
+            errors,
+        ] = await TypeResolver.resolveToClass<IRequestCookies>(
+            RequestCookies,
+            req.cookies
+        );
+
+        if (errors.length > 0) console.error(errors);
+        if (cookies == null) return this.failAuth(res);
+
+        const token: string = cookies[REFRESH_TOKEN_NAME];
+
+        if (token == null) return this.failAuth(res);
 
         try {
-            const payload: any = verify(token, REFRESH_TOKEN_SECRET);
+            const payload: IContextPayload | string = verify(
+                token,
+                REFRESH_TOKEN_SECRET
+            );
+            if (typeof payload === 'string')
+                throw new Error('Payload should not be a string.');
             const user = await User.findOne({ id: payload.userId });
-            if (!user || user.tokenVersion !== payload.tokenVersion)
+            if (
+                user === undefined ||
+                user.tokenVersion !== payload.tokenVersion
+            )
                 return this.failAuth(res);
 
             sendRefreshToken(res, createRefreshToken(user));
@@ -48,9 +66,18 @@ class AppController {
         res: Response
     ): Promise<Response> {
         const { userId, token } = req.params;
-        const payload: any = verify(token, REFRESH_TOKEN_SECRET);
+        const [
+            payload,
+            errors,
+        ] = await TypeResolver.resolveToClass<IContextPayload>(
+            ContextPayload,
+            verify(token, REFRESH_TOKEN_SECRET)
+        );
+        if (errors.length > 0) console.error(errors);
+        if (payload == null) return this.failAuth(res);
+
         const user = await User.findOne(userId);
-        if (!user || user.tokenVersion !== payload.tokenVersion)
+        if (user === undefined || user.tokenVersion !== payload.tokenVersion)
             return this.failAuth(res);
         return res.status(StatusCodes.OK).json({ ok: true });
     }

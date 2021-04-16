@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler, FormEvent, useState } from 'react';
+import React, { FormEvent, useState } from 'react';
 import { useRegisterMutation, FieldError } from '../../generated/graphql';
 import { RouteComponentProps } from 'react-router';
 
@@ -7,6 +7,7 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import InputTextField from '../components/InputTextField';
+import { IInputEvent } from '../../../shared/types';
 
 const RegistrationPage: React.FC<RouteComponentProps> = ({ history }) => {
     const [name, setName] = useState('');
@@ -17,7 +18,7 @@ const RegistrationPage: React.FC<RouteComponentProps> = ({ history }) => {
     const [fieldErrors, setFieldErrors] = useState(fieldErrorsInit);
 
     const [register, { error }] = useRegisterMutation();
-    if (error) console.error(error);
+    if (error !== undefined) console.error(error);
 
     const handleSubmit = async (e: FormEvent): Promise<void> => {
         e.preventDefault();
@@ -30,19 +31,18 @@ const RegistrationPage: React.FC<RouteComponentProps> = ({ history }) => {
             },
         });
         console.log(response);
-        if (!response?.data) return;
-        if (response.data.registerUser?.errors) {
-            setFieldErrors(response.data.registerUser.errors);
+        if (response?.data?.registerUser?.errors == null) {
+            history.push('/');
             return;
         }
-        history.push('/');
+        setFieldErrors(response.data.registerUser.errors);
     };
 
     const handleChangeBuilder = (
         field: string,
         setter: (value: React.SetStateAction<string>) => void
-    ): ChangeEventHandler => (e: any): void => {
-        setter(e?.target?.value);
+    ) => (e: IInputEvent): void => {
+        setter(e.target.value);
         setFieldErrors(fieldErrors.filter((err) => err.field !== field));
     };
 

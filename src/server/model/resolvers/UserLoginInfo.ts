@@ -3,8 +3,8 @@ import { Field, ArgsType } from 'type-graphql';
 @ArgsType()
 export class UserLoginInfo {
     @Field()
-    usernameOrEmail!: string;
+    public usernameOrEmail!: string;
 
     @Field()
-    password!: string;
+    public password!: string;
 }

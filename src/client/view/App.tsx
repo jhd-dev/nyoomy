@@ -15,6 +15,7 @@ import { onError } from '@apollo/client/link/error';
 import { TokenRefreshLink } from 'apollo-link-token-refresh';
 import jwtDecode, { JwtPayload } from 'jwt-decode';
 import { ACCESS_TOKEN_NAME } from '../../shared/constants';
+import type { IAccessTokenResponse } from '../../shared/types';
 
 const cache = new InMemoryCache({});
 
@@ -28,7 +29,7 @@ const requestLink: ApolloLink = new ApolloLink(
 
             try {
                 const accessToken = getAccessToken();
-                if (accessToken) {
+                if (accessToken !== '') {
                     operation.setContext({
                         headers: {
                             authorization: `bearer ${accessToken}`,
@@ -40,7 +41,7 @@ const requestLink: ApolloLink = new ApolloLink(
                     error: observer.error.bind(observer),
                     complete: observer.complete.bind(observer),
                 });
-            } catch (err: any) {
+            } catch (err: unknown) {
                 console.error(err);
                 observer.error.bind(observer);
             }
@@ -59,8 +60,11 @@ const client = new ApolloClient({
 
                 try {
                     const { exp } = jwtDecode<JwtPayload>(token);
-                    return !!exp && Date.now() < exp * 1000;
-                } catch {
+                    return (
+                        exp !== undefined && exp >= 0 && Date.now() < exp * 1000
+                    );
+                } catch (err: unknown) {
+                    console.error(err);
                     return false;
                 }
             },
@@ -73,7 +77,7 @@ const client = new ApolloClient({
             handleFetch: (accessToken: string): void => {
                 setAccessToken(accessToken);
             },
-            handleError: (err: any): void => {
+            handleError: (err: Error): void => {
                 console.warn('Your refresh token is invalid. Try to relogin');
                 console.error(err);
             },
@@ -92,19 +96,17 @@ const client = new ApolloClient({
     cache,
 });
 
-interface AppIProps {}
-
-export const App: React.FC<AppIProps> = () => {
+export const App: React.FC = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetch(window.location.origin + '/refresh_token', {
+        void fetch(window.location.origin + '/refresh_token', {
             method: 'POST',
             credentials: 'include',
-        }).then(async (x) => {
-            const { accessToken } = await x.json();
-            console.log(accessToken);
-            setAccessToken(accessToken);
+        }).then(async (x: Response) => {
+            const res = (await x.json()) as IAccessTokenResponse;
+            console.log(res);
+            setAccessToken(res.accessToken);
             setLoading(false);
         });
     }, []);

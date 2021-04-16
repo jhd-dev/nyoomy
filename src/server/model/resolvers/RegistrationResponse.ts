@@ -6,11 +6,11 @@ import { FieldError } from './FieldError';
 @ObjectType()
 export class RegistrationResponse implements LoginResponse {
     @Field(() => [FieldError], { nullable: true })
-    errors?: FieldError[];
+    public errors?: FieldError[];
 
     @Field({ nullable: true })
-    accessToken?: string;
+    public accessToken?: string;
 
     @Field(() => User, { nullable: true })
-    user?: User;
+    public user?: User;
 }

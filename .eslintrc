@@ -2,7 +2,10 @@
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaVersion": 2020,
-        "sourceType": "module"
+        "sourceType": "module",
+        "project": "tsconfig.json",
+        "extraFileExtensions": [".json"],
+        "ecmaFeatures": { "jsx": true }
     },
     "env": {
         "es6": true
@@ -13,8 +16,7 @@
         "plugin:react/recommended",
         "plugin:@typescript-eslint/recommended",
         "plugin:@typescript-eslint/recommended-requiring-type-checking",
-        "prettier/@typescript-eslint",
-        "plugin:prettier/recommended"
+        "prettier"
     ],
     "rules": {
         "react-hooks/rules-of-hooks": "error",
@@ -49,38 +51,37 @@
         "default-case-last": "error",
         "default-param-last": "error",
         "no-param-reassign": "error",
-        "no-shadow": [
-            "error",
-            {
-                "builtInGlobals": true,
-                "hoist": "functions",
-                "allow": ["done"]
-            }
-        ],
         "no-lonely-if": "warn",
-        "space-unary-ops": [
-            "error",
-            {
-                "words": true,
-                "nonwords": true,
-                "overrides": {
-                    "!": false,
-                    "!!": false
-                }
-            }
-        ],
         "prefer-rest-params": "error",
         "no-var": "error",
         "prefer-arrow-callback": "warn",
+        "eqeqeq": ["error", "always", { "null": "ignore" }],
         "@typescript-eslint/typedef": [
             "warn",
-            "call-signature",
-            "arrow-call-signature",
-            "parameter",
-            "arrow-parameter",
-            "variable-declaration-ignore-function",
-            "member-variable-declaration"
-        ]
+            {
+                "call-signature": true,
+                "arrow-call-signature": true,
+                "parameter": true,
+                "arrow-parameter": true,
+                "variable-declaration-ignore-function": true,
+                "member-variable-declaration": true
+            }
+        ],
+        "@typescript-eslint/no-inferrable-types": "off",
+        "@typescript-eslint/no-explicit-any": "warn",
+        "@typescript-eslint/strict-boolean-expressions": [
+            "error",
+            {
+                "allowString": false,
+                "allowNumber": false,
+                "allowNullableObject": false
+            }
+        ],
+        "@typescript-eslint/prefer-readonly": "warn",
+        "@typescript-eslint/no-this-alias": "error",
+        "@typescript-eslint/prefer-includes": "warn",
+        "@typescript-eslint/no-require-imports": "warn",
+        "@typescript-eslint/explicit-member-accessibility": "error"
     },
     "settings": {
         "react": {

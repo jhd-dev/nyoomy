@@ -4,8 +4,8 @@ import { User } from '../entity/User';
 @ObjectType()
 export class LoginResponse {
     @Field()
-    accessToken?: string;
+    public accessToken?: string;
 
     @Field(() => User)
-    user?: User;
+    public user?: User;
 }
