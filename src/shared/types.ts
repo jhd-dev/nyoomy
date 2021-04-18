@@ -43,6 +43,7 @@ export interface IDictionary<T> {
 
 /**
  * An enum representing the potential NODE_ENV values.
+ *
  * @enum {NodeEnvString}
  */
 export enum NodeEnv {

@@ -55,7 +55,6 @@
     ],
     "explorerExclude.backup": {},
     "files.exclude": {
-        "**/.git": true,
         "**/.svn": true,
         "**/.hg": true,
         "**/CVS": true,

@@ -1,5 +1,8 @@
 *                 text=auto eol=lf
 
+src/client/generated/* linguist-generated=true
+dist/* linguist-generated=true
+
 # Source code
 *.css             text diff=css
 *.graphql         text

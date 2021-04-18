@@ -10,10 +10,6 @@ package-lock.json
 # Distribution
 /dist
 
-# GraphQL generated code
-*/generated
-src/client/generated
-
 # Environmental variables
 .env
 .env.*
