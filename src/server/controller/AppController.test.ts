@@ -11,51 +11,45 @@ import AppController from './AppController';
 describe('AppController', () => {
     let agent: SuperTest<Test>;
 
-    beforeAll((done) => {
+    beforeAll(() => {
         // setting up supertest
         const server = new TestServer();
         server.setController(new AppController());
         agent = supertest.agent(server.getExpressInstance());
-        done();
     });
 
     describe('refreshToken', () => {
-        it("fails if the client's cookie has no refresh token", (done) => {
-            void agent
+        it("fails if the client's cookie has no refresh token", async () => {
+            await agent
                 .post('/refresh_token')
                 .expect('Content-Type', /json/)
                 .expect(StatusCodes.UNAUTHORIZED, (_err, res) => {
                     expect(res.body?.accessToken).toBe('');
                     expect(res.body?.ok).toBe(false);
-                    done();
                 });
         });
 
-        it('fails if the refresh token is invalid', (done) => {
-            void agent
+        it('fails if the refresh token is invalid', async () => {
+            await agent
                 .post('/refresh_token')
                 .expect('Content-Type', /json/)
                 .expect(StatusCodes.UNAUTHORIZED, (_err, res) => {
                     expect(res.body?.accessToken).toBe('');
                     expect(res.body?.ok).toBe(false);
-                    done();
                 });
         });
 
-        it('sends another refresh token if the refresh token is valid', (done) => {
-            void agent
+        it('sends another refresh token if the refresh token is valid', async () => {
+            await agent
                 .post('/refresh_token')
                 .expect('Content-Type', /json/)
                 .expect(StatusCodes.OK, (err, res) => {
                     if (err != null) console.error(err);
                     expect(res.body.ok).toBe(true);
                     expect(res.body.accessToken).toBeTruthy();
-                    done();
                 });
         });
 
-        xit('sends another access token if the refresh token is valid', (done) => {
-            done();
-        });
+        it.skip('sends another access token if the refresh token is valid');
     });
 });

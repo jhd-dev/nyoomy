@@ -9,17 +9,15 @@ describe('AppServer', () => {
     let appServer: AppServer;
 
     describe('start', () => {
-        beforeEach((done) => {
+        beforeEach(() => {
             jest.spyOn(Server.prototype, 'addControllers');
             jest.spyOn(console, 'info');
             appServer = new AppServer();
             port++;
-            done();
         });
 
-        afterEach((done) => {
+        afterEach(() => {
             port++;
-            done();
         });
 
         it('should return a Promise containing itself', async () => {
@@ -27,12 +25,7 @@ describe('AppServer', () => {
             expect(appServer).toBe(server);
         });
 
-        // it('should register all of its controllers', async () => {
-        //     await appServer.start(port);
-        //     // expect(appServer.addControllers).toHaveBeenCalled();
-        // });
-
-        xit('should notify the user that the server is running and on which port', async () => {
+        it.skip('should notify the user that the server is running and on which port', async () => {
             await appServer.start(port);
             expect(console.info).toHaveBeenCalled();
             expect(console.info).toHaveBeenCalledWith(

@@ -28,9 +28,9 @@ export default class TypeResolver {
      * Ensures that the given value can be resolved to the given class,
      * returning it if so, or null if otherwise.
      *
-     * @param targetClass the class to attempt to resolve the sourceObject to
-     * @param sourceObject the value to attempt to resolve to the targetClass
-     * @returns the type-safe, resolved object
+     * @param {ClassConstructor} targetClass the class to attempt to resolve the sourceObject to
+     * @param {unknown} sourceObject the value to attempt to resolve to the targetClass
+     * @returns {Promise<TypeResolution>} the type-safe, resolved object
      * @throws when strict is true and the resolution failed due to incompatible types.
      */
     public static async resolveToClass<T extends Dictionary>(
@@ -65,8 +65,8 @@ export default class TypeResolver {
      * Determines whether the given value is a valid object, ensuring it is not
      * a primitive, null, undefined, or an array.
      *
-     * @param obj the potential object to test
-     * @returns whether the given value is a valid object
+     * @param {unknown} obj the potential object to test
+     * @returns {boolean} whether the given value is a valid object
      */
     public static isValidObject(obj: unknown): boolean {
         return typeof obj === 'object' && obj != null && !Array.isArray(obj);

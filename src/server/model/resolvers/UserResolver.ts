@@ -28,7 +28,8 @@ import sendEmail from '../../utils/sendEmail';
 
 /**
  * Verifies that the client's context has a valid access token.
- * @const
+ *
+ * @constant
  * @type {MiddlewareFn<IExpressContext>}
  * @throws when the user is not authenticated
  */
@@ -54,13 +55,15 @@ const isAuth: MiddlewareFn<IExpressContext> = ({ context }, next) => {
 
 /**
  * GraphQL resolver for the user table.
- * @export
+ *
+ * @exports
  * @class UserResolver
  */
 @Resolver()
 export class UserResolver {
     /**
      * Queries **all** users in the database.
+     *
      * @async
      * @returns {Promise<User[]>} a list of all users in the database
      */
@@ -71,8 +74,8 @@ export class UserResolver {
 
     /**
      * Attempts to add a user to the database,
+     *
      * @param {UserRegistrationInfo} param0 { name, email, username, password }
-     *      @param
      * @returns {Promise<RegistrationResponse>} the user
      */
     @Mutation(() => RegistrationResponse)

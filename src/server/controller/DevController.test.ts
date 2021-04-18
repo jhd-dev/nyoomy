@@ -12,19 +12,18 @@ describe('DevController', () => {
     const message = DevController.DEV_MSG;
     let agent: SuperTest<Test>;
 
-    beforeAll((done) => {
+    beforeAll(() => {
         // setting up supertest
         const server = new TestServer();
         server.setController(devController);
         agent = supertest.agent(server.getExpressInstance());
-        done();
     });
 
     describe(`Dev mode: "/*"`, () => {
-        it(`should respond with the text "${message}"`, (done) => {
-            ['/', '/public'].forEach((url) => {
+        it(`should respond with the text "${message}"`, async () => {
+            for (const url of ['/', '/public']) {
                 console.log(url);
-                void agent
+                await agent
                     .get(url)
                     .end(
                         (
@@ -38,10 +37,9 @@ describe('DevController', () => {
                             expect(body).toBeInstanceOf(Object);
                             expect(body.message).toBeDefined();
                             expect(body.message).toBe(message);
-                            done();
                         }
                     );
-            });
+            }
         });
     });
 });

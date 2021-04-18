@@ -13,8 +13,9 @@ export default class TestServer extends Server {
     }
 
     /**
-     * Adds a controller to the server
-     * @param controller the Controller to add
+     * Adds a controller to the server.
+     *
+     * @param {Controller} controller the Controller to add
      */
     public setController(controller: Controller): void {
         super.addControllers(controller);
@@ -22,7 +23,8 @@ export default class TestServer extends Server {
 
     /**
      * Returns the server's express application instance.
-     * @returns the server's express application instance.
+     *
+     * @returns {Application} the server's express application instance.
      */
     public getExpressInstance(): Application {
         return this.app;

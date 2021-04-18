@@ -1,7 +1,4 @@
 {
-    "env": {
-        "es6": true
-    },
     "extends": ["eslint:recommended", "prettier"],
     "overrides": [
         {
@@ -14,12 +11,28 @@
                 "extraFileExtensions": ["json", "yml"],
                 "ecmaFeatures": { "jsx": true }
             },
+            "env": {
+                "es6": true,
+                "jest/globals": true
+            },
             "extends": [
                 "plugin:react/recommended",
                 "plugin:@typescript-eslint/recommended",
-                "plugin:@typescript-eslint/recommended-requiring-type-checking"
+                "plugin:@typescript-eslint/recommended-requiring-type-checking",
+                "plugin:jest/recommended",
+                "plugin:jest/style",
+                "plugin:import/errors",
+                "plugin:import/warnings",
+                "plugin:import/typescript",
+                "plugin:jsdoc/recommended"
             ],
-            "plugins": ["@typescript-eslint", "react-hooks"],
+            "plugins": [
+                "@typescript-eslint",
+                "react-hooks",
+                "jest",
+                "import",
+                "jsdoc"
+            ],
             "rules": {
                 "react-hooks/rules-of-hooks": "error",
                 "react-hooks/exhaustive-deps": "warn",
@@ -83,7 +96,14 @@
                 "@typescript-eslint/no-this-alias": "error",
                 "@typescript-eslint/prefer-includes": "warn",
                 "@typescript-eslint/no-require-imports": "warn",
-                "@typescript-eslint/explicit-member-accessibility": "error"
+                "@typescript-eslint/explicit-member-accessibility": "error",
+                "jest/require-top-level-describe": "error",
+                "jsdoc/no-undefined-types": "off"
+            },
+            "settings": {
+                "jsdoc": {
+                    "mode": "typescript"
+                }
             }
         },
         {
