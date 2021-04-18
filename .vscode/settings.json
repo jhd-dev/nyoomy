@@ -23,21 +23,37 @@
         "typeorm"
     ],
     "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": true
+        "source.fixAll.eslint": true,
+        "source.fixAll.markdownlint": true
+    },
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.rulers": [80, 100],
+    "eslint.alwaysShowStatus": true,
+    "eslint.options": {
+        "extensions": [
+            ".js",
+            ".jsx",
+            ".ts",
+            ".tsx",
+            ".json",
+            ".jsonc",
+            ".yml",
+            ".yaml",
+            ".graphql"
+        ]
     },
     "eslint.validate": [
         "javascript",
         "javascriptreact",
         "typescript",
         "typescriptreact",
-        "json"
+        "json",
+        "jsonc",
+        "yaml",
+        "graphql"
     ],
-    "editor.rulers": [80, 100],
-    "editor.formatOnSave": true,
-    "eslint.alwaysShowStatus": true,
-    "[git-commit]": {
-        "editor.rulers": [50]
-    },
+    "explorerExclude.backup": {},
     "files.exclude": {
         "**/.git": true,
         "**/.svn": true,
@@ -45,5 +61,7 @@
         "**/CVS": true,
         "**/.DS_Store": true
     },
-    "explorerExclude.backup": {}
+    "[git-commit]": {
+        "editor.rulers": [50]
+    }
 }

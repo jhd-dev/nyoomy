@@ -1,92 +1,120 @@
 {
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-        "ecmaVersion": 2020,
-        "sourceType": "module",
-        "project": "tsconfig.json",
-        "extraFileExtensions": [".json"],
-        "ecmaFeatures": { "jsx": true }
-    },
     "env": {
         "es6": true
     },
-    "plugins": ["@typescript-eslint", "react-hooks"],
-    "extends": [
-        "eslint:recommended",
-        "plugin:react/recommended",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:@typescript-eslint/recommended-requiring-type-checking",
-        "prettier"
+    "extends": ["eslint:recommended", "prettier"],
+    "overrides": [
+        {
+            "files": ["*.js", "*.jsx", "*.ts", "*.tsx"],
+            "parser": "@typescript-eslint/parser",
+            "parserOptions": {
+                "ecmaVersion": 2020,
+                "sourceType": "module",
+                "project": "tsconfig.json",
+                "extraFileExtensions": ["json", "yml"],
+                "ecmaFeatures": { "jsx": true }
+            },
+            "extends": [
+                "plugin:react/recommended",
+                "plugin:@typescript-eslint/recommended",
+                "plugin:@typescript-eslint/recommended-requiring-type-checking"
+            ],
+            "plugins": ["@typescript-eslint", "react-hooks"],
+            "rules": {
+                "react-hooks/rules-of-hooks": "error",
+                "react-hooks/exhaustive-deps": "warn",
+                "react/prop-types": "off",
+                "max-len": [
+                    "warn",
+                    {
+                        "code": 100,
+                        "tabWidth": 4,
+                        "ignoreStrings": false
+                    }
+                ],
+                "max-classes-per-file": ["warn", 1],
+                "no-eval": "error",
+                "no-invalid-this": [
+                    "error",
+                    {
+                        "capIsConstructor": false
+                    }
+                ],
+                "no-return-await": "error",
+                "no-throw-literal": "error",
+                "require-await": "error",
+                "no-unused-expressions": "error",
+                "no-unneeded-ternary": [
+                    "error",
+                    {
+                        "defaultAssignment": false
+                    }
+                ],
+                "default-case-last": "error",
+                "default-param-last": "error",
+                "no-param-reassign": "error",
+                "no-lonely-if": "warn",
+                "prefer-rest-params": "error",
+                "no-var": "error",
+                "prefer-arrow-callback": "warn",
+                "eqeqeq": ["error", "always", { "null": "ignore" }],
+                "@typescript-eslint/typedef": [
+                    "warn",
+                    {
+                        "call-signature": true,
+                        "arrow-call-signature": true,
+                        "parameter": true,
+                        "arrow-parameter": true,
+                        "variable-declaration-ignore-function": true,
+                        "member-variable-declaration": true
+                    }
+                ],
+                "@typescript-eslint/no-inferrable-types": "off",
+                "@typescript-eslint/no-explicit-any": "warn",
+                "@typescript-eslint/strict-boolean-expressions": [
+                    "error",
+                    {
+                        "allowString": false,
+                        "allowNumber": false,
+                        "allowNullableObject": false
+                    }
+                ],
+                "@typescript-eslint/prefer-readonly": "warn",
+                "@typescript-eslint/no-this-alias": "error",
+                "@typescript-eslint/prefer-includes": "warn",
+                "@typescript-eslint/no-require-imports": "warn",
+                "@typescript-eslint/explicit-member-accessibility": "error"
+            }
+        },
+        {
+            "files": ["*.graphql"],
+            "parser": "@graphql-eslint/eslint-plugin",
+            "parserOptions": {
+                "skipGraphQLConfig": true
+            },
+            "plugins": ["@graphql-eslint"],
+            "rules": { "@graphql-eslint/no-hashtag-description": ["error"] }
+        },
+        {
+            "files": ["*.json", "*.jsonc"],
+            "plugins": ["json"],
+            "extends": ["plugin:json/recommended-with-comments"],
+            "rules": {
+                "json/*": ["warn", { "allowComments": true }],
+                "json/duplicate-key": "error",
+                "json/trailing-comma": "error"
+            }
+        },
+        {
+            "files": ["*.yml", "*.yaml"],
+            "extends": ["plugin:yml/standard", "plugin:yml/prettier"]
+        }
     ],
-    "rules": {
-        "react-hooks/rules-of-hooks": "error",
-        "react-hooks/exhaustive-deps": "warn",
-        "react/prop-types": "off",
-        "max-len": [
-            "warn",
-            {
-                "code": 100,
-                "tabWidth": 4,
-                "ignoreStrings": false
-            }
-        ],
-        "max-classes-per-file": ["warn", 1],
-        "no-eval": "error",
-        "no-invalid-this": [
-            "error",
-            {
-                "capIsConstructor": false
-            }
-        ],
-        "no-return-await": "error",
-        "no-throw-literal": "error",
-        "require-await": "error",
-        "no-unused-expressions": "error",
-        "no-unneeded-ternary": [
-            "error",
-            {
-                "defaultAssignment": false
-            }
-        ],
-        "default-case-last": "error",
-        "default-param-last": "error",
-        "no-param-reassign": "error",
-        "no-lonely-if": "warn",
-        "prefer-rest-params": "error",
-        "no-var": "error",
-        "prefer-arrow-callback": "warn",
-        "eqeqeq": ["error", "always", { "null": "ignore" }],
-        "@typescript-eslint/typedef": [
-            "warn",
-            {
-                "call-signature": true,
-                "arrow-call-signature": true,
-                "parameter": true,
-                "arrow-parameter": true,
-                "variable-declaration-ignore-function": true,
-                "member-variable-declaration": true
-            }
-        ],
-        "@typescript-eslint/no-inferrable-types": "off",
-        "@typescript-eslint/no-explicit-any": "warn",
-        "@typescript-eslint/strict-boolean-expressions": [
-            "error",
-            {
-                "allowString": false,
-                "allowNumber": false,
-                "allowNullableObject": false
-            }
-        ],
-        "@typescript-eslint/prefer-readonly": "warn",
-        "@typescript-eslint/no-this-alias": "error",
-        "@typescript-eslint/prefer-includes": "warn",
-        "@typescript-eslint/no-require-imports": "warn",
-        "@typescript-eslint/explicit-member-accessibility": "error"
-    },
     "settings": {
         "react": {
             "pragma": "React",
             "version": "detect"
         }
-    }
+    },
+    "root": true
 }

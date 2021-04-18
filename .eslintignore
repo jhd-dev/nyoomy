@@ -1,6 +1,3 @@
 node_modules
 dist
 src/client/generated
-package.json
-postcss.config.json
-nodemon.json
