@@ -24,13 +24,5 @@ describe('AppServer', () => {
             const server: AppServer = await appServer.start(port);
             expect(appServer).toBe(server);
         });
-
-        it.skip('should notify the user that the server is running and on which port', async () => {
-            await appServer.start(port);
-            expect(console.info).toHaveBeenCalled();
-            expect(console.info).toHaveBeenCalledWith(
-                appServer.START_MSG + String(port)
-            );
-        });
     });
 });

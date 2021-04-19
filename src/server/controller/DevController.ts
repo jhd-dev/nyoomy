@@ -9,7 +9,7 @@ class DevController {
 
     @Get('*')
     private notifyDevMode(_req: Request, res: Response): Response {
-        console.log('Starting in dev mode.');
+        //console.log('Starting in dev mode.');
         const message = DevController.DEV_MSG;
         return res.status(StatusCodes.OK).json({ message });
     }

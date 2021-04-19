@@ -2,5 +2,5 @@
     "watch": ["src"],
     "ext": "ts",
     "ignore": [],
-    "exec": "ts-node src/server/main.ts dev"
+    "exec": "node -r esm --loader ts-node/esm src/server/main.ts dev"
 }

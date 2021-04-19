@@ -53,8 +53,9 @@
         "yaml",
         "graphql"
     ],
-    "explorerExclude.backup": {},
+    "explorerExclude.backup": null,
     "files.exclude": {
+        "**/.git": false,
         "**/.svn": true,
         "**/.hg": true,
         "**/CVS": true,

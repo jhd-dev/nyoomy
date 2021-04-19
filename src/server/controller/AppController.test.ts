@@ -49,7 +49,5 @@ describe('AppController', () => {
                     expect(res.body.accessToken).toBeTruthy();
                 });
         });
-
-        it.skip('sends another access token if the refresh token is valid');
     });
 });

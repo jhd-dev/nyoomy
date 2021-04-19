@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { Field, ObjectType, ID, Directive, Int } from 'type-graphql';
 import {
     BaseEntity,

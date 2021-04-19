@@ -2,6 +2,7 @@
 
 src/client/generated/* linguist-generated=true
 dist/* linguist-generated=true
+.husky/* linguist-generated=true
 
 # Source code
 *.css             text diff=css
