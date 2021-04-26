@@ -1,0 +1,30 @@
+import type { User } from '@nyoomy/database';
+import { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } from '@nyoomy/global';
+import { sign } from 'jsonwebtoken';
+import type { Response } from 'express';
+
+const ACCESS_TOKEN_EXPIRATION = '60m';
+const REFRESH_TOKEN_EXPIRATION = '7d';
+
+export const createAccessToken = (user: User): string => {
+    return sign({ userId: user.id }, ACCESS_TOKEN_SECRET, {
+        expiresIn: ACCESS_TOKEN_EXPIRATION,
+    });
+};
+
+export const createRefreshToken = (user: User): string => {
+    return sign(
+        { userId: user.id, tokenVersion: user.tokenVersion },
+        REFRESH_TOKEN_SECRET,
+        {
+            expiresIn: REFRESH_TOKEN_EXPIRATION,
+        }
+    );
+};
+
+export const sendRefreshToken = (res: Response, token: string): Response => {
+    return res.cookie(REFRESH_TOKEN_SECRET, token, {
+        httpOnly: true,
+        path: '/refresh_token',
+    });
+};

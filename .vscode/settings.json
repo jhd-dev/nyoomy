@@ -1,27 +1,4 @@
 {
-    "cSpell.words": [
-        "GraphQLID",
-        "Nyoomy",
-        "Prettier's",
-        "browserslist",
-        "cockroachdb",
-        "codegen",
-        "estree",
-        "fontawesome",
-        "fortawesome",
-        "graphiql",
-        "inmemory",
-        "mariadb",
-        "nonwords",
-        "nyoomyapp",
-        "oper",
-        "overnightjs",
-        "postgres",
-        "relogin",
-        "sqljs",
-        "testid",
-        "typeorm"
-    ],
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": true,
         "source.fixAll.markdownlint": true
@@ -43,6 +20,7 @@
             ".graphql"
         ]
     },
+    "eslint.packageManager": "yarn",
     "eslint.validate": [
         "javascript",
         "javascriptreact",
@@ -53,7 +31,6 @@
         "yaml",
         "graphql"
     ],
-    "explorerExclude.backup": null,
     "files.exclude": {
         "**/.git": false,
         "**/.svn": true,
@@ -63,5 +40,11 @@
     },
     "[git-commit]": {
         "editor.rulers": [50]
-    }
+    },
+    "search.exclude": {
+        "**/node_modules": true
+    },
+    "search.followSymlinks": false,
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "tslint.enable": false
 }

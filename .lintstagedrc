@@ -1,8 +1,5 @@
 {
-    "*.{js,jsx,ts,tsx,json,jsonc,yml,yaml,graphql}": [
-        "yarn run lint"
-    ],
     "*.{js,jsx,ts,tsx,html,css,json,md,yaml,yml,graphql}": [
-        "yarn run format"
+        "yarn run lint"
     ]
 }

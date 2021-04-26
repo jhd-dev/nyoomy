@@ -1,4 +1,5 @@
 {
+    "root": true,
     "extends": ["eslint:recommended", "prettier"],
     "overrides": [
         {
@@ -7,13 +8,12 @@
             "parserOptions": {
                 "ecmaVersion": 2020,
                 "sourceType": "module",
-                "project": "tsconfig.json",
-                "extraFileExtensions": ["json", "yml"],
+                "project": ["./tsconfig-eslint.json"],
+                "extraFileExtensions": [".json"],
                 "ecmaFeatures": { "jsx": true }
             },
             "env": {
-                "es6": true,
-                "jest/globals": true
+                "es6": true
             },
             "extends": [
                 "plugin:react/recommended",
@@ -84,26 +84,49 @@
                 ],
                 "@typescript-eslint/no-inferrable-types": "off",
                 "@typescript-eslint/no-explicit-any": "warn",
-                "@typescript-eslint/strict-boolean-expressions": [
-                    "error",
-                    {
-                        "allowString": false,
-                        "allowNumber": false,
-                        "allowNullableObject": false
-                    }
-                ],
                 "@typescript-eslint/prefer-readonly": "warn",
                 "@typescript-eslint/no-this-alias": "error",
                 "@typescript-eslint/prefer-includes": "warn",
                 "@typescript-eslint/no-require-imports": "warn",
                 "@typescript-eslint/explicit-member-accessibility": "error",
                 "jest/require-top-level-describe": "error",
-                "jsdoc/no-undefined-types": "off"
+                "jsdoc/no-undefined-types": "off",
+                "jsdoc/require-jsdoc": "off",
+                "import/order": [
+                    "error",
+                    {
+                        "groups": [
+                            ["builtin", "external"],
+                            "internal",
+                            ["sibling", "parent", "index"],
+                            "object"
+                        ],
+                        "pathGroups": [
+                            {
+                                "pattern": "@nyoomy/**",
+                                "group": "external",
+                                "position": "after"
+                            }
+                        ],
+                        "newlines-between": "always",
+                        "alphabetize": {
+                            "order": "asc",
+                            "caseInsensitive": false
+                        }
+                    }
+                ]
             },
             "settings": {
                 "jsdoc": {
                     "mode": "typescript"
                 }
+            }
+        },
+        {
+            "files": ["*.test.js", "*.test.jsx", "*.test.ts", "*.test.tsx"],
+            "env": {
+                "es6": true,
+                "jest/globals": true
             }
         },
         {
@@ -135,6 +158,5 @@
             "pragma": "React",
             "version": "detect"
         }
-    },
-    "root": true
+    }
 }

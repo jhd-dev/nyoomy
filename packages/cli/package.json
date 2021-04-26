@@ -1,0 +1,31 @@
+{
+    "name": "@nyoomy/cli",
+    "version": "0.1.0",
+    "description": "A command-line interface with which to interact with the Nyoomy API.",
+    "main": "lib/index.js",
+    "typings": "lib/index.d.ts",
+    "module": "src/index.ts",
+    "scripts": {
+        "watch": "tsc --watch",
+        "build": "tsc",
+        "test": "jest --detectOpenHandles",
+        "generate": "graphql-codegen --config codegen.yml"
+    },
+    "dependencies": {
+        "@nyoomy/client": "workspace:*",
+        "chalk": "^4.1.1",
+        "reflect-metadata": "^0.1.13",
+        "yargs": "^16.2.0"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.13.14",
+        "@babel/plugin-proposal-class-properties": "^7.13.0",
+        "@babel/plugin-proposal-decorators": "^7.13.5",
+        "@babel/plugin-transform-runtime": "^7.13.9",
+        "@babel/preset-env": "^7.13.9",
+        "@babel/preset-typescript": "^7.13.0",
+        "@babel/runtime": "^7.13.9",
+        "@types/yargs": "^16",
+        "ts-node": "^9.1.1"
+    }
+}

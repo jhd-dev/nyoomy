@@ -1,0 +1,18 @@
+{
+    "files": [],
+    "include": [],
+    "references": [
+        { "path": "./packages/assets" },
+        { "path": "./packages/cli" },
+        { "path": "./packages/client" },
+        { "path": "./packages/common" },
+        { "path": "./packages/config" },
+        { "path": "./packages/database" },
+        { "path": "./packages/desktop" },
+        { "path": "./packages/extension" },
+        { "path": "./packages/global" },
+        { "path": "./packages/mobile" },
+        { "path": "./packages/server" },
+        { "path": "./packages/web" }
+    ] /* https://www.staging-typescript.org/docs/handbook/project-references.html */
+}

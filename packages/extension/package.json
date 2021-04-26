@@ -1,0 +1,25 @@
+{
+    "name": "@nyoomy/extension",
+    "version": "0.1.0",
+    "private": true,
+    "description": "A web browser extension to for quick and convenient access to Nyoomy's features.",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts",
+    "module": "src/index.ts",
+    "scripts": {
+        "build": "tsc",
+        "build:watch": "tsc --watch",
+        "test": "jest --detectOpenHandles"
+    },
+    "author": "",
+    "dependencies": {
+        "dotenv": "^8.2.0",
+        "reflect-metadata": "^0.1.13"
+    },
+    "devDependencies": {
+        "@types/node": "^14.14.41",
+        "jest": "^26.6.3",
+        "jest-transform-stub": "^2.0.0",
+        "typescript": "^4.2.4"
+    }
+}

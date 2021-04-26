@@ -1,8 +1,12 @@
-*                 text=auto eol=lf
+* text=auto eol=lf
 
-src/client/generated/* linguist-generated=true
+generated/* linguist-generated=true
 dist/* linguist-generated=true
+lib/* linguist-generated=true
+bin/* linguist-generated=true
+*.lock linguist-generated=true
 .husky/* linguist-generated=true
+.yarn/* linguist-vendored=true
 
 # Source code
 *.css             text diff=css
@@ -10,16 +14,15 @@ dist/* linguist-generated=true
 *.html            text diff=html
 *.js              text
 *.json            text
+*.jsonc           text
 *.jsx             text
 *.map             text -diff
+*.pro             text
 *.sass            text
 *.scss            text diff=css
-*.sh              text eol=lf
-*.sql             text
+*.sh              text
 *.ts              text
 *.tsx             text
-*.xml             text
-*.xhtml           text diff=html
 
 # Docker
 Dockerfile        text
@@ -36,7 +39,7 @@ Dockerfile        text
 *.mdtext          text
 *.txt             text
 AUTHORS           text
-CHANGELOG         text
+*CHANGELOG*       text
 CHANGES           text
 CONTRIBUTING      text
 COPYING           text
@@ -48,7 +51,8 @@ LICENSE           text
 NEWS              text
 readme            text
 *README*          text
-TODO              text
+*ROADMAP*         text
+*TODO*            text
 
 # Configs
 *.cnf             text
@@ -59,11 +63,9 @@ TODO              text
 .gitattributes    text
 .gitconfig        text
 *.lock            text -diff
-package.json      text eol=lf
+package.json      text
 package-lock.json text -diff
-pnpm-lock.yaml    text eol=lf -diff
-yarn.lock         text -diff
-*.toml            text
+pnpm-lock.yaml    text -diff
 *.yaml            text
 *.yml             text
 browserslist      text
@@ -72,16 +74,13 @@ browserslist      text
 Procfile          text
 
 # Graphics
+*.ai              binary
 *.bmp             binary
 *.gif             binary
 *.gifv            binary
 *.ico             binary
-*.jng             binary
-*.jp2             binary
 *.jpg             binary
 *.jpeg            binary
-*.jpx             binary
-*.jxr             binary
 *.pdf             binary
 *.png             binary
 *.psb             binary
@@ -92,33 +91,23 @@ Procfile          text
 *.tiff            binary
 *.wbmp            binary
 *.webp            binary
+*.xcf             binary
 
 # Audio
-*.kar             binary
 *.m4a             binary
 *.mid             binary
 *.midi            binary
 *.mp3             binary
 *.ogg             binary
-*.ra              binary
 
 # Video
-*.3gpp            binary
-*.3gp             binary
-*.as              binary
-*.asf             binary
-*.asx             binary
 *.fla             binary
 *.flv             binary
 *.m4v             binary
-*.mng             binary
 *.mov             binary
 *.mp4             binary
 *.mpeg            binary
 *.mpg             binary
-*.ogv             binary
-*.swc             binary
-*.swf             binary
 *.webm            binary
 
 # Archives

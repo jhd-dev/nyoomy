@@ -1,0 +1,4 @@
+{
+    "extends": "./tsconfig.base.json", // This texxt isful l of cspelll ssdfsd is I.
+    "include": ["./scripts/**/*.ts"]
+}

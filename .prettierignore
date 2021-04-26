@@ -1,8 +1,11 @@
 node_modules
 dist
-src/client/generated
-*.idea
-*.yarn
+lib
+generated
+.idea
+.husky
+.yarn
 *.tsbuildinfo
 *.lock
 .env.*
+*.md
