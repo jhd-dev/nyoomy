@@ -2,6 +2,7 @@ node_modules
 dist
 lib
 generated
+temp
 .idea
 .husky
 .yarn

@@ -3,6 +3,7 @@ dist
 lib
 bin
 generated
+temp
 .idea
 .husky
 .yarn

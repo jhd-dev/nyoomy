@@ -1,0 +1,50 @@
+{
+    "name": "@nyoomy/eslint-config",
+    "version": "0.1.0",
+    "private": true,
+    "description": "Base configuration files for Nyoomy development tools.",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/jhd-dev/nyoomy.git",
+        "directory": "packages/eslint-config"
+    },
+    "author": "",
+    "main": "src/index.js",
+    "scripts": {
+        "build": "tsc -b tsconfig.json",
+        "build:watch": "tsc -b --watch",
+        "test": "jest --detectOpenHandles"
+    },
+    "dependencies": {
+        "@graphql-eslint/eslint-plugin": "^0.9.1",
+        "@html-eslint/eslint-plugin": "^0.9.0",
+        "@html-eslint/parser": "^0.9.0",
+        "@typescript-eslint/eslint-plugin": "^4.16.1",
+        "@typescript-eslint/parser": "^4.16.1",
+        "@typescript-eslint/typescript-estree": "^4.21.0",
+        "eslint-config-airbnb": "^18.2.1",
+        "eslint-config-prettier": "^8.1.0",
+        "eslint-define-config": "^1.0.8",
+        "eslint-plugin-editorconfig": "^3.0.2",
+        "eslint-plugin-import": "^2.22.1",
+        "eslint-plugin-inclusive-language": "^2.1.1",
+        "eslint-plugin-jest": "^24.3.5",
+        "eslint-plugin-jest-dom": "^3.8.1",
+        "eslint-plugin-jsdoc": "^32.3.0",
+        "eslint-plugin-json": "^2.1.2",
+        "eslint-plugin-jsx-a11y": "^6.4.1",
+        "eslint-plugin-node": "^11.1.0",
+        "eslint-plugin-pii": "^1.0.2",
+        "eslint-plugin-prettier": "^3.3.1",
+        "eslint-plugin-react": "^7.22.0",
+        "eslint-plugin-react-hooks": "^4.2.0",
+        "eslint-plugin-regexp": "^0.9.0",
+        "eslint-plugin-yml": "^0.9.0"
+    },
+    "peerDependencies": {
+        "eslint": "^7.24.0",
+        "graphql": "^15.5.0",
+        "prettier": "^2.2.1",
+        "typescript": "^4.2.4"
+    }
+}

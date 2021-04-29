@@ -29,9 +29,10 @@
         "@types/bcryptjs": "^2.4.2",
         "@types/graphql-date": "^1.0.5",
         "@types/jsonwebtoken": "^8.5.1",
-        "@types/jwt-decode": "^3.1.0",
         "jest": "^26.6.3",
-        "psql": "^0.0.1",
+        "psql": "^0.0.1"
+    },
+    "peerDependencies": {
         "typescript": "^4.2.4"
     }
 }

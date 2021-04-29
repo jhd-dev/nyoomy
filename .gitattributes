@@ -75,6 +75,7 @@ Procfile          text
 
 # Graphics
 *.ai              binary
+*.apng            binary
 *.bmp             binary
 *.gif             binary
 *.gifv            binary

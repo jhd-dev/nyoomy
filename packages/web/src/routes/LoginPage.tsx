@@ -9,7 +9,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import InputTextField from '../components/InputTextField';
-import { IInputEvent } from '../@nyoomy/common/src/types';
+import { IInputEvent } from '@nyoomy/common';
 
 const LoginPage: React.FC<RouteComponentProps> = ({ history }) => {
     const [usernameOrEmail, setUsernameOrEmail] = useState('');

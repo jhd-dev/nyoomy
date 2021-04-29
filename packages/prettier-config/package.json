@@ -1,0 +1,24 @@
+{
+    "name": "@nyoomy/prettier-config",
+    "version": "0.1.0",
+    "private": true,
+    "description": "Base configuration files for Nyoomy development tools.",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/jhd-dev/nyoomy.git",
+        "directory": "packages/prettier-config"
+    },
+    "author": "",
+    "main": "src/index.ts",
+    "scripts": {
+        "build": "tsc -b tsconfig.json",
+        "build:watch": "tsc -b --watch"
+    },
+    "dependencies": {
+        "prettier-plugin-packagejson": "^2.2.10"
+    },
+    "peerDependencies": {
+        "prettier": "^2.2.1",
+        "typescript": "^4.2.4"
+    }
+}

@@ -1,6 +1,6 @@
 import { login } from './generated/graphql-hooks';
 
-export interface INyoomyApiConfig {
+export interface INyoomyClientConfig {
     userId: string;
     apiKey: string;
 }
@@ -9,15 +9,15 @@ export interface IApiConnectionResult {
     errors?: Error[];
 }
 
-export interface INyoomyApi {
+export interface INyoomyClient {
     connect(): Promise<IApiConnectionResult>;
 }
 
-export default class NyoomyApi implements INyoomyApi {
+export default class NyoomyClient implements INyoomyClient {
     private readonly userId: string;
     private readonly apiKey: string;
 
-    public constructor(config: INyoomyApiConfig) {
+    public constructor(config: INyoomyClientConfig) {
         if (typeof config.userId !== 'string') {
             throw new Error('userId of NyoomyApi must be a string.');
         }

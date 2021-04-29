@@ -26,6 +26,7 @@
         "@babel/preset-typescript": "^7.13.0",
         "@babel/runtime": "^7.13.9",
         "@types/yargs": "^16",
-        "ts-node": "^9.1.1"
+        "ts-node": "^9.1.1",
+        "typescript": "^4.2.4"
     }
 }

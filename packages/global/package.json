@@ -2,10 +2,8 @@
     "name": "@nyoomy/global",
     "version": "0.1.0",
     "private": true,
-    "description": "",
-    "main": "lib/index.js",
-    "typings": "lib/index.d.ts",
-    "module": "src/index.ts",
+    "description": "Constant values referenced across the Nyoomy ecosystem.",
+    "main": "src/index.ts",
     "scripts": {
         "build": "tsc -b tsconfig.json",
         "build:watch": "tsc -b --watch",
@@ -19,17 +17,9 @@
         "reflect-metadata": "^0.1.13"
     },
     "devDependencies": {
-        "@types/node": "^14.14.41",
-        "eslint": "^7.24.0",
-        "eslint-config-prettier": "^8.1.0",
-        "eslint-plugin-import": "^2.22.1",
-        "eslint-plugin-jest": "^24.3.5",
-        "eslint-plugin-jsdoc": "^32.3.0",
-        "eslint-plugin-json": "^2.1.2",
-        "eslint-plugin-prettier": "^3.3.1",
-        "eslint-plugin-yml": "^0.9.0",
-        "jest": "^26.6.3",
-        "jest-transform-stub": "^2.0.0",
+        "jest": "^26.6.3"
+    },
+    "peerDependencies": {
         "typescript": "^4.2.4"
     }
 }

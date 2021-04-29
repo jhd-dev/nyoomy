@@ -3,10 +3,10 @@
     "version": "0.1.0",
     "private": true,
     "description": "",
-    "readmeFilename": "README.md",
     "repository": {
         "type": "git",
-        "url": "https://github.com/jhd-dev/nyoomy"
+        "url": "git+https://github.com/jhd-dev/nyoomy.git",
+        "directory": "."
     },
     "bugs": {
         "url": "https://github.com/jhd-dev/nyoomy/issues"
@@ -18,85 +18,55 @@
         "url": "https://github.com/jhd-dev/"
     },
     "scripts": {
-        "setup": "yarn -v && yarn install",
+        "setup": "yarn check-versions && yarn install",
         "start": "yarn run watch",
         "build": "yarn run clean && lerna run build",
+        "build:ts": "tsc -b tsconfig-composite.json",
         "watch": "concurrently --names \"CLIENT,SERVER\" \"yarn workspace web watch\" \"yarn workspace server watch\"",
         "test": "lerna run test",
-        "lint": "yarn lint:eslint && yarn lint:style && yarn lint:markdown && yarn format && yarn spellcheck",
-        "lint:eslint": "eslint --cache --fix --color .",
-        "lint:markdown": "markdownlint --fix --config .markdownlintrc --ignore-path .markdownlintignore",
+        "lint": "yarn lint:eslint && yarn lint:style && yarn lint:markdown && yarn lint:format && yarn lint:spelling",
+        "lint:eslint": "eslint \"**/*.{js,jsx,ts,tsx}\" --cache --fix --color",
+        "lint:markdown": "markdownlint --fix --config .markdownlintrc --ignore-path .markdownlintignore ./",
         "lint:style": "stylelint \"**/*.scss\" && stylelint \"**/*.css\"",
-        "format": "prettier -lw --config .prettierrc --ignore-path .prettierignore .",
-        "spellcheck": "cspell \"packages/**/*.*\" --config ./.cspell.json",
-        "clean": "./scripts/clean.ts -vm && yarn install && yarn lint",
+        "lint:format": "prettier -lw --config .prettierrc.js --ignore-path .prettierignore .",
+        "lint:spelling": "cspell \"packages/**/*.*\" --config ./.cspell.json",
+        "clean": "./scripts/clean.ts -vm && yarn cache clean && yarn install && yarn lint:format",
         "clean:fast": "./scripts/clean.ts",
         "diff": "lerna diff",
         "update-resolutions": "yarn link -Apr .",
-        "b": "tsc -b tsconfig-composite.json"
+        "check-versions": "./scripts/check-node-version.ts"
     },
     "devDependencies": {
-        "@graphql-eslint/eslint-plugin": "^0.9.1",
+        "@nyoomy/eslint-config": "workspace:*",
+        "@nyoomy/prettier-config": "workspace:*",
+        "@nyoomy/stylelint-config": "workspace:*",
+        "@types/eslint": "^7",
         "@types/node": "^14.14.41",
         "@types/rimraf": "^3.0.0",
         "@types/yargs": "^16",
-        "@typescript-eslint/eslint-plugin": "^4.16.1",
-        "@typescript-eslint/parser": "^4.16.1",
-        "@typescript-eslint/typescript-estree": "^4.21.0",
         "concurrently": "^6.0.0",
         "cspell": "^5.2.4",
-        "eslint": "^7.24.0",
-        "eslint-config-prettier": "^8.1.0",
-        "eslint-plugin-import": "^2.22.1",
-        "eslint-plugin-jest": "^24.3.5",
-        "eslint-plugin-jsdoc": "^32.3.0",
-        "eslint-plugin-json": "^2.1.2",
-        "eslint-plugin-jsx-a11y": "^6.4.1",
-        "eslint-plugin-prettier": "^3.3.1",
-        "eslint-plugin-react": "^7.22.0",
-        "eslint-plugin-react-hooks": "^4.2.0",
-        "eslint-plugin-yml": "^0.9.0",
+        "eslint": "^7.25.0",
+        "eslint-define-config": "^1.0.8",
+        "graphql": "^15.5.0",
         "husky": "^6.0.0",
         "lerna": "^4.0.0",
         "lint-staged": "^10.5.4",
         "markdownlint": "^0.23.1",
         "markdownlint-cli": "^0.27.1",
+        "please-upgrade-node": "^3.2.0",
         "prettier": "^2.2.1",
         "rimraf": "^3.0.2",
         "stylelint": "^13.12.0",
-        "stylelint-config-sass-guidelines": "^8.0.0",
-        "stylelint-config-standard": "^21.0.0",
-        "stylelint-no-unsupported-browser-features": "^4.1.4",
-        "stylelint-order": "^4.1.0",
         "ts-node": "^9.1.1",
         "typescript": "^4.2.4",
         "yargs": "^16.2.0"
     },
     "engines": {
         "node": ">=14.16.1",
-        "yarn": ">=2.4.1",
-        "npm": ">=7.10.0"
+        "yarn": ">=2.4.1"
     },
-    "workspaces": {
-        "packages": [
-            "packages/*"
-        ]
-    },
-    "resolutions": {
-        "nyoomy": "portal:",
-        "@nyoomy/assets": "portal:packages/assets",
-        "@nyoomy/cli": "portal:packages/cli",
-        "@nyoomy/client": "portal:packages/client",
-        "@nyoomy/common": "portal:packages/common",
-        "@nyoomy/config": "portal:packages/config",
-        "@nyoomy/database": "portal:packages/database",
-        "@nyoomy/desktop": "portal:packages/desktop",
-        "@nyoomy/email": "portal:packages/email",
-        "@nyoomy/extension": "portal:packages/extension",
-        "@nyoomy/global": "portal:packages/global",
-        "@nyoomy/mobile": "portal:packages/mobile",
-        "@nyoomy/server": "portal:packages/server",
-        "@nyoomy/web": "portal:packages/web",
-        "@nyoomy/webhooks": "portal:packages/webhooks"
-    }
+    "workspaces": [
+        "packages/*"
+    ]
 }

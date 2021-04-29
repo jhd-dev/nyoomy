@@ -1,35 +1,24 @@
 {
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": true,
-        "source.fixAll.markdownlint": true
+        "source.fixAll.markdownlint": true,
+        "source.fixAll.stylelint": true
     },
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true,
     "editor.rulers": [80, 100],
     "eslint.alwaysShowStatus": true,
-    "eslint.options": {
-        "extensions": [
-            ".js",
-            ".jsx",
-            ".ts",
-            ".tsx",
-            ".json",
-            ".jsonc",
-            ".yml",
-            ".yaml",
-            ".graphql"
-        ]
-    },
     "eslint.packageManager": "yarn",
     "eslint.validate": [
         "javascript",
         "javascriptreact",
         "typescript",
         "typescriptreact",
-        "json",
-        "jsonc",
-        "yaml",
-        "graphql"
+        "json"
+        // "jsonc",
+        // "yaml",
+        // "graphql",
+        // "html"
     ],
     "files.exclude": {
         "**/.git": false,
@@ -38,13 +27,24 @@
         "**/CVS": true,
         "**/.DS_Store": true
     },
-    "[git-commit]": {
-        "editor.rulers": [50]
-    },
+    "javascript.preferences.quoteStyle": "single",
+    "material-icon-theme.activeIconPack": "react",
+    "prettier.enable": true,
+    "prettier.prettierPath": "node_modules/prettier",
+    "prettier.requireConfig": true,
+    "prettier.useEditorConfig": true,
     "search.exclude": {
-        "**/node_modules": true
+        ".yarn": true,
+        "**/*.lock": true
     },
     "search.followSymlinks": false,
+    "stylelint.packageManager": "yarn",
+    // "stylelint.stylelintPath": "node_modules/stylelint/lib",
+    "stylelint.validate": ["css", "html", "postcss", "scss"],
+    "tslint.enable": false,
+    "typescript.preferences.quoteStyle": "single",
     "typescript.tsdk": "node_modules/typescript/lib",
-    "tslint.enable": false
+    "[git-commit]": {
+        "editor.rulers": [50]
+    }
 }

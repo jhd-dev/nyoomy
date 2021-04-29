@@ -1,1 +1,0 @@
-# @nyoomy/mobile

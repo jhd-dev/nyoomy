@@ -1,17 +1,3 @@
 {
-    "extends": ["stylelint-config-standard"],
-    "plugins": ["stylelint-order", "stylelint-no-unsupported-browser-features"],
-    "rules": {
-        "order/order": [
-            "dollar-variables",
-            "custom-properties",
-            "declarations",
-            "rules",
-            "at-rules"
-        ],
-        "plugin/no-unsupported-browser-features": [
-            true,
-            { "severity": "warning" }
-        ]
-    }
+    "extends": "@nyoomy/stylelint-config"
 }
