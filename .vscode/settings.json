@@ -39,7 +39,7 @@
     },
     "search.followSymlinks": false,
     "stylelint.packageManager": "yarn",
-    // "stylelint.stylelintPath": "node_modules/stylelint/lib",
+    "stylelint.stylelintPath": "node_modules/stylelint/lib",
     "stylelint.validate": ["css", "html", "postcss", "scss"],
     "tslint.enable": false,
     "typescript.preferences.quoteStyle": "single",
