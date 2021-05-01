@@ -1,4 +1,4 @@
-import React, { useState, FormEvent } from 'react';
+import React, { useState, FormEvent, FC } from 'react';
 import { RouteComponentProps } from 'react-router';
 import {
     MeDocument,
@@ -11,7 +11,7 @@ import Container from 'react-bootstrap/Container';
 import InputTextField from '../components/InputTextField';
 import { IInputEvent } from '@nyoomy/common';
 
-const LoginPage: React.FC<RouteComponentProps> = ({ history }) => {
+const LoginPage: FC<RouteComponentProps> = ({ history }) => {
     const [usernameOrEmail, setUsernameOrEmail] = useState('');
     const [password, setPassword] = useState('');
 

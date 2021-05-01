@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import MainPage from './MainPage';
 import RegistrationPage from './RegistrationPage';
 import LoginPage from './LoginPage';
-import Header from '../components/Header';
+import Header from '@nyoomy/components';
 
-const Routes: React.FC = () => {
+const Routes: FC = () => {
     return (
         <BrowserRouter>
             <div>

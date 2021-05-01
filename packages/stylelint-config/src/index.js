@@ -1,4 +1,4 @@
-export default {
+module.exports = {
     extends: [
         'stylelint-config-standard',
         'stylelint-config-sass-guidelines',
@@ -7,6 +7,7 @@ export default {
     ],
     plugins: ['stylelint-order', 'stylelint-no-unsupported-browser-features'],
     rules: {
+        'selector-class-pattern': '',
         'order/order': [
             'dollar-variables',
             'custom-properties',
@@ -14,9 +15,9 @@ export default {
             'rules',
             'at-rules',
         ],
-        'plugin/no-unsupported-browser-features': [
-            true,
-            { severity: 'warning' },
-        ],
+        // 'plugin/no-unsupported-browser-features': [
+        //     true,
+        //     { severity: 'warning' },
+        // ],
     },
 };

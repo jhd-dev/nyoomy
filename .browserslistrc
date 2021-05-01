@@ -9,6 +9,8 @@ last 2 Safari versions
 last 1 Electron version
 not dead
 not IE 10
+not IE 11
+not OperaMini all
 
 [development]
 defaults

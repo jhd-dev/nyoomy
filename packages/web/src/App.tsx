@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, FC } from 'react';
 import fetch from 'cross-fetch';
 
 import './style/App.scss';
@@ -98,7 +98,7 @@ const client = new ApolloClient({
     cache,
 });
 
-export const App: React.FC = () => {
+export const App: FC = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {

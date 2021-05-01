@@ -4,7 +4,6 @@ import {
     classToPlain,
 } from 'class-transformer';
 import { validateOrReject, ValidationError } from 'class-validator';
-
 import type { Dictionary } from '../types/types';
 
 // const primitiveConstructors = [String, Number, BigInt, Boolean, Symbol];
@@ -52,7 +51,7 @@ export async function resolveToClass<T extends Dictionary>(
         await validateOrReject(instance);
         return [instance, []];
     } catch (errors: unknown) {
-        const validationErrors = errors as ValidationError[];
+        const validationErrors: ValidationError[] = errors as ValidationError[];
         return [null, validationErrors];
     }
 }

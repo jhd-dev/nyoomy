@@ -8,6 +8,9 @@
     // Indent unordered lists using 4 spaces
     "MD007": { "indent": 4, "start_indented": false },
 
+    // Line length
+    "MD013": { "stern": true, "strict": false },
+
     // Ordered lists should have multiple, numerically sequential entries
     "MD029": { "style": "ordered" },
 

@@ -11,16 +11,16 @@ export default {
         {
             files: typescriptFiles,
             parser: '@typescript-eslint/parser',
-    parserOptions: {
-        ecmaVersion: 2020,
-        sourceType: 'module',
-        project: ['tsconfig-eslint.json'],
-        extraFileExtensions: ['.json'],
-        ecmaFeatures: {
-            jsx: true,
-            modules: true
-        },
-    },
+            parserOptions: {
+                ecmaVersion: 2020,
+                sourceType: 'module',
+                project: ['tsconfig-eslint.json'],
+                extraFileExtensions: ['.json'],
+                ecmaFeatures: {
+                    jsx: true,
+                    modules: true,
+                },
+            },
             env: {
                 es6: true,
             },

@@ -1,15 +1,14 @@
-import React, { FormEvent, useState } from 'react';
-import { useRegisterMutation, FieldError } from '../../generated/graphql-hooks';
+import React, { FormEvent, useState, FC } from 'react';
+import { useRegisterMutation, FieldError } from '@nyoomy/graphql';
 import { RouteComponentProps } from 'react-router';
-
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
-import InputTextField from '../components/InputTextField';
-import { IInputEvent } from '../@nyoomy/common/src/types';
+import InputTextField from '@nyoomy/components';
+import { IInputEvent } from '@nyoomy/common';
 
-const RegistrationPage: React.FC<RouteComponentProps> = ({ history }) => {
+const RegistrationPage: FC<RouteComponentProps> = ({ history }) => {
     const [name, setName] = useState('');
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');

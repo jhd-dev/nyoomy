@@ -1,5 +1,5 @@
 import { APP_NAME } from '@nyoomy/global';
-import React from 'react';
+import React, { FC } from 'react';
 //import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 //import { faEllipsisH, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import { useMeQuery, useLogoutMutation } from '@nyoomy/graphql';
 import { setAccessToken } from '../utils/accessToken';
 
-export const Header: React.FC = () => {
+export const Header: FC = () => {
     const { data, loading } = useMeQuery({ fetchPolicy: 'network-only' });
     const [logout, { client }] = useLogoutMutation();
 

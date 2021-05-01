@@ -2,12 +2,12 @@
     "name": "@nyoomy/assets",
     "version": "0.1.0",
     "description": "Graphics, audio, and other non-code resources for Nyoomy.",
+    "author": "",
     "scripts": {
         "build": "tsc",
         "build:watch": "tsc --watch",
         "test": "jest --detectOpenHandles"
     },
-    "author": "",
     "dependencies": {
         "class-transformer": "^0.4.0",
         "class-validator": "^0.13.1",

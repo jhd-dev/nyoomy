@@ -2,7 +2,7 @@
     "name": "@nyoomy/prettier-config",
     "version": "0.1.0",
     "private": true,
-    "description": "Base configuration files for Nyoomy development tools.",
+    "description": "Configuration for Prettier.",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/jhd-dev/nyoomy.git",

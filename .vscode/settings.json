@@ -14,11 +14,11 @@
         "javascriptreact",
         "typescript",
         "typescriptreact",
-        "json"
-        // "jsonc",
-        // "yaml",
-        // "graphql",
-        // "html"
+        "json",
+        "jsonc",
+        "yaml",
+        "graphql",
+        "html"
     ],
     "files.exclude": {
         "**/.git": false,

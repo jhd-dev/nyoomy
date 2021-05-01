@@ -3,13 +3,13 @@
     "version": "0.1.0",
     "private": true,
     "description": "UI components for Nyoomy.",
+    "author": "",
     "main": "lib/index.js",
     "scripts": {
         "build": "tsc",
         "build:watch": "tsc --watch",
         "test": "jest --detectOpenHandles"
     },
-    "author": "",
     "dependencies": {
         "class-transformer": "^0.4.0",
         "class-validator": "^0.13.1",

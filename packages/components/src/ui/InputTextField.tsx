@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
@@ -18,7 +18,7 @@ interface InputTextFieldProps {
     children?: Partial<Element>;
 }
 
-const InputTextField: React.FC<InputTextFieldProps> = ({
+const InputTextField: FC<InputTextFieldProps> = ({
     field,
     inputType,
     label,
