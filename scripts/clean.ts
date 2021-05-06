@@ -15,15 +15,17 @@ import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
 interface ICleanArgs {
-    'verbose': boolean;
-    'quiet': boolean;
-    'help': boolean;
-    'include-modules': boolean;
-    '_': (string | number)[];
-    '$0': string;
+    argv: {
+        'verbose': boolean;
+        'quiet': boolean;
+        'help': boolean;
+        'include-modules': boolean;
+        '_': Array<string | number>;
+        '$0': string;
+    };
 }
 
-const argv: ICleanArgs = yargs(hideBin(process.argv))
+const { argv }: ICleanArgs = yargs(hideBin(process.argv))
     .scriptName('clean.ts')
     .usage('$0 <path> [<path> ...]')
     .options({
@@ -49,9 +51,9 @@ const argv: ICleanArgs = yargs(hideBin(process.argv))
     .help()
     .alias('help', 'h')
     .default('help', false)
-    .version(false).argv;
+    .version(false);
 
-const DEFAULT_DELETABLES: ReadonlyArray<string> = [
+const DEFAULT_DELETABLES: readonly string[] = [
     'packages/**/dist',
     'packages/**/lib',
     'packages/**/generated',
@@ -60,7 +62,7 @@ const DEFAULT_DELETABLES: ReadonlyArray<string> = [
     '.eslintcache',
 ];
 
-const MODULE_DELETABLES: ReadonlyArray<string> = [
+const MODULE_DELETABLES: readonly string[] = [
     '**/node_modules',
     '**/.yarn/cache',
 ];
@@ -71,12 +73,12 @@ const enum MessageType {
     ERROR,
 }
 
-const getDeletables = (): ReadonlyArray<string> => {
-    const baseDeletables: ReadonlyArray<string> =
+const getDeletables = (): readonly string[] => {
+    const baseDeletables: readonly string[] =
         argv._.length > 0
             ? argv._.map((arg) => String(arg))
             : DEFAULT_DELETABLES;
-    const allDeletables: ReadonlyArray<string> = argv['include-modules']
+    const allDeletables: readonly string[] = argv['include-modules']
         ? baseDeletables.concat(MODULE_DELETABLES)
         : baseDeletables;
     return allDeletables;
@@ -84,6 +86,7 @@ const getDeletables = (): ReadonlyArray<string> => {
 
 const promiseRimraf = (filename: string): Promise<Error | null> =>
     new Promise((resolve, reject) =>
+        // eslint-disable-next-line promise/prefer-await-to-callbacks
         rimraf(filename, (error: Error | null) => {
             if (error == null) {
                 resolve(null);
@@ -110,6 +113,8 @@ const printMessage = (message: string, messageType: MessageType): void => {
                 console.error(message);
             }
             break;
+        default:
+            throw new Error('Message type not recongized.');
     }
 };
 

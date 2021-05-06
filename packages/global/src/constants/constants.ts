@@ -23,7 +23,7 @@ export const DATABASE_TYPE = 'postgres' as const;
  * @constant
  * @default
  */
-export const REFRESH_TOKEN_NAME = 'refreshToken';
+export const COOKIE_NAME = 'refreshToken';
 
 /**
  * The header name associated with the auth access tokens sent to the client.

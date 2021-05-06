@@ -13,7 +13,6 @@
         "test": "jest --detectOpenHandles"
     },
     "dependencies": {
-        "dotenv": "^8.2.0",
         "reflect-metadata": "^0.1.13"
     },
     "devDependencies": {

@@ -1,6 +1,7 @@
 const restrictedGlobals = require('confusing-browser-globals');
 
 module.exports = {
+    'class-methods-use-this': 'off',
     'default-case-last': 'error',
     'default-param-last': 'error',
     'eqeqeq': [
@@ -10,7 +11,6 @@ module.exports = {
             null: 'ignore',
         },
     ],
-    'inclusive-language/use-inclusive-words': 'warn',
     'max-classes-per-file': ['warn', 1],
     'max-len': [
         'warn',
@@ -40,7 +40,10 @@ module.exports = {
     ],
     'no-unused-expressions': 'error',
     'no-var': 'error',
+    'no-void': ['error', { allowAsStatement: true }],
     'prefer-arrow-callback': 'warn',
     'prefer-rest-params': 'error',
     'require-await': 'error',
+    'no-console': ['warn', { allow: ['error', 'warn', 'info'] }],
+    'global-require': 'off',
 };

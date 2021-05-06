@@ -1,68 +1,68 @@
-/* eslint-ignore @typescript-eslint/no-unnecessary-type-assertions */
+/* eslint-disable prefer-destructuring */
+/* eslint-disable node/no-process-env */
+/* eslint-disable no-underscore-dangle */
 
-import { config } from 'dotenv';
+import { config } from 'dotenv-safe';
+import { resolve } from 'path';
 
-config({
-    path: '.env.local',
+const ROOT = '../../../..';
+
+const env = config({
+    path: resolve(__dirname, ROOT, '.env.local'),
+    example: resolve(__dirname, ROOT, '.env.example'),
+    allowEmptyValues: false,
+    encoding: 'utf8',
 });
 
-const DEFAULT_PORT = 4000;
+if (env.parsed == null) {
+    throw new Error('Unable to parse environmental variables.');
+}
 
 /**
  * The enum value associated with the current node environment (NODE_ENV).
  *
  * @exports
- * @constant
  */
-export const NODE_ENV: string = process.env.NODE_ENV as string;
+export const NODE_ENV: string = env.parsed.NODE_ENV;
+
+export const __dev__: boolean = NODE_ENV === 'development';
+export const __prod__: boolean = NODE_ENV === 'production';
+export const __test__: boolean = NODE_ENV === 'test';
 
 /**
  * The port to attempt to host the server on.
  *
  * @exports
- * @constant
  */
-export const PORT: number =
-    process.env.PORT === undefined ? DEFAULT_PORT : parseInt(process.env.PORT);
-
+export const PORT: number = parseInt(env.parsed.PORT, 10);
+export const DOMAIN: string = env.parsed.DOMAIN;
 /**
  * The name of the database used to store the model.
  *
  * @exports
- * @constant
  */
-export const DB_NAME: string = process.env.DB_NAME as string;
-
+export const DB_NAME: string = env.parsed.DB_NAME;
 /**
  * The username used for the server to log into the database.
  *
  * @exports
- * @constant
  */
-export const DB_USERNAME: string = process.env.DB_USERNAME as string;
-
+export const DB_USERNAME: string = env.parsed.DB_USERNAME;
 /**
  * The password used for the server to log into the database.
  *
  * @exports
- * @constant
  */
-export const DB_PASSWORD: string = process.env.DB_PASSWORD as string;
-
-/**
- * The secret key used to generate access tokens for user authentication.
- *
- * @exports
- * @constant
- */
-export const ACCESS_TOKEN_SECRET: string = process.env
-    .ACCESS_TOKEN_SECRET as string;
-
-/**
- * The secret key used to generate refresh tokens for user authentication.
- *
- * @exports
- * @constant
- */
-export const REFRESH_TOKEN_SECRET: string = process.env
-    .REFRESH_TOKEN_SECRET as string;
+export const DB_PASSWORD: string = env.parsed.DB_PASSWORD;
+export const ACCESS_TOKEN_SECRET: string = env.parsed.ACCESS_TOKEN_SECRET;
+export const REDIS_SECRET: string = env.parsed.REDIS_SECRET;
+export const EMAIL_TRANSPORTER_HOST: string = env.parsed.EMAIL_TRANSPORTER_HOST;
+export const EMAIL_TRANSPORTER_PORT: number = parseInt(
+    env.parsed.EMAIL_TRANSPORTER_PORT,
+    10
+);
+export const EMAIL_TRANSPORTER_NAME: string = env.parsed.EMAIL_TRANSPORTER_NAME;
+export const EMAIL_TRANSPORTER_ADDRESS: string =
+    env.parsed.EMAIL_TRANSPORTER_ADDRESS;
+export const EMAIL_TRANSPORTER_PASSWORD: string =
+    env.parsed.EMAIL_TRANSPORTER_PASSWORD;

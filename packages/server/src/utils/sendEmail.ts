@@ -1,3 +1,10 @@
+import {
+    EMAIL_TRANSPORTER_HOST,
+    EMAIL_TRANSPORTER_PORT,
+    EMAIL_TRANSPORTER_NAME,
+    EMAIL_TRANSPORTER_ADDRESS,
+    EMAIL_TRANSPORTER_PASSWORD,
+} from '@nyoomy/global';
 import nodemailer from 'nodemailer';
 import type MimeNode from 'nodemailer/lib/mime-node';
 
@@ -8,21 +15,21 @@ const sendEmail = async (
 ): Promise<void> => {
     // create reusable transporter object using the default SMTP transport
     const transporter = nodemailer.createTransport({
-        host: 'smtp.ethereal.email',
-        port: 587,
+        host: EMAIL_TRANSPORTER_HOST,
+        port: EMAIL_TRANSPORTER_PORT,
         auth: {
-            user: 'ally.kuphal@ethereal.email',
-            pass: 'cyDXm6CJgKsDYZKbgZ',
+            user: EMAIL_TRANSPORTER_ADDRESS,
+            pass: EMAIL_TRANSPORTER_PASSWORD,
         },
     });
 
     // send mail with defined transport object
     const info = (await transporter.sendMail({
-        from: '"Ally Kuphal" <ally.kuphal@ethereal.email>', // sender address
+        from: `"${EMAIL_TRANSPORTER_NAME}" <${EMAIL_TRANSPORTER_ADDRESS}>`,
         to,
-        subject, // Subject line
-        //text,
-        html, // html body
+        subject,
+        // text,
+        html,
     })) as {
         envelope: MimeNode.Envelope;
         messageId: string;
@@ -33,7 +40,6 @@ const sendEmail = async (
     }
 
     console.log('Message sent: %s', info.messageId);
-    // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 
     // Preview only available when sending through an Ethereal account
     console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));

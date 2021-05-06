@@ -1,4 +1,6 @@
-import { config as dotenvConfig } from 'dotenv';
+/* eslint-disable import/no-extraneous-dependencies */
+
+import { config as dotenvConfig } from 'dotenv-safe';
 import DotenvPlugin from 'dotenv-webpack';
 import ESLintWebpackPlugin from 'eslint-webpack-plugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
@@ -12,6 +14,9 @@ import {
 
 dotenvConfig({
     path: resolve(__dirname, '.env.local'),
+    example: resolve(__dirname, '.env.example'),
+    allowEmptyValues: false,
+    encoding: 'utf8',
 });
 
 const isProd: boolean = process.env.NODE_ENV === 'production';

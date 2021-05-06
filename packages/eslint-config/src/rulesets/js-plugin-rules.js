@@ -1,16 +1,19 @@
 module.exports = {
-    'import/extensions': [
+    'import/extensions': 'off',
+    'import/no-extraneous-dependencies': [
         'error',
-        'ignorePackages',
         {
-            js: 'never',
-            mjs: 'never',
-            jsx: 'never',
-            ts: 'never',
-            tsx: 'never',
-            json: 'always',
+            devDependencies: [
+                '**/packages/*/*.js',
+                '**/packages/*/*.ts',
+                '**/scripts/*.ts',
+                '**/*.test.ts',
+                '**/*.test.tsx',
+            ],
         },
     ],
+    'import/no-unresolved': 'off',
+    'node/no-unpublished-require': 'off',
     'import/order': [
         'error',
         {
@@ -34,12 +37,20 @@ module.exports = {
             },
         },
     ],
+    'import/prefer-default-export': 'off',
+    'inclusive-language/use-inclusive-words': 'warn',
     'jsdoc/no-undefined-types': 'off',
     'jsdoc/require-jsdoc': 'off',
     'node/no-missing-import': 'off',
     'node/no-path-concat': 'error',
+    'node/prefer-global/console': 'error',
+    'node/no-process-env': 'error',
+    'node/no-process-exit': 'error',
     'node/no-unpublished-import': 'off',
     'node/no-unsupported-features/es-syntax': 'off',
+    'node/shebang': 'error',
+    'promise/prefer-await-to-then': 'warn',
+    'promise/prefer-await-to-callbacks': 'warn',
     'react-hooks/exhaustive-deps': 'warn',
     'react-hooks/rules-of-hooks': 'error',
     'react/jsx-filename-extension': ['error', { extensions: ['.tsx'] }],

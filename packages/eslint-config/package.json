@@ -28,7 +28,9 @@
         "eslint-config-prettier": "^8.1.0",
         "eslint-define-config": "^1.0.8",
         "eslint-import-resolver-typescript": "^2.4.0",
+        "eslint-plugin-array-func": "^3.1.7",
         "eslint-plugin-editorconfig": "^3.0.2",
+        "eslint-plugin-eslint-comments": "^3.2.0",
         "eslint-plugin-import": "^2.22.1",
         "eslint-plugin-inclusive-language": "^2.1.1",
         "eslint-plugin-jest": "^24.3.5",
@@ -40,9 +42,13 @@
         "eslint-plugin-node": "^11.1.0",
         "eslint-plugin-pii": "^1.0.2",
         "eslint-plugin-prettier": "^3.3.1",
+        "eslint-plugin-promise": "^5.1.0",
         "eslint-plugin-react": "^7.22.0",
         "eslint-plugin-react-hooks": "^4.2.0",
         "eslint-plugin-regexp": "^0.9.0",
+        "eslint-plugin-security-node": "^1.0.14",
+        "eslint-plugin-sonarjs": "^0.7.0",
+        "eslint-plugin-type-graphql": "^0.3.0",
         "eslint-plugin-yml": "^0.9.0"
     },
     "devDependencies": {

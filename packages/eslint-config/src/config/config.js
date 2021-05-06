@@ -1,14 +1,14 @@
 // Workaround for https://github.com/eslint/eslint/issues/3458
 require('@rushstack/eslint-patch/modern-module-resolution');
 
-// var graphQLOverride = require('../rulesets/graphql-override');
-const htmlOverride = require('../rulesets/html-override');
-const jsOverride = require('../rulesets/js-override');
-const jsonOverride = require('../rulesets/json-override');
-const yamlOverride = require('../rulesets/yaml-override');
+// var graphQLOverrides = require('../overrides/graphql-override');
+const htmlOverrides = require('../overrides/html-override');
+const jsOverrides = require('../overrides/js-override');
+const jsonOverrides = require('../overrides/json-override');
+const tsOverrides = require('../overrides/ts-override');
+const yamlOverrides = require('../overrides/yaml-override');
 
 module.exports = {
-    // extends: require('./utils/orderRulesets.ts').orderRulesets(),
     plugins: [
         '@typescript-eslint',
         // '@graphql-eslint',
@@ -23,13 +23,21 @@ module.exports = {
         'inclusive-language',
         'jsdoc',
         'pii',
+        'promise',
         'regexp',
+        'node',
+        'type-graphql',
+        'sonarjs',
+        'security-node',
+        'array-func',
+        'eslint-comments',
     ],
     overrides: [
-        jsOverride,
-        jsonOverride,
-        yamlOverride,
-        htmlOverride,
-        // graphQLOverride,
+        ...jsOverrides,
+        ...tsOverrides,
+        ...jsonOverrides,
+        ...yamlOverrides,
+        ...htmlOverrides,
+        // ...graphQLOverrides,
     ],
 };
