@@ -1,4 +1,4 @@
-module.exports = [
+export default [
     {
         files: ['*.yml', '*.yaml'],
         extends: ['plugin:yml/standard', 'plugin:yml/prettier'],

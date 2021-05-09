@@ -1,4 +1,10 @@
-module.exports = {
+import jsRules from './js-rules';
+
+/**
+ * ESLint rules for TypeScript files.
+ */
+export default {
+    ...jsRules,
     '@typescript-eslint/array-type': [
         'error',
         { default: 'array-simple', readonly: 'array-simple' },
@@ -20,47 +26,6 @@ module.exports = {
             objectLiteralTypeAssertions: 'allow-as-parameter',
         },
     ],
-    // '@typescript-eslint/naming-convention': [
-    //     'warn',
-    //     {
-    //         selector: 'default',
-    //         format: ['camelCase'],
-    //         leadingUnderscore: 'forbid',
-    //         trailingUnderscore: 'forbid',
-    //     },
-    //     {
-    //         selector: 'variable',
-    //         modifiers: ['const'],
-    //         format: ['camelCase', 'UPPER_CASE'],
-    //         leadingUnderscore: 'allowSingleOrDouble',
-    //         trailingUnderscore: 'allowDouble',
-    //     },
-    //     {
-    //         selector: ['classProperty', 'typeProperty'],
-    //         modifiers: ['readonly'],
-    //         format: ['camelCase', 'UPPER_CASE'],
-    //         leadingUnderscore: 'allow',
-    //         trailingUnderscore: 'allow',
-    //     },
-    //     {
-    //         selector: 'enumMember',
-    //         format: ['UPPER_CASE'],
-    //         leadingUnderscore: 'forbid',
-    //         trailingUnderscore: 'forbid',
-    //     },
-    //     {
-    //         selector: 'typeLike',
-    //         format: ['PascalCase'],
-    //         leadingUnderscore: 'forbid',
-    //         trailingUnderscore: 'forbid',
-    //     },
-    //     {
-    //         selector: ['parameter', 'parameterProperty'],
-    //         format: ['camelCase'],
-    //         leadingUnderscore: 'allow',
-    //         trailingUnderscore: 'forbid',
-    //     },
-    // ],
     '@typescript-eslint/consistent-type-imports': [
         'error',
         { prefer: 'type-imports', disallowTypeAnnotations: true },

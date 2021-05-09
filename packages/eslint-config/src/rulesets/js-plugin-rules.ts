@@ -1,4 +1,7 @@
-module.exports = {
+/**
+ * JavaScript ESLint rules from external plugins.
+ */
+export default {
     'import/extensions': 'off',
     'import/no-extraneous-dependencies': [
         'error',
@@ -6,6 +9,9 @@ module.exports = {
             devDependencies: [
                 '**/packages/*/*.js',
                 '**/packages/*/*.ts',
+                '**/packages/*/tools/*.js',
+                '**/packages/*/tools/*.ts',
+                '**/scripts/*.js',
                 '**/scripts/*.ts',
                 '**/*.test.ts',
                 '**/*.test.tsx',

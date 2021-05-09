@@ -1,4 +1,4 @@
-module.exports = [
+export default [
     {
         files: ['*.json', '*.jsonc'],
         extends: ['plugin:json/recommended-with-comments'],

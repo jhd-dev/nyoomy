@@ -1,4 +1,4 @@
-module.exports = [
+export default [
     {
         files: ['*.graphql', '*.gql'],
         parser: '@graphql-eslint/eslint-plugin',

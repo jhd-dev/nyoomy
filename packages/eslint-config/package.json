@@ -8,8 +8,9 @@
         "url": "git+https://github.com/jhd-dev/nyoomy.git",
         "directory": "packages/eslint-config"
     },
-    "author": "",
-    "main": "src/index.js",
+    "main": "lib/index.js",
+    "module": "src/index.ts",
+    "typings": "lib/index.d.ts",
     "scripts": {
         "build": "tsc -b tsconfig.json",
         "build:watch": "tsc -b --watch",
@@ -19,15 +20,12 @@
         "@graphql-eslint/eslint-plugin": "^0.9.1",
         "@html-eslint/eslint-plugin": "^0.9.0",
         "@html-eslint/parser": "^0.9.0",
-        "@rushstack/eslint-patch": "^1.0.6",
         "@typescript-eslint/eslint-plugin": "^4.16.1",
         "@typescript-eslint/parser": "^4.16.1",
         "@typescript-eslint/typescript-estree": "^4.21.0",
         "confusing-browser-globals": "^1.0.10",
         "eslint-config-airbnb": "^18.2.1",
         "eslint-config-prettier": "^8.1.0",
-        "eslint-define-config": "^1.0.8",
-        "eslint-import-resolver-typescript": "^2.4.0",
         "eslint-plugin-array-func": "^3.1.7",
         "eslint-plugin-editorconfig": "^3.0.2",
         "eslint-plugin-eslint-comments": "^3.2.0",
@@ -52,7 +50,8 @@
         "eslint-plugin-yml": "^0.9.0"
     },
     "devDependencies": {
-        "@types/confusing-browser-globals": "^1.0.0"
+        "@types/confusing-browser-globals": "^1.0.0",
+        "eslint-define-config": "^1.0.8"
     },
     "peerDependencies": {
         "eslint": "^7.25.0",

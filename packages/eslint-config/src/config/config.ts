@@ -1,14 +1,11 @@
-// Workaround for https://github.com/eslint/eslint/issues/3458
-require('@rushstack/eslint-patch/modern-module-resolution');
+// import graphQLOverrides from '../overrides/graphql-override';
+import htmlOverrides from '../overrides/html-override';
+import jsOverrides from '../overrides/js-override';
+import jsonOverrides from '../overrides/json-override';
+import tsOverrides from '../overrides/ts-override';
+import yamlOverrides from '../overrides/yaml-override';
 
-// var graphQLOverrides = require('../overrides/graphql-override');
-const htmlOverrides = require('../overrides/html-override');
-const jsOverrides = require('../overrides/js-override');
-const jsonOverrides = require('../overrides/json-override');
-const tsOverrides = require('../overrides/ts-override');
-const yamlOverrides = require('../overrides/yaml-override');
-
-module.exports = {
+export default {
     plugins: [
         '@typescript-eslint',
         // '@graphql-eslint',
