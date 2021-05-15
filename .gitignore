@@ -58,6 +58,12 @@ pids
 # WebStorm IDE config
 .idea/
 
+# Redis dumps
+*.rdb
+
 # Misc.
-temp
+temp/
+./cache/
+cached/
 *.DS_Store
+

@@ -1,18 +1,18 @@
 mutation Register(
-    $name: String!
+    $displayName: String!
     $email: String!
     $username: String!
     $password: String!
 ) {
     registerUser(
-        name: $name
+        displayName: $displayName
         email: $email
         username: $username
         password: $password
     ) {
         user {
             id
-            name
+            displayName
             username
         }
         errors {

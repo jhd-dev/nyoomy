@@ -1,15 +1,13 @@
-import React, { useState, FormEvent, FC } from 'react';
-import { RouteComponentProps } from 'react-router';
-import {
-    MeDocument,
-    useLoginMutation,
-    MeQuery,
-} from '../../generated/graphql-hooks';
-import Form from 'react-bootstrap/Form';
+import type { FormEvent, FC } from 'react';
+import React, { useState } from 'react';
+import type { IInputEvent } from '@nyoomy/common';
+import type { MeQuery } from '@nyoomy/graphql';
+import { MeDocument, useLoginMutation } from '@nyoomy/graphql';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
+import Form from 'react-bootstrap/Form';
+import type { RouteComponentProps } from 'react-router-dom';
 import InputTextField from '../components/InputTextField';
-import { IInputEvent } from '@nyoomy/common';
 
 const LoginPage: FC<RouteComponentProps> = ({ history }) => {
     const [usernameOrEmail, setUsernameOrEmail] = useState('');
@@ -25,8 +23,8 @@ const LoginPage: FC<RouteComponentProps> = ({ history }) => {
                 usernameOrEmail,
                 password,
             },
-            update: (store, { data }) => {
-                if (data == null) return null;
+            update: (store, { data }): void => {
+                if (data == null) return;
                 store.writeQuery<MeQuery>({
                     query: MeDocument,
                     data: {
@@ -64,7 +62,7 @@ const LoginPage: FC<RouteComponentProps> = ({ history }) => {
                     required
                 />
                 <Button type="submit">Login</Button>
-                <Button type=""></Button>
+                <Button type="" />
             </Container>
         </Form>
     );

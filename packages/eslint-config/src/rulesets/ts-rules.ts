@@ -1,3 +1,4 @@
+import { OFF, WARN, ERROR } from '../types/severity';
 import jsRules from './js-rules';
 
 /**
@@ -5,12 +6,13 @@ import jsRules from './js-rules';
  */
 export default {
     ...jsRules,
+    'no-use-before-define': OFF,
     '@typescript-eslint/array-type': [
-        'error',
+        ERROR,
         { default: 'array-simple', readonly: 'array-simple' },
     ],
     '@typescript-eslint/ban-ts-comment': [
-        'error',
+        ERROR,
         {
             'ts-expect-error': 'allow-with-description',
             'ts-ignore': true,
@@ -20,43 +22,43 @@ export default {
         },
     ],
     '@typescript-eslint/consistent-type-assertions': [
-        'error',
+        ERROR,
         {
             assertionStyle: 'as',
             objectLiteralTypeAssertions: 'allow-as-parameter',
         },
     ],
     '@typescript-eslint/consistent-type-imports': [
-        'error',
+        ERROR,
         { prefer: 'type-imports', disallowTypeAnnotations: true },
     ],
-    'dot-notation': 'off',
-    '@typescript-eslint/dot-notation': 'error',
-    '@typescript-eslint/explicit-member-accessibility': 'error',
+    'dot-notation': OFF,
+    '@typescript-eslint/dot-notation': ERROR,
+    '@typescript-eslint/explicit-member-accessibility': ERROR,
     '@typescript-eslint/no-base-to-string': [
-        'error',
+        ERROR,
         { ignoredTypeNames: ['RegExp', 'URL', 'URLSearchParams'] },
     ],
-    '@typescript-eslint/no-dynamic-delete': 'error',
-    '@typescript-eslint/no-explicit-any': 'warn',
-    '@typescript-eslint/no-inferrable-types': 'off',
-    '@typescript-eslint/no-require-imports': 'warn',
-    'no-shadow': 'off',
-    '@typescript-eslint/no-shadow': 'error',
-    '@typescript-eslint/no-this-alias': 'error',
-    '@typescript-eslint/no-unsafe-argument': 'error',
-    'no-unused-vars': 'off',
-    '@typescript-eslint/no-unused-vars': 'error',
-    '@typescript-eslint/prefer-includes': 'warn',
-    '@typescript-eslint/prefer-literal-enum-member': 'error',
-    '@typescript-eslint/prefer-nullish-coalescing': 'error',
-    '@typescript-eslint/prefer-optional-chain': 'warn',
-    '@typescript-eslint/prefer-readonly': 'warn',
-    '@typescript-eslint/prefer-reduce-type-parameter': 'warn',
-    '@typescript-eslint/prefer-ts-expect-error': 'warn',
-    '@typescript-eslint/prefer-string-starts-ends-with': 'error',
+    '@typescript-eslint/no-dynamic-delete': ERROR,
+    '@typescript-eslint/no-explicit-any': WARN,
+    '@typescript-eslint/no-inferrable-types': OFF,
+    '@typescript-eslint/no-require-imports': WARN,
+    'no-shadow': OFF,
+    '@typescript-eslint/no-shadow': ERROR,
+    '@typescript-eslint/no-this-alias': ERROR,
+    '@typescript-eslint/no-unsafe-argument': ERROR,
+    'no-unused-vars': OFF,
+    '@typescript-eslint/no-unused-vars': ERROR,
+    '@typescript-eslint/prefer-includes': WARN,
+    '@typescript-eslint/prefer-literal-enum-member': ERROR,
+    '@typescript-eslint/prefer-nullish-coalescing': ERROR,
+    '@typescript-eslint/prefer-optional-chain': WARN,
+    '@typescript-eslint/prefer-readonly': WARN,
+    '@typescript-eslint/prefer-reduce-type-parameter': WARN,
+    '@typescript-eslint/prefer-ts-expect-error': WARN,
+    '@typescript-eslint/prefer-string-starts-ends-with': ERROR,
     '@typescript-eslint/restrict-template-expressions': [
-        'error',
+        ERROR,
         {
             allowNumber: true,
             allowBoolean: false,
@@ -65,20 +67,20 @@ export default {
         },
     ],
     '@typescript-eslint/require-array-sort-compare': [
-        'error',
+        ERROR,
         { ignoreStringArrays: true },
     ],
     '@typescript-eslint/typedef': [
-        'warn',
+        WARN,
         {
-            arrayDestructuring: true,
+            arrayDestructuring: false,
             arrowParameter: false,
             memberVariableDeclaration: true,
             objectDestructuring: false,
             parameter: true,
             propertyDeclaration: true,
-            variableDeclaration: true,
-            variableDeclarationIgnoreFunction: true,
+            variableDeclaration: false,
+            variableDeclarationIgnoreFunction: false,
         },
     ],
 };

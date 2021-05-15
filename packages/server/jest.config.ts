@@ -1,6 +1,6 @@
+import 'reflect-metadata';
 import type { Config } from '@jest/types';
 import { defaults } from 'jest-config';
-import 'reflect-metadata';
 
 // https://jestjs.io/docs/configuration
 const getJestConfig = (): Config.InitialOptions => ({

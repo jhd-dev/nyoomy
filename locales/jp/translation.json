@@ -1,0 +1,97 @@
+{
+    "appName": "ニューミ",
+    "welcome": "ようこそ!",
+    "account": {
+        "displayNameField": {
+            "fieldName": "名前",
+            "fieldLabel": "名前",
+            "example": "太郎"
+        },
+        "usernameField": {
+            "fieldName": "ユーザー名",
+            "fieldLabel": "ユーザー名",
+            "example": "taro_07"
+        },
+        "emailAddressField": {
+            "fieldName": "メールアドレス ",
+            "fieldLabel": "メールアドレス ",
+            "example": "address@example.com",
+            "errors": {
+                "invalidEmail": "有効なメールアドレスを入力してください。",
+                "alreadyUsed": "This e-mail address is already in use."
+            }
+        },
+        "passwordField": {
+            "fieldName": "パスワード",
+            "fieldLabel": "パスワード",
+            "example": "********",
+            "errors": {
+                "tooShort": "Your password must contain at least {minLength} characters."
+            }
+        },
+        "dateOfBirth": "date of birth",
+        "createAccount": "Create Account"
+    },
+    "nav": {
+        "loginStatus": "Logged in as @{username}"
+    },
+    "date": {
+        "months": {
+            "jan": "一月",
+            "feb": "二月",
+            "mar": "三月",
+            "apr": "四月",
+            "may": "五月",
+            "jun": "六月",
+            "jul": "七月",
+            "aug": "八月",
+            "sep": "九月",
+            "oct": "十月",
+            "nov": "十一月",
+            "dec": "十二月"
+        },
+        "monthsShort": {
+            "jan": "1月",
+            "feb": "2月",
+            "mar": "3月",
+            "apr": "4月",
+            "may": "5月",
+            "jun": "6月",
+            "jul": "7月",
+            "aug": "8月",
+            "sep": "9月",
+            "oct": "10月",
+            "nov": "11月",
+            "dec": "12月"
+        },
+        "weekdays": {
+            "sun": "日曜日",
+            "mon": "月曜日",
+            "tue": "火曜日",
+            "wed": "水曜日",
+            "thu": "木曜日",
+            "fri": "金曜日",
+            "sat": "土曜日"
+        },
+        "weekdaysShort": {
+            "sun": "日",
+            "mon": "月",
+            "tue": "火",
+            "wed": "水",
+            "thu": "木",
+            "fri": "金",
+            "sat": "土"
+        },
+        "yesterday": "昨日",
+        "today": "今日",
+        "tomorrow": "明日"
+    },
+    "time": {
+        "twelveHour": "12-hour time",
+        "twentyFourHour": "24-hour time",
+        "use24Hour": "Use 24-hour time?",
+        "am": "午前",
+        "pm": "午後",
+        "timeFormat": "{hour}:{minute}"
+    }
+}

@@ -6,7 +6,9 @@ lib/* linguist-generated=true
 bin/* linguist-generated=true
 *.lock linguist-generated=true
 .husky/* linguist-generated=true
+
 .yarn/* linguist-vendored=true
+vendored/* linguist-vendored=true
 
 # Source code
 *.css             text diff=css

@@ -1,16 +1,19 @@
 /* eslint-disable prefer-destructuring */
-/* eslint-disable node/no-process-env */
 /* eslint-disable no-underscore-dangle */
 
+import type { DotenvSafeConfigOutput } from 'dotenv-safe';
 import { config } from 'dotenv-safe';
 import { resolve } from 'path';
+import { URL } from 'url';
 
-const ROOT = '../../../..';
+const ROOT: string = '../../../..';
+export const ENV_FILENAME: string = '.env.local';
+export const ENV_EXAMPLE_FILENAME: string = '.env.example';
 
-const env = config({
-    path: resolve(__dirname, ROOT, '.env.local'),
-    example: resolve(__dirname, ROOT, '.env.example'),
-    allowEmptyValues: false,
+const env: DotenvSafeConfigOutput = config({
+    path: resolve(__dirname, ROOT, ENV_FILENAME),
+    example: resolve(__dirname, ROOT, ENV_EXAMPLE_FILENAME),
+    allowEmptyValues: true,
     encoding: 'utf8',
 });
 
@@ -19,12 +22,11 @@ if (env.parsed == null) {
 }
 
 /**
- * The enum value associated with the current node environment (NODE_ENV).
+ * The current node environment ('development', 'production', or 'test').
  *
  * @exports
  */
 export const NODE_ENV: string = env.parsed.NODE_ENV;
-
 export const __dev__: boolean = NODE_ENV === 'development';
 export const __prod__: boolean = NODE_ENV === 'production';
 export const __test__: boolean = NODE_ENV === 'test';
@@ -35,7 +37,7 @@ export const __test__: boolean = NODE_ENV === 'test';
  * @exports
  */
 export const PORT: number = parseInt(env.parsed.PORT, 10);
-export const DOMAIN: string = env.parsed.DOMAIN;
+export const PUBLIC_URL: URL = new URL(env.parsed.PUBLIC_URL);
 /**
  * The name of the database used to store the model.
  *
@@ -52,8 +54,9 @@ export const DB_USERNAME: string = env.parsed.DB_USERNAME;
  * The password used for the server to log into the database.
  *
  * @exports
+ * @default ""
  */
-export const DB_PASSWORD: string = env.parsed.DB_PASSWORD;
+export const DB_PASSWORD: string = env.parsed.DB_PASSWORD ?? '';
 export const ACCESS_TOKEN_SECRET: string = env.parsed.ACCESS_TOKEN_SECRET;
 export const REDIS_SECRET: string = env.parsed.REDIS_SECRET;
 export const EMAIL_TRANSPORTER_HOST: string = env.parsed.EMAIL_TRANSPORTER_HOST;

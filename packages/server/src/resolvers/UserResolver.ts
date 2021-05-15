@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-import { COOKIE_NAME, DOMAIN } from '@nyoomy/global';
+import { COOKIE_NAME, PUBLIC_URL } from '@nyoomy/global';
 import { compare, hash } from 'bcryptjs';
 import {
     Resolver,
@@ -42,7 +42,7 @@ export class UserResolver {
     }
 
     @Query(() => User, { nullable: true })
-    public async me(@Ctx() { req }: IContext): Promise<User | null> {
+    public async currentUser(@Ctx() { req }: IContext): Promise<User | null> {
         if (typeof req?.session?.id !== 'string' || req.session.id.length === 0)
             return null;
         return (
@@ -129,7 +129,7 @@ export class UserResolver {
         await sendEmail(
             email,
             'Forgot password',
-            `<a href="${DOMAIN}/reset-password/${token}">
+            `<a href="${PUBLIC_URL}/reset-password/${token}">
                 Click here to reset your password.
             </a>`
         );

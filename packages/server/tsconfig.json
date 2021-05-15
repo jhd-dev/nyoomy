@@ -3,9 +3,10 @@
         "target": "ES5",
         "module": "commonjs",
         "lib": ["dom", "dom.iterable", "esnext", "es2020"],
-        "sourceMap": true,
+        "sourceMap": false,
         "outDir": "./dist",
         "moduleResolution": "node",
+        "declaration": true,
 
         "removeComments": true,
         "noImplicitAny": true,

@@ -1,12 +1,12 @@
 import 'reflect-metadata';
-import { __prod__, REDIS_SECRET, PORT, COOKIE_NAME } from '@nyoomy/global';
+import { __prod__, REDIS_SECRET, PORT } from '@nyoomy/global';
 import { Server } from '@overnightjs/core';
 import { ApolloServer } from 'apollo-server-express';
 import connectRedis from 'connect-redis';
 import cors from 'cors';
 import { json, urlencoded } from 'express';
 import session from 'express-session';
-import portfinder from 'portfinder';
+import { COOKIE_NAME } from './constants';
 import AuthController from './controllers/AuthController';
 import type { IContext } from './types/IContext';
 import { createDatabaseConnection } from './utils/createDatabaseConnection';
@@ -28,13 +28,10 @@ export class AppServer extends Server implements IAppServer {
         this.setupControllers();
     }
 
-    public async start(port?: number, strict: boolean = false): Promise<void> {
+    public async start(port: number): Promise<void> {
         await this.initDatabase();
-        const freePort: number = await portfinder.getPortPromise(
-            typeof port === 'number' ? { port } : {}
-        );
-        this.app.listen(strict ? port : freePort, () =>
-            console.info(`Server listening on port ${freePort}.`)
+        this.app.listen(port, () =>
+            console.info(`Server listening on port ${port}.`)
         );
     }
 

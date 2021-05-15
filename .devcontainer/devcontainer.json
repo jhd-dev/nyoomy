@@ -1,20 +1,35 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
-// https://github.com/microsoft/vscode-dev-containers/tree/v0.177.0/containers/typescript-node
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.177.0/containers/javascript-node-postgres
+// Update the VARIANT arg in docker-compose.yml to pick a Node.js version: 10, 12, 14
 {
-    "name": "Node.js & TypeScript",
-    "build": {
-        "dockerfile": "Dockerfile",
-        // Update 'VARIANT' to pick a Node version: 12, 14, 16
-        "args": { "VARIANT": "14" }
-    },
+    "name": "Node.js Workspace",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "workspace",
+    "workspaceFolder": "/workspace",
 
     // Set *default* container specific settings.json values on container create.
     "settings": {
-        "terminal.integrated.shell.linux": "/bin/bash"
+        "#terminal.integrated.defaultProfile.linux#": "/bin/bash",
+        "sqltools.connections": [
+            {
+                "name": "Container Database",
+                "driver": "PostgreSQL",
+                "previewLimit": 50,
+                "server": "localhost",
+                "port": 5432,
+                "database": "nyoomy_db_dev",
+                "username": "postgres",
+                "password": "postgres",
+                "askForPassword": false,
+                "idleTimeoutMillis": 0
+            }
+        ]
     },
 
     // Add the IDs of extensions you want installed when the container is created.
     "extensions": [
+        "mtxr.sqltools",
+        "mtxr.sqltools-driver-pg",
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
         "streetsidesoftware.code-spell-checker",
@@ -24,15 +39,22 @@
     ],
 
     // Use 'forwardPorts' to make a list of ports inside the container available locally.
-    "forwardPorts": [
-        4000, // Express
-        5432, // Postgres
-        6379 // Redis
-    ],
+    "forwardPorts": [4000, 5432, 6379],
+    "portsAttributes": {
+        "4000": {
+            "label": "Server"
+        },
+        "5432": {
+            "label": "PostgreSQL"
+        },
+        "6379": {
+            "label": "Redis"
+        }
+    },
 
     // Use 'postCreateCommand' to run commands after the container is created.
-    "postCreateCommand": "yarn run setup",
+    "postCreateCommand": "yarn run setup"
 
     // Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
-    "remoteUser": "node"
+    // "remoteUser": "node"
 }

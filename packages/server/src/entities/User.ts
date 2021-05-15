@@ -22,11 +22,11 @@ export class User extends BaseEntity {
     @Field(() => ID)
     public readonly id: string;
 
-    @Column('varchar', { length: 64 })
+    @Column('varchar', { length: 32 })
     @Field(() => String)
     public displayName: string;
 
-    @Column('varchar', { unique: true, length: 64 })
+    @Column('varchar', { unique: true, length: 32 })
     @Field(() => String)
     public username: string;
 
@@ -68,6 +68,10 @@ export class User extends BaseEntity {
     @Column('time', { default: MIDNIGHT })
     @Field(() => String)
     public cron: string;
+
+    @Column('varchar', { default: 'en_US', length: 35 })
+    @Field(() => String)
+    public language: string;
 
     // @VersionColumn('integer')
     // @Field(() => Int)

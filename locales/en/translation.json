@@ -1,0 +1,97 @@
+{
+    "appName": "Nyoomy",
+    "welcome": "Welcome!",
+    "account": {
+        "displayNameField": {
+            "fieldName": "display name",
+            "fieldLabel": "Display Name",
+            "example": "Johnny Appleseed"
+        },
+        "usernameField": {
+            "fieldName": "username",
+            "fieldLabel": "Username",
+            "example": "johnny_123"
+        },
+        "emailAddressField": {
+            "fieldName": "e-mail address",
+            "fieldLabel": "E-mail Address",
+            "example": "address@example.com",
+            "errors": {
+                "invalidEmail": "Please enter a valid e-mail address",
+                "alreadyUsed": "This e-mail address is already in use."
+            }
+        },
+        "passwordField": {
+            "fieldName": "password",
+            "fieldLabel": "Password",
+            "example": "********",
+            "errors": {
+                "tooShort": "Your password must contain at least {minLength} characters."
+            }
+        },
+        "dateOfBirth": "date of birth",
+        "createAccount": "Create Account"
+    },
+    "nav": {
+        "loginStatus": "Logged in as @{username}"
+    },
+    "date": {
+        "months": {
+            "jan": "January",
+            "feb": "February",
+            "mar": "March",
+            "apr": "April",
+            "may": "May",
+            "jun": "June",
+            "jul": "July",
+            "aug": "August",
+            "sep": "September",
+            "oct": "October",
+            "nov": "November",
+            "dec": "December"
+        },
+        "monthsShort": {
+            "jan": "Jan.",
+            "feb": "Feb.",
+            "mar": "Mar.",
+            "apr": "Apr.",
+            "may": "May.",
+            "jun": "Jun.",
+            "jul": "Jul.",
+            "aug": "Aug.",
+            "sep": "Sep.",
+            "oct": "Oct.",
+            "nov": "Nov.",
+            "dec": "Dec."
+        },
+        "weekdays": {
+            "sun": "Sunday",
+            "mon": "Monday",
+            "tue": "Tuesday",
+            "wed": "Wednesday",
+            "thu": "Thursday",
+            "fri": "Friday",
+            "sat": "Saturday"
+        },
+        "weekdaysShort": {
+            "sun": "Sun",
+            "mon": "Mon",
+            "tue": "Tues",
+            "wed": "Wed",
+            "thu": "Thurs",
+            "fri": "Fri",
+            "sat": "Sat"
+        },
+        "yesterday": "Yesterday",
+        "today": "Today",
+        "tomorrow": "Tomorrow"
+    },
+    "time": {
+        "twelveHour": "12-hour time",
+        "twentyFourHour": "24-hour time",
+        "use24Hour": "Use 24-hour time?",
+        "am": "am",
+        "pm": "pm",
+        "timeFormat": "{hour}:{minute}"
+    }
+}

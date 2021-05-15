@@ -1,5 +1,6 @@
 import type { EslintConfig } from 'eslint-define-config';
 import tsRules from '../rulesets/ts-rules';
+import { OFF, ERROR } from '../types/severity';
 import { excludePrettier } from '../utils/exclude-prettier';
 import jsOverrides from './js-override';
 
@@ -8,6 +9,7 @@ const baseExtends: string[] = [
     'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'plugin:type-graphql/recommended',
+    'plugin:import/typescript',
 ];
 const tsExtends: string[] = [...baseExtends, 'prettier'];
 const tsTestExtends: string[] = [
@@ -28,8 +30,10 @@ const tsOptions: Partial<EslintConfig> = {
     },
     env: { es6: true },
     settings: {
-        jsdoc: { mode: 'typescript' },
-        react: { pragma: 'React', version: 'detect' },
+        'jsdoc': { mode: 'typescript' },
+        'react': { pragma: 'React', version: 'detect' },
+        'import/core-modules': ['electron'],
+        'import/internal-regex': '^@nyoomy/',
     },
 };
 
@@ -44,13 +48,10 @@ export default [
         files: ['*.test.ts', '*.test.tsx'],
         extends: tsTestExtends,
         ...tsOptions,
-        env: {
-            'es6': true,
-            'jest/globals': true,
-        },
+        env: { 'es6': true, 'jest/globals': true },
         rules: {
             ...tsRules,
-            'jest/require-top-level-describe': 'error',
+            'jest/require-top-level-describe': ERROR,
         },
     },
     {
@@ -59,7 +60,7 @@ export default [
         ...tsOptions,
         rules: {
             ...tsRules,
-            'node/shebang': 'off',
+            'node/shebang': OFF,
         },
     },
 ];

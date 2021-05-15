@@ -1,3 +1,5 @@
+import { ERROR } from '../types/severity';
+
 export default [
     {
         files: ['*.graphql', '*.gql'],
@@ -6,7 +8,7 @@ export default [
             skipGraphQLConfig: true,
         },
         rules: {
-            '@graphql-eslint/no-hashtag-description': ['error'],
+            '@graphql-eslint/no-hashtag-description': [ERROR],
         },
     },
 ];

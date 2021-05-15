@@ -1,32 +1,21 @@
-/* eslint-disable import/no-extraneous-dependencies */
-
-import { config as dotenvConfig } from 'dotenv-safe';
+import { ENV_FILENAME, NODE_ENV, PORT, __prod__ } from '@nyoomy/global';
 import DotenvPlugin from 'dotenv-webpack';
 import ESLintWebpackPlugin from 'eslint-webpack-plugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import { resolve, relative } from 'path';
-import {
-    Configuration,
-    HotModuleReplacementPlugin,
-    DefinePlugin,
-} from 'webpack';
+import { join, resolve, relative } from 'path';
+import type { Configuration } from 'webpack';
+import { HotModuleReplacementPlugin, DefinePlugin } from 'webpack';
 
-dotenvConfig({
-    path: resolve(__dirname, '.env.local'),
-    example: resolve(__dirname, '.env.example'),
-    allowEmptyValues: false,
-    encoding: 'utf8',
-});
+const ROOT: string = '../..';
+const relativeEnvFile: string = resolve(__dirname, ROOT, ENV_FILENAME);
 
-const isProd: boolean = process.env.NODE_ENV === 'production';
-
-console.log(resolve(__dirname, '.env.local'));
-console.log(`process.env.NODE_ENV: ${String(process.env.NODE_ENV)}`);
-console.log(`process.env.PORT: ${String(process.env.PORT)}`);
+console.info(`Using env file: ${relativeEnvFile}`);
+console.info(`process.env.NODE_ENV: ${NODE_ENV}`);
+console.info(`process.env.PORT: ${String(PORT)}`);
 
 const config: Configuration = {
-    mode: isProd ? 'production' : 'development',
+    mode: __prod__ ? 'production' : 'development',
     output: {
         path: resolve(__dirname, 'dist'),
         filename: '[name].js',
@@ -34,7 +23,7 @@ const config: Configuration = {
     },
     entry: './src/view/index.tsx',
     devtool: 'inline-source-map',
-    watch: !isProd,
+    watch: !__prod__,
     module: {
         rules: [
             {
@@ -48,9 +37,7 @@ const config: Configuration = {
                     'style-loader',
                     {
                         loader: 'css-loader',
-                        options: {
-                            importLoaders: 1,
-                        },
+                        options: { importLoaders: 1 },
                     },
                     {
                         loader: 'postcss-loader',
@@ -76,10 +63,7 @@ const config: Configuration = {
     },
     resolve: {
         extensions: ['.tsx', '.ts', '.js', '.scss'],
-        fallback: {
-            fs: false,
-            path: false,
-        },
+        fallback: { fs: false, path: false },
     },
     plugins: [
         new HtmlWebpackPlugin({
@@ -87,36 +71,31 @@ const config: Configuration = {
             favicon: './public/favicon.ico',
             // manifest: "public/manifest.json",
         }),
-        new ForkTsCheckerWebpackPlugin({
-            async: false,
-        }),
+        new ForkTsCheckerWebpackPlugin({ async: false }),
         new HotModuleReplacementPlugin(),
         new ESLintWebpackPlugin({
             context: relative(resolve(__dirname, 'src/view'), __dirname),
             extensions: ['js', 'jsx', 'ts', 'tsx'],
         }),
         new DefinePlugin({
-            'process.env.NODE_ENV': JSON.stringify(
-                process.env.NODE_ENV ?? 'development'
-            ),
+            'process.env.NODE_ENV': JSON.stringify(NODE_ENV ?? 'development'),
         }),
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         new DotenvPlugin({
-            path: resolve(__dirname, '.env.local'),
+            path: relativeEnvFile,
             safe: true,
             ignoreStub: true,
         }),
     ],
-    stats: {
-        errorDetails: !isProd,
-    },
-    // devServer: {
-    //     contentBase: join(__dirname, 'dist'),
-    //     historyApiFallback: true,
-    //     port: 4000,
-    //     open: true,
-    //     hot: true,
-    // },
+    stats: { errorDetails: !__prod__ },
+    devServer: __prod__
+        ? undefined
+        : {
+              contentBase: join(__dirname, 'dist'),
+              historyApiFallback: true,
+              port: PORT,
+              open: true,
+              hot: true,
+          },
 };
 
 export default config;

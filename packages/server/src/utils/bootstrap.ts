@@ -1,7 +1,12 @@
 import { PORT } from '@nyoomy/global';
-import { AppServer, IAppServer } from '../AppServer';
+import type { IAppServer } from '../AppServer';
+import { AppServer } from '../AppServer';
 
 export const bootstrap = (): void => {
-    const server: IAppServer = new AppServer();
-    server.start(PORT);
+    try {
+        const server: IAppServer = new AppServer();
+        void server.start(PORT);
+    } catch (err: unknown) {
+        console.error(err);
+    }
 };

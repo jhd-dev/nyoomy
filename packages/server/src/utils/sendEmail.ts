@@ -5,8 +5,14 @@ import {
     EMAIL_TRANSPORTER_ADDRESS,
     EMAIL_TRANSPORTER_PASSWORD,
 } from '@nyoomy/global';
+import type { Transporter } from 'nodemailer';
 import nodemailer from 'nodemailer';
 import type MimeNode from 'nodemailer/lib/mime-node';
+
+interface TransporterInfo {
+    envelope: MimeNode.Envelope;
+    messageId: string;
+}
 
 const sendEmail = async (
     to: string,
@@ -14,7 +20,7 @@ const sendEmail = async (
     html: string
 ): Promise<void> => {
     // create reusable transporter object using the default SMTP transport
-    const transporter = nodemailer.createTransport({
+    const transporter: Transporter = nodemailer.createTransport({
         host: EMAIL_TRANSPORTER_HOST,
         port: EMAIL_TRANSPORTER_PORT,
         auth: {
@@ -24,16 +30,13 @@ const sendEmail = async (
     });
 
     // send mail with defined transport object
-    const info = (await transporter.sendMail({
+    const info: TransporterInfo = (await transporter.sendMail({
         from: `"${EMAIL_TRANSPORTER_NAME}" <${EMAIL_TRANSPORTER_ADDRESS}>`,
         to,
         subject,
         // text,
         html,
-    })) as {
-        envelope: MimeNode.Envelope;
-        messageId: string;
-    };
+    })) as TransporterInfo;
 
     if (typeof info !== 'object' || info == null || !('messageId' in info)) {
         throw new Error('Invalid mail info object.');
