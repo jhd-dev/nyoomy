@@ -5,6 +5,8 @@
         "streetsidesoftware.code-spell-checker",
         "davidanson.vscode-markdownlint",
         "editorconfig.editorconfig",
-        "stylelint.vscode-stylelint"
+        "stylelint.vscode-stylelint",
+        "ms-vscode-remote.remote-containers",
+        "ms-azuretools.vscode-docker"
     ]
 }
