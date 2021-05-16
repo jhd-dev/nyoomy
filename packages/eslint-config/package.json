@@ -50,8 +50,7 @@
         "eslint-plugin-yml": "^0.9.0"
     },
     "devDependencies": {
-        "@types/confusing-browser-globals": "^1.0.0",
-        "eslint-define-config": "^1.0.8"
+        "@types/confusing-browser-globals": "^1.0.0"
     },
     "peerDependencies": {
         "eslint": "^7.25.0",

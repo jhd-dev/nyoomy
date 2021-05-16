@@ -1,4 +1,3 @@
-import type { EslintConfig } from 'eslint-define-config';
 import jsRules from '../rulesets/js-rules';
 
 const baseExtends: string[] = [
@@ -21,7 +20,7 @@ const baseExtends: string[] = [
 ];
 const jsExtends: string[] = [...baseExtends, 'prettier'];
 
-const jsOptions: EslintConfig = {
+const jsOptions = {
     parser: '@typescript-eslint/parser',
     parserOptions: {
         ecmaVersion: 2020,

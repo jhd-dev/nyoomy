@@ -1,11 +1,10 @@
-import type { EslintConfig } from 'eslint-define-config';
 import tsRules from '../rulesets/ts-rules';
 import { OFF, ERROR } from '../types/severity';
 import { excludePrettier } from '../utils/exclude-prettier';
 import jsOverrides from './js-override';
 
 const baseExtends: string[] = [
-    ...excludePrettier(jsOverrides[0].extends as string[]),
+    ...excludePrettier(jsOverrides[0].extends),
     'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'plugin:type-graphql/recommended',
@@ -19,7 +18,7 @@ const tsTestExtends: string[] = [
     'plugin:jest-dom/recommended',
     'prettier',
 ];
-const tsOptions: Partial<EslintConfig> = {
+const tsOptions = {
     parser: '@typescript-eslint/parser',
     parserOptions: {
         ecmaVersion: 2020,
