@@ -8,13 +8,20 @@
         "url": "git+https://github.com/jhd-dev/nyoomy.git",
         "directory": "packages/graphql"
     },
-    "main": "src/index.ts",
+    "exports": {
+        ".": "./src/generated/graphql.ts",
+        "./hooks": "./src/generated/graphql-hooks.ts"
+    },
+    "main": "src/generated/graphql.ts",
     "scripts": {
-        "build": "tsc -b tsconfig.json",
-        "build:watch": "tsc -b --watch",
+        "build": "yarn generate",
+        "build:watch": "yarn generate:watch",
         "watch": "concurrently --names \"GQL,TS\" \"yarn generate:watch\" \"yarn build:watch\"",
         "generate": "graphql-codegen --config ./codegen.yml",
         "generate:watch": "graphql-codegen --config --watch ./codegen.yml"
+    },
+    "dependencies": {
+        "@apollo/client": "^3.3.19"
     },
     "devDependencies": {
         "@graphql-codegen/add": "^2.0.2",
@@ -27,7 +34,8 @@
         "@graphql-codegen/typescript-resolvers": "^1.19.1",
         "@graphql-codegen/typescript-type-graphql": "^1.18.4",
         "@types/concurrently": "^6.0.1",
-        "concurrently": "^6.0.2"
+        "concurrently": "^6.0.2",
+        "graphql-tag": "^2.12.4"
     },
     "peerDependencies": {
         "graphql": "^15.5.0",
