@@ -31,6 +31,8 @@ services:
 
     environment:
       YARN_VERSION: 2.4.1
+      DB_HOST: localhost
+      REDIS_HOST: localhost
 
   db:
     container_name: postgres-container

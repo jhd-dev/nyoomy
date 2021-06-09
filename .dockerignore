@@ -1,0 +1,26 @@
+node_modules/
+
+# dist/
+# lib/
+# bin/
+
+*.md
+LICENSE.txt
+
+.devcontainer/
+.git/
+.github/
+.husky/
+.vscode/
+docs/
+.editorconfig
+.git*
+.huskyrc.json
+.lintstagedrc.json
+
+# .dockerignore
+# docker-compose.yml
+# Dockerfile
+
+# ./run.ps1
+# ./run.sh

@@ -1,5 +1,4 @@
 import { PUBLIC_URL, __prod__ } from '@nyoomy/global';
-import { URL } from 'url';
 
 // In production, we register a service worker to serve assets from local cache.
 // This lets the app load faster on subsequent visits in production, and gives

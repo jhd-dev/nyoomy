@@ -1,7 +1,7 @@
 /* eslint-disable jsdoc/require-returns */
 /* eslint-disable jsdoc/require-param */
-import type { MiddlewareFn } from 'type-graphql';
 import type { IContext } from '../types/IContext';
+import type { MiddlewareFn } from 'type-graphql';
 
 /**
  * Verifies that the client's context has a valid access token.

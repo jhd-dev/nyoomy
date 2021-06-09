@@ -1,7 +1,7 @@
-import type { GraphQLSchema } from 'graphql';
 import { resolve } from 'path';
 import { buildSchema } from 'type-graphql';
 import type { IContext } from '../types/IContext';
+import type { GraphQLSchema } from 'graphql';
 
 export const createSchema = (): Promise<GraphQLSchema> =>
     buildSchema({

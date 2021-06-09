@@ -1,10 +1,9 @@
 /* eslint-disable prefer-destructuring */
 /* eslint-disable no-underscore-dangle */
 
-import type { DotenvSafeConfigOutput } from 'dotenv-safe';
 import { config } from 'dotenv-safe';
 import { resolve } from 'path';
-import { URL } from 'url';
+import type { DotenvSafeConfigOutput } from 'dotenv-safe';
 
 const ROOT: string = '../../../..';
 export const ENV_FILENAME: string = '.env.local';

@@ -13,11 +13,7 @@ not IE 11
 not OperaMini all
 
 [development]
-defaults
 last 2 Chrome versions
 last 2 Firefox versions
 last 2 Safari versions
 last 1 Electron version
-
-[ssr]
-maintained Node versions

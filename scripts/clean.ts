@@ -57,9 +57,8 @@ const DEFAULT_DELETABLES: readonly string[] = [
     'packages/**/dist',
     'packages/**/lib',
     'packages/**/generated',
-    '**.tsbuildinfo',
-    '**/.tsbuildinfo',
-    '.eslintcache',
+    '**/*.tsbuildinfo',
+    '**/*.eslintcache',
 ];
 
 const MODULE_DELETABLES: readonly string[] = [
@@ -78,10 +77,9 @@ const getDeletables = (): readonly string[] => {
         argv._.length > 0
             ? argv._.map((arg) => String(arg))
             : DEFAULT_DELETABLES;
-    const allDeletables: readonly string[] = argv['include-modules']
+    return argv['include-modules']
         ? baseDeletables.concat(MODULE_DELETABLES)
         : baseDeletables;
-    return allDeletables;
 };
 
 const promiseRimraf = (filename: string): Promise<Error | null> =>
@@ -97,21 +95,18 @@ const promiseRimraf = (filename: string): Promise<Error | null> =>
     );
 
 const printMessage = (message: string, messageType: MessageType): void => {
+    if (!argv.quiet) return;
     switch (messageType) {
         case MessageType.FINISHED:
-            if (!argv.quiet) {
-                console.info(message);
-            }
+            console.info(message);
             break;
         case MessageType.PROGRESS:
-            if (argv.verbose && !argv.quiet) {
+            if (argv.verbose) {
                 console.info(message);
             }
             break;
         case MessageType.ERROR:
-            if (!argv.quiet) {
-                console.error(message);
-            }
+            console.error(message);
             break;
         default:
             throw new Error('Message type not recongized.');
@@ -125,14 +120,12 @@ const attemptDeletion = async (deletable: string): Promise<void> => {
             printMessage(`Cleaned ${deletable}.`, MessageType.PROGRESS);
         }
     } catch (error: unknown) {
-        if (!argv.quiet) {
-            printMessage(
-                `Error occurred while attempting to clean "${deletable}": ${String(
-                    error
-                )}`,
-                MessageType.ERROR
-            );
-        }
+        printMessage(
+            `Error occurred while attempting to clean "${deletable}": ${String(
+                error
+            )}`,
+            MessageType.ERROR
+        );
     }
 };
 

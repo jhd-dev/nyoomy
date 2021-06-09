@@ -1,20 +1,12 @@
-import {
-    DB_USERNAME,
-    DB_PASSWORD,
-    DATABASE_TYPE,
-    DB_NAME,
-} from '@nyoomy/global';
+import { NODE_ENV } from '@nyoomy/global';
+import { createConnection, getConnectionOptions } from 'typeorm';
 import type { Connection } from 'typeorm';
-import { createConnection } from 'typeorm';
-import { User } from '../entities/User';
 
-export const createDatabaseConnection = (): Promise<Connection> =>
-    createConnection({
-        type: DATABASE_TYPE,
-        database: DB_NAME,
-        username: DB_USERNAME,
-        password: DB_PASSWORD,
-        logging: false,
-        synchronize: true,
-        entities: [User],
+const connectionName = `${NODE_ENV}_connection`;
+
+export const createDatabaseConnection = async (): Promise<Connection> => {
+    const options = await getConnectionOptions(connectionName);
+    return createConnection({
+        ...options,
     });
+};

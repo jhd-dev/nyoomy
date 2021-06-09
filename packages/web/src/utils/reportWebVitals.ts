@@ -1,5 +1,5 @@
-import type { ReportHandler } from 'web-vitals';
 import { getCLS, getFID, getFCP, getLCP, getTTFB } from 'web-vitals';
+import type { ReportHandler } from 'web-vitals';
 
 export const reportWebVitals = (onPerfEntry?: ReportHandler): void => {
     if (onPerfEntry != null && typeof onPerfEntry === 'function') {

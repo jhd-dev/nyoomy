@@ -5,8 +5,8 @@ import {
     EMAIL_TRANSPORTER_ADDRESS,
     EMAIL_TRANSPORTER_PASSWORD,
 } from '@nyoomy/global';
-import type { Transporter } from 'nodemailer';
 import nodemailer from 'nodemailer';
+import type { Transporter } from 'nodemailer';
 import type MimeNode from 'nodemailer/lib/mime-node';
 
 interface TransporterInfo {

@@ -1,0 +1,10 @@
+{
+    "extends": "./tsconfig.base.json",
+    "compilerOptions": {
+        "esModuleInterop": true,
+        "module": "CommonJS",
+        "lib": ["DOM", "DOM.Iterable", "ESNext", "ES2020"]
+    },
+    "include": ["./*.ts", "./scripts/*.ts"],
+    "exclude": ["./**/node_modules/", "./**/.yarn/"]
+}

@@ -62,6 +62,7 @@ const defaultOptions =  {}
  * @property {boolean} isEmailVerified
  * @property {string} bio
  * @property {string} cron
+ * @property {string} language
  * @property {DateTime} createdAt
  */
 /** All built-in and custom scalars, mapped to their actual values */
@@ -161,6 +162,7 @@ export type User = {
   isEmailVerified: Scalars['Boolean'];
   bio: Scalars['String'];
   cron: Scalars['String'];
+  language: Scalars['String'];
   createdAt: Scalars['DateTime'];
 };
 
@@ -390,6 +392,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   isEmailVerified?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   bio?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   cron?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  language?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };

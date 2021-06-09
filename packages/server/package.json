@@ -3,11 +3,9 @@
     "version": "0.1.0",
     "private": true,
     "description": "",
-    "main": "dist/index.js",
-    "module": "src/index.ts",
-    "typings": "dist/index.d.ts",
+    "main": "src/bootstrap.ts",
     "scripts": {
-        "start": "ts-node src/index.ts --noImplicitOverride --trace-warnings --unhandled-rejections=strict",
+        "start": "ts-node src/bootstrap.ts --noImplicitOverride --trace-warnings --unhandled-rejections=strict",
         "watch": "nodemon --config nodemon.json",
         "build": "tsc -p tsconfig.json",
         "build:watch": "tsc -p tsconfig.json --watch",
@@ -16,7 +14,6 @@
     "dependencies": {
         "@nyoomy/common": "workspace:*",
         "@nyoomy/global": "workspace:*",
-        "@overnightjs/core": "^1.7.5",
         "apollo-server-express": "^2.23.0",
         "bcryptjs": "^2.4.3",
         "class-transformer": "^0.4.0",

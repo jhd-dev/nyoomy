@@ -9,7 +9,6 @@
         "declaration": true,
 
         "removeComments": true,
-        "jsx": "preserve",
         "noImplicitAny": true,
         "strictNullChecks": true,
         "strictFunctionTypes": true,
@@ -22,7 +21,6 @@
         "esModuleInterop": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "resolveJsonModule": true,
 
         "typeRoots": ["../../node_modules/@types", "src/**/*.d.ts"]
     },
