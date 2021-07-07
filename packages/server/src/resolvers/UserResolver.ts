@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-import { COOKIE_NAME, PUBLIC_URL } from '@nyoomy/global';
+import { COOKIE_NAME } from '@nyoomy/global';
 import { compare, hash } from 'bcryptjs';
 import {
     Resolver,
@@ -12,8 +12,8 @@ import {
     ID,
 } from 'type-graphql';
 import { User } from '../entities/User';
+import { PUBLIC_URL } from '../env';
 import { isAuthorized } from '../middleware/isAuthorized';
-import type { FieldError } from '../types/FieldError';
 import { IContext } from '../types/IContext';
 import { LoginResponse } from '../types/LoginResponse';
 import { RegistrationResponse } from '../types/RegistrationResponse';
@@ -21,6 +21,7 @@ import { UserLoginInfo } from '../types/UserLoginInfo';
 import { UserRegistrationInfo } from '../types/UserRegistrationInfo';
 import sendEmail from '../utils/sendEmail';
 import { validateRegistration } from '../utils/validateRegistration';
+import type { FieldError } from '../types/FieldError';
 
 /**
  * GraphQL resolver for the user table.
@@ -129,7 +130,7 @@ export class UserResolver {
         await sendEmail(
             email,
             'Forgot password',
-            `<a href="${PUBLIC_URL}/reset-password/${token}">
+            `<a href="${PUBLIC_URL.origin}/reset-password/${token}">
                 Click here to reset your password.
             </a>`
         );

@@ -1,5 +1,5 @@
-import { NODE_ENV } from '@nyoomy/global';
 import { createConnection, getConnectionOptions } from 'typeorm';
+import { NODE_ENV } from '../env';
 import type { Connection } from 'typeorm';
 
 const connectionName = `${NODE_ENV}_connection`;

@@ -1,15 +1,14 @@
-import { ENV_EXAMPLE_FILENAME, ENV_FILENAME } from '@nyoomy/global';
 import DotenvPlugin from 'dotenv-webpack';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import { join, resolve } from 'path';
-import { ProgressPlugin } from 'webpack';
+// import { ProgressPlugin } from 'webpack';
 import type { Configuration } from 'webpack';
 
 const ROOT: string = '../..';
-const relativeEnvFile: string = resolve(__dirname, join(ROOT, ENV_FILENAME));
+const relativeEnvFile: string = resolve(__dirname, join(ROOT, './.env.local'));
 const relativeEnvExampleFile: string = resolve(
     __dirname,
-    join(ROOT, ENV_EXAMPLE_FILENAME)
+    join(ROOT, './.env.example')
 );
 const assetsDir = resolve(__dirname, '../../assets');
 
@@ -59,7 +58,13 @@ const config: Configuration = {
     resolve: {
         extensions: ['.tsx', '.ts', '.jsx', '.js', '.json', '.scss', '...'],
         alias: { Assets: assetsDir },
-        fallback: { fs: false, path: false, util: false, url: false },
+        fallback: {
+            fs: false,
+            os: false,
+            path: false,
+            util: false,
+            url: false,
+        },
     },
     plugins: [
         new ForkTsCheckerWebpackPlugin({ async: false }),
@@ -68,9 +73,9 @@ const config: Configuration = {
             safe: relativeEnvExampleFile,
             ignoreStub: true,
         }),
-        new ProgressPlugin((percentage, message, ...args) => {
-            console.info(percentage, message, ...args);
-        }),
+        // new ProgressPlugin((percentage, message, ...args) => {
+        //     console.info(percentage, message, ...args);
+        // }),
     ],
 };
 

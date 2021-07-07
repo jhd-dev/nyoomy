@@ -1,5 +1,5 @@
-import { NODE_ENV } from '@nyoomy/global';
 import Redis from 'ioredis';
+import { NODE_ENV } from '../env';
 
 const redis: Redis.Redis = new Redis();
 

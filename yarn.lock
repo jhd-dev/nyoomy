@@ -4015,10 +4015,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@nyoomy/global@portal:packages/global::locator=nyoomy%40workspace%3A."
   dependencies:
-    "@types/dotenv-safe": ^8.1.1
+    "@types/dotenv-webpack": ^7.0.2
     class-transformer: ^0.4.0
     class-validator: ^0.13.1
-    dotenv-safe: ^8.2.0
+    dotenv: ^10.0.0
     jest: ^26.6.3
     reflect-metadata: ^0.1.13
   peerDependencies:
@@ -4030,10 +4030,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@nyoomy/global@workspace:packages/global"
   dependencies:
-    "@types/dotenv-safe": ^8.1.1
+    "@types/dotenv-webpack": ^7.0.2
     class-transformer: ^0.4.0
     class-validator: ^0.13.1
-    dotenv-safe: ^8.2.0
+    dotenv: ^10.0.0
     jest: ^26.6.3
     reflect-metadata: ^0.1.13
   peerDependencies:
@@ -4136,6 +4136,7 @@ __metadata:
     class-validator: ^0.13.1
     connect-redis: ^5.2.0
     cors: ^2.8.5
+    dotenv: ^10.0.0
     express: ^4.17.1
     express-session: ^1.17.1
     graphql: ^15.5.0
@@ -4220,8 +4221,6 @@ __metadata:
     "@testing-library/react": ^11.2.6
     "@testing-library/user-event": ^12.8.1
     "@types/cssnano": ^4.0.0
-    "@types/dotenv-safe": ^8.1.1
-    "@types/dotenv-webpack": ^7.0.1
     "@types/mini-css-extract-plugin": ^1.4.3
     "@types/node": ^14.14.41
     "@types/postcss-import": ^12.0.0
@@ -4246,7 +4245,6 @@ __metadata:
     css-loader: ^5.2.4
     css-minimizer-webpack-plugin: ^3.0.0
     cssnano: ^4.1.10
-    dotenv-safe: ^8.2.0
     dotenv-webpack: ^7.0.2
     eslint-webpack-plugin: ^2.5.2
     fork-ts-checker-webpack-plugin: ^6.2.1
@@ -4844,16 +4842,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/dotenv-safe@npm:^8.1.1":
-  version: 8.1.1
-  resolution: "@types/dotenv-safe@npm:8.1.1"
-  dependencies:
-    dotenv: ^8.2.0
-  checksum: f1551cd57316c9c4c94a7bce041c1379dec863171adefdfe6508c07ca71d6ff2937b3cc2f1d651441ed4c4aecea2a4dd654d20941aa903d68278f8f7f67dae79
-  languageName: node
-  linkType: hard
-
-"@types/dotenv-webpack@npm:^7.0.1":
+"@types/dotenv-webpack@npm:^7.0.2":
   version: 7.0.2
   resolution: "@types/dotenv-webpack@npm:7.0.2"
   dependencies:
@@ -9740,15 +9729,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv-safe@npm:^8.2.0":
-  version: 8.2.0
-  resolution: "dotenv-safe@npm:8.2.0"
-  dependencies:
-    dotenv: ^8.2.0
-  checksum: 8525ceed5a8ae4a4b9264080a3ad1550cb4c5d8d5990b4772fd62a6d245c01a01f77a540bab4fb16ae0513d9ea804cbaa6d19acb370b5bc68f2d103813c2eb2e
-  languageName: node
-  linkType: hard
-
 "dotenv-webpack@npm:^7.0.2":
   version: 7.0.2
   resolution: "dotenv-webpack@npm:7.0.2"
@@ -9757,6 +9737,13 @@ __metadata:
   peerDependencies:
     webpack: ^4 || ^5
   checksum: 63cb71dd1b1d0f77087c32341f2a2dea56facf13919a346890545a7b1b407a9bd323248e6a8bedd46cf17cb9a8f13ae37a85887cf5d97e1edf53ca87daa8758e
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:^10.0.0":
+  version: 10.0.0
+  resolution: "dotenv@npm:10.0.0"
+  checksum: 9c45712e213de63bdb646b8e5344749b7566e25a67bbd3f03711d54e40eff10066c1f23eff0081d0949fda7c8efcc6e9e8bf18d0f023a8274f55f5d5f97bb6db
   languageName: node
   linkType: hard
 

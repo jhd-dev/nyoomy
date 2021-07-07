@@ -1,15 +1,18 @@
 import 'reflect-metadata';
-import { __prod__, REDIS_SECRET, PORT } from '@nyoomy/global';
 import { ApolloServer } from 'apollo-server-express';
 import connectRedis from 'connect-redis';
 import cors from 'cors';
 import express, { json, urlencoded } from 'express';
 import session from 'express-session';
+import { join } from 'path';
 import { COOKIE_NAME } from './constants';
+import { __prod__, REDIS_SECRET, PORT } from './env';
 import { createDatabaseConnection } from './utils/createDatabaseConnection';
 import { createSchema } from './utils/createSchema';
 import redis from './utils/redis';
 import type { IContext } from './types/IContext';
+
+const WEB_PATH = join(__dirname, '../../web/dist');
 
 const app = express();
 void bootstrap();
@@ -41,7 +44,8 @@ function applyMiddleware(): void {
                     maxAge: 1000 * 60 * 60 * 24 * 7 * 365, // 7 years
                 },
             })
-        );
+        )
+        .use('/', express.static(WEB_PATH));
 }
 
 async function initDatabase(): Promise<void> {
@@ -57,7 +61,13 @@ async function initDatabase(): Promise<void> {
 }
 
 function startServer(port: number): void {
-    app.listen(port, () => console.info(`Server listening on port ${port}.`));
+    const server = app.listen(port, () =>
+        console.info(`Server listening on port ${port}.`)
+    );
+    process.on('SIGTERM', () => {
+        console.info('SIGTERM signal recieved; closing HTTP server.');
+        server.close(() => console.info('HTTP server closed.'));
+    });
 }
 
 async function bootstrap(): Promise<void> {

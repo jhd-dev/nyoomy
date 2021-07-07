@@ -1,7 +1,7 @@
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import { resolve } from 'path';
-import { DefinePlugin, HotModuleReplacementPlugin } from 'webpack';
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+// import { DefinePlugin } from 'webpack';
+// import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import { merge } from 'webpack-merge';
 import common from './webpack.common';
 import type { Configuration } from 'webpack';
@@ -11,7 +11,7 @@ const staticPath = resolve(__dirname, 'public');
 export default merge<Configuration>(common, {
     mode: 'development',
     devtool: 'inline-source-map',
-    watch: true,
+    // watch: true,
     plugins: [
         new HtmlWebpackPlugin({
             template: resolve(staticPath, 'index.html'),
@@ -20,14 +20,14 @@ export default merge<Configuration>(common, {
             filename: 'index.html',
             title: 'Nyoomy',
             cache: true,
-            inject: false,
+            inject: 'body',
             minify: false,
         }),
-        new HotModuleReplacementPlugin(),
-        new DefinePlugin({
-            'process.env.NODE_ENV': JSON.stringify('development'),
-        }),
-        new BundleAnalyzerPlugin({ analyzerPort: 'auto', openAnalyzer: false }),
+        // new HotModuleReplacementPlugin(),
+        // new DefinePlugin({
+        //     'process.env.NODE_ENV': JSON.stringify('development'),
+        // }),
+        // new BundleAnalyzerPlugin({ analyzerPort: 'auto', openAnalyzer: false }),
     ],
     stats: { errorDetails: true },
 });

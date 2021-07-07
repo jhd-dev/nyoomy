@@ -1,11 +1,11 @@
+import nodemailer from 'nodemailer';
 import {
     EMAIL_TRANSPORTER_HOST,
     EMAIL_TRANSPORTER_PORT,
     EMAIL_TRANSPORTER_NAME,
     EMAIL_TRANSPORTER_ADDRESS,
     EMAIL_TRANSPORTER_PASSWORD,
-} from '@nyoomy/global';
-import nodemailer from 'nodemailer';
+} from '../env';
 import type { Transporter } from 'nodemailer';
 import type MimeNode from 'nodemailer/lib/mime-node';
 
