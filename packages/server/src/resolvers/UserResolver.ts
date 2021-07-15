@@ -44,13 +44,9 @@ export class UserResolver {
 
     @Query(() => User, { nullable: true })
     public async currentUser(@Ctx() { req }: IContext): Promise<User | null> {
-        if (typeof req?.session?.id !== 'string' || req.session.id.length === 0)
-            return null;
-        return (
-            (await User.findOne({
-                id: req.session.id,
-            })) ?? null
-        );
+        const id = req?.session?.userId;
+        if (typeof id !== 'string' || id.length === 0) return null;
+        return (await User.findOne({ id })) ?? null;
     }
 
     /**

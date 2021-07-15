@@ -11,7 +11,7 @@ const staticPath = resolve(__dirname, 'public');
 export default merge<Configuration>(common, {
     mode: 'development',
     devtool: 'inline-source-map',
-    // watch: true,
+    watch: true,
     plugins: [
         new HtmlWebpackPlugin({
             template: resolve(staticPath, 'index.html'),

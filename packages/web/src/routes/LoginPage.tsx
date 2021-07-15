@@ -6,8 +6,8 @@ import { MeDocument, useLoginMutation } from '@nyoomy/graphql';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
-import type { RouteComponentProps } from 'react-router-dom';
 import InputTextField from '../components/InputTextField';
+import type { RouteComponentProps } from 'react-router-dom';
 
 const LoginPage: FC<RouteComponentProps> = ({ history }) => {
     const [usernameOrEmail, setUsernameOrEmail] = useState('');
