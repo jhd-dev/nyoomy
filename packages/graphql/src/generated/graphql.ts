@@ -60,7 +60,6 @@ export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?:
  * @property {string} bio
  * @property {string} cron
  * @property {string} language
- * @property {Array<string>} sessionsIds
  * @property {DateTime} createdAt
  */
 /** All built-in and custom scalars, mapped to their actual values */
@@ -161,7 +160,6 @@ export type User = {
   bio: Scalars['String'];
   cron: Scalars['String'];
   language: Scalars['String'];
-  sessionsIds: Array<Scalars['String']>;
   createdAt: Scalars['DateTime'];
 };
 
@@ -392,7 +390,6 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   bio?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   cron?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   language?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  sessionsIds?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
