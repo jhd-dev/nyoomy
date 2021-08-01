@@ -1,10 +1,16 @@
 import type { FC } from 'react';
 import React, { useState } from 'react';
+import type { CounterMetricDailyEntry } from '@nyoomy/graphql';
+// import type { CounterMetric, CountersQueryHookResult } from '@nyoomy/graphql';
 import { Tile } from './Tile';
 
-export const CounterTile: FC = () => {
-    const [label, setLabel] = useState('Click to set label');
-    const [count, setCount] = useState(0);
+interface IProps {
+    metric: CounterMetricDailyEntry;
+}
+
+export const CounterTile: FC<IProps> = ({ metric }) => {
+    const [label, setLabel] = useState(metric.label);
+    const [count, setCount] = useState(metric.count);
     return (
         <Tile>
             <input
@@ -23,12 +29,16 @@ export const CounterTile: FC = () => {
             <input
                 type="text"
                 className="editable-text"
-                onChange={(e) => setCount(attemptParseInt(e.target.value))}
+                onChange={(e) => {
+                    const val = attemptParseInt(e.target.value);
+                    // syncCount(val);
+                    setCount(val);
+                }}
                 value={count}
             />
             <button
                 type="button"
-                onClick={() => setCount(Math.round(count + 1))}
+                onClick={() => setCount(Math.round(count + metric.interval))}
             >
                 +
             </button>
@@ -45,6 +55,8 @@ function attemptParseInt(
     return isNaN(attempt) ? defaultInt : attempt;
 }
 
-function isValidLabel(label: string): boolean {
+function isValidLabel(label?: string): boolean {
     return typeof label === 'string' && label.length > 0;
 }
+
+// function syncCount(newCount: number) {}

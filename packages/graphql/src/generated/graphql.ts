@@ -6,6 +6,38 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };
 /**
+ * @typedef {Object} CounterEntry
+ * @property {string} id
+ * @property {CounterMetric} metric
+ * @property {string} date
+ * @property {number} count
+ */
+
+/**
+ * @typedef {Object} CounterMetric
+ * @property {string} id
+ * @property {string} label
+ * @property {string} description
+ * @property {User} user
+ * @property {Array<CounterEntry>} entries
+ * @property {number} maximum
+ * @property {number} minimum
+ * @property {number} interval
+ */
+
+/**
+ * @typedef {Object} CounterMetricDailyEntry
+ * @property {string} metricId
+ * @property {string} date
+ * @property {number} count
+ * @property {string} label
+ * @property {string} description
+ * @property {number} maximum
+ * @property {number} minimum
+ * @property {number} interval
+ */
+
+/**
  * The javascript `Date` as string. Type represents date and time as the ISO Date string.
  * @typedef {*} DateTime
  */
@@ -38,6 +70,8 @@ export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?:
  * @typedef {Object} Query
  * @property {Array<User>} getAllUsers
  * @property {User} [currentUser]
+ * @property {Array<CounterMetricDailyEntry>} getCounters
+ * @property {Array<CounterMetricDailyEntry>} getDayCounters
  */
 
 /**
@@ -60,6 +94,7 @@ export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?:
  * @property {string} bio
  * @property {string} cron
  * @property {string} language
+ * @property {Array<CounterMetric>} metrics
  * @property {DateTime} createdAt
  */
 /** All built-in and custom scalars, mapped to their actual values */
@@ -71,6 +106,38 @@ export type Scalars = {
   Float: number;
   /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
   DateTime: any;
+};
+
+export type CounterEntry = {
+  __typename?: 'CounterEntry';
+  id: Scalars['ID'];
+  metric: CounterMetric;
+  date: Scalars['String'];
+  count: Scalars['Int'];
+};
+
+export type CounterMetric = {
+  __typename?: 'CounterMetric';
+  id: Scalars['ID'];
+  label: Scalars['String'];
+  description: Scalars['String'];
+  user: User;
+  entries: Array<CounterEntry>;
+  maximum: Scalars['Int'];
+  minimum: Scalars['Int'];
+  interval: Scalars['Int'];
+};
+
+export type CounterMetricDailyEntry = {
+  __typename?: 'CounterMetricDailyEntry';
+  metricId: Scalars['String'];
+  date: Scalars['String'];
+  count: Scalars['Int'];
+  label: Scalars['String'];
+  description: Scalars['String'];
+  maximum: Scalars['Int'];
+  minimum: Scalars['Int'];
+  interval: Scalars['Int'];
 };
 
 
@@ -138,6 +205,13 @@ export type Query = {
   __typename?: 'Query';
   getAllUsers: Array<User>;
   currentUser?: Maybe<User>;
+  getCounters: Array<CounterMetricDailyEntry>;
+  getDayCounters: Array<CounterMetricDailyEntry>;
+};
+
+
+export type QueryGetDayCountersArgs = {
+  date: Scalars['String'];
 };
 
 export type RegistrationResponse = {
@@ -160,6 +234,7 @@ export type User = {
   bio: Scalars['String'];
   cron: Scalars['String'];
   language: Scalars['String'];
+  metrics: Array<CounterMetric>;
   createdAt: Scalars['DateTime'];
 };
 
@@ -211,14 +286,27 @@ export type RegisterMutation = (
   ) }
 );
 
-export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+export type CountersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = (
+export type CountersQuery = (
   { __typename?: 'Query' }
-  & { currentUser?: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'displayName' | 'username'>
+  & { getCounters: Array<(
+    { __typename?: 'CounterMetricDailyEntry' }
+    & Pick<CounterMetricDailyEntry, 'metricId' | 'label' | 'description' | 'maximum' | 'minimum' | 'interval' | 'date' | 'count'>
+  )> }
+);
+
+export type DayCountersQueryVariables = Exact<{
+  date: Scalars['String'];
+}>;
+
+
+export type DayCountersQuery = (
+  { __typename?: 'Query' }
+  & { getDayCounters: Array<(
+    { __typename?: 'CounterMetricDailyEntry' }
+    & Pick<CounterMetricDailyEntry, 'metricId' | 'label' | 'description' | 'maximum' | 'minimum' | 'interval' | 'date' | 'count'>
   )> }
 );
 
@@ -230,6 +318,17 @@ export type UsersQuery = (
   & { getAllUsers: Array<(
     { __typename?: 'User' }
     & Pick<User, 'displayName' | 'username'>
+  )> }
+);
+
+export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MeQuery = (
+  { __typename?: 'Query' }
+  & { currentUser?: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'displayName' | 'username'>
   )> }
 );
 
@@ -311,32 +410,70 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  CounterEntry: ResolverTypeWrapper<CounterEntry>;
+  ID: ResolverTypeWrapper<Scalars['ID']>;
+  String: ResolverTypeWrapper<Scalars['String']>;
+  Int: ResolverTypeWrapper<Scalars['Int']>;
+  CounterMetric: ResolverTypeWrapper<CounterMetric>;
+  CounterMetricDailyEntry: ResolverTypeWrapper<CounterMetricDailyEntry>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
   FieldError: ResolverTypeWrapper<FieldError>;
-  String: ResolverTypeWrapper<Scalars['String']>;
   LoginResponse: ResolverTypeWrapper<LoginResponse>;
   Mutation: ResolverTypeWrapper<{}>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
-  ID: ResolverTypeWrapper<Scalars['ID']>;
   Query: ResolverTypeWrapper<{}>;
   RegistrationResponse: ResolverTypeWrapper<RegistrationResponse>;
   User: ResolverTypeWrapper<User>;
-  Int: ResolverTypeWrapper<Scalars['Int']>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
+  CounterEntry: CounterEntry;
+  ID: Scalars['ID'];
+  String: Scalars['String'];
+  Int: Scalars['Int'];
+  CounterMetric: CounterMetric;
+  CounterMetricDailyEntry: CounterMetricDailyEntry;
   DateTime: Scalars['DateTime'];
   FieldError: FieldError;
-  String: Scalars['String'];
   LoginResponse: LoginResponse;
   Mutation: {};
   Boolean: Scalars['Boolean'];
-  ID: Scalars['ID'];
   Query: {};
   RegistrationResponse: RegistrationResponse;
   User: User;
-  Int: Scalars['Int'];
+};
+
+export type CounterEntryResolvers<ContextType = any, ParentType extends ResolversParentTypes['CounterEntry'] = ResolversParentTypes['CounterEntry']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  metric?: Resolver<ResolversTypes['CounterMetric'], ParentType, ContextType>;
+  date?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CounterMetricResolvers<ContextType = any, ParentType extends ResolversParentTypes['CounterMetric'] = ResolversParentTypes['CounterMetric']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  label?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  entries?: Resolver<Array<ResolversTypes['CounterEntry']>, ParentType, ContextType>;
+  maximum?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  minimum?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  interval?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CounterMetricDailyEntryResolvers<ContextType = any, ParentType extends ResolversParentTypes['CounterMetricDailyEntry'] = ResolversParentTypes['CounterMetricDailyEntry']> = {
+  metricId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  date?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  label?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  maximum?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  minimum?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  interval?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
@@ -369,6 +506,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   getAllUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
   currentUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  getCounters?: Resolver<Array<ResolversTypes['CounterMetricDailyEntry']>, ParentType, ContextType>;
+  getDayCounters?: Resolver<Array<ResolversTypes['CounterMetricDailyEntry']>, ParentType, ContextType, RequireFields<QueryGetDayCountersArgs, 'date'>>;
 };
 
 export type RegistrationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['RegistrationResponse'] = ResolversParentTypes['RegistrationResponse']> = {
@@ -390,11 +529,15 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   bio?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   cron?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   language?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  metrics?: Resolver<Array<ResolversTypes['CounterMetric']>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = any> = {
+  CounterEntry?: CounterEntryResolvers<ContextType>;
+  CounterMetric?: CounterMetricResolvers<ContextType>;
+  CounterMetricDailyEntry?: CounterMetricDailyEntryResolvers<ContextType>;
   DateTime?: GraphQLScalarType;
   FieldError?: FieldErrorResolvers<ContextType>;
   LoginResponse?: LoginResponseResolvers<ContextType>;

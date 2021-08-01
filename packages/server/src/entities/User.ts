@@ -8,10 +8,11 @@ import {
     CreateDateColumn,
     DeleteDateColumn,
     Entity,
+    OneToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
-    // VersionColumn,
 } from 'typeorm';
+import { CounterMetric } from './CounterMetric';
 
 const MIDNIGHT: string = new Date(0).toTimeString().split(' ')[0];
 
@@ -45,7 +46,7 @@ export class User extends BaseEntity {
     @Column('varchar', { nullable: true })
     public resetPasswordToken: string;
 
-    @Column('date')
+    @Column('date', { nullable: true })
     @Field(() => String)
     public birthday: string;
 
@@ -72,6 +73,10 @@ export class User extends BaseEntity {
     @Column('varchar', { default: 'en_US', length: 35 })
     @Field(() => String)
     public language: string;
+
+    @OneToMany(() => CounterMetric, (metric) => metric.user)
+    @Field(() => [CounterMetric])
+    public metrics: CounterMetric[];
 
     // @VersionColumn('integer')
     // @Field(() => Int)

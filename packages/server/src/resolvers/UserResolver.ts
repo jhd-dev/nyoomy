@@ -11,9 +11,10 @@ import {
     UseMiddleware,
     ID,
 } from 'type-graphql';
-import { User } from '../entities/User';
+import { CounterEntry, CounterMetric, User } from '../entities';
 import { PUBLIC_URL } from '../env';
 import { isAuthorized } from '../middleware/isAuthorized';
+import { CounterMetricDailyEntry } from '../types/CounterMetricDailyEntry';
 import { IContext } from '../types/IContext';
 import { LoginResponse } from '../types/LoginResponse';
 import { RegistrationResponse } from '../types/RegistrationResponse';
@@ -22,6 +23,11 @@ import { UserRegistrationInfo } from '../types/UserRegistrationInfo';
 import sendEmail from '../utils/sendEmail';
 import { validateRegistration } from '../utils/validateRegistration';
 import type { FieldError } from '../types/FieldError';
+
+async function getUser(userId?: string): Promise<User | null> {
+    if (typeof userId !== 'string' || userId.length === 0) return null;
+    return (await User.findOne({ id: userId })) ?? null;
+}
 
 /**
  * GraphQL resolver for the user table.
@@ -189,6 +195,82 @@ export class UserResolver {
             console.error(err);
             return false;
         }
+    }
+
+    @Query(() => [CounterMetricDailyEntry])
+    public async getCounters(
+        @Ctx() { req }: IContext
+    ): Promise<CounterMetricDailyEntry[]> {
+        const user = await getUser(req?.session?.userId);
+        if (user == null) return [];
+
+        const metrics = await CounterMetric.find({ user });
+        const date = new Date().toDateString();
+
+        const dailyEntries: CounterMetricDailyEntry[] = [];
+        for (const metric of metrics) {
+            let existingEntry = metric.entries.find(
+                (entry) => entry.date === date
+            );
+            if (existingEntry === undefined) {
+                const newEntry = new CounterEntry();
+                newEntry.date = date;
+                newEntry.metric = metric;
+                await newEntry.save();
+                metric.entries.push(newEntry);
+                await metric.save();
+                existingEntry = newEntry;
+            }
+            dailyEntries.push({
+                metricId: metric.id,
+                date: existingEntry.date,
+                count: existingEntry.count,
+                label: metric.label,
+                description: metric.description,
+                maximum: metric.maximum,
+                minimum: metric.minimum,
+                interval: metric.interval,
+            });
+        }
+        return dailyEntries;
+    }
+
+    @Query(() => [CounterMetricDailyEntry])
+    public async getDayCounters(
+        @Ctx() { req }: IContext,
+        @Arg('date', () => String) date: string
+    ): Promise<CounterMetricDailyEntry[]> {
+        const user = await getUser(req?.session?.userId);
+        if (user == null) return [];
+
+        const metrics = await CounterMetric.find({ user });
+
+        const dailyEntries: CounterMetricDailyEntry[] = [];
+        for (const metric of metrics) {
+            let existingEntry = metric.entries.find(
+                (entry) => entry.date === date
+            );
+            if (existingEntry === undefined) {
+                const newEntry = new CounterEntry();
+                newEntry.date = date;
+                newEntry.metric = metric;
+                await newEntry.save();
+                metric.entries.push(newEntry);
+                await metric.save();
+                existingEntry = newEntry;
+            }
+            dailyEntries.push({
+                metricId: metric.id,
+                date: existingEntry.date,
+                count: existingEntry.count,
+                label: metric.label,
+                description: metric.description,
+                maximum: metric.maximum,
+                minimum: metric.minimum,
+                interval: metric.interval,
+            });
+        }
+        return dailyEntries;
     }
 }
 /* eslint-enable @typescript-eslint/no-unsafe-return */

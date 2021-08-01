@@ -7,9 +7,9 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
-import type { RouteComponentProps } from 'react-router-dom';
 import { Header } from '../components/Header';
 import InputTextField from '../components/InputTextField';
+import type { RouteComponentProps } from 'react-router-dom';
 
 const RegistrationPage: FC<RouteComponentProps> = ({ history }) => {
     const [displayName, setName] = useState('');
@@ -39,13 +39,15 @@ const RegistrationPage: FC<RouteComponentProps> = ({ history }) => {
         setFieldErrors(response.data.registerUser.errors);
     };
 
-    const handleChangeBuilder = (
-        field: string,
-        setter: (value: React.SetStateAction<string>) => void
-    ) => (e: IInputEvent): void => {
-        setter(e.target.value);
-        setFieldErrors(fieldErrors.filter((err) => err.field !== field));
-    };
+    const handleChangeBuilder =
+        (
+            field: string,
+            setter: (value: React.SetStateAction<string>) => void
+        ) =>
+        (e: IInputEvent): void => {
+            setter(e.target.value);
+            setFieldErrors(fieldErrors.filter((err) => err.field !== field));
+        };
 
     return (
         <>

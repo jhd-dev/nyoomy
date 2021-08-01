@@ -1,0 +1,25 @@
+query Counters {
+    getCounters {
+        metricId
+        label
+        description
+        maximum
+        minimum
+        interval
+        date
+        count
+    }
+}
+
+query DayCounters($date: String!) {
+    getDayCounters(date: $date) {
+        metricId
+        label
+        description
+        maximum
+        minimum
+        interval
+        date
+        count
+    }
+}

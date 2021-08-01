@@ -1,7 +1,0 @@
-query Me {
-    currentUser {
-        id
-        displayName
-        username
-    }
-}

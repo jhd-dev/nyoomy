@@ -4,3 +4,11 @@ query Users {
         username
     }
 }
+
+query Me {
+    currentUser {
+        id
+        displayName
+        username
+    }
+}

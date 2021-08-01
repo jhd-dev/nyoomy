@@ -1,70 +1,11 @@
 /* eslint-disable */
-import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };
 const defaultOptions =  {}
-/**
- * The javascript `Date` as string. Type represents date and time as the ISO Date string.
- * @typedef {*} DateTime
- */
-
-/**
- * @typedef {Object} FieldError
- * @property {string} field
- * @property {string} message
- */
-
-/**
- * @typedef {Object} LoginResponse
- * @property {User} [user]
- * @property {string} [error]
- */
-
-/**
- * @typedef {Object} Mutation
- * @property {RegistrationResponse} registerUser
- * @property {LoginResponse} login
- * @property {boolean} logout
- * @property {boolean} forgotPassword
- * @property {boolean} resetPassword
- * @property {boolean} deleteUserById
- * @property {boolean} deleteUser
- * @property {boolean} updateUserPassword
- */
-
-/**
- * @typedef {Object} Query
- * @property {Array<User>} getAllUsers
- * @property {User} [currentUser]
- */
-
-/**
- * @typedef {Object} RegistrationResponse
- * @property {Array<FieldError>} [errors]
- * @property {User} [user]
- */
-
-/**
- * @typedef {Object} User
- * @property {string} id
- * @property {string} displayName
- * @property {string} username
- * @property {string} email
- * @property {number} tokenVersion
- * @property {string} birthday
- * @property {string} picture
- * @property {boolean} isPublic
- * @property {boolean} isEmailVerified
- * @property {string} bio
- * @property {string} cron
- * @property {string} language
- * @property {DateTime} createdAt
- */
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -74,6 +15,38 @@ export type Scalars = {
   Float: number;
   /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
   DateTime: any;
+};
+
+export type CounterEntry = {
+  __typename?: 'CounterEntry';
+  id: Scalars['ID'];
+  metric: CounterMetric;
+  date: Scalars['String'];
+  count: Scalars['Int'];
+};
+
+export type CounterMetric = {
+  __typename?: 'CounterMetric';
+  id: Scalars['ID'];
+  label: Scalars['String'];
+  description: Scalars['String'];
+  user: User;
+  entries: Array<CounterEntry>;
+  maximum: Scalars['Int'];
+  minimum: Scalars['Int'];
+  interval: Scalars['Int'];
+};
+
+export type CounterMetricDailyEntry = {
+  __typename?: 'CounterMetricDailyEntry';
+  metricId: Scalars['String'];
+  date: Scalars['String'];
+  count: Scalars['Int'];
+  label: Scalars['String'];
+  description: Scalars['String'];
+  maximum: Scalars['Int'];
+  minimum: Scalars['Int'];
+  interval: Scalars['Int'];
 };
 
 
@@ -141,6 +114,13 @@ export type Query = {
   __typename?: 'Query';
   getAllUsers: Array<User>;
   currentUser?: Maybe<User>;
+  getCounters: Array<CounterMetricDailyEntry>;
+  getDayCounters: Array<CounterMetricDailyEntry>;
+};
+
+
+export type QueryGetDayCountersArgs = {
+  date: Scalars['String'];
 };
 
 export type RegistrationResponse = {
@@ -163,6 +143,7 @@ export type User = {
   bio: Scalars['String'];
   cron: Scalars['String'];
   language: Scalars['String'];
+  metrics: Array<CounterMetric>;
   createdAt: Scalars['DateTime'];
 };
 
@@ -214,14 +195,27 @@ export type RegisterMutation = (
   ) }
 );
 
-export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+export type CountersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = (
+export type CountersQuery = (
   { __typename?: 'Query' }
-  & { currentUser?: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'displayName' | 'username'>
+  & { getCounters: Array<(
+    { __typename?: 'CounterMetricDailyEntry' }
+    & Pick<CounterMetricDailyEntry, 'metricId' | 'label' | 'description' | 'maximum' | 'minimum' | 'interval' | 'date' | 'count'>
+  )> }
+);
+
+export type DayCountersQueryVariables = Exact<{
+  date: Scalars['String'];
+}>;
+
+
+export type DayCountersQuery = (
+  { __typename?: 'Query' }
+  & { getDayCounters: Array<(
+    { __typename?: 'CounterMetricDailyEntry' }
+    & Pick<CounterMetricDailyEntry, 'metricId' | 'label' | 'description' | 'maximum' | 'minimum' | 'interval' | 'date' | 'count'>
   )> }
 );
 
@@ -236,183 +230,16 @@ export type UsersQuery = (
   )> }
 );
 
+export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ResolverTypeWrapper<T> = Promise<T> | T;
-
-
-export type LegacyStitchingResolver<TResult, TParent, TContext, TArgs> = {
-  fragment: string;
-  resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
-};
-
-export type NewStitchingResolver<TResult, TParent, TContext, TArgs> = {
-  selectionSet: string;
-  resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
-};
-export type StitchingResolver<TResult, TParent, TContext, TArgs> = LegacyStitchingResolver<TResult, TParent, TContext, TArgs> | NewStitchingResolver<TResult, TParent, TContext, TArgs>;
-export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
-  | ResolverFn<TResult, TParent, TContext, TArgs>
-  | StitchingResolver<TResult, TParent, TContext, TArgs>;
-
-export type ResolverFn<TResult, TParent, TContext, TArgs> = (
-  parent: TParent,
-  args: TArgs,
-  context: TContext,
-  info: GraphQLResolveInfo
-) => Promise<TResult> | TResult;
-
-export type SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs> = (
-  parent: TParent,
-  args: TArgs,
-  context: TContext,
-  info: GraphQLResolveInfo
-) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
-
-export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
-  parent: TParent,
-  args: TArgs,
-  context: TContext,
-  info: GraphQLResolveInfo
-) => TResult | Promise<TResult>;
-
-export interface SubscriptionSubscriberObject<TResult, TKey extends string, TParent, TContext, TArgs> {
-  subscribe: SubscriptionSubscribeFn<{ [key in TKey]: TResult }, TParent, TContext, TArgs>;
-  resolve?: SubscriptionResolveFn<TResult, { [key in TKey]: TResult }, TContext, TArgs>;
-}
-
-export interface SubscriptionResolverObject<TResult, TParent, TContext, TArgs> {
-  subscribe: SubscriptionSubscribeFn<any, TParent, TContext, TArgs>;
-  resolve: SubscriptionResolveFn<TResult, any, TContext, TArgs>;
-}
-
-export type SubscriptionObject<TResult, TKey extends string, TParent, TContext, TArgs> =
-  | SubscriptionSubscriberObject<TResult, TKey, TParent, TContext, TArgs>
-  | SubscriptionResolverObject<TResult, TParent, TContext, TArgs>;
-
-export type SubscriptionResolver<TResult, TKey extends string, TParent = {}, TContext = {}, TArgs = {}> =
-  | ((...args: any[]) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
-  | SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>;
-
-export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
-  parent: TParent,
-  context: TContext,
-  info: GraphQLResolveInfo
-) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
-
-export type IsTypeOfResolverFn<T = {}, TContext = {}> = (obj: T, context: TContext, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
-
-export type NextResolverFn<T> = () => Promise<T>;
-
-export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs = {}> = (
-  next: NextResolverFn<TResult>,
-  parent: TParent,
-  args: TArgs,
-  context: TContext,
-  info: GraphQLResolveInfo
-) => TResult | Promise<TResult>;
-
-/** Mapping between all available schema types and the resolvers types */
-export type ResolversTypes = {
-  DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
-  FieldError: ResolverTypeWrapper<FieldError>;
-  String: ResolverTypeWrapper<Scalars['String']>;
-  LoginResponse: ResolverTypeWrapper<LoginResponse>;
-  Mutation: ResolverTypeWrapper<{}>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
-  ID: ResolverTypeWrapper<Scalars['ID']>;
-  Query: ResolverTypeWrapper<{}>;
-  RegistrationResponse: ResolverTypeWrapper<RegistrationResponse>;
-  User: ResolverTypeWrapper<User>;
-  Int: ResolverTypeWrapper<Scalars['Int']>;
-};
-
-/** Mapping between all available schema types and the resolvers parents */
-export type ResolversParentTypes = {
-  DateTime: Scalars['DateTime'];
-  FieldError: FieldError;
-  String: Scalars['String'];
-  LoginResponse: LoginResponse;
-  Mutation: {};
-  Boolean: Scalars['Boolean'];
-  ID: Scalars['ID'];
-  Query: {};
-  RegistrationResponse: RegistrationResponse;
-  User: User;
-  Int: Scalars['Int'];
-};
-
-export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
-  name: 'DateTime';
-}
-
-export type FieldErrorResolvers<ContextType = any, ParentType extends ResolversParentTypes['FieldError'] = ResolversParentTypes['FieldError']> = {
-  field?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type LoginResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['LoginResponse'] = ResolversParentTypes['LoginResponse']> = {
-  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  error?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  registerUser?: Resolver<ResolversTypes['RegistrationResponse'], ParentType, ContextType, RequireFields<MutationRegisterUserArgs, 'displayName' | 'email' | 'username' | 'password'>>;
-  login?: Resolver<ResolversTypes['LoginResponse'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'usernameOrEmail' | 'password'>>;
-  logout?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  forgotPassword?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationForgotPasswordArgs, 'email'>>;
-  resetPassword?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationResetPasswordArgs, 'email'>>;
-  deleteUserById?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteUserByIdArgs, 'id'>>;
-  deleteUser?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  updateUserPassword?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationUpdateUserPasswordArgs, 'newPassword' | 'oldPassword' | 'username'>>;
-};
-
-export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  getAllUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
-  currentUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-};
-
-export type RegistrationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['RegistrationResponse'] = ResolversParentTypes['RegistrationResponse']> = {
-  errors?: Resolver<Maybe<Array<ResolversTypes['FieldError']>>, ParentType, ContextType>;
-  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  displayName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  tokenVersion?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  birthday?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  picture?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  isPublic?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  isEmailVerified?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  bio?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  cron?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  language?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type Resolvers<ContextType = any> = {
-  DateTime?: GraphQLScalarType;
-  FieldError?: FieldErrorResolvers<ContextType>;
-  LoginResponse?: LoginResponseResolvers<ContextType>;
-  Mutation?: MutationResolvers<ContextType>;
-  Query?: QueryResolvers<ContextType>;
-  RegistrationResponse?: RegistrationResponseResolvers<ContextType>;
-  User?: UserResolvers<ContextType>;
-};
-
-
-/**
- * @deprecated
- * Use "Resolvers" root object instead. If you wish to get "IResolvers", add "typesPrefix: I" to your config.
- */
-export type IResolvers<ContextType = any> = Resolvers<ContextType>;
+export type MeQuery = (
+  { __typename?: 'Query' }
+  & { currentUser?: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'displayName' | 'username'>
+  )> }
+);
 
 
 export const LoginDocument = gql`
@@ -533,6 +360,133 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const CountersDocument = gql`
+    query Counters {
+  getCounters {
+    metricId
+    label
+    description
+    maximum
+    minimum
+    interval
+    date
+    count
+  }
+}
+    `;
+
+/**
+ * __useCountersQuery__
+ *
+ * To run a query within a React component, call `useCountersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCountersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCountersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCountersQuery(baseOptions?: Apollo.QueryHookOptions<CountersQuery, CountersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CountersQuery, CountersQueryVariables>(CountersDocument, options);
+      }
+export function useCountersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CountersQuery, CountersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CountersQuery, CountersQueryVariables>(CountersDocument, options);
+        }
+export type CountersQueryHookResult = ReturnType<typeof useCountersQuery>;
+export type CountersLazyQueryHookResult = ReturnType<typeof useCountersLazyQuery>;
+export type CountersQueryResult = Apollo.QueryResult<CountersQuery, CountersQueryVariables>;
+export function refetchCountersQuery(variables?: CountersQueryVariables) {
+      return { query: CountersDocument, variables: variables }
+    }
+export const DayCountersDocument = gql`
+    query DayCounters($date: String!) {
+  getDayCounters(date: $date) {
+    metricId
+    label
+    description
+    maximum
+    minimum
+    interval
+    date
+    count
+  }
+}
+    `;
+
+/**
+ * __useDayCountersQuery__
+ *
+ * To run a query within a React component, call `useDayCountersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDayCountersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDayCountersQuery({
+ *   variables: {
+ *      date: // value for 'date'
+ *   },
+ * });
+ */
+export function useDayCountersQuery(baseOptions: Apollo.QueryHookOptions<DayCountersQuery, DayCountersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<DayCountersQuery, DayCountersQueryVariables>(DayCountersDocument, options);
+      }
+export function useDayCountersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DayCountersQuery, DayCountersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<DayCountersQuery, DayCountersQueryVariables>(DayCountersDocument, options);
+        }
+export type DayCountersQueryHookResult = ReturnType<typeof useDayCountersQuery>;
+export type DayCountersLazyQueryHookResult = ReturnType<typeof useDayCountersLazyQuery>;
+export type DayCountersQueryResult = Apollo.QueryResult<DayCountersQuery, DayCountersQueryVariables>;
+export function refetchDayCountersQuery(variables?: DayCountersQueryVariables) {
+      return { query: DayCountersDocument, variables: variables }
+    }
+export const UsersDocument = gql`
+    query Users {
+  getAllUsers {
+    displayName
+    username
+  }
+}
+    `;
+
+/**
+ * __useUsersQuery__
+ *
+ * To run a query within a React component, call `useUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUsersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useUsersQuery(baseOptions?: Apollo.QueryHookOptions<UsersQuery, UsersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UsersQuery, UsersQueryVariables>(UsersDocument, options);
+      }
+export function useUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UsersQuery, UsersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UsersQuery, UsersQueryVariables>(UsersDocument, options);
+        }
+export type UsersQueryHookResult = ReturnType<typeof useUsersQuery>;
+export type UsersLazyQueryHookResult = ReturnType<typeof useUsersLazyQuery>;
+export type UsersQueryResult = Apollo.QueryResult<UsersQuery, UsersQueryVariables>;
+export function refetchUsersQuery(variables?: UsersQueryVariables) {
+      return { query: UsersDocument, variables: variables }
+    }
 export const MeDocument = gql`
     query Me {
   currentUser {
@@ -569,38 +523,6 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
-export const UsersDocument = gql`
-    query Users {
-  getAllUsers {
-    displayName
-    username
-  }
-}
-    `;
-
-/**
- * __useUsersQuery__
- *
- * To run a query within a React component, call `useUsersQuery` and pass it any options that fit your needs.
- * When your component renders, `useUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useUsersQuery({
- *   variables: {
- *   },
- * });
- */
-export function useUsersQuery(baseOptions?: Apollo.QueryHookOptions<UsersQuery, UsersQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<UsersQuery, UsersQueryVariables>(UsersDocument, options);
-      }
-export function useUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UsersQuery, UsersQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<UsersQuery, UsersQueryVariables>(UsersDocument, options);
-        }
-export type UsersQueryHookResult = ReturnType<typeof useUsersQuery>;
-export type UsersLazyQueryHookResult = ReturnType<typeof useUsersLazyQuery>;
-export type UsersQueryResult = Apollo.QueryResult<UsersQuery, UsersQueryVariables>;
+export function refetchMeQuery(variables?: MeQueryVariables) {
+      return { query: MeDocument, variables: variables }
+    }
