@@ -4,9 +4,7 @@ import { useMeQuery, useLogoutMutation } from '@nyoomy/graphql';
 import { Link } from 'react-router-dom';
 
 export const LoginStatus: FC = () => {
-    const { data, loading, error } = useMeQuery({
-        fetchPolicy: 'network-only',
-    });
+    const { data, loading, error } = useMeQuery();
     const [logout, { client }] = useLogoutMutation();
 
     if (error !== undefined) {

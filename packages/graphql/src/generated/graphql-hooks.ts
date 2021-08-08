@@ -31,7 +31,7 @@ export type CounterMetric = {
   label: Scalars['String'];
   description: Scalars['String'];
   user: User;
-  entries: Array<CounterEntry>;
+  metricEntries: Array<CounterEntry>;
   maximum: Scalars['Int'];
   minimum: Scalars['Int'];
   interval: Scalars['Int'];
@@ -72,6 +72,7 @@ export type Mutation = {
   deleteUserById: Scalars['Boolean'];
   deleteUser: Scalars['Boolean'];
   updateUserPassword: Scalars['Boolean'];
+  addCounter?: Maybe<CounterMetricDailyEntry>;
 };
 
 
@@ -214,6 +215,17 @@ export type DayCountersQueryVariables = Exact<{
 export type DayCountersQuery = (
   { __typename?: 'Query' }
   & { getDayCounters: Array<(
+    { __typename?: 'CounterMetricDailyEntry' }
+    & Pick<CounterMetricDailyEntry, 'metricId' | 'label' | 'description' | 'maximum' | 'minimum' | 'interval' | 'date' | 'count'>
+  )> }
+);
+
+export type AddCounterMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AddCounterMutation = (
+  { __typename?: 'Mutation' }
+  & { addCounter?: Maybe<(
     { __typename?: 'CounterMetricDailyEntry' }
     & Pick<CounterMetricDailyEntry, 'metricId' | 'label' | 'description' | 'maximum' | 'minimum' | 'interval' | 'date' | 'count'>
   )> }
@@ -449,6 +461,45 @@ export type DayCountersQueryResult = Apollo.QueryResult<DayCountersQuery, DayCou
 export function refetchDayCountersQuery(variables?: DayCountersQueryVariables) {
       return { query: DayCountersDocument, variables: variables }
     }
+export const AddCounterDocument = gql`
+    mutation AddCounter {
+  addCounter {
+    metricId
+    label
+    description
+    maximum
+    minimum
+    interval
+    date
+    count
+  }
+}
+    `;
+export type AddCounterMutationFn = Apollo.MutationFunction<AddCounterMutation, AddCounterMutationVariables>;
+
+/**
+ * __useAddCounterMutation__
+ *
+ * To run a mutation, you first call `useAddCounterMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddCounterMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addCounterMutation, { data, loading, error }] = useAddCounterMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAddCounterMutation(baseOptions?: Apollo.MutationHookOptions<AddCounterMutation, AddCounterMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddCounterMutation, AddCounterMutationVariables>(AddCounterDocument, options);
+      }
+export type AddCounterMutationHookResult = ReturnType<typeof useAddCounterMutation>;
+export type AddCounterMutationResult = Apollo.MutationResult<AddCounterMutation>;
+export type AddCounterMutationOptions = Apollo.BaseMutationOptions<AddCounterMutation, AddCounterMutationVariables>;
 export const UsersDocument = gql`
     query Users {
   getAllUsers {

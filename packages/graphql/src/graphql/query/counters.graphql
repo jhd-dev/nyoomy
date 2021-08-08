@@ -23,3 +23,16 @@ query DayCounters($date: String!) {
         count
     }
 }
+
+mutation AddCounter {
+    addCounter {
+        metricId
+        label
+        description
+        maximum
+        minimum
+        interval
+        date
+        count
+    }
+}

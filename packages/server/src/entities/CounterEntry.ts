@@ -16,11 +16,11 @@ export class CounterEntry extends BaseEntity {
     @Field(() => ID)
     public readonly id: string;
 
-    @ManyToOne(() => CounterMetric, (metric) => metric.entries)
+    @ManyToOne(() => CounterMetric, (metric) => metric.metricEntries)
     @Field(() => CounterMetric)
     public metric: CounterMetric;
 
-    @Column('date', { unique: true })
+    @Column('date')
     @Field(() => String)
     public date: string;
 

@@ -34,15 +34,18 @@ export class CounterMetric extends BaseEntity {
     @Field(() => User)
     public user: User;
 
-    @OneToMany(() => CounterEntry, (entry) => entry.metric)
+    @OneToMany(() => CounterEntry, (entry) => entry.metric, {
+        cascade: true,
+        nullable: false,
+    })
     @Field(() => [CounterEntry])
-    public entries: CounterEntry[];
+    public metricEntries: CounterEntry[];
 
-    @Column('integer', { nullable: true })
+    @Column('integer', { default: 8 })
     @Field(() => Int)
     public maximum: number;
 
-    @Column('integer', { nullable: true })
+    @Column('integer', { default: 0 })
     @Field(() => Int)
     public minimum: number;
 

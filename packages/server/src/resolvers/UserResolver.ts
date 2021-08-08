@@ -205,11 +205,15 @@ export class UserResolver {
         if (user == null) return [];
 
         const metrics = await CounterMetric.find({ user });
+        console.log(metrics);
         const date = new Date().toDateString();
 
         const dailyEntries: CounterMetricDailyEntry[] = [];
+        // if (!Array.isArray(metrics.entries)) {
+        //     metric.entries = [];
+        // }
         for (const metric of metrics) {
-            let existingEntry = metric.entries.find(
+            let existingEntry = metric?.metricEntries?.find(
                 (entry) => entry.date === date
             );
             if (existingEntry === undefined) {
@@ -217,7 +221,7 @@ export class UserResolver {
                 newEntry.date = date;
                 newEntry.metric = metric;
                 await newEntry.save();
-                metric.entries.push(newEntry);
+                // metric.metricEntries.push(newEntry);
                 await metric.save();
                 existingEntry = newEntry;
             }
@@ -247,7 +251,7 @@ export class UserResolver {
 
         const dailyEntries: CounterMetricDailyEntry[] = [];
         for (const metric of metrics) {
-            let existingEntry = metric.entries.find(
+            let existingEntry = metric.metricEntries.find(
                 (entry) => entry.date === date
             );
             if (existingEntry === undefined) {
@@ -255,7 +259,7 @@ export class UserResolver {
                 newEntry.date = date;
                 newEntry.metric = metric;
                 await newEntry.save();
-                metric.entries.push(newEntry);
+                metric.metricEntries.push(newEntry);
                 await metric.save();
                 existingEntry = newEntry;
             }
@@ -271,6 +275,36 @@ export class UserResolver {
             });
         }
         return dailyEntries;
+    }
+
+    @Mutation(() => CounterMetricDailyEntry, { nullable: true })
+    public async addCounter(
+        @Ctx() { req }: IContext
+    ): Promise<CounterMetricDailyEntry | null> {
+        const user = await getUser(req?.session?.userId);
+        console.log(user?.email);
+        if (user == null) return null;
+
+        const metric = await CounterMetric.create({ user }).save();
+
+        const entry = await CounterEntry.create({
+            metric,
+            date: new Date().toDateString(),
+        }).save();
+
+        await entry.save();
+        await metric.save();
+
+        return {
+            metricId: metric.id,
+            date: entry.date,
+            count: entry.count,
+            label: metric.label,
+            description: metric.description,
+            maximum: metric.maximum,
+            minimum: metric.minimum,
+            interval: metric.interval,
+        };
     }
 }
 /* eslint-enable @typescript-eslint/no-unsafe-return */

@@ -19,7 +19,7 @@ export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?:
  * @property {string} label
  * @property {string} description
  * @property {User} user
- * @property {Array<CounterEntry>} entries
+ * @property {Array<CounterEntry>} metricEntries
  * @property {number} maximum
  * @property {number} minimum
  * @property {number} interval
@@ -64,6 +64,7 @@ export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?:
  * @property {boolean} deleteUserById
  * @property {boolean} deleteUser
  * @property {boolean} updateUserPassword
+ * @property {CounterMetricDailyEntry} [addCounter]
  */
 
 /**
@@ -122,7 +123,7 @@ export type CounterMetric = {
   label: Scalars['String'];
   description: Scalars['String'];
   user: User;
-  entries: Array<CounterEntry>;
+  metricEntries: Array<CounterEntry>;
   maximum: Scalars['Int'];
   minimum: Scalars['Int'];
   interval: Scalars['Int'];
@@ -163,6 +164,7 @@ export type Mutation = {
   deleteUserById: Scalars['Boolean'];
   deleteUser: Scalars['Boolean'];
   updateUserPassword: Scalars['Boolean'];
+  addCounter?: Maybe<CounterMetricDailyEntry>;
 };
 
 
@@ -305,6 +307,17 @@ export type DayCountersQueryVariables = Exact<{
 export type DayCountersQuery = (
   { __typename?: 'Query' }
   & { getDayCounters: Array<(
+    { __typename?: 'CounterMetricDailyEntry' }
+    & Pick<CounterMetricDailyEntry, 'metricId' | 'label' | 'description' | 'maximum' | 'minimum' | 'interval' | 'date' | 'count'>
+  )> }
+);
+
+export type AddCounterMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AddCounterMutation = (
+  { __typename?: 'Mutation' }
+  & { addCounter?: Maybe<(
     { __typename?: 'CounterMetricDailyEntry' }
     & Pick<CounterMetricDailyEntry, 'metricId' | 'label' | 'description' | 'maximum' | 'minimum' | 'interval' | 'date' | 'count'>
   )> }
@@ -457,7 +470,7 @@ export type CounterMetricResolvers<ContextType = any, ParentType extends Resolve
   label?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
-  entries?: Resolver<Array<ResolversTypes['CounterEntry']>, ParentType, ContextType>;
+  metricEntries?: Resolver<Array<ResolversTypes['CounterEntry']>, ParentType, ContextType>;
   maximum?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   minimum?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   interval?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -501,6 +514,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteUserById?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteUserByIdArgs, 'id'>>;
   deleteUser?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   updateUserPassword?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationUpdateUserPasswordArgs, 'newPassword' | 'oldPassword' | 'username'>>;
+  addCounter?: Resolver<Maybe<ResolversTypes['CounterMetricDailyEntry']>, ParentType, ContextType>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {

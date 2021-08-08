@@ -74,7 +74,7 @@ export class User extends BaseEntity {
     @Field(() => String)
     public language: string;
 
-    @OneToMany(() => CounterMetric, (metric) => metric.user)
+    @OneToMany(() => CounterMetric, (metric) => metric.user, { cascade: true })
     @Field(() => [CounterMetric])
     public metrics: CounterMetric[];
 
