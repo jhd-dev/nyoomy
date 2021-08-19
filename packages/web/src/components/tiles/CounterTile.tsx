@@ -26,7 +26,6 @@ export const CounterTile: FC<IProps> = ({ metric }) => {
     });
 
     const updateLabel = async (newLabel: string): Promise<void> => {
-        setLabel(newLabel);
         await updateCounter({
             variables: {
                 updateInput: {
@@ -36,14 +35,10 @@ export const CounterTile: FC<IProps> = ({ metric }) => {
                 },
             },
         });
+        setLabel(newLabel);
     };
 
-    const updateCount = async (): Promise<void> => {
-        const newCount = Math.min(
-            Math.max(count + 1, metric.minimum),
-            metric.maximum
-        );
-        console.log(`newCount: ${newCount}`);
+    const updateCount = async (newCount: number): Promise<void> => {
         const response = await updateCounter({
             variables: {
                 updateInput: {
@@ -53,8 +48,23 @@ export const CounterTile: FC<IProps> = ({ metric }) => {
                 },
             },
         });
-        console.log(response);
         setCount(newCount);
+    };
+
+    const incrementCount = async (): Promise<void> => {
+        const newCount = Math.min(
+            Math.max(count + 1, metric.minimum),
+            metric.maximum
+        );
+        await updateCount(newCount);
+    };
+
+    const decrementCount = async (): Promise<void> => {
+        const newCount = Math.min(
+            Math.max(count - 1, metric.minimum),
+            metric.maximum
+        );
+        await updateCount(newCount);
     };
 
     return (
@@ -66,10 +76,7 @@ export const CounterTile: FC<IProps> = ({ metric }) => {
                 value={isValidLabel(label) ? label : ''}
             />
             <br />
-            <button
-                type="button"
-                onClick={() => setCount(Math.round(count - 1))}
-            >
+            <button type="button" onClick={decrementCount}>
                 -
             </button>
             <input
@@ -82,7 +89,7 @@ export const CounterTile: FC<IProps> = ({ metric }) => {
                 }}
                 value={count}
             />
-            <button type="button" onClick={updateCount}>
+            <button type="button" onClick={incrementCount}>
                 +
             </button>
         </Tile>
@@ -101,5 +108,3 @@ function attemptParseInt(
 function isValidLabel(label?: string): boolean {
     return typeof label === 'string' && label.length > 0;
 }
-
-// function syncCount(newCount: number) {}
