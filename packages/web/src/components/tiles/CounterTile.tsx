@@ -14,6 +14,7 @@ export const CounterTile: FC<IProps> = ({ metric }) => {
     });
 
     const [label, setLabel] = useState(metric.label);
+    const [description, setDescription] = useState(metric.description);
     const [count, setCount] = useState(metric.count);
 
     useEffect(() => {
@@ -25,7 +26,11 @@ export const CounterTile: FC<IProps> = ({ metric }) => {
         }
     });
 
-    const updateLabel = async (newLabel: string): Promise<void> => {
+    const changeLabel = async (e: {
+        target: { value: string };
+    }): Promise<void> => {
+        const newLabel = e.target.value;
+
         await updateCounter({
             variables: {
                 updateInput: {
@@ -38,7 +43,24 @@ export const CounterTile: FC<IProps> = ({ metric }) => {
         setLabel(newLabel);
     };
 
+    const changeDescription = async (e: {
+        target: { value: string };
+    }): Promise<void> => {
+        const newDescription = e.target.value;
+        await updateCounter({
+            variables: {
+                updateInput: {
+                    metricId: metric.metricId,
+                    date: metric.date,
+                    description: newDescription,
+                },
+            },
+        });
+        setDescription(newDescription);
+    };
+
     const updateCount = async (newCount: number): Promise<void> => {
+        if (count === newCount) return;
         const response = await updateCounter({
             variables: {
                 updateInput: {
@@ -67,13 +89,31 @@ export const CounterTile: FC<IProps> = ({ metric }) => {
         await updateCount(newCount);
     };
 
+    const manuallyChangeCount = async (e: { target: { value: string } }) => {
+        const newCount = Math.min(
+            Math.max(attemptParseInt(e.target.value), metric.minimum),
+            metric.maximum
+        );
+        // syncCount(val);
+        await updateCount(newCount);
+    };
+
     return (
         <Tile>
             <input
                 type="text"
                 className="editable-text"
-                onChange={(e) => updateLabel(e.target.value)}
+                onChange={changeLabel}
                 value={isValidLabel(label) ? label : ''}
+                placeholder="Click to add label"
+            />
+            <br />
+            <input
+                type="text"
+                className="editable-text"
+                onChange={changeDescription}
+                value={isValidLabel(description) ? description : ''}
+                placeholder="Click to add description"
             />
             <br />
             <button type="button" onClick={decrementCount}>
@@ -82,11 +122,7 @@ export const CounterTile: FC<IProps> = ({ metric }) => {
             <input
                 type="text"
                 className="editable-text"
-                onChange={(e) => {
-                    const val = attemptParseInt(e.target.value);
-                    // syncCount(val);
-                    setCount(val);
-                }}
+                onChange={manuallyChangeCount}
                 value={count}
             />
             <button type="button" onClick={incrementCount}>
