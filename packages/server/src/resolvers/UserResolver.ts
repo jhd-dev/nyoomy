@@ -23,6 +23,7 @@ import { UserRegistrationInfo } from '../types/UserRegistrationInfo';
 import sendEmail from '../utils/sendEmail';
 import { validateRegistration } from '../utils/validateRegistration';
 import type { FieldError } from '../types/FieldError';
+import { UpdateCounterMetricInput } from '../types/UpdateCounterMetricInput';
 
 async function getUser(userId?: string): Promise<User | null> {
     if (typeof userId !== 'string' || userId.length === 0) return null;
@@ -213,9 +214,7 @@ export class UserResolver {
         //     metric.entries = [];
         // }
         for (const metric of metrics) {
-            let existingEntry = metric?.metricEntries?.find(
-                (entry) => entry.date === date
-            );
+            let existingEntry = await CounterEntry.findOne({ metric, date });
             if (existingEntry === undefined) {
                 const newEntry = new CounterEntry();
                 newEntry.date = date;
@@ -305,6 +304,75 @@ export class UserResolver {
             minimum: metric.minimum,
             interval: metric.interval,
         };
+    }
+
+    @Mutation(() => CounterMetricDailyEntry, { nullable: true })
+    // @UseMiddleware(isAuthorized)
+    public async updateCounter(
+        @Ctx() { req }: IContext,
+        @Arg('updateInput') updateInput: UpdateCounterMetricInput
+    ): Promise<CounterMetricDailyEntry | null> {
+        console.log('updateInput!');
+        console.log(updateInput);
+        try {
+            // Find user
+
+            const user = await getUser(req?.session?.userId);
+            console.log(user?.email);
+            if (user == null) {
+                throw new Error(
+                    `User with id '${req?.session?.userId}' could not be found.`
+                );
+            }
+
+            // Update metric
+
+            const metric = await CounterMetric.findOne(updateInput.metricId);
+            if (metric == null) {
+                throw new Error(
+                    `Metric with id '${updateInput.metricId}' could not be found.`
+                );
+            }
+
+            metric.label = updateInput.label ?? metric.label;
+            metric.description = updateInput.description ?? metric.description;
+            metric.maximum = updateInput.maximum ?? metric.maximum;
+            metric.minimum = updateInput.minimum ?? metric.minimum;
+            metric.interval = updateInput.interval ?? metric.interval;
+
+            await metric.save();
+
+            // Update entry
+
+            const entry = await CounterEntry.findOne({
+                metric,
+                date: updateInput.date,
+            });
+            if (entry == null) {
+                throw new Error(
+                    `Entry with date '${updateInput.date}' could not be found.`
+                );
+            }
+
+            entry.count = updateInput.count ?? entry.count;
+            console.log(`entry.count: ${entry.count}`);
+
+            await entry.save();
+
+            return {
+                metricId: metric.id,
+                date: entry.date,
+                count: entry.count,
+                label: metric.label,
+                description: metric.description,
+                maximum: metric.maximum,
+                minimum: metric.minimum,
+                interval: metric.interval,
+            };
+        } catch (err: unknown) {
+            console.error(err);
+            return null;
+        }
     }
 }
 /* eslint-enable @typescript-eslint/no-unsafe-return */

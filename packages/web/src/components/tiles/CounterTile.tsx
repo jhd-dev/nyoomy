@@ -1,7 +1,7 @@
 import type { FC } from 'react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useUpdateCounterMutation } from '@nyoomy/graphql';
 import type { CounterMetricDailyEntry } from '@nyoomy/graphql';
-// import type { CounterMetric, CountersQueryHookResult } from '@nyoomy/graphql';
 import { Tile } from './Tile';
 
 interface IProps {
@@ -9,14 +9,60 @@ interface IProps {
 }
 
 export const CounterTile: FC<IProps> = ({ metric }) => {
+    const [updateCounter, { loading, error }] = useUpdateCounterMutation({
+        refetchQueries: ['Counters'],
+    });
+
     const [label, setLabel] = useState(metric.label);
     const [count, setCount] = useState(metric.count);
+
+    useEffect(() => {
+        if (loading) {
+            console.log('Loading UpdateCounterMutation...');
+        }
+        if (error != null) {
+            console.error(`Error with UpdateCounterMutation: ${error.message}`);
+        }
+    });
+
+    const updateLabel = async (newLabel: string): Promise<void> => {
+        setLabel(newLabel);
+        await updateCounter({
+            variables: {
+                updateInput: {
+                    metricId: metric.metricId,
+                    date: metric.date,
+                    label: newLabel,
+                },
+            },
+        });
+    };
+
+    const updateCount = async (): Promise<void> => {
+        const newCount = Math.min(
+            Math.max(count + 1, metric.minimum),
+            metric.maximum
+        );
+        console.log(`newCount: ${newCount}`);
+        const response = await updateCounter({
+            variables: {
+                updateInput: {
+                    metricId: metric.metricId,
+                    date: metric.date,
+                    count: newCount,
+                },
+            },
+        });
+        console.log(response);
+        setCount(newCount);
+    };
+
     return (
         <Tile>
             <input
                 type="text"
                 className="editable-text"
-                onChange={(e) => setLabel(e.target.value)}
+                onChange={(e) => updateLabel(e.target.value)}
                 value={isValidLabel(label) ? label : ''}
             />
             <br />
@@ -36,10 +82,7 @@ export const CounterTile: FC<IProps> = ({ metric }) => {
                 }}
                 value={count}
             />
-            <button
-                type="button"
-                onClick={() => setCount(Math.round(count + metric.interval))}
-            >
+            <button type="button" onClick={updateCount}>
                 +
             </button>
         </Tile>

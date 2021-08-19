@@ -73,6 +73,7 @@ export type Mutation = {
   deleteUser: Scalars['Boolean'];
   updateUserPassword: Scalars['Boolean'];
   addCounter?: Maybe<CounterMetricDailyEntry>;
+  updateCounter?: Maybe<CounterMetricDailyEntry>;
 };
 
 
@@ -111,6 +112,11 @@ export type MutationUpdateUserPasswordArgs = {
   username: Scalars['String'];
 };
 
+
+export type MutationUpdateCounterArgs = {
+  updateInput: UpdateCounterMetricInput;
+};
+
 export type Query = {
   __typename?: 'Query';
   getAllUsers: Array<User>;
@@ -128,6 +134,17 @@ export type RegistrationResponse = {
   __typename?: 'RegistrationResponse';
   errors?: Maybe<Array<FieldError>>;
   user?: Maybe<User>;
+};
+
+export type UpdateCounterMetricInput = {
+  metricId: Scalars['ID'];
+  date: Scalars['String'];
+  label?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  maximum?: Maybe<Scalars['Int']>;
+  minimum?: Maybe<Scalars['Int']>;
+  interval?: Maybe<Scalars['Int']>;
+  count?: Maybe<Scalars['Int']>;
 };
 
 export type User = {
@@ -228,6 +245,19 @@ export type AddCounterMutation = (
   & { addCounter?: Maybe<(
     { __typename?: 'CounterMetricDailyEntry' }
     & Pick<CounterMetricDailyEntry, 'metricId' | 'label' | 'description' | 'maximum' | 'minimum' | 'interval' | 'date' | 'count'>
+  )> }
+);
+
+export type UpdateCounterMutationVariables = Exact<{
+  updateInput: UpdateCounterMetricInput;
+}>;
+
+
+export type UpdateCounterMutation = (
+  { __typename?: 'Mutation' }
+  & { updateCounter?: Maybe<(
+    { __typename?: 'CounterMetricDailyEntry' }
+    & Pick<CounterMetricDailyEntry, 'metricId' | 'date' | 'label' | 'description' | 'maximum' | 'minimum' | 'interval' | 'count'>
   )> }
 );
 
@@ -500,6 +530,46 @@ export function useAddCounterMutation(baseOptions?: Apollo.MutationHookOptions<A
 export type AddCounterMutationHookResult = ReturnType<typeof useAddCounterMutation>;
 export type AddCounterMutationResult = Apollo.MutationResult<AddCounterMutation>;
 export type AddCounterMutationOptions = Apollo.BaseMutationOptions<AddCounterMutation, AddCounterMutationVariables>;
+export const UpdateCounterDocument = gql`
+    mutation UpdateCounter($updateInput: UpdateCounterMetricInput!) {
+  updateCounter(updateInput: $updateInput) {
+    metricId
+    date
+    label
+    description
+    maximum
+    minimum
+    interval
+    count
+  }
+}
+    `;
+export type UpdateCounterMutationFn = Apollo.MutationFunction<UpdateCounterMutation, UpdateCounterMutationVariables>;
+
+/**
+ * __useUpdateCounterMutation__
+ *
+ * To run a mutation, you first call `useUpdateCounterMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCounterMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCounterMutation, { data, loading, error }] = useUpdateCounterMutation({
+ *   variables: {
+ *      updateInput: // value for 'updateInput'
+ *   },
+ * });
+ */
+export function useUpdateCounterMutation(baseOptions?: Apollo.MutationHookOptions<UpdateCounterMutation, UpdateCounterMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateCounterMutation, UpdateCounterMutationVariables>(UpdateCounterDocument, options);
+      }
+export type UpdateCounterMutationHookResult = ReturnType<typeof useUpdateCounterMutation>;
+export type UpdateCounterMutationResult = Apollo.MutationResult<UpdateCounterMutation>;
+export type UpdateCounterMutationOptions = Apollo.BaseMutationOptions<UpdateCounterMutation, UpdateCounterMutationVariables>;
 export const UsersDocument = gql`
     query Users {
   getAllUsers {

@@ -65,6 +65,7 @@ export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?:
  * @property {boolean} deleteUser
  * @property {boolean} updateUserPassword
  * @property {CounterMetricDailyEntry} [addCounter]
+ * @property {CounterMetricDailyEntry} [updateCounter]
  */
 
 /**
@@ -79,6 +80,18 @@ export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?:
  * @typedef {Object} RegistrationResponse
  * @property {Array<FieldError>} [errors]
  * @property {User} [user]
+ */
+
+/**
+ * @typedef {Object} UpdateCounterMetricInput
+ * @property {string} metricId
+ * @property {string} date
+ * @property {string} [label]
+ * @property {string} [description]
+ * @property {number} [maximum]
+ * @property {number} [minimum]
+ * @property {number} [interval]
+ * @property {number} [count]
  */
 
 /**
@@ -165,6 +178,7 @@ export type Mutation = {
   deleteUser: Scalars['Boolean'];
   updateUserPassword: Scalars['Boolean'];
   addCounter?: Maybe<CounterMetricDailyEntry>;
+  updateCounter?: Maybe<CounterMetricDailyEntry>;
 };
 
 
@@ -203,6 +217,11 @@ export type MutationUpdateUserPasswordArgs = {
   username: Scalars['String'];
 };
 
+
+export type MutationUpdateCounterArgs = {
+  updateInput: UpdateCounterMetricInput;
+};
+
 export type Query = {
   __typename?: 'Query';
   getAllUsers: Array<User>;
@@ -220,6 +239,17 @@ export type RegistrationResponse = {
   __typename?: 'RegistrationResponse';
   errors?: Maybe<Array<FieldError>>;
   user?: Maybe<User>;
+};
+
+export type UpdateCounterMetricInput = {
+  metricId: Scalars['ID'];
+  date: Scalars['String'];
+  label?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  maximum?: Maybe<Scalars['Int']>;
+  minimum?: Maybe<Scalars['Int']>;
+  interval?: Maybe<Scalars['Int']>;
+  count?: Maybe<Scalars['Int']>;
 };
 
 export type User = {
@@ -320,6 +350,19 @@ export type AddCounterMutation = (
   & { addCounter?: Maybe<(
     { __typename?: 'CounterMetricDailyEntry' }
     & Pick<CounterMetricDailyEntry, 'metricId' | 'label' | 'description' | 'maximum' | 'minimum' | 'interval' | 'date' | 'count'>
+  )> }
+);
+
+export type UpdateCounterMutationVariables = Exact<{
+  updateInput: UpdateCounterMetricInput;
+}>;
+
+
+export type UpdateCounterMutation = (
+  { __typename?: 'Mutation' }
+  & { updateCounter?: Maybe<(
+    { __typename?: 'CounterMetricDailyEntry' }
+    & Pick<CounterMetricDailyEntry, 'metricId' | 'date' | 'label' | 'description' | 'maximum' | 'minimum' | 'interval' | 'count'>
   )> }
 );
 
@@ -436,6 +479,7 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Query: ResolverTypeWrapper<{}>;
   RegistrationResponse: ResolverTypeWrapper<RegistrationResponse>;
+  UpdateCounterMetricInput: UpdateCounterMetricInput;
   User: ResolverTypeWrapper<User>;
 };
 
@@ -454,6 +498,7 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
   Query: {};
   RegistrationResponse: RegistrationResponse;
+  UpdateCounterMetricInput: UpdateCounterMetricInput;
   User: User;
 };
 
@@ -515,6 +560,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteUser?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   updateUserPassword?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationUpdateUserPasswordArgs, 'newPassword' | 'oldPassword' | 'username'>>;
   addCounter?: Resolver<Maybe<ResolversTypes['CounterMetricDailyEntry']>, ParentType, ContextType>;
+  updateCounter?: Resolver<Maybe<ResolversTypes['CounterMetricDailyEntry']>, ParentType, ContextType, RequireFields<MutationUpdateCounterArgs, 'updateInput'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {

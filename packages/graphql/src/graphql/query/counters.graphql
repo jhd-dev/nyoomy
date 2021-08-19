@@ -36,3 +36,16 @@ mutation AddCounter {
         count
     }
 }
+
+mutation UpdateCounter($updateInput: UpdateCounterMetricInput!) {
+    updateCounter(updateInput: $updateInput) {
+        metricId
+        date
+        label
+        description
+        maximum
+        minimum
+        interval
+        count
+    }
+}
