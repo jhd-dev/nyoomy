@@ -1,4 +1,5 @@
 import { Field, Int, ObjectType } from 'type-graphql';
+import MetricType from './MetricType';
 
 /**
  * A single day's CounterMetric Entry, including the metric's info
@@ -7,6 +8,9 @@ import { Field, Int, ObjectType } from 'type-graphql';
 export class CounterMetricDailyEntry {
     @Field(() => String)
     public metricId: string;
+
+    @Field(() => MetricType)
+    public metricType: MetricType = MetricType.COUNTER;
 
     @Field(() => String)
     public date: string;

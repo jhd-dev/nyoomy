@@ -11,7 +11,14 @@ import {
     UseMiddleware,
     ID,
 } from 'type-graphql';
-import { CounterEntry, CounterMetric, User } from '../entities';
+import {
+    CounterEntry,
+    CounterMetric,
+    TimerAttempt,
+    TimerEntry,
+    TimerMetric,
+    User,
+} from '../entities';
 import { PUBLIC_URL } from '../env';
 import { isAuthorized } from '../middleware/isAuthorized';
 import { CounterMetricDailyEntry } from '../types/CounterMetricDailyEntry';
@@ -24,6 +31,9 @@ import sendEmail from '../utils/sendEmail';
 import { validateRegistration } from '../utils/validateRegistration';
 import type { FieldError } from '../types/FieldError';
 import { UpdateCounterMetricInput } from '../types/UpdateCounterMetricInput';
+import { GetMetricsResponse } from '../types/GetMetricsResponse';
+import { TimerMetricPayload } from '../types/TimerMetricPayload';
+import { IsNull, Not } from 'typeorm';
 
 async function getUser(userId?: string): Promise<User | null> {
     if (typeof userId !== 'string' || userId.length === 0) return null;
@@ -198,6 +208,168 @@ export class UserResolver {
         }
     }
 
+    // @Query(() => GetMetricsResponse)
+    // public async getMetrics(
+    //     @Ctx() { req }: IContext
+    // ): Promise<GetMetricsResponse> {
+    //     const user = await getUser(req?.session?.userId);
+    //     if (user == null) return { counters: [], timers: [] };
+
+    //     const counters = await CounterMetric.find({ user });
+    //     const date = new Date().toDateString();
+    //     const counterEntries: CounterMetricDailyEntry[] = [];
+
+    //     for (const counter of counters) {
+    //         let existingEntry = await CounterEntry.findOne({
+    //             metric: counter,
+    //             date,
+    //         });
+    //         if (existingEntry === undefined) {
+    //             const newEntry = new CounterEntry();
+    //             newEntry.date = date;
+    //             newEntry.metric = counter;
+    //             await newEntry.save();
+    //             await counter.save();
+    //             existingEntry = newEntry;
+    //         }
+    //         counterEntries.push({
+    //             metricId: counter.id,
+    //             metricType: counter.metricType,
+    //             date: existingEntry.date,
+    //             count: existingEntry.count,
+    //             label: counter.label,
+    //             description: counter.description,
+    //             maximum: counter.maximum,
+    //             minimum: counter.minimum,
+    //             interval: counter.interval,
+    //         });
+    //     }
+
+    //     const timers = await TimerMetric.find({ user });
+    //     const timerPayloads: TimerMetricPayload[] = [];
+
+    //     for (const timer of timers) {
+    //         let existingEntry = await TimerEntry.findOne({
+    //             metric: timer,
+    //             date,
+    //         });
+    //         if (existingEntry === undefined) {
+    //             const newEntry = await TimerEntry.create({
+    //                 metric: timer,
+    //                 date,
+    //             }).save();
+    //             await timer.save();
+    //             existingEntry = newEntry;
+    //         }
+
+    //         const currentAttempt = await TimerAttempt.findOne({
+    //             where: {
+    //                 entry: existingEntry,
+    //                 startTime: Not(IsNull()),
+    //                 endTime: IsNull(),
+    //             },
+    //         });
+    //         const startTime =
+    //             currentAttempt == null ? null : currentAttempt.startTime;
+
+    //         timerPayloads.push({
+    //             metricId: timer.id,
+    //             date: existingEntry.date,
+    //             metricType: timer.metricType,
+    //             label: timer.label,
+    //             description: timer.description,
+    //             goalLength: timer.goalLength,
+    //             goalPerDay: timer.goalPerDay,
+    //             startTime,
+    //         });
+    //     }
+
+    //     return {
+    //         counters: counterEntries,
+    //         timers: timerPayloads,
+    //     };
+    // }
+
+    @Query(() => [TimerMetricPayload])
+    public async getTimers(
+        @Ctx() { req }: IContext
+    ): Promise<TimerMetricPayload[]> {
+        const user = await getUser(req?.session?.userId);
+        if (user == null) return [];
+
+        const date = new Date().toDateString();
+        const timers = await TimerMetric.find({ user });
+        const timerPayloads: TimerMetricPayload[] = [];
+
+        for (const timer of timers) {
+            let existingEntry = await TimerEntry.findOne({
+                metric: timer,
+                date,
+            });
+            if (existingEntry === undefined) {
+                const newEntry = await TimerEntry.create({
+                    metric: timer,
+                    date,
+                }).save();
+                await timer.save();
+                existingEntry = newEntry;
+            }
+
+            const currentAttempt = await TimerAttempt.findOne({
+                where: {
+                    entry: existingEntry,
+                    startTime: Not(IsNull()),
+                    endTime: IsNull(),
+                },
+            });
+            const startTime =
+                currentAttempt == null ? null : currentAttempt.startTime;
+
+            timerPayloads.push({
+                metricId: timer.id,
+                date: existingEntry.date,
+                metricType: timer.metricType,
+                label: timer.label,
+                description: timer.description,
+                goalLength: timer.goalLength,
+                goalPerDay: timer.goalPerDay,
+                startTime,
+            });
+        }
+
+        return timerPayloads;
+    }
+
+    @Mutation(() => TimerMetricPayload, { nullable: true })
+    public async addTimer(
+        @Ctx() { req }: IContext
+    ): Promise<TimerMetricPayload | null> {
+        const user = await getUser(req?.session?.userId);
+        console.log(user?.email);
+        if (user == null) return null;
+
+        const metric = await TimerMetric.create({ user }).save();
+
+        const entry = await TimerEntry.create({
+            metric,
+            date: new Date().toDateString(),
+        }).save();
+
+        await entry.save();
+        await metric.save();
+
+        return {
+            metricId: metric.id,
+            metricType: metric.metricType,
+            date: entry.date,
+            label: metric.label,
+            description: metric.description,
+            goalLength: metric.goalLength,
+            goalPerDay: metric.goalPerDay,
+            startTime: null,
+        };
+    }
+
     @Query(() => [CounterMetricDailyEntry])
     public async getCounters(
         @Ctx() { req }: IContext
@@ -226,6 +398,7 @@ export class UserResolver {
             }
             dailyEntries.push({
                 metricId: metric.id,
+                metricType: metric.metricType,
                 date: existingEntry.date,
                 count: existingEntry.count,
                 label: metric.label,
@@ -264,6 +437,7 @@ export class UserResolver {
             }
             dailyEntries.push({
                 metricId: metric.id,
+                metricType: metric.metricType,
                 date: existingEntry.date,
                 count: existingEntry.count,
                 label: metric.label,
@@ -296,6 +470,7 @@ export class UserResolver {
 
         return {
             metricId: metric.id,
+            metricType: metric.metricType,
             date: entry.date,
             count: entry.count,
             label: metric.label,
@@ -307,7 +482,6 @@ export class UserResolver {
     }
 
     @Mutation(() => CounterMetricDailyEntry, { nullable: true })
-    // @UseMiddleware(isAuthorized)
     public async updateCounter(
         @Ctx() { req }: IContext,
         @Arg('updateInput') updateInput: UpdateCounterMetricInput
@@ -361,6 +535,7 @@ export class UserResolver {
 
             return {
                 metricId: metric.id,
+                metricType: metric.metricType,
                 date: entry.date,
                 count: entry.count,
                 label: metric.label,

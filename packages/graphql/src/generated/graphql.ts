@@ -6,6 +6,7 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };
 /**
+ * A single day's data for a particular CounterMetric
  * @typedef {Object} CounterEntry
  * @property {string} id
  * @property {CounterMetric} metric
@@ -16,9 +17,10 @@ export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?:
 /**
  * @typedef {Object} CounterMetric
  * @property {string} id
+ * @property {MetricType} metricType
+ * @property {User} user
  * @property {string} label
  * @property {string} description
- * @property {User} user
  * @property {Array<CounterEntry>} metricEntries
  * @property {number} maximum
  * @property {number} minimum
@@ -28,6 +30,7 @@ export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?:
 /**
  * @typedef {Object} CounterMetricDailyEntry
  * @property {string} metricId
+ * @property {MetricType} metricType
  * @property {string} date
  * @property {number} count
  * @property {string} label
@@ -49,9 +52,23 @@ export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?:
  */
 
 /**
+ * @typedef {Object} IMetric
+ * @property {string} id
+ * @property {MetricType} metricType
+ * @property {User} user
+ * @property {string} label
+ * @property {string} description
+ */
+
+/**
  * @typedef {Object} LoginResponse
  * @property {User} [user]
  * @property {string} [error]
+ */
+
+/**
+ * The types of metrics a user can create
+ * @typedef {("COUNTER"|"TIMER")} MetricType
  */
 
 /**
@@ -64,12 +81,14 @@ export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?:
  * @property {boolean} deleteUserById
  * @property {boolean} deleteUser
  * @property {boolean} updateUserPassword
+ * @property {TimerMetricPayload} [addTimer]
  * @property {CounterMetricDailyEntry} [addCounter]
  * @property {CounterMetricDailyEntry} [updateCounter]
  */
 
 /**
  * @typedef {Object} Query
+ * @property {Array<TimerMetricPayload>} getTimers
  * @property {Array<User>} getAllUsers
  * @property {User} [currentUser]
  * @property {Array<CounterMetricDailyEntry>} getCounters
@@ -80,6 +99,48 @@ export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?:
  * @typedef {Object} RegistrationResponse
  * @property {Array<FieldError>} [errors]
  * @property {User} [user]
+ */
+
+/**
+ * @typedef {Object} TimerAttempt
+ * @property {string} id
+ * @property {TimerEntry} entry
+ * @property {string} startTime
+ * @property {string} endTime
+ * @property {boolean} didFinish
+ * @property {boolean} [didSucceed]
+ */
+
+/**
+ * @typedef {Object} TimerEntry
+ * @property {string} id
+ * @property {TimerMetric} metric
+ * @property {string} date
+ * @property {Array<TimerAttempt>} attempts
+ */
+
+/**
+ * @typedef {Object} TimerMetric
+ * @property {string} id
+ * @property {MetricType} metricType
+ * @property {User} user
+ * @property {Array<TimerEntry>} metricEntries
+ * @property {string} label
+ * @property {string} description
+ * @property {number} goalLength
+ * @property {number} goalPerDay
+ */
+
+/**
+ * @typedef {Object} TimerMetricPayload
+ * @property {string} metricId
+ * @property {string} metricType
+ * @property {string} date
+ * @property {string} label
+ * @property {string} description
+ * @property {number} goalLength
+ * @property {number} goalPerDay
+ * @property {string} [startTime]
  */
 
 /**
@@ -109,6 +170,7 @@ export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?:
  * @property {string} cron
  * @property {string} language
  * @property {Array<CounterMetric>} metrics
+ * @property {Array<TimerMetric>} timerMetrics
  * @property {DateTime} createdAt
  */
 /** All built-in and custom scalars, mapped to their actual values */
@@ -122,6 +184,7 @@ export type Scalars = {
   DateTime: any;
 };
 
+/** A single day's data for a particular CounterMetric */
 export type CounterEntry = {
   __typename?: 'CounterEntry';
   id: Scalars['ID'];
@@ -130,12 +193,13 @@ export type CounterEntry = {
   count: Scalars['Int'];
 };
 
-export type CounterMetric = {
+export type CounterMetric = IMetric & {
   __typename?: 'CounterMetric';
   id: Scalars['ID'];
+  metricType: MetricType;
+  user: User;
   label: Scalars['String'];
   description: Scalars['String'];
-  user: User;
   metricEntries: Array<CounterEntry>;
   maximum: Scalars['Int'];
   minimum: Scalars['Int'];
@@ -145,6 +209,7 @@ export type CounterMetric = {
 export type CounterMetricDailyEntry = {
   __typename?: 'CounterMetricDailyEntry';
   metricId: Scalars['String'];
+  metricType: MetricType;
   date: Scalars['String'];
   count: Scalars['Int'];
   label: Scalars['String'];
@@ -161,11 +226,25 @@ export type FieldError = {
   message: Scalars['String'];
 };
 
+export type IMetric = {
+  id: Scalars['ID'];
+  metricType: MetricType;
+  user: User;
+  label: Scalars['String'];
+  description: Scalars['String'];
+};
+
 export type LoginResponse = {
   __typename?: 'LoginResponse';
   user?: Maybe<User>;
   error?: Maybe<Scalars['String']>;
 };
+
+/** The types of metrics a user can create */
+export enum MetricType {
+  Counter = 'COUNTER',
+  Timer = 'TIMER'
+}
 
 export type Mutation = {
   __typename?: 'Mutation';
@@ -177,6 +256,7 @@ export type Mutation = {
   deleteUserById: Scalars['Boolean'];
   deleteUser: Scalars['Boolean'];
   updateUserPassword: Scalars['Boolean'];
+  addTimer?: Maybe<TimerMetricPayload>;
   addCounter?: Maybe<CounterMetricDailyEntry>;
   updateCounter?: Maybe<CounterMetricDailyEntry>;
 };
@@ -224,6 +304,7 @@ export type MutationUpdateCounterArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  getTimers: Array<TimerMetricPayload>;
   getAllUsers: Array<User>;
   currentUser?: Maybe<User>;
   getCounters: Array<CounterMetricDailyEntry>;
@@ -239,6 +320,48 @@ export type RegistrationResponse = {
   __typename?: 'RegistrationResponse';
   errors?: Maybe<Array<FieldError>>;
   user?: Maybe<User>;
+};
+
+export type TimerAttempt = {
+  __typename?: 'TimerAttempt';
+  id: Scalars['ID'];
+  entry: TimerEntry;
+  startTime: Scalars['String'];
+  endTime: Scalars['String'];
+  didFinish: Scalars['Boolean'];
+  didSucceed?: Maybe<Scalars['Boolean']>;
+};
+
+export type TimerEntry = {
+  __typename?: 'TimerEntry';
+  id: Scalars['ID'];
+  metric: TimerMetric;
+  date: Scalars['String'];
+  attempts: Array<TimerAttempt>;
+};
+
+export type TimerMetric = {
+  __typename?: 'TimerMetric';
+  id: Scalars['ID'];
+  metricType: MetricType;
+  user: User;
+  metricEntries: Array<TimerEntry>;
+  label: Scalars['String'];
+  description: Scalars['String'];
+  goalLength: Scalars['Int'];
+  goalPerDay: Scalars['Int'];
+};
+
+export type TimerMetricPayload = {
+  __typename?: 'TimerMetricPayload';
+  metricId: Scalars['String'];
+  metricType: Scalars['String'];
+  date: Scalars['String'];
+  label: Scalars['String'];
+  description: Scalars['String'];
+  goalLength: Scalars['Int'];
+  goalPerDay: Scalars['Int'];
+  startTime?: Maybe<Scalars['String']>;
 };
 
 export type UpdateCounterMetricInput = {
@@ -267,6 +390,7 @@ export type User = {
   cron: Scalars['String'];
   language: Scalars['String'];
   metrics: Array<CounterMetric>;
+  timerMetrics: Array<TimerMetric>;
   createdAt: Scalars['DateTime'];
 };
 
@@ -325,7 +449,7 @@ export type CountersQuery = (
   { __typename?: 'Query' }
   & { getCounters: Array<(
     { __typename?: 'CounterMetricDailyEntry' }
-    & Pick<CounterMetricDailyEntry, 'metricId' | 'label' | 'description' | 'maximum' | 'minimum' | 'interval' | 'date' | 'count'>
+    & Pick<CounterMetricDailyEntry, 'metricId' | 'metricType' | 'label' | 'description' | 'maximum' | 'minimum' | 'interval' | 'date' | 'count'>
   )> }
 );
 
@@ -338,7 +462,7 @@ export type DayCountersQuery = (
   { __typename?: 'Query' }
   & { getDayCounters: Array<(
     { __typename?: 'CounterMetricDailyEntry' }
-    & Pick<CounterMetricDailyEntry, 'metricId' | 'label' | 'description' | 'maximum' | 'minimum' | 'interval' | 'date' | 'count'>
+    & Pick<CounterMetricDailyEntry, 'metricId' | 'metricType' | 'label' | 'description' | 'maximum' | 'minimum' | 'interval' | 'date' | 'count'>
   )> }
 );
 
@@ -349,7 +473,18 @@ export type AddCounterMutation = (
   { __typename?: 'Mutation' }
   & { addCounter?: Maybe<(
     { __typename?: 'CounterMetricDailyEntry' }
-    & Pick<CounterMetricDailyEntry, 'metricId' | 'label' | 'description' | 'maximum' | 'minimum' | 'interval' | 'date' | 'count'>
+    & Pick<CounterMetricDailyEntry, 'metricId' | 'metricType' | 'label' | 'description' | 'maximum' | 'minimum' | 'interval' | 'date' | 'count'>
+  )> }
+);
+
+export type AddTimerMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AddTimerMutation = (
+  { __typename?: 'Mutation' }
+  & { addTimer?: Maybe<(
+    { __typename?: 'TimerMetricPayload' }
+    & Pick<TimerMetricPayload, 'metricId' | 'metricType' | 'label' | 'description' | 'date' | 'goalLength' | 'goalPerDay' | 'startTime'>
   )> }
 );
 
@@ -362,7 +497,21 @@ export type UpdateCounterMutation = (
   { __typename?: 'Mutation' }
   & { updateCounter?: Maybe<(
     { __typename?: 'CounterMetricDailyEntry' }
-    & Pick<CounterMetricDailyEntry, 'metricId' | 'date' | 'label' | 'description' | 'maximum' | 'minimum' | 'interval' | 'count'>
+    & Pick<CounterMetricDailyEntry, 'metricId' | 'metricType' | 'date' | 'label' | 'description' | 'maximum' | 'minimum' | 'interval' | 'count'>
+  )> }
+);
+
+export type MetricsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MetricsQuery = (
+  { __typename?: 'Query' }
+  & { getCounters: Array<(
+    { __typename?: 'CounterMetricDailyEntry' }
+    & Pick<CounterMetricDailyEntry, 'metricId' | 'metricType' | 'label' | 'description' | 'maximum' | 'minimum' | 'interval' | 'date' | 'count'>
+  )>, getTimers: Array<(
+    { __typename?: 'TimerMetricPayload' }
+    & Pick<TimerMetricPayload, 'metricId' | 'metricType' | 'label' | 'description' | 'date' | 'goalLength' | 'goalPerDay' | 'startTime'>
   )> }
 );
 
@@ -474,11 +623,17 @@ export type ResolversTypes = {
   CounterMetricDailyEntry: ResolverTypeWrapper<CounterMetricDailyEntry>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
   FieldError: ResolverTypeWrapper<FieldError>;
+  IMetric: ResolversTypes['CounterMetric'];
   LoginResponse: ResolverTypeWrapper<LoginResponse>;
+  MetricType: MetricType;
   Mutation: ResolverTypeWrapper<{}>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Query: ResolverTypeWrapper<{}>;
   RegistrationResponse: ResolverTypeWrapper<RegistrationResponse>;
+  TimerAttempt: ResolverTypeWrapper<TimerAttempt>;
+  TimerEntry: ResolverTypeWrapper<TimerEntry>;
+  TimerMetric: ResolverTypeWrapper<TimerMetric>;
+  TimerMetricPayload: ResolverTypeWrapper<TimerMetricPayload>;
   UpdateCounterMetricInput: UpdateCounterMetricInput;
   User: ResolverTypeWrapper<User>;
 };
@@ -493,11 +648,16 @@ export type ResolversParentTypes = {
   CounterMetricDailyEntry: CounterMetricDailyEntry;
   DateTime: Scalars['DateTime'];
   FieldError: FieldError;
+  IMetric: ResolversParentTypes['CounterMetric'];
   LoginResponse: LoginResponse;
   Mutation: {};
   Boolean: Scalars['Boolean'];
   Query: {};
   RegistrationResponse: RegistrationResponse;
+  TimerAttempt: TimerAttempt;
+  TimerEntry: TimerEntry;
+  TimerMetric: TimerMetric;
+  TimerMetricPayload: TimerMetricPayload;
   UpdateCounterMetricInput: UpdateCounterMetricInput;
   User: User;
 };
@@ -512,9 +672,10 @@ export type CounterEntryResolvers<ContextType = any, ParentType extends Resolver
 
 export type CounterMetricResolvers<ContextType = any, ParentType extends ResolversParentTypes['CounterMetric'] = ResolversParentTypes['CounterMetric']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  metricType?: Resolver<ResolversTypes['MetricType'], ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   label?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   metricEntries?: Resolver<Array<ResolversTypes['CounterEntry']>, ParentType, ContextType>;
   maximum?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   minimum?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -524,6 +685,7 @@ export type CounterMetricResolvers<ContextType = any, ParentType extends Resolve
 
 export type CounterMetricDailyEntryResolvers<ContextType = any, ParentType extends ResolversParentTypes['CounterMetricDailyEntry'] = ResolversParentTypes['CounterMetricDailyEntry']> = {
   metricId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  metricType?: Resolver<ResolversTypes['MetricType'], ParentType, ContextType>;
   date?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   count?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   label?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -544,6 +706,15 @@ export type FieldErrorResolvers<ContextType = any, ParentType extends ResolversP
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type IMetricResolvers<ContextType = any, ParentType extends ResolversParentTypes['IMetric'] = ResolversParentTypes['IMetric']> = {
+  __resolveType: TypeResolveFn<'CounterMetric', ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  metricType?: Resolver<ResolversTypes['MetricType'], ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  label?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+};
+
 export type LoginResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['LoginResponse'] = ResolversParentTypes['LoginResponse']> = {
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   error?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -559,11 +730,13 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteUserById?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteUserByIdArgs, 'id'>>;
   deleteUser?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   updateUserPassword?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationUpdateUserPasswordArgs, 'newPassword' | 'oldPassword' | 'username'>>;
+  addTimer?: Resolver<Maybe<ResolversTypes['TimerMetricPayload']>, ParentType, ContextType>;
   addCounter?: Resolver<Maybe<ResolversTypes['CounterMetricDailyEntry']>, ParentType, ContextType>;
   updateCounter?: Resolver<Maybe<ResolversTypes['CounterMetricDailyEntry']>, ParentType, ContextType, RequireFields<MutationUpdateCounterArgs, 'updateInput'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  getTimers?: Resolver<Array<ResolversTypes['TimerMetricPayload']>, ParentType, ContextType>;
   getAllUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
   currentUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   getCounters?: Resolver<Array<ResolversTypes['CounterMetricDailyEntry']>, ParentType, ContextType>;
@@ -573,6 +746,48 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 export type RegistrationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['RegistrationResponse'] = ResolversParentTypes['RegistrationResponse']> = {
   errors?: Resolver<Maybe<Array<ResolversTypes['FieldError']>>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type TimerAttemptResolvers<ContextType = any, ParentType extends ResolversParentTypes['TimerAttempt'] = ResolversParentTypes['TimerAttempt']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  entry?: Resolver<ResolversTypes['TimerEntry'], ParentType, ContextType>;
+  startTime?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  endTime?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  didFinish?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  didSucceed?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type TimerEntryResolvers<ContextType = any, ParentType extends ResolversParentTypes['TimerEntry'] = ResolversParentTypes['TimerEntry']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  metric?: Resolver<ResolversTypes['TimerMetric'], ParentType, ContextType>;
+  date?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  attempts?: Resolver<Array<ResolversTypes['TimerAttempt']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type TimerMetricResolvers<ContextType = any, ParentType extends ResolversParentTypes['TimerMetric'] = ResolversParentTypes['TimerMetric']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  metricType?: Resolver<ResolversTypes['MetricType'], ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  metricEntries?: Resolver<Array<ResolversTypes['TimerEntry']>, ParentType, ContextType>;
+  label?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  goalLength?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  goalPerDay?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type TimerMetricPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['TimerMetricPayload'] = ResolversParentTypes['TimerMetricPayload']> = {
+  metricId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  metricType?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  date?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  label?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  goalLength?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  goalPerDay?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  startTime?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -590,6 +805,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   cron?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   language?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   metrics?: Resolver<Array<ResolversTypes['CounterMetric']>, ParentType, ContextType>;
+  timerMetrics?: Resolver<Array<ResolversTypes['TimerMetric']>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -600,10 +816,15 @@ export type Resolvers<ContextType = any> = {
   CounterMetricDailyEntry?: CounterMetricDailyEntryResolvers<ContextType>;
   DateTime?: GraphQLScalarType;
   FieldError?: FieldErrorResolvers<ContextType>;
+  IMetric?: IMetricResolvers<ContextType>;
   LoginResponse?: LoginResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   RegistrationResponse?: RegistrationResponseResolvers<ContextType>;
+  TimerAttempt?: TimerAttemptResolvers<ContextType>;
+  TimerEntry?: TimerEntryResolvers<ContextType>;
+  TimerMetric?: TimerMetricResolvers<ContextType>;
+  TimerMetricPayload?: TimerMetricPayloadResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 };
 

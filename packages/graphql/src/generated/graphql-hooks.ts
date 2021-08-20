@@ -17,6 +17,7 @@ export type Scalars = {
   DateTime: any;
 };
 
+/** A single day's data for a particular CounterMetric */
 export type CounterEntry = {
   __typename?: 'CounterEntry';
   id: Scalars['ID'];
@@ -25,12 +26,13 @@ export type CounterEntry = {
   count: Scalars['Int'];
 };
 
-export type CounterMetric = {
+export type CounterMetric = IMetric & {
   __typename?: 'CounterMetric';
   id: Scalars['ID'];
+  metricType: MetricType;
+  user: User;
   label: Scalars['String'];
   description: Scalars['String'];
-  user: User;
   metricEntries: Array<CounterEntry>;
   maximum: Scalars['Int'];
   minimum: Scalars['Int'];
@@ -40,6 +42,7 @@ export type CounterMetric = {
 export type CounterMetricDailyEntry = {
   __typename?: 'CounterMetricDailyEntry';
   metricId: Scalars['String'];
+  metricType: MetricType;
   date: Scalars['String'];
   count: Scalars['Int'];
   label: Scalars['String'];
@@ -56,11 +59,25 @@ export type FieldError = {
   message: Scalars['String'];
 };
 
+export type IMetric = {
+  id: Scalars['ID'];
+  metricType: MetricType;
+  user: User;
+  label: Scalars['String'];
+  description: Scalars['String'];
+};
+
 export type LoginResponse = {
   __typename?: 'LoginResponse';
   user?: Maybe<User>;
   error?: Maybe<Scalars['String']>;
 };
+
+/** The types of metrics a user can create */
+export enum MetricType {
+  Counter = 'COUNTER',
+  Timer = 'TIMER'
+}
 
 export type Mutation = {
   __typename?: 'Mutation';
@@ -72,6 +89,7 @@ export type Mutation = {
   deleteUserById: Scalars['Boolean'];
   deleteUser: Scalars['Boolean'];
   updateUserPassword: Scalars['Boolean'];
+  addTimer?: Maybe<TimerMetricPayload>;
   addCounter?: Maybe<CounterMetricDailyEntry>;
   updateCounter?: Maybe<CounterMetricDailyEntry>;
 };
@@ -119,6 +137,7 @@ export type MutationUpdateCounterArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  getTimers: Array<TimerMetricPayload>;
   getAllUsers: Array<User>;
   currentUser?: Maybe<User>;
   getCounters: Array<CounterMetricDailyEntry>;
@@ -134,6 +153,48 @@ export type RegistrationResponse = {
   __typename?: 'RegistrationResponse';
   errors?: Maybe<Array<FieldError>>;
   user?: Maybe<User>;
+};
+
+export type TimerAttempt = {
+  __typename?: 'TimerAttempt';
+  id: Scalars['ID'];
+  entry: TimerEntry;
+  startTime: Scalars['String'];
+  endTime: Scalars['String'];
+  didFinish: Scalars['Boolean'];
+  didSucceed?: Maybe<Scalars['Boolean']>;
+};
+
+export type TimerEntry = {
+  __typename?: 'TimerEntry';
+  id: Scalars['ID'];
+  metric: TimerMetric;
+  date: Scalars['String'];
+  attempts: Array<TimerAttempt>;
+};
+
+export type TimerMetric = {
+  __typename?: 'TimerMetric';
+  id: Scalars['ID'];
+  metricType: MetricType;
+  user: User;
+  metricEntries: Array<TimerEntry>;
+  label: Scalars['String'];
+  description: Scalars['String'];
+  goalLength: Scalars['Int'];
+  goalPerDay: Scalars['Int'];
+};
+
+export type TimerMetricPayload = {
+  __typename?: 'TimerMetricPayload';
+  metricId: Scalars['String'];
+  metricType: Scalars['String'];
+  date: Scalars['String'];
+  label: Scalars['String'];
+  description: Scalars['String'];
+  goalLength: Scalars['Int'];
+  goalPerDay: Scalars['Int'];
+  startTime?: Maybe<Scalars['String']>;
 };
 
 export type UpdateCounterMetricInput = {
@@ -162,6 +223,7 @@ export type User = {
   cron: Scalars['String'];
   language: Scalars['String'];
   metrics: Array<CounterMetric>;
+  timerMetrics: Array<TimerMetric>;
   createdAt: Scalars['DateTime'];
 };
 
@@ -220,7 +282,7 @@ export type CountersQuery = (
   { __typename?: 'Query' }
   & { getCounters: Array<(
     { __typename?: 'CounterMetricDailyEntry' }
-    & Pick<CounterMetricDailyEntry, 'metricId' | 'label' | 'description' | 'maximum' | 'minimum' | 'interval' | 'date' | 'count'>
+    & Pick<CounterMetricDailyEntry, 'metricId' | 'metricType' | 'label' | 'description' | 'maximum' | 'minimum' | 'interval' | 'date' | 'count'>
   )> }
 );
 
@@ -233,7 +295,7 @@ export type DayCountersQuery = (
   { __typename?: 'Query' }
   & { getDayCounters: Array<(
     { __typename?: 'CounterMetricDailyEntry' }
-    & Pick<CounterMetricDailyEntry, 'metricId' | 'label' | 'description' | 'maximum' | 'minimum' | 'interval' | 'date' | 'count'>
+    & Pick<CounterMetricDailyEntry, 'metricId' | 'metricType' | 'label' | 'description' | 'maximum' | 'minimum' | 'interval' | 'date' | 'count'>
   )> }
 );
 
@@ -244,7 +306,18 @@ export type AddCounterMutation = (
   { __typename?: 'Mutation' }
   & { addCounter?: Maybe<(
     { __typename?: 'CounterMetricDailyEntry' }
-    & Pick<CounterMetricDailyEntry, 'metricId' | 'label' | 'description' | 'maximum' | 'minimum' | 'interval' | 'date' | 'count'>
+    & Pick<CounterMetricDailyEntry, 'metricId' | 'metricType' | 'label' | 'description' | 'maximum' | 'minimum' | 'interval' | 'date' | 'count'>
+  )> }
+);
+
+export type AddTimerMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AddTimerMutation = (
+  { __typename?: 'Mutation' }
+  & { addTimer?: Maybe<(
+    { __typename?: 'TimerMetricPayload' }
+    & Pick<TimerMetricPayload, 'metricId' | 'metricType' | 'label' | 'description' | 'date' | 'goalLength' | 'goalPerDay' | 'startTime'>
   )> }
 );
 
@@ -257,7 +330,21 @@ export type UpdateCounterMutation = (
   { __typename?: 'Mutation' }
   & { updateCounter?: Maybe<(
     { __typename?: 'CounterMetricDailyEntry' }
-    & Pick<CounterMetricDailyEntry, 'metricId' | 'date' | 'label' | 'description' | 'maximum' | 'minimum' | 'interval' | 'count'>
+    & Pick<CounterMetricDailyEntry, 'metricId' | 'metricType' | 'date' | 'label' | 'description' | 'maximum' | 'minimum' | 'interval' | 'count'>
+  )> }
+);
+
+export type MetricsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MetricsQuery = (
+  { __typename?: 'Query' }
+  & { getCounters: Array<(
+    { __typename?: 'CounterMetricDailyEntry' }
+    & Pick<CounterMetricDailyEntry, 'metricId' | 'metricType' | 'label' | 'description' | 'maximum' | 'minimum' | 'interval' | 'date' | 'count'>
+  )>, getTimers: Array<(
+    { __typename?: 'TimerMetricPayload' }
+    & Pick<TimerMetricPayload, 'metricId' | 'metricType' | 'label' | 'description' | 'date' | 'goalLength' | 'goalPerDay' | 'startTime'>
   )> }
 );
 
@@ -406,6 +493,7 @@ export const CountersDocument = gql`
     query Counters {
   getCounters {
     metricId
+    metricType
     label
     description
     maximum
@@ -450,6 +538,7 @@ export const DayCountersDocument = gql`
     query DayCounters($date: String!) {
   getDayCounters(date: $date) {
     metricId
+    metricType
     label
     description
     maximum
@@ -495,6 +584,7 @@ export const AddCounterDocument = gql`
     mutation AddCounter {
   addCounter {
     metricId
+    metricType
     label
     description
     maximum
@@ -530,10 +620,50 @@ export function useAddCounterMutation(baseOptions?: Apollo.MutationHookOptions<A
 export type AddCounterMutationHookResult = ReturnType<typeof useAddCounterMutation>;
 export type AddCounterMutationResult = Apollo.MutationResult<AddCounterMutation>;
 export type AddCounterMutationOptions = Apollo.BaseMutationOptions<AddCounterMutation, AddCounterMutationVariables>;
+export const AddTimerDocument = gql`
+    mutation AddTimer {
+  addTimer {
+    metricId
+    metricType
+    label
+    description
+    date
+    goalLength
+    goalPerDay
+    startTime
+  }
+}
+    `;
+export type AddTimerMutationFn = Apollo.MutationFunction<AddTimerMutation, AddTimerMutationVariables>;
+
+/**
+ * __useAddTimerMutation__
+ *
+ * To run a mutation, you first call `useAddTimerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddTimerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addTimerMutation, { data, loading, error }] = useAddTimerMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAddTimerMutation(baseOptions?: Apollo.MutationHookOptions<AddTimerMutation, AddTimerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddTimerMutation, AddTimerMutationVariables>(AddTimerDocument, options);
+      }
+export type AddTimerMutationHookResult = ReturnType<typeof useAddTimerMutation>;
+export type AddTimerMutationResult = Apollo.MutationResult<AddTimerMutation>;
+export type AddTimerMutationOptions = Apollo.BaseMutationOptions<AddTimerMutation, AddTimerMutationVariables>;
 export const UpdateCounterDocument = gql`
     mutation UpdateCounter($updateInput: UpdateCounterMetricInput!) {
   updateCounter(updateInput: $updateInput) {
     metricId
+    metricType
     date
     label
     description
@@ -570,6 +700,61 @@ export function useUpdateCounterMutation(baseOptions?: Apollo.MutationHookOption
 export type UpdateCounterMutationHookResult = ReturnType<typeof useUpdateCounterMutation>;
 export type UpdateCounterMutationResult = Apollo.MutationResult<UpdateCounterMutation>;
 export type UpdateCounterMutationOptions = Apollo.BaseMutationOptions<UpdateCounterMutation, UpdateCounterMutationVariables>;
+export const MetricsDocument = gql`
+    query Metrics {
+  getCounters {
+    metricId
+    metricType
+    label
+    description
+    maximum
+    minimum
+    interval
+    date
+    count
+  }
+  getTimers {
+    metricId
+    metricType
+    label
+    description
+    date
+    goalLength
+    goalPerDay
+    startTime
+  }
+}
+    `;
+
+/**
+ * __useMetricsQuery__
+ *
+ * To run a query within a React component, call `useMetricsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMetricsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMetricsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMetricsQuery(baseOptions?: Apollo.QueryHookOptions<MetricsQuery, MetricsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MetricsQuery, MetricsQueryVariables>(MetricsDocument, options);
+      }
+export function useMetricsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MetricsQuery, MetricsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MetricsQuery, MetricsQueryVariables>(MetricsDocument, options);
+        }
+export type MetricsQueryHookResult = ReturnType<typeof useMetricsQuery>;
+export type MetricsLazyQueryHookResult = ReturnType<typeof useMetricsLazyQuery>;
+export type MetricsQueryResult = Apollo.QueryResult<MetricsQuery, MetricsQueryVariables>;
+export function refetchMetricsQuery(variables?: MetricsQueryVariables) {
+      return { query: MetricsDocument, variables: variables }
+    }
 export const UsersDocument = gql`
     query Users {
   getAllUsers {
