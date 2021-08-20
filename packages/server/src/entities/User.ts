@@ -13,6 +13,7 @@ import {
     UpdateDateColumn,
 } from 'typeorm';
 import { CounterMetric } from './CounterMetric';
+import { TimerMetric } from './TimerMetric';
 
 const MIDNIGHT: string = new Date(0).toTimeString().split(' ')[0];
 
@@ -78,17 +79,9 @@ export class User extends BaseEntity {
     @Field(() => [CounterMetric])
     public metrics: CounterMetric[];
 
-    // @VersionColumn('integer')
-    // @Field(() => Int)
-    // public version: number;
-
-    // @Column('uuid', { array: true, default: [] })
-    // @Field(() => [FriendRequest])
-    // public outgoingFriendRequests: FriendRequest[];
-
-    // @Column('uuid', { array: true, default: [] })
-    // @Field(() => [User])
-    // public following: User[];
+    @OneToMany(() => TimerMetric, (metric) => metric.user, { cascade: true })
+    @Field(() => [TimerMetric])
+    public timerMetrics: TimerMetric[];
 
     @CreateDateColumn({ type: 'timestamptz' })
     @Field(() => Date)

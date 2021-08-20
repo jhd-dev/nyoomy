@@ -1,8 +1,6 @@
 import { createConnection, getConnectionOptions } from 'typeorm';
 // import { NODE_ENV } from '../env';
-import { User } from '../entities';
-import { CounterEntry } from '../entities/CounterEntry';
-import { CounterMetric } from '../entities/CounterMetric';
+import entities from '../entities';
 import type { Connection } from 'typeorm';
 
 const connectionName = 'default'; // `${NODE_ENV}_connection`;
@@ -13,6 +11,6 @@ export const createDatabaseConnection = async (): Promise<Connection> => {
     return createConnection({
         ...options,
         name: connectionName,
-        entities: [User, CounterMetric, CounterEntry],
+        entities,
     });
 };

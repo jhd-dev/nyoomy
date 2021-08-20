@@ -8,31 +8,31 @@ import {
     OneToMany,
     ManyToOne,
 } from 'typeorm';
-import { IMetric } from '../types/IMetric';
 import MetricType from '../types/MetricType';
-import { CounterEntry } from './CounterEntry';
+import { IMetric } from '../types/IMetric';
+import { TimerEntry } from './TimerEntry';
 import { User } from './User';
 
-@Entity('counter_metrics')
+@Entity('timer_metrics')
 @ObjectType({ implements: IMetric })
-export class CounterMetric extends BaseEntity implements IMetric {
+export class TimerMetric extends BaseEntity implements IMetric {
     @PrimaryGeneratedColumn()
     @Field(() => ID)
     public readonly id: string;
 
     @Field(() => MetricType)
-    public readonly metricType: MetricType = MetricType.COUNTER;
+    public readonly metricType: MetricType = MetricType.TIMER;
 
     @ManyToOne(() => User, (user) => user.metrics)
     @Field(() => User)
     public user: User;
 
-    @OneToMany(() => CounterEntry, (entry) => entry.metric, {
+    @OneToMany(() => TimerEntry, (entry) => entry.metric, {
         cascade: true,
         nullable: false,
     })
-    @Field(() => [CounterEntry])
-    public metricEntries: CounterEntry[];
+    @Field(() => [TimerEntry])
+    public metricEntries: TimerEntry[];
 
     @Column('varchar', { length: 32, default: '' })
     @Field(() => String)
@@ -42,15 +42,13 @@ export class CounterMetric extends BaseEntity implements IMetric {
     @Field(() => String)
     public description: string;
 
-    @Column('integer', { default: 8 })
+    /* The number of minutes an attempt should last to succeed */
+    @Column('integer', { default: 25 })
     @Field(() => Int)
-    public maximum: number;
+    public goalLength: number;
 
-    @Column('integer', { default: 0 })
-    @Field(() => Int)
-    public minimum: number;
-
+    /* The number of successful attempts required to fulfill the metric */
     @Column('integer', { default: 1 })
     @Field(() => Int)
-    public interval: number;
+    public goalPerDay: number;
 }

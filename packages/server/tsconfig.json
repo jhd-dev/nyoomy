@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "target": "ES5",
+        "target": "es2018",
         "module": "commonjs",
         "lib": ["dom", "dom.iterable", "esnext", "es2020"],
         "sourceMap": false,

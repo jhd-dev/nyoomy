@@ -10,7 +10,9 @@ import {
 import { CounterMetric } from './CounterMetric';
 
 @Entity('counter_entries')
-@ObjectType()
+@ObjectType({
+    description: "A single day's data for a particular CounterMetric",
+})
 export class CounterEntry extends BaseEntity {
     @PrimaryGeneratedColumn()
     @Field(() => ID)
