@@ -1,7 +1,8 @@
 import type { FC } from 'react';
 import React, { useState } from 'react';
-// import { useUpdateCounterMutation } from '@nyoomy/graphql';
+import { useUpdateTimerMutation } from '@nyoomy/graphql';
 import type { TimerMetricPayload } from '@nyoomy/graphql';
+import { DeleteTimerButton } from '../DeleteTimerButton';
 import { Tile } from './Tile';
 
 interface IProps {
@@ -9,9 +10,12 @@ interface IProps {
 }
 
 export const TimerTile: FC<IProps> = ({ metric }) => {
-    // const [updateCounter, { loading, error }] = useUpdateCounterMutation({
-    //     refetchQueries: ['Metrics'],
-    // });
+    const [updateTimer] = useUpdateTimerMutation({
+        refetchQueries: ['Metrics'],
+        onError(error: unknown) {
+            console.error(error);
+        },
+    });
 
     const [label, setLabel] = useState(metric.label);
     const [description, setDescription] = useState(metric.description);
@@ -21,15 +25,15 @@ export const TimerTile: FC<IProps> = ({ metric }) => {
     }): Promise<void> => {
         const newLabel = e.target.value;
 
-        // await updateCounter({
-        //     variables: {
-        //         updateInput: {
-        //             metricId: metric.metricId,
-        //             date: metric.date,
-        //             label: newLabel,
-        //         },
-        //     },
-        // });
+        await updateTimer({
+            variables: {
+                updateInput: {
+                    metricId: metric.metricId,
+                    date: metric.date,
+                    label: newLabel,
+                },
+            },
+        });
         setLabel(newLabel);
     };
 
@@ -37,15 +41,15 @@ export const TimerTile: FC<IProps> = ({ metric }) => {
         target: { value: string };
     }): Promise<void> => {
         const newDescription = e.target.value;
-        // await updateCounter({
-        //     variables: {
-        //         updateInput: {
-        //             metricId: metric.metricId,
-        //             date: metric.date,
-        //             description: newDescription,
-        //         },
-        //     },
-        // });
+        await updateTimer({
+            variables: {
+                updateInput: {
+                    metricId: metric.metricId,
+                    date: metric.date,
+                    description: newDescription,
+                },
+            },
+        });
         setDescription(newDescription);
     };
 
@@ -67,24 +71,10 @@ export const TimerTile: FC<IProps> = ({ metric }) => {
                 placeholder="Click to add description"
             />
             <br />
-            {/* <button type="button" onClick={decrementCount}>
-                -
-            </button>
-            <button type="button" onClick={incrementCount}>
-                +
-            </button> */}
+            <DeleteTimerButton metricId={metric.metricId} />
         </Tile>
     );
 };
-
-// function attemptParseInt(
-//     str: string,
-//     radix: number = 10,
-//     defaultInt: number = 0
-// ): number {
-//     const attempt = parseInt(str, radix);
-//     return isNaN(attempt) ? defaultInt : attempt;
-// }
 
 function isValidLabel(label?: string): boolean {
     return typeof label === 'string' && label.length > 0;

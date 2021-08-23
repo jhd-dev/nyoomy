@@ -34,6 +34,7 @@ import { UpdateCounterMetricInput } from '../types/UpdateCounterMetricInput';
 import { GetMetricsResponse } from '../types/GetMetricsResponse';
 import { TimerMetricPayload } from '../types/TimerMetricPayload';
 import { IsNull, Not } from 'typeorm';
+import { UpdateTimerMetricInput } from '../types/UpdateTimerMetricInput';
 
 async function getUser(userId?: string): Promise<User | null> {
     if (typeof userId !== 'string' || userId.length === 0) return null;
@@ -547,6 +548,105 @@ export class UserResolver {
         } catch (err: unknown) {
             console.error(err);
             return null;
+        }
+    }
+
+    @Mutation(() => TimerMetricPayload, { nullable: true })
+    public async updateTimer(
+        @Ctx() { req }: IContext,
+        @Arg('updateInput') updateInput: UpdateTimerMetricInput
+    ): Promise<TimerMetricPayload | null> {
+        try {
+            // Find user
+
+            const user = await getUser(req?.session?.userId);
+            console.log(user?.email);
+            if (user == null) {
+                throw new Error(
+                    `User with id '${req?.session?.userId}' could not be found.`
+                );
+            }
+
+            // Update metric
+
+            const metric = await TimerMetric.findOne(updateInput.metricId);
+            if (metric == null) {
+                throw new Error(
+                    `Metric with id '${updateInput.metricId}' could not be found.`
+                );
+            }
+
+            metric.label = updateInput.label ?? metric.label;
+            metric.description = updateInput.description ?? metric.description;
+            metric.goalLength = updateInput.goalLength ?? metric.goalLength;
+            metric.goalPerDay = updateInput.goalPerDay ?? metric.goalPerDay;
+
+            await metric.save();
+
+            // Update entry
+
+            const entry = await CounterEntry.findOne({
+                metric,
+                date: updateInput.date,
+            });
+            if (entry == null) {
+                throw new Error(
+                    `Entry with date '${updateInput.date}' could not be found.`
+                );
+            }
+
+            const currentAttempt = await TimerAttempt.findOne({
+                where: {
+                    entry,
+                    startTime: Not(IsNull()),
+                    endTime: IsNull(),
+                },
+            });
+
+            const startTime =
+                currentAttempt == null ? null : currentAttempt.startTime;
+
+            return {
+                metricId: metric.id,
+                metricType: metric.metricType,
+                date: entry.date,
+                label: metric.label,
+                description: metric.description,
+                goalLength: metric.goalLength,
+                goalPerDay: metric.goalPerDay,
+                startTime,
+            };
+        } catch (err: unknown) {
+            console.error(err);
+            return null;
+        }
+    }
+
+    @Mutation(() => Boolean)
+    public async deleteCounter(
+        @Arg('id', () => ID) id: string
+    ): Promise<boolean> {
+        try {
+            const metric = await TimerMetric.findOneOrFail(id);
+            await metric.remove();
+            return true;
+        } catch (err: unknown) {
+            console.error(err);
+            return false;
+        }
+    }
+
+    @Mutation(() => Boolean)
+    public async deleteTimer(
+        @Arg('id', () => ID) id: string
+    ): Promise<boolean> {
+        try {
+            const metric = await TimerMetric.findOneOrFail(id);
+            await metric.remove();
+            return true;
+        } catch (err: unknown) {
+            console.error(err);
+            return false;
         }
     }
 }

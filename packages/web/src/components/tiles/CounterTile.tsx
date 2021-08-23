@@ -2,6 +2,7 @@ import type { FC } from 'react';
 import React, { useEffect, useState } from 'react';
 import { useUpdateCounterMutation } from '@nyoomy/graphql';
 import type { CounterMetricDailyEntry } from '@nyoomy/graphql';
+import { DeleteCounterButton } from '../DeleteCounterButton';
 import { Tile } from './Tile';
 
 interface IProps {
@@ -128,6 +129,7 @@ export const CounterTile: FC<IProps> = ({ metric }) => {
             <button type="button" onClick={incrementCount}>
                 +
             </button>
+            <DeleteCounterButton metricId={metric.metricId} />
         </Tile>
     );
 };

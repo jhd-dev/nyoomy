@@ -8,8 +8,8 @@ import {
     OneToMany,
     ManyToOne,
 } from 'typeorm';
-import MetricType from '../types/MetricType';
 import { IMetric } from '../types/IMetric';
+import MetricType from '../types/MetricType';
 import { TimerEntry } from './TimerEntry';
 import { User } from './User';
 
@@ -23,7 +23,7 @@ export class TimerMetric extends BaseEntity implements IMetric {
     @Field(() => MetricType)
     public readonly metricType: MetricType = MetricType.TIMER;
 
-    @ManyToOne(() => User, (user) => user.metrics)
+    @ManyToOne(() => User, (user) => user.metrics, { onDelete: 'CASCADE' })
     @Field(() => User)
     public user: User;
 

@@ -30,6 +30,7 @@ export class CounterMetric extends BaseEntity implements IMetric {
     @OneToMany(() => CounterEntry, (entry) => entry.metric, {
         cascade: true,
         nullable: false,
+        onDelete: 'CASCADE',
     })
     @Field(() => [CounterEntry])
     public metricEntries: CounterEntry[];

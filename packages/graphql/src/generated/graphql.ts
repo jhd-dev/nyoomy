@@ -84,6 +84,9 @@ export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?:
  * @property {TimerMetricPayload} [addTimer]
  * @property {CounterMetricDailyEntry} [addCounter]
  * @property {CounterMetricDailyEntry} [updateCounter]
+ * @property {TimerMetricPayload} [updateTimer]
+ * @property {boolean} deleteCounter
+ * @property {boolean} deleteTimer
  */
 
 /**
@@ -153,6 +156,18 @@ export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?:
  * @property {number} [minimum]
  * @property {number} [interval]
  * @property {number} [count]
+ */
+
+/**
+ * @typedef {Object} UpdateTimerMetricInput
+ * @property {string} metricId
+ * @property {string} date
+ * @property {string} [label]
+ * @property {string} [description]
+ * @property {number} [maximum]
+ * @property {number} [goalLength]
+ * @property {number} [goalPerDay]
+ * @property {string} [startTime]
  */
 
 /**
@@ -259,6 +274,9 @@ export type Mutation = {
   addTimer?: Maybe<TimerMetricPayload>;
   addCounter?: Maybe<CounterMetricDailyEntry>;
   updateCounter?: Maybe<CounterMetricDailyEntry>;
+  updateTimer?: Maybe<TimerMetricPayload>;
+  deleteCounter: Scalars['Boolean'];
+  deleteTimer: Scalars['Boolean'];
 };
 
 
@@ -300,6 +318,21 @@ export type MutationUpdateUserPasswordArgs = {
 
 export type MutationUpdateCounterArgs = {
   updateInput: UpdateCounterMetricInput;
+};
+
+
+export type MutationUpdateTimerArgs = {
+  updateInput: UpdateTimerMetricInput;
+};
+
+
+export type MutationDeleteCounterArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationDeleteTimerArgs = {
+  id: Scalars['ID'];
 };
 
 export type Query = {
@@ -373,6 +406,17 @@ export type UpdateCounterMetricInput = {
   minimum?: Maybe<Scalars['Int']>;
   interval?: Maybe<Scalars['Int']>;
   count?: Maybe<Scalars['Int']>;
+};
+
+export type UpdateTimerMetricInput = {
+  metricId: Scalars['ID'];
+  date: Scalars['String'];
+  label?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  maximum?: Maybe<Scalars['Int']>;
+  goalLength?: Maybe<Scalars['Int']>;
+  goalPerDay?: Maybe<Scalars['Int']>;
+  startTime?: Maybe<Scalars['String']>;
 };
 
 export type User = {
@@ -488,6 +532,19 @@ export type AddTimerMutation = (
   )> }
 );
 
+export type UpdateTimerMutationVariables = Exact<{
+  updateInput: UpdateTimerMetricInput;
+}>;
+
+
+export type UpdateTimerMutation = (
+  { __typename?: 'Mutation' }
+  & { updateTimer?: Maybe<(
+    { __typename?: 'TimerMetricPayload' }
+    & Pick<TimerMetricPayload, 'metricId' | 'metricType' | 'label' | 'description' | 'date' | 'goalLength' | 'goalPerDay' | 'startTime'>
+  )> }
+);
+
 export type UpdateCounterMutationVariables = Exact<{
   updateInput: UpdateCounterMetricInput;
 }>;
@@ -499,6 +556,26 @@ export type UpdateCounterMutation = (
     { __typename?: 'CounterMetricDailyEntry' }
     & Pick<CounterMetricDailyEntry, 'metricId' | 'metricType' | 'date' | 'label' | 'description' | 'maximum' | 'minimum' | 'interval' | 'count'>
   )> }
+);
+
+export type DeleteCounterMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeleteCounterMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteCounter'>
+);
+
+export type DeleteTimerMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeleteTimerMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteTimer'>
 );
 
 export type MetricsQueryVariables = Exact<{ [key: string]: never; }>;
@@ -635,6 +712,7 @@ export type ResolversTypes = {
   TimerMetric: ResolverTypeWrapper<TimerMetric>;
   TimerMetricPayload: ResolverTypeWrapper<TimerMetricPayload>;
   UpdateCounterMetricInput: UpdateCounterMetricInput;
+  UpdateTimerMetricInput: UpdateTimerMetricInput;
   User: ResolverTypeWrapper<User>;
 };
 
@@ -659,6 +737,7 @@ export type ResolversParentTypes = {
   TimerMetric: TimerMetric;
   TimerMetricPayload: TimerMetricPayload;
   UpdateCounterMetricInput: UpdateCounterMetricInput;
+  UpdateTimerMetricInput: UpdateTimerMetricInput;
   User: User;
 };
 
@@ -733,6 +812,9 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   addTimer?: Resolver<Maybe<ResolversTypes['TimerMetricPayload']>, ParentType, ContextType>;
   addCounter?: Resolver<Maybe<ResolversTypes['CounterMetricDailyEntry']>, ParentType, ContextType>;
   updateCounter?: Resolver<Maybe<ResolversTypes['CounterMetricDailyEntry']>, ParentType, ContextType, RequireFields<MutationUpdateCounterArgs, 'updateInput'>>;
+  updateTimer?: Resolver<Maybe<ResolversTypes['TimerMetricPayload']>, ParentType, ContextType, RequireFields<MutationUpdateTimerArgs, 'updateInput'>>;
+  deleteCounter?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteCounterArgs, 'id'>>;
+  deleteTimer?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteTimerArgs, 'id'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {

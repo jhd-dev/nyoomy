@@ -18,7 +18,9 @@ export class TimerEntry extends BaseEntity {
     @Field(() => ID)
     public readonly id: string;
 
-    @ManyToOne(() => TimerMetric, (metric) => metric.metricEntries)
+    @ManyToOne(() => TimerMetric, (metric) => metric.metricEntries, {
+        onDelete: 'CASCADE',
+    })
     @Field(() => TimerMetric)
     public metric: TimerMetric;
 

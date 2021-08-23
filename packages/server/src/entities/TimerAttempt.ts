@@ -16,7 +16,9 @@ export class TimerAttempt extends BaseEntity {
     @Field(() => ID)
     public readonly id: string;
 
-    @ManyToOne(() => TimerEntry, (entry) => entry.attempts)
+    @ManyToOne(() => TimerEntry, (entry) => entry.attempts, {
+        onDelete: 'CASCADE',
+    })
     @Field(() => TimerEntry)
     public entry: TimerEntry;
 

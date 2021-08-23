@@ -75,7 +75,10 @@ export class User extends BaseEntity {
     @Field(() => String)
     public language: string;
 
-    @OneToMany(() => CounterMetric, (metric) => metric.user, { cascade: true })
+    @OneToMany(() => CounterMetric, (metric) => metric.user, {
+        cascade: true,
+        onDelete: 'CASCADE',
+    })
     @Field(() => [CounterMetric])
     public metrics: CounterMetric[];
 

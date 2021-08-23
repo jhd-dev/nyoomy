@@ -6,9 +6,20 @@ const apolloUri = `${window.location.origin}/graphql`;
 
 console.info(`Creating Apollo Client for: ${apolloUri}`);
 
+const cache = new InMemoryCache({
+    typePolicies: {
+        CounterMetricDailyEntry: {
+            keyFields: ['metricId', 'date'],
+        },
+        TimerMetricPayload: {
+            keyFields: ['metricId', 'date'],
+        },
+    },
+});
+
 const client = new ApolloClient({
     uri: apolloUri,
-    cache: new InMemoryCache(),
+    cache,
     name: 'web',
 });
 

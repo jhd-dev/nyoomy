@@ -92,6 +92,9 @@ export type Mutation = {
   addTimer?: Maybe<TimerMetricPayload>;
   addCounter?: Maybe<CounterMetricDailyEntry>;
   updateCounter?: Maybe<CounterMetricDailyEntry>;
+  updateTimer?: Maybe<TimerMetricPayload>;
+  deleteCounter: Scalars['Boolean'];
+  deleteTimer: Scalars['Boolean'];
 };
 
 
@@ -133,6 +136,21 @@ export type MutationUpdateUserPasswordArgs = {
 
 export type MutationUpdateCounterArgs = {
   updateInput: UpdateCounterMetricInput;
+};
+
+
+export type MutationUpdateTimerArgs = {
+  updateInput: UpdateTimerMetricInput;
+};
+
+
+export type MutationDeleteCounterArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationDeleteTimerArgs = {
+  id: Scalars['ID'];
 };
 
 export type Query = {
@@ -206,6 +224,17 @@ export type UpdateCounterMetricInput = {
   minimum?: Maybe<Scalars['Int']>;
   interval?: Maybe<Scalars['Int']>;
   count?: Maybe<Scalars['Int']>;
+};
+
+export type UpdateTimerMetricInput = {
+  metricId: Scalars['ID'];
+  date: Scalars['String'];
+  label?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  maximum?: Maybe<Scalars['Int']>;
+  goalLength?: Maybe<Scalars['Int']>;
+  goalPerDay?: Maybe<Scalars['Int']>;
+  startTime?: Maybe<Scalars['String']>;
 };
 
 export type User = {
@@ -321,6 +350,19 @@ export type AddTimerMutation = (
   )> }
 );
 
+export type UpdateTimerMutationVariables = Exact<{
+  updateInput: UpdateTimerMetricInput;
+}>;
+
+
+export type UpdateTimerMutation = (
+  { __typename?: 'Mutation' }
+  & { updateTimer?: Maybe<(
+    { __typename?: 'TimerMetricPayload' }
+    & Pick<TimerMetricPayload, 'metricId' | 'metricType' | 'label' | 'description' | 'date' | 'goalLength' | 'goalPerDay' | 'startTime'>
+  )> }
+);
+
 export type UpdateCounterMutationVariables = Exact<{
   updateInput: UpdateCounterMetricInput;
 }>;
@@ -332,6 +374,26 @@ export type UpdateCounterMutation = (
     { __typename?: 'CounterMetricDailyEntry' }
     & Pick<CounterMetricDailyEntry, 'metricId' | 'metricType' | 'date' | 'label' | 'description' | 'maximum' | 'minimum' | 'interval' | 'count'>
   )> }
+);
+
+export type DeleteCounterMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeleteCounterMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteCounter'>
+);
+
+export type DeleteTimerMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeleteTimerMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteTimer'>
 );
 
 export type MetricsQueryVariables = Exact<{ [key: string]: never; }>;
@@ -659,6 +721,46 @@ export function useAddTimerMutation(baseOptions?: Apollo.MutationHookOptions<Add
 export type AddTimerMutationHookResult = ReturnType<typeof useAddTimerMutation>;
 export type AddTimerMutationResult = Apollo.MutationResult<AddTimerMutation>;
 export type AddTimerMutationOptions = Apollo.BaseMutationOptions<AddTimerMutation, AddTimerMutationVariables>;
+export const UpdateTimerDocument = gql`
+    mutation UpdateTimer($updateInput: UpdateTimerMetricInput!) {
+  updateTimer(updateInput: $updateInput) {
+    metricId
+    metricType
+    label
+    description
+    date
+    goalLength
+    goalPerDay
+    startTime
+  }
+}
+    `;
+export type UpdateTimerMutationFn = Apollo.MutationFunction<UpdateTimerMutation, UpdateTimerMutationVariables>;
+
+/**
+ * __useUpdateTimerMutation__
+ *
+ * To run a mutation, you first call `useUpdateTimerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTimerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateTimerMutation, { data, loading, error }] = useUpdateTimerMutation({
+ *   variables: {
+ *      updateInput: // value for 'updateInput'
+ *   },
+ * });
+ */
+export function useUpdateTimerMutation(baseOptions?: Apollo.MutationHookOptions<UpdateTimerMutation, UpdateTimerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateTimerMutation, UpdateTimerMutationVariables>(UpdateTimerDocument, options);
+      }
+export type UpdateTimerMutationHookResult = ReturnType<typeof useUpdateTimerMutation>;
+export type UpdateTimerMutationResult = Apollo.MutationResult<UpdateTimerMutation>;
+export type UpdateTimerMutationOptions = Apollo.BaseMutationOptions<UpdateTimerMutation, UpdateTimerMutationVariables>;
 export const UpdateCounterDocument = gql`
     mutation UpdateCounter($updateInput: UpdateCounterMetricInput!) {
   updateCounter(updateInput: $updateInput) {
@@ -700,6 +802,68 @@ export function useUpdateCounterMutation(baseOptions?: Apollo.MutationHookOption
 export type UpdateCounterMutationHookResult = ReturnType<typeof useUpdateCounterMutation>;
 export type UpdateCounterMutationResult = Apollo.MutationResult<UpdateCounterMutation>;
 export type UpdateCounterMutationOptions = Apollo.BaseMutationOptions<UpdateCounterMutation, UpdateCounterMutationVariables>;
+export const DeleteCounterDocument = gql`
+    mutation DeleteCounter($id: ID!) {
+  deleteCounter(id: $id)
+}
+    `;
+export type DeleteCounterMutationFn = Apollo.MutationFunction<DeleteCounterMutation, DeleteCounterMutationVariables>;
+
+/**
+ * __useDeleteCounterMutation__
+ *
+ * To run a mutation, you first call `useDeleteCounterMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteCounterMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteCounterMutation, { data, loading, error }] = useDeleteCounterMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteCounterMutation(baseOptions?: Apollo.MutationHookOptions<DeleteCounterMutation, DeleteCounterMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteCounterMutation, DeleteCounterMutationVariables>(DeleteCounterDocument, options);
+      }
+export type DeleteCounterMutationHookResult = ReturnType<typeof useDeleteCounterMutation>;
+export type DeleteCounterMutationResult = Apollo.MutationResult<DeleteCounterMutation>;
+export type DeleteCounterMutationOptions = Apollo.BaseMutationOptions<DeleteCounterMutation, DeleteCounterMutationVariables>;
+export const DeleteTimerDocument = gql`
+    mutation DeleteTimer($id: ID!) {
+  deleteTimer(id: $id)
+}
+    `;
+export type DeleteTimerMutationFn = Apollo.MutationFunction<DeleteTimerMutation, DeleteTimerMutationVariables>;
+
+/**
+ * __useDeleteTimerMutation__
+ *
+ * To run a mutation, you first call `useDeleteTimerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteTimerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteTimerMutation, { data, loading, error }] = useDeleteTimerMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteTimerMutation(baseOptions?: Apollo.MutationHookOptions<DeleteTimerMutation, DeleteTimerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteTimerMutation, DeleteTimerMutationVariables>(DeleteTimerDocument, options);
+      }
+export type DeleteTimerMutationHookResult = ReturnType<typeof useDeleteTimerMutation>;
+export type DeleteTimerMutationResult = Apollo.MutationResult<DeleteTimerMutation>;
+export type DeleteTimerMutationOptions = Apollo.BaseMutationOptions<DeleteTimerMutation, DeleteTimerMutationVariables>;
 export const MetricsDocument = gql`
     query Metrics {
   getCounters {
