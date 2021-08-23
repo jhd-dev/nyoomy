@@ -61,6 +61,14 @@ export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?:
  */
 
 /**
+ * @typedef {Object} ITodo
+ * @property {string} id
+ * @property {User} user
+ * @property {string} title
+ * @property {string} description
+ */
+
+/**
  * @typedef {Object} LoginResponse
  * @property {User} [user]
  * @property {string} [error]
@@ -73,6 +81,9 @@ export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?:
 
 /**
  * @typedef {Object} Mutation
+ * @property {TodoResponse} [addTodo]
+ * @property {TodoResponse} [updateTodo]
+ * @property {boolean} deleteTodo
  * @property {RegistrationResponse} registerUser
  * @property {LoginResponse} login
  * @property {boolean} logout
@@ -92,6 +103,7 @@ export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?:
 /**
  * @typedef {Object} Query
  * @property {Array<TimerMetricPayload>} getTimers
+ * @property {Array<TodoResponse>} getMyTodos
  * @property {Array<User>} getAllUsers
  * @property {User} [currentUser]
  * @property {Array<CounterMetricDailyEntry>} getCounters
@@ -102,6 +114,18 @@ export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?:
  * @typedef {Object} RegistrationResponse
  * @property {Array<FieldError>} [errors]
  * @property {User} [user]
+ */
+
+/**
+ * @typedef {Object} SubTodo
+ * @property {string} id
+ * @property {User} user
+ * @property {string} title
+ * @property {string} description
+ * @property {Todo} supertask
+ * @property {Array<SubTodo>} subtasks
+ * @property {boolean} isCompleted
+ * @property {boolean} isArchived
  */
 
 /**
@@ -147,6 +171,40 @@ export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?:
  */
 
 /**
+ * @typedef {Object} Todo
+ * @property {string} id
+ * @property {User} user
+ * @property {string} title
+ * @property {string} description
+ * @property {Array<TodoEntry>} entries
+ * @property {Array<SubTodo>} subtasks
+ * @property {boolean} isCompleted
+ * @property {boolean} isArchived
+ * @property {Array<Weekday>} repeatWeekdays
+ * @property {boolean} doesRepeat
+ */
+
+/**
+ * A single day's data for a particular CounterMetric
+ * @typedef {Object} TodoEntry
+ * @property {string} id
+ * @property {Todo} todo
+ * @property {string} date
+ * @property {boolean} isCompleted
+ */
+
+/**
+ * @typedef {Object} TodoResponse
+ * @property {string} todoId
+ * @property {string} date
+ * @property {string} title
+ * @property {string} description
+ * @property {boolean} isCompleted
+ * @property {boolean} isArchived
+ * @property {Array<Weekday>} repeatWeekdays
+ */
+
+/**
  * @typedef {Object} UpdateCounterMetricInput
  * @property {string} metricId
  * @property {string} date
@@ -171,6 +229,17 @@ export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?:
  */
 
 /**
+ * @typedef {Object} UpdateTodoInput
+ * @property {string} todoId
+ * @property {string} date
+ * @property {string} [title]
+ * @property {string} [description]
+ * @property {boolean} [isCompleted]
+ * @property {boolean} [isArchived]
+ * @property {Array<Weekday>} [repeatWeekdays]
+ */
+
+/**
  * @typedef {Object} User
  * @property {string} id
  * @property {string} displayName
@@ -186,7 +255,13 @@ export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?:
  * @property {string} language
  * @property {Array<CounterMetric>} metrics
  * @property {Array<TimerMetric>} timerMetrics
+ * @property {Array<Todo>} todos
  * @property {DateTime} createdAt
+ */
+
+/**
+ * The days of the week
+ * @typedef {("SUNDAY"|"MONDAY"|"TUESDAY"|"WEDNESDAY"|"THURSDAY"|"FRIDAY"|"SATURDAY")} Weekday
  */
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -249,6 +324,13 @@ export type IMetric = {
   description: Scalars['String'];
 };
 
+export type ITodo = {
+  id: Scalars['ID'];
+  user: User;
+  title: Scalars['String'];
+  description: Scalars['String'];
+};
+
 export type LoginResponse = {
   __typename?: 'LoginResponse';
   user?: Maybe<User>;
@@ -263,6 +345,9 @@ export enum MetricType {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addTodo?: Maybe<TodoResponse>;
+  updateTodo?: Maybe<TodoResponse>;
+  deleteTodo: Scalars['Boolean'];
   registerUser: RegistrationResponse;
   login: LoginResponse;
   logout: Scalars['Boolean'];
@@ -277,6 +362,16 @@ export type Mutation = {
   updateTimer?: Maybe<TimerMetricPayload>;
   deleteCounter: Scalars['Boolean'];
   deleteTimer: Scalars['Boolean'];
+};
+
+
+export type MutationUpdateTodoArgs = {
+  updateInput: UpdateTodoInput;
+};
+
+
+export type MutationDeleteTodoArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -338,10 +433,16 @@ export type MutationDeleteTimerArgs = {
 export type Query = {
   __typename?: 'Query';
   getTimers: Array<TimerMetricPayload>;
+  getMyTodos: Array<TodoResponse>;
   getAllUsers: Array<User>;
   currentUser?: Maybe<User>;
   getCounters: Array<CounterMetricDailyEntry>;
   getDayCounters: Array<CounterMetricDailyEntry>;
+};
+
+
+export type QueryGetMyTodosArgs = {
+  excludeArchived?: Maybe<Scalars['Boolean']>;
 };
 
 
@@ -353,6 +454,18 @@ export type RegistrationResponse = {
   __typename?: 'RegistrationResponse';
   errors?: Maybe<Array<FieldError>>;
   user?: Maybe<User>;
+};
+
+export type SubTodo = ITodo & {
+  __typename?: 'SubTodo';
+  id: Scalars['ID'];
+  user: User;
+  title: Scalars['String'];
+  description: Scalars['String'];
+  supertask: Todo;
+  subtasks: Array<SubTodo>;
+  isCompleted: Scalars['Boolean'];
+  isArchived: Scalars['Boolean'];
 };
 
 export type TimerAttempt = {
@@ -397,6 +510,40 @@ export type TimerMetricPayload = {
   startTime?: Maybe<Scalars['String']>;
 };
 
+export type Todo = ITodo & {
+  __typename?: 'Todo';
+  id: Scalars['ID'];
+  user: User;
+  title: Scalars['String'];
+  description: Scalars['String'];
+  entries: Array<TodoEntry>;
+  subtasks: Array<SubTodo>;
+  isCompleted: Scalars['Boolean'];
+  isArchived: Scalars['Boolean'];
+  repeatWeekdays: Array<Weekday>;
+  doesRepeat: Scalars['Boolean'];
+};
+
+/** A single day's data for a particular CounterMetric */
+export type TodoEntry = {
+  __typename?: 'TodoEntry';
+  id: Scalars['ID'];
+  todo: Todo;
+  date: Scalars['String'];
+  isCompleted: Scalars['Boolean'];
+};
+
+export type TodoResponse = {
+  __typename?: 'TodoResponse';
+  todoId: Scalars['String'];
+  date: Scalars['String'];
+  title: Scalars['String'];
+  description: Scalars['String'];
+  isCompleted: Scalars['Boolean'];
+  isArchived: Scalars['Boolean'];
+  repeatWeekdays: Array<Weekday>;
+};
+
 export type UpdateCounterMetricInput = {
   metricId: Scalars['ID'];
   date: Scalars['String'];
@@ -419,6 +566,16 @@ export type UpdateTimerMetricInput = {
   startTime?: Maybe<Scalars['String']>;
 };
 
+export type UpdateTodoInput = {
+  todoId: Scalars['ID'];
+  date: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  isCompleted?: Maybe<Scalars['Boolean']>;
+  isArchived?: Maybe<Scalars['Boolean']>;
+  repeatWeekdays?: Maybe<Array<Weekday>>;
+};
+
 export type User = {
   __typename?: 'User';
   id: Scalars['ID'];
@@ -435,8 +592,20 @@ export type User = {
   language: Scalars['String'];
   metrics: Array<CounterMetric>;
   timerMetrics: Array<TimerMetric>;
+  todos: Array<Todo>;
   createdAt: Scalars['DateTime'];
 };
+
+/** The days of the week */
+export enum Weekday {
+  Sunday = 'SUNDAY',
+  Monday = 'MONDAY',
+  Tuesday = 'TUESDAY',
+  Wednesday = 'WEDNESDAY',
+  Thursday = 'THURSDAY',
+  Friday = 'FRIDAY',
+  Saturday = 'SATURDAY'
+}
 
 export type LoginMutationVariables = Exact<{
   usernameOrEmail: Scalars['String'];
@@ -701,19 +870,26 @@ export type ResolversTypes = {
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
   FieldError: ResolverTypeWrapper<FieldError>;
   IMetric: ResolversTypes['CounterMetric'];
+  ITodo: ResolversTypes['SubTodo'] | ResolversTypes['Todo'];
   LoginResponse: ResolverTypeWrapper<LoginResponse>;
   MetricType: MetricType;
   Mutation: ResolverTypeWrapper<{}>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Query: ResolverTypeWrapper<{}>;
   RegistrationResponse: ResolverTypeWrapper<RegistrationResponse>;
+  SubTodo: ResolverTypeWrapper<SubTodo>;
   TimerAttempt: ResolverTypeWrapper<TimerAttempt>;
   TimerEntry: ResolverTypeWrapper<TimerEntry>;
   TimerMetric: ResolverTypeWrapper<TimerMetric>;
   TimerMetricPayload: ResolverTypeWrapper<TimerMetricPayload>;
+  Todo: ResolverTypeWrapper<Todo>;
+  TodoEntry: ResolverTypeWrapper<TodoEntry>;
+  TodoResponse: ResolverTypeWrapper<TodoResponse>;
   UpdateCounterMetricInput: UpdateCounterMetricInput;
   UpdateTimerMetricInput: UpdateTimerMetricInput;
+  UpdateTodoInput: UpdateTodoInput;
   User: ResolverTypeWrapper<User>;
+  Weekday: Weekday;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -727,17 +903,23 @@ export type ResolversParentTypes = {
   DateTime: Scalars['DateTime'];
   FieldError: FieldError;
   IMetric: ResolversParentTypes['CounterMetric'];
+  ITodo: ResolversParentTypes['SubTodo'] | ResolversParentTypes['Todo'];
   LoginResponse: LoginResponse;
   Mutation: {};
   Boolean: Scalars['Boolean'];
   Query: {};
   RegistrationResponse: RegistrationResponse;
+  SubTodo: SubTodo;
   TimerAttempt: TimerAttempt;
   TimerEntry: TimerEntry;
   TimerMetric: TimerMetric;
   TimerMetricPayload: TimerMetricPayload;
+  Todo: Todo;
+  TodoEntry: TodoEntry;
+  TodoResponse: TodoResponse;
   UpdateCounterMetricInput: UpdateCounterMetricInput;
   UpdateTimerMetricInput: UpdateTimerMetricInput;
+  UpdateTodoInput: UpdateTodoInput;
   User: User;
 };
 
@@ -794,6 +976,14 @@ export type IMetricResolvers<ContextType = any, ParentType extends ResolversPare
   description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
+export type ITodoResolvers<ContextType = any, ParentType extends ResolversParentTypes['ITodo'] = ResolversParentTypes['ITodo']> = {
+  __resolveType: TypeResolveFn<'SubTodo' | 'Todo', ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+};
+
 export type LoginResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['LoginResponse'] = ResolversParentTypes['LoginResponse']> = {
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   error?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -801,6 +991,9 @@ export type LoginResponseResolvers<ContextType = any, ParentType extends Resolve
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  addTodo?: Resolver<Maybe<ResolversTypes['TodoResponse']>, ParentType, ContextType>;
+  updateTodo?: Resolver<Maybe<ResolversTypes['TodoResponse']>, ParentType, ContextType, RequireFields<MutationUpdateTodoArgs, 'updateInput'>>;
+  deleteTodo?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteTodoArgs, 'id'>>;
   registerUser?: Resolver<ResolversTypes['RegistrationResponse'], ParentType, ContextType, RequireFields<MutationRegisterUserArgs, 'displayName' | 'email' | 'username' | 'password'>>;
   login?: Resolver<ResolversTypes['LoginResponse'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'usernameOrEmail' | 'password'>>;
   logout?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
@@ -819,6 +1012,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   getTimers?: Resolver<Array<ResolversTypes['TimerMetricPayload']>, ParentType, ContextType>;
+  getMyTodos?: Resolver<Array<ResolversTypes['TodoResponse']>, ParentType, ContextType, RequireFields<QueryGetMyTodosArgs, 'excludeArchived'>>;
   getAllUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
   currentUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   getCounters?: Resolver<Array<ResolversTypes['CounterMetricDailyEntry']>, ParentType, ContextType>;
@@ -828,6 +1022,18 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 export type RegistrationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['RegistrationResponse'] = ResolversParentTypes['RegistrationResponse']> = {
   errors?: Resolver<Maybe<Array<ResolversTypes['FieldError']>>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SubTodoResolvers<ContextType = any, ParentType extends ResolversParentTypes['SubTodo'] = ResolversParentTypes['SubTodo']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  supertask?: Resolver<ResolversTypes['Todo'], ParentType, ContextType>;
+  subtasks?: Resolver<Array<ResolversTypes['SubTodo']>, ParentType, ContextType>;
+  isCompleted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isArchived?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -873,6 +1079,39 @@ export type TimerMetricPayloadResolvers<ContextType = any, ParentType extends Re
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type TodoResolvers<ContextType = any, ParentType extends ResolversParentTypes['Todo'] = ResolversParentTypes['Todo']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  entries?: Resolver<Array<ResolversTypes['TodoEntry']>, ParentType, ContextType>;
+  subtasks?: Resolver<Array<ResolversTypes['SubTodo']>, ParentType, ContextType>;
+  isCompleted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isArchived?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  repeatWeekdays?: Resolver<Array<ResolversTypes['Weekday']>, ParentType, ContextType>;
+  doesRepeat?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type TodoEntryResolvers<ContextType = any, ParentType extends ResolversParentTypes['TodoEntry'] = ResolversParentTypes['TodoEntry']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  todo?: Resolver<ResolversTypes['Todo'], ParentType, ContextType>;
+  date?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  isCompleted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type TodoResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['TodoResponse'] = ResolversParentTypes['TodoResponse']> = {
+  todoId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  date?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  isCompleted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isArchived?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  repeatWeekdays?: Resolver<Array<ResolversTypes['Weekday']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   displayName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -888,6 +1127,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   language?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   metrics?: Resolver<Array<ResolversTypes['CounterMetric']>, ParentType, ContextType>;
   timerMetrics?: Resolver<Array<ResolversTypes['TimerMetric']>, ParentType, ContextType>;
+  todos?: Resolver<Array<ResolversTypes['Todo']>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -899,14 +1139,19 @@ export type Resolvers<ContextType = any> = {
   DateTime?: GraphQLScalarType;
   FieldError?: FieldErrorResolvers<ContextType>;
   IMetric?: IMetricResolvers<ContextType>;
+  ITodo?: ITodoResolvers<ContextType>;
   LoginResponse?: LoginResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   RegistrationResponse?: RegistrationResponseResolvers<ContextType>;
+  SubTodo?: SubTodoResolvers<ContextType>;
   TimerAttempt?: TimerAttemptResolvers<ContextType>;
   TimerEntry?: TimerEntryResolvers<ContextType>;
   TimerMetric?: TimerMetricResolvers<ContextType>;
   TimerMetricPayload?: TimerMetricPayloadResolvers<ContextType>;
+  Todo?: TodoResolvers<ContextType>;
+  TodoEntry?: TodoEntryResolvers<ContextType>;
+  TodoResponse?: TodoResponseResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 };
 

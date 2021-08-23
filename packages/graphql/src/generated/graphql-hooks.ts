@@ -67,6 +67,13 @@ export type IMetric = {
   description: Scalars['String'];
 };
 
+export type ITodo = {
+  id: Scalars['ID'];
+  user: User;
+  title: Scalars['String'];
+  description: Scalars['String'];
+};
+
 export type LoginResponse = {
   __typename?: 'LoginResponse';
   user?: Maybe<User>;
@@ -81,6 +88,9 @@ export enum MetricType {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addTodo?: Maybe<TodoResponse>;
+  updateTodo?: Maybe<TodoResponse>;
+  deleteTodo: Scalars['Boolean'];
   registerUser: RegistrationResponse;
   login: LoginResponse;
   logout: Scalars['Boolean'];
@@ -95,6 +105,16 @@ export type Mutation = {
   updateTimer?: Maybe<TimerMetricPayload>;
   deleteCounter: Scalars['Boolean'];
   deleteTimer: Scalars['Boolean'];
+};
+
+
+export type MutationUpdateTodoArgs = {
+  updateInput: UpdateTodoInput;
+};
+
+
+export type MutationDeleteTodoArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -156,10 +176,16 @@ export type MutationDeleteTimerArgs = {
 export type Query = {
   __typename?: 'Query';
   getTimers: Array<TimerMetricPayload>;
+  getMyTodos: Array<TodoResponse>;
   getAllUsers: Array<User>;
   currentUser?: Maybe<User>;
   getCounters: Array<CounterMetricDailyEntry>;
   getDayCounters: Array<CounterMetricDailyEntry>;
+};
+
+
+export type QueryGetMyTodosArgs = {
+  excludeArchived?: Maybe<Scalars['Boolean']>;
 };
 
 
@@ -171,6 +197,18 @@ export type RegistrationResponse = {
   __typename?: 'RegistrationResponse';
   errors?: Maybe<Array<FieldError>>;
   user?: Maybe<User>;
+};
+
+export type SubTodo = ITodo & {
+  __typename?: 'SubTodo';
+  id: Scalars['ID'];
+  user: User;
+  title: Scalars['String'];
+  description: Scalars['String'];
+  supertask: Todo;
+  subtasks: Array<SubTodo>;
+  isCompleted: Scalars['Boolean'];
+  isArchived: Scalars['Boolean'];
 };
 
 export type TimerAttempt = {
@@ -215,6 +253,40 @@ export type TimerMetricPayload = {
   startTime?: Maybe<Scalars['String']>;
 };
 
+export type Todo = ITodo & {
+  __typename?: 'Todo';
+  id: Scalars['ID'];
+  user: User;
+  title: Scalars['String'];
+  description: Scalars['String'];
+  entries: Array<TodoEntry>;
+  subtasks: Array<SubTodo>;
+  isCompleted: Scalars['Boolean'];
+  isArchived: Scalars['Boolean'];
+  repeatWeekdays: Array<Weekday>;
+  doesRepeat: Scalars['Boolean'];
+};
+
+/** A single day's data for a particular CounterMetric */
+export type TodoEntry = {
+  __typename?: 'TodoEntry';
+  id: Scalars['ID'];
+  todo: Todo;
+  date: Scalars['String'];
+  isCompleted: Scalars['Boolean'];
+};
+
+export type TodoResponse = {
+  __typename?: 'TodoResponse';
+  todoId: Scalars['String'];
+  date: Scalars['String'];
+  title: Scalars['String'];
+  description: Scalars['String'];
+  isCompleted: Scalars['Boolean'];
+  isArchived: Scalars['Boolean'];
+  repeatWeekdays: Array<Weekday>;
+};
+
 export type UpdateCounterMetricInput = {
   metricId: Scalars['ID'];
   date: Scalars['String'];
@@ -237,6 +309,16 @@ export type UpdateTimerMetricInput = {
   startTime?: Maybe<Scalars['String']>;
 };
 
+export type UpdateTodoInput = {
+  todoId: Scalars['ID'];
+  date: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  isCompleted?: Maybe<Scalars['Boolean']>;
+  isArchived?: Maybe<Scalars['Boolean']>;
+  repeatWeekdays?: Maybe<Array<Weekday>>;
+};
+
 export type User = {
   __typename?: 'User';
   id: Scalars['ID'];
@@ -253,8 +335,20 @@ export type User = {
   language: Scalars['String'];
   metrics: Array<CounterMetric>;
   timerMetrics: Array<TimerMetric>;
+  todos: Array<Todo>;
   createdAt: Scalars['DateTime'];
 };
+
+/** The days of the week */
+export enum Weekday {
+  Sunday = 'SUNDAY',
+  Monday = 'MONDAY',
+  Tuesday = 'TUESDAY',
+  Wednesday = 'WEDNESDAY',
+  Thursday = 'THURSDAY',
+  Friday = 'FRIDAY',
+  Saturday = 'SATURDAY'
+}
 
 export type LoginMutationVariables = Exact<{
   usernameOrEmail: Scalars['String'];
