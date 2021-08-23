@@ -14,6 +14,7 @@ import {
 } from 'typeorm';
 import { CounterMetric } from './CounterMetric';
 import { TimerMetric } from './TimerMetric';
+import { Todo } from './Todo';
 
 const MIDNIGHT: string = new Date(0).toTimeString().split(' ')[0];
 
@@ -77,7 +78,6 @@ export class User extends BaseEntity {
 
     @OneToMany(() => CounterMetric, (metric) => metric.user, {
         cascade: true,
-        onDelete: 'CASCADE',
     })
     @Field(() => [CounterMetric])
     public metrics: CounterMetric[];
@@ -85,6 +85,10 @@ export class User extends BaseEntity {
     @OneToMany(() => TimerMetric, (metric) => metric.user, { cascade: true })
     @Field(() => [TimerMetric])
     public timerMetrics: TimerMetric[];
+
+    @OneToMany(() => Todo, (todo) => todo.user)
+    @Field(() => [Todo])
+    public todos: Todo[];
 
     @CreateDateColumn({ type: 'timestamptz' })
     @Field(() => Date)
