@@ -41,7 +41,7 @@ export class Journal extends BaseEntity {
     @Field()
     public isArchived: boolean;
 
-    @CreateDateColumn('timestamptz')
+    @CreateDateColumn({ type: 'timestamptz' })
     @Field(() => Date)
     public readonly createdAt: Date;
 }

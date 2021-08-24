@@ -74,6 +74,37 @@ export type ITodo = {
   description: Scalars['String'];
 };
 
+export type Journal = {
+  __typename?: 'Journal';
+  id: Scalars['ID'];
+  user: User;
+  entries: Array<JournalEntry>;
+  title: Scalars['String'];
+  dailyWordGoal: Scalars['Int'];
+  isArchived: Scalars['Boolean'];
+  createdAt: Scalars['DateTime'];
+};
+
+/** A single day's entry in a Journal */
+export type JournalEntry = {
+  __typename?: 'JournalEntry';
+  id: Scalars['ID'];
+  journal: Journal;
+  date: Scalars['String'];
+  text: Scalars['String'];
+  didMeetGoal: Scalars['Boolean'];
+};
+
+export type JournalResponse = {
+  __typename?: 'JournalResponse';
+  journalId: Scalars['ID'];
+  date: Scalars['String'];
+  title: Scalars['String'];
+  text: Scalars['String'];
+  isArchived: Scalars['Boolean'];
+  dailyWordGoal: Scalars['Int'];
+};
+
 export type LoginResponse = {
   __typename?: 'LoginResponse';
   user?: Maybe<User>;
@@ -88,6 +119,9 @@ export enum MetricType {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addJournal?: Maybe<JournalResponse>;
+  updateJournal?: Maybe<JournalResponse>;
+  deleteJournal: Scalars['Boolean'];
   addTodo?: Maybe<TodoResponse>;
   updateTodo?: Maybe<TodoResponse>;
   deleteTodo: Scalars['Boolean'];
@@ -105,6 +139,16 @@ export type Mutation = {
   updateTimer?: Maybe<TimerMetricPayload>;
   deleteCounter: Scalars['Boolean'];
   deleteTimer: Scalars['Boolean'];
+};
+
+
+export type MutationUpdateJournalArgs = {
+  updateInput: UpdateJournalInput;
+};
+
+
+export type MutationDeleteJournalArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -175,12 +219,18 @@ export type MutationDeleteTimerArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  getMyJournals: Array<JournalResponse>;
   getTimers: Array<TimerMetricPayload>;
   getMyTodos: Array<TodoResponse>;
   getAllUsers: Array<User>;
   currentUser?: Maybe<User>;
   getCounters: Array<CounterMetricDailyEntry>;
   getDayCounters: Array<CounterMetricDailyEntry>;
+};
+
+
+export type QueryGetMyJournalsArgs = {
+  excludeArchived?: Maybe<Scalars['Boolean']>;
 };
 
 
@@ -298,6 +348,15 @@ export type UpdateCounterMetricInput = {
   count?: Maybe<Scalars['Int']>;
 };
 
+export type UpdateJournalInput = {
+  journalId: Scalars['ID'];
+  date: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
+  text?: Maybe<Scalars['String']>;
+  isArchived?: Maybe<Scalars['Boolean']>;
+  dailyWordGoal?: Maybe<Scalars['Int']>;
+};
+
 export type UpdateTimerMetricInput = {
   metricId: Scalars['ID'];
   date: Scalars['String'];
@@ -336,6 +395,7 @@ export type User = {
   metrics: Array<CounterMetric>;
   timerMetrics: Array<TimerMetric>;
   todos: Array<Todo>;
+  journals: Array<Journal>;
   createdAt: Scalars['DateTime'];
 };
 
@@ -488,6 +548,51 @@ export type DeleteTimerMutationVariables = Exact<{
 export type DeleteTimerMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'deleteTimer'>
+);
+
+export type MyJournalsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MyJournalsQuery = (
+  { __typename?: 'Query' }
+  & { getMyJournals: Array<(
+    { __typename?: 'JournalResponse' }
+    & Pick<JournalResponse, 'journalId' | 'date' | 'title' | 'text' | 'dailyWordGoal' | 'isArchived'>
+  )> }
+);
+
+export type AddJournalMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AddJournalMutation = (
+  { __typename?: 'Mutation' }
+  & { addJournal?: Maybe<(
+    { __typename?: 'JournalResponse' }
+    & Pick<JournalResponse, 'journalId' | 'date' | 'title' | 'text' | 'dailyWordGoal' | 'isArchived'>
+  )> }
+);
+
+export type UpdateJournalMutationVariables = Exact<{
+  updateInput: UpdateJournalInput;
+}>;
+
+
+export type UpdateJournalMutation = (
+  { __typename?: 'Mutation' }
+  & { updateJournal?: Maybe<(
+    { __typename?: 'JournalResponse' }
+    & Pick<JournalResponse, 'journalId' | 'date' | 'title' | 'dailyWordGoal' | 'isArchived'>
+  )> }
+);
+
+export type DeleteJournalMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeleteJournalMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteJournal'>
 );
 
 export type MetricsQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1003,6 +1108,153 @@ export function useDeleteTimerMutation(baseOptions?: Apollo.MutationHookOptions<
 export type DeleteTimerMutationHookResult = ReturnType<typeof useDeleteTimerMutation>;
 export type DeleteTimerMutationResult = Apollo.MutationResult<DeleteTimerMutation>;
 export type DeleteTimerMutationOptions = Apollo.BaseMutationOptions<DeleteTimerMutation, DeleteTimerMutationVariables>;
+export const MyJournalsDocument = gql`
+    query MyJournals {
+  getMyJournals {
+    journalId
+    date
+    title
+    text
+    dailyWordGoal
+    isArchived
+  }
+}
+    `;
+
+/**
+ * __useMyJournalsQuery__
+ *
+ * To run a query within a React component, call `useMyJournalsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMyJournalsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMyJournalsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMyJournalsQuery(baseOptions?: Apollo.QueryHookOptions<MyJournalsQuery, MyJournalsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MyJournalsQuery, MyJournalsQueryVariables>(MyJournalsDocument, options);
+      }
+export function useMyJournalsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MyJournalsQuery, MyJournalsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MyJournalsQuery, MyJournalsQueryVariables>(MyJournalsDocument, options);
+        }
+export type MyJournalsQueryHookResult = ReturnType<typeof useMyJournalsQuery>;
+export type MyJournalsLazyQueryHookResult = ReturnType<typeof useMyJournalsLazyQuery>;
+export type MyJournalsQueryResult = Apollo.QueryResult<MyJournalsQuery, MyJournalsQueryVariables>;
+export function refetchMyJournalsQuery(variables?: MyJournalsQueryVariables) {
+      return { query: MyJournalsDocument, variables: variables }
+    }
+export const AddJournalDocument = gql`
+    mutation AddJournal {
+  addJournal {
+    journalId
+    date
+    title
+    text
+    dailyWordGoal
+    isArchived
+  }
+}
+    `;
+export type AddJournalMutationFn = Apollo.MutationFunction<AddJournalMutation, AddJournalMutationVariables>;
+
+/**
+ * __useAddJournalMutation__
+ *
+ * To run a mutation, you first call `useAddJournalMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddJournalMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addJournalMutation, { data, loading, error }] = useAddJournalMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAddJournalMutation(baseOptions?: Apollo.MutationHookOptions<AddJournalMutation, AddJournalMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddJournalMutation, AddJournalMutationVariables>(AddJournalDocument, options);
+      }
+export type AddJournalMutationHookResult = ReturnType<typeof useAddJournalMutation>;
+export type AddJournalMutationResult = Apollo.MutationResult<AddJournalMutation>;
+export type AddJournalMutationOptions = Apollo.BaseMutationOptions<AddJournalMutation, AddJournalMutationVariables>;
+export const UpdateJournalDocument = gql`
+    mutation UpdateJournal($updateInput: UpdateJournalInput!) {
+  updateJournal(updateInput: $updateInput) {
+    journalId
+    date
+    title
+    dailyWordGoal
+    isArchived
+  }
+}
+    `;
+export type UpdateJournalMutationFn = Apollo.MutationFunction<UpdateJournalMutation, UpdateJournalMutationVariables>;
+
+/**
+ * __useUpdateJournalMutation__
+ *
+ * To run a mutation, you first call `useUpdateJournalMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateJournalMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateJournalMutation, { data, loading, error }] = useUpdateJournalMutation({
+ *   variables: {
+ *      updateInput: // value for 'updateInput'
+ *   },
+ * });
+ */
+export function useUpdateJournalMutation(baseOptions?: Apollo.MutationHookOptions<UpdateJournalMutation, UpdateJournalMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateJournalMutation, UpdateJournalMutationVariables>(UpdateJournalDocument, options);
+      }
+export type UpdateJournalMutationHookResult = ReturnType<typeof useUpdateJournalMutation>;
+export type UpdateJournalMutationResult = Apollo.MutationResult<UpdateJournalMutation>;
+export type UpdateJournalMutationOptions = Apollo.BaseMutationOptions<UpdateJournalMutation, UpdateJournalMutationVariables>;
+export const DeleteJournalDocument = gql`
+    mutation DeleteJournal($id: ID!) {
+  deleteJournal(id: $id)
+}
+    `;
+export type DeleteJournalMutationFn = Apollo.MutationFunction<DeleteJournalMutation, DeleteJournalMutationVariables>;
+
+/**
+ * __useDeleteJournalMutation__
+ *
+ * To run a mutation, you first call `useDeleteJournalMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteJournalMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteJournalMutation, { data, loading, error }] = useDeleteJournalMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteJournalMutation(baseOptions?: Apollo.MutationHookOptions<DeleteJournalMutation, DeleteJournalMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteJournalMutation, DeleteJournalMutationVariables>(DeleteJournalDocument, options);
+      }
+export type DeleteJournalMutationHookResult = ReturnType<typeof useDeleteJournalMutation>;
+export type DeleteJournalMutationResult = Apollo.MutationResult<DeleteJournalMutation>;
+export type DeleteJournalMutationOptions = Apollo.BaseMutationOptions<DeleteJournalMutation, DeleteJournalMutationVariables>;
 export const MetricsDocument = gql`
     query Metrics {
   getCounters {

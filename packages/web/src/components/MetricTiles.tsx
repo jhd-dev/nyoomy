@@ -5,6 +5,7 @@ import type {
     TimerMetricPayload,
 } from '@nyoomy/graphql';
 import { useMetricsQuery } from '@nyoomy/graphql';
+import { JournalListPanel } from './JournalListPanel';
 import { TodoListPanel } from './TodoListPanel';
 import { CounterTile } from './tiles/CounterTile';
 import { TimerTile } from './tiles/TimerTile';
@@ -32,6 +33,7 @@ export const MetricTiles: FC = () => {
                 <TimerTile key={metric.metricId} metric={metric} />
             ))}
             <TodoListPanel />
+            <JournalListPanel />
         </div>
     );
 };

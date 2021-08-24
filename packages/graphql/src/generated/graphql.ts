@@ -69,6 +69,37 @@ export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?:
  */
 
 /**
+ * @typedef {Object} Journal
+ * @property {string} id
+ * @property {User} user
+ * @property {Array<JournalEntry>} entries
+ * @property {string} title
+ * @property {number} dailyWordGoal
+ * @property {boolean} isArchived
+ * @property {DateTime} createdAt
+ */
+
+/**
+ * A single day's entry in a Journal
+ * @typedef {Object} JournalEntry
+ * @property {string} id
+ * @property {Journal} journal
+ * @property {string} date
+ * @property {string} text
+ * @property {boolean} didMeetGoal
+ */
+
+/**
+ * @typedef {Object} JournalResponse
+ * @property {string} journalId
+ * @property {string} date
+ * @property {string} title
+ * @property {string} text
+ * @property {boolean} isArchived
+ * @property {number} dailyWordGoal
+ */
+
+/**
  * @typedef {Object} LoginResponse
  * @property {User} [user]
  * @property {string} [error]
@@ -81,6 +112,9 @@ export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?:
 
 /**
  * @typedef {Object} Mutation
+ * @property {JournalResponse} [addJournal]
+ * @property {JournalResponse} [updateJournal]
+ * @property {boolean} deleteJournal
  * @property {TodoResponse} [addTodo]
  * @property {TodoResponse} [updateTodo]
  * @property {boolean} deleteTodo
@@ -102,6 +136,7 @@ export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?:
 
 /**
  * @typedef {Object} Query
+ * @property {Array<JournalResponse>} getMyJournals
  * @property {Array<TimerMetricPayload>} getTimers
  * @property {Array<TodoResponse>} getMyTodos
  * @property {Array<User>} getAllUsers
@@ -217,6 +252,16 @@ export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?:
  */
 
 /**
+ * @typedef {Object} UpdateJournalInput
+ * @property {string} journalId
+ * @property {string} date
+ * @property {string} [title]
+ * @property {string} [text]
+ * @property {boolean} [isArchived]
+ * @property {number} [dailyWordGoal]
+ */
+
+/**
  * @typedef {Object} UpdateTimerMetricInput
  * @property {string} metricId
  * @property {string} date
@@ -256,6 +301,7 @@ export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?:
  * @property {Array<CounterMetric>} metrics
  * @property {Array<TimerMetric>} timerMetrics
  * @property {Array<Todo>} todos
+ * @property {Array<Journal>} journals
  * @property {DateTime} createdAt
  */
 
@@ -331,6 +377,37 @@ export type ITodo = {
   description: Scalars['String'];
 };
 
+export type Journal = {
+  __typename?: 'Journal';
+  id: Scalars['ID'];
+  user: User;
+  entries: Array<JournalEntry>;
+  title: Scalars['String'];
+  dailyWordGoal: Scalars['Int'];
+  isArchived: Scalars['Boolean'];
+  createdAt: Scalars['DateTime'];
+};
+
+/** A single day's entry in a Journal */
+export type JournalEntry = {
+  __typename?: 'JournalEntry';
+  id: Scalars['ID'];
+  journal: Journal;
+  date: Scalars['String'];
+  text: Scalars['String'];
+  didMeetGoal: Scalars['Boolean'];
+};
+
+export type JournalResponse = {
+  __typename?: 'JournalResponse';
+  journalId: Scalars['ID'];
+  date: Scalars['String'];
+  title: Scalars['String'];
+  text: Scalars['String'];
+  isArchived: Scalars['Boolean'];
+  dailyWordGoal: Scalars['Int'];
+};
+
 export type LoginResponse = {
   __typename?: 'LoginResponse';
   user?: Maybe<User>;
@@ -345,6 +422,9 @@ export enum MetricType {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addJournal?: Maybe<JournalResponse>;
+  updateJournal?: Maybe<JournalResponse>;
+  deleteJournal: Scalars['Boolean'];
   addTodo?: Maybe<TodoResponse>;
   updateTodo?: Maybe<TodoResponse>;
   deleteTodo: Scalars['Boolean'];
@@ -362,6 +442,16 @@ export type Mutation = {
   updateTimer?: Maybe<TimerMetricPayload>;
   deleteCounter: Scalars['Boolean'];
   deleteTimer: Scalars['Boolean'];
+};
+
+
+export type MutationUpdateJournalArgs = {
+  updateInput: UpdateJournalInput;
+};
+
+
+export type MutationDeleteJournalArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -432,12 +522,18 @@ export type MutationDeleteTimerArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  getMyJournals: Array<JournalResponse>;
   getTimers: Array<TimerMetricPayload>;
   getMyTodos: Array<TodoResponse>;
   getAllUsers: Array<User>;
   currentUser?: Maybe<User>;
   getCounters: Array<CounterMetricDailyEntry>;
   getDayCounters: Array<CounterMetricDailyEntry>;
+};
+
+
+export type QueryGetMyJournalsArgs = {
+  excludeArchived?: Maybe<Scalars['Boolean']>;
 };
 
 
@@ -555,6 +651,15 @@ export type UpdateCounterMetricInput = {
   count?: Maybe<Scalars['Int']>;
 };
 
+export type UpdateJournalInput = {
+  journalId: Scalars['ID'];
+  date: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
+  text?: Maybe<Scalars['String']>;
+  isArchived?: Maybe<Scalars['Boolean']>;
+  dailyWordGoal?: Maybe<Scalars['Int']>;
+};
+
 export type UpdateTimerMetricInput = {
   metricId: Scalars['ID'];
   date: Scalars['String'];
@@ -593,6 +698,7 @@ export type User = {
   metrics: Array<CounterMetric>;
   timerMetrics: Array<TimerMetric>;
   todos: Array<Todo>;
+  journals: Array<Journal>;
   createdAt: Scalars['DateTime'];
 };
 
@@ -745,6 +851,51 @@ export type DeleteTimerMutationVariables = Exact<{
 export type DeleteTimerMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'deleteTimer'>
+);
+
+export type MyJournalsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MyJournalsQuery = (
+  { __typename?: 'Query' }
+  & { getMyJournals: Array<(
+    { __typename?: 'JournalResponse' }
+    & Pick<JournalResponse, 'journalId' | 'date' | 'title' | 'text' | 'dailyWordGoal' | 'isArchived'>
+  )> }
+);
+
+export type AddJournalMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AddJournalMutation = (
+  { __typename?: 'Mutation' }
+  & { addJournal?: Maybe<(
+    { __typename?: 'JournalResponse' }
+    & Pick<JournalResponse, 'journalId' | 'date' | 'title' | 'text' | 'dailyWordGoal' | 'isArchived'>
+  )> }
+);
+
+export type UpdateJournalMutationVariables = Exact<{
+  updateInput: UpdateJournalInput;
+}>;
+
+
+export type UpdateJournalMutation = (
+  { __typename?: 'Mutation' }
+  & { updateJournal?: Maybe<(
+    { __typename?: 'JournalResponse' }
+    & Pick<JournalResponse, 'journalId' | 'date' | 'title' | 'dailyWordGoal' | 'isArchived'>
+  )> }
+);
+
+export type DeleteJournalMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeleteJournalMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteJournal'>
 );
 
 export type MetricsQueryVariables = Exact<{ [key: string]: never; }>;
@@ -916,10 +1067,13 @@ export type ResolversTypes = {
   FieldError: ResolverTypeWrapper<FieldError>;
   IMetric: ResolversTypes['CounterMetric'];
   ITodo: ResolversTypes['SubTodo'] | ResolversTypes['Todo'];
+  Journal: ResolverTypeWrapper<Journal>;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  JournalEntry: ResolverTypeWrapper<JournalEntry>;
+  JournalResponse: ResolverTypeWrapper<JournalResponse>;
   LoginResponse: ResolverTypeWrapper<LoginResponse>;
   MetricType: MetricType;
   Mutation: ResolverTypeWrapper<{}>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Query: ResolverTypeWrapper<{}>;
   RegistrationResponse: ResolverTypeWrapper<RegistrationResponse>;
   SubTodo: ResolverTypeWrapper<SubTodo>;
@@ -931,6 +1085,7 @@ export type ResolversTypes = {
   TodoEntry: ResolverTypeWrapper<TodoEntry>;
   TodoResponse: ResolverTypeWrapper<TodoResponse>;
   UpdateCounterMetricInput: UpdateCounterMetricInput;
+  UpdateJournalInput: UpdateJournalInput;
   UpdateTimerMetricInput: UpdateTimerMetricInput;
   UpdateTodoInput: UpdateTodoInput;
   User: ResolverTypeWrapper<User>;
@@ -949,9 +1104,12 @@ export type ResolversParentTypes = {
   FieldError: FieldError;
   IMetric: ResolversParentTypes['CounterMetric'];
   ITodo: ResolversParentTypes['SubTodo'] | ResolversParentTypes['Todo'];
+  Journal: Journal;
+  Boolean: Scalars['Boolean'];
+  JournalEntry: JournalEntry;
+  JournalResponse: JournalResponse;
   LoginResponse: LoginResponse;
   Mutation: {};
-  Boolean: Scalars['Boolean'];
   Query: {};
   RegistrationResponse: RegistrationResponse;
   SubTodo: SubTodo;
@@ -963,6 +1121,7 @@ export type ResolversParentTypes = {
   TodoEntry: TodoEntry;
   TodoResponse: TodoResponse;
   UpdateCounterMetricInput: UpdateCounterMetricInput;
+  UpdateJournalInput: UpdateJournalInput;
   UpdateTimerMetricInput: UpdateTimerMetricInput;
   UpdateTodoInput: UpdateTodoInput;
   User: User;
@@ -1029,6 +1188,36 @@ export type ITodoResolvers<ContextType = any, ParentType extends ResolversParent
   description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
+export type JournalResolvers<ContextType = any, ParentType extends ResolversParentTypes['Journal'] = ResolversParentTypes['Journal']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  entries?: Resolver<Array<ResolversTypes['JournalEntry']>, ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  dailyWordGoal?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  isArchived?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type JournalEntryResolvers<ContextType = any, ParentType extends ResolversParentTypes['JournalEntry'] = ResolversParentTypes['JournalEntry']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  journal?: Resolver<ResolversTypes['Journal'], ParentType, ContextType>;
+  date?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  didMeetGoal?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type JournalResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['JournalResponse'] = ResolversParentTypes['JournalResponse']> = {
+  journalId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  date?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  isArchived?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  dailyWordGoal?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type LoginResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['LoginResponse'] = ResolversParentTypes['LoginResponse']> = {
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   error?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -1036,6 +1225,9 @@ export type LoginResponseResolvers<ContextType = any, ParentType extends Resolve
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  addJournal?: Resolver<Maybe<ResolversTypes['JournalResponse']>, ParentType, ContextType>;
+  updateJournal?: Resolver<Maybe<ResolversTypes['JournalResponse']>, ParentType, ContextType, RequireFields<MutationUpdateJournalArgs, 'updateInput'>>;
+  deleteJournal?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteJournalArgs, 'id'>>;
   addTodo?: Resolver<Maybe<ResolversTypes['TodoResponse']>, ParentType, ContextType>;
   updateTodo?: Resolver<Maybe<ResolversTypes['TodoResponse']>, ParentType, ContextType, RequireFields<MutationUpdateTodoArgs, 'updateInput'>>;
   deleteTodo?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteTodoArgs, 'id'>>;
@@ -1056,6 +1248,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  getMyJournals?: Resolver<Array<ResolversTypes['JournalResponse']>, ParentType, ContextType, RequireFields<QueryGetMyJournalsArgs, 'excludeArchived'>>;
   getTimers?: Resolver<Array<ResolversTypes['TimerMetricPayload']>, ParentType, ContextType>;
   getMyTodos?: Resolver<Array<ResolversTypes['TodoResponse']>, ParentType, ContextType, RequireFields<QueryGetMyTodosArgs, 'excludeArchived'>>;
   getAllUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
@@ -1173,6 +1366,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   metrics?: Resolver<Array<ResolversTypes['CounterMetric']>, ParentType, ContextType>;
   timerMetrics?: Resolver<Array<ResolversTypes['TimerMetric']>, ParentType, ContextType>;
   todos?: Resolver<Array<ResolversTypes['Todo']>, ParentType, ContextType>;
+  journals?: Resolver<Array<ResolversTypes['Journal']>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -1185,6 +1379,9 @@ export type Resolvers<ContextType = any> = {
   FieldError?: FieldErrorResolvers<ContextType>;
   IMetric?: IMetricResolvers<ContextType>;
   ITodo?: ITodoResolvers<ContextType>;
+  Journal?: JournalResolvers<ContextType>;
+  JournalEntry?: JournalEntryResolvers<ContextType>;
+  JournalResponse?: JournalResponseResolvers<ContextType>;
   LoginResponse?: LoginResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
