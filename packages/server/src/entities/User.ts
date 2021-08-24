@@ -8,11 +8,13 @@ import {
     CreateDateColumn,
     DeleteDateColumn,
     Entity,
+    JoinColumn,
     OneToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
 import { CounterMetric } from './CounterMetric';
+import { Journal } from './Journal';
 import { TimerMetric } from './TimerMetric';
 import { Todo } from './Todo';
 
@@ -89,6 +91,10 @@ export class User extends BaseEntity {
     @OneToMany(() => Todo, (todo) => todo.user)
     @Field(() => [Todo])
     public todos: Todo[];
+
+    @OneToMany(() => Journal, (journal) => journal.user)
+    @Field(() => [Journal])
+    public journals: Journal[];
 
     @CreateDateColumn({ type: 'timestamptz' })
     @Field(() => Date)

@@ -1,5 +1,7 @@
 import { CounterEntry } from './CounterEntry';
 import { CounterMetric } from './CounterMetric';
+import { Journal } from './Journal';
+import { JournalEntry } from './JournalEntry';
 import { SubTodo } from './SubTodo';
 import { TimerAttempt } from './TimerAttempt';
 import { TimerEntry } from './TimerEntry';
@@ -11,6 +13,8 @@ import { User } from './User';
 const entities = [
     CounterEntry,
     CounterMetric,
+    Journal,
+    JournalEntry,
     SubTodo,
     TimerAttempt,
     TimerEntry,
@@ -24,6 +28,8 @@ export default entities;
 
 export * from './CounterEntry';
 export * from './CounterMetric';
+export * from './Journal';
+export * from './JournalEntry';
 export * from './SubTodo';
 export * from './TimerAttempt';
 export * from './TimerEntry';
