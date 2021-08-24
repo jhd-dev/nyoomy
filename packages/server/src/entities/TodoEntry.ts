@@ -18,7 +18,9 @@ export class TodoEntry extends BaseEntity {
     @Field(() => ID)
     public readonly id: string;
 
-    @ManyToOne(() => Todo, (todo) => todo.entries)
+    @ManyToOne(() => Todo, (todo) => todo.entries, {
+        onDelete: 'CASCADE',
+    })
     @Field(() => Todo)
     public todo: Todo;
 

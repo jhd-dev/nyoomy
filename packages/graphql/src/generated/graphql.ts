@@ -761,6 +761,51 @@ export type MetricsQuery = (
   )> }
 );
 
+export type MyTodosQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MyTodosQuery = (
+  { __typename?: 'Query' }
+  & { getMyTodos: Array<(
+    { __typename?: 'TodoResponse' }
+    & Pick<TodoResponse, 'todoId' | 'date' | 'title' | 'description' | 'isCompleted' | 'isArchived' | 'repeatWeekdays'>
+  )> }
+);
+
+export type AddTodoMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AddTodoMutation = (
+  { __typename?: 'Mutation' }
+  & { addTodo?: Maybe<(
+    { __typename?: 'TodoResponse' }
+    & Pick<TodoResponse, 'todoId' | 'date' | 'title' | 'description' | 'isCompleted' | 'isArchived' | 'repeatWeekdays'>
+  )> }
+);
+
+export type UpdateTodoMutationVariables = Exact<{
+  updateInput: UpdateTodoInput;
+}>;
+
+
+export type UpdateTodoMutation = (
+  { __typename?: 'Mutation' }
+  & { updateTodo?: Maybe<(
+    { __typename?: 'TodoResponse' }
+    & Pick<TodoResponse, 'todoId' | 'date' | 'title' | 'description'>
+  )> }
+);
+
+export type DeleteTodoMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeleteTodoMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteTodo'>
+);
+
 export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 

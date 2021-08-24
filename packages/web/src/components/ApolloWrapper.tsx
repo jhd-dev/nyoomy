@@ -14,6 +14,9 @@ const cache = new InMemoryCache({
         TimerMetricPayload: {
             keyFields: ['metricId', 'date'],
         },
+        TodoResponse: {
+            keyFields: ['todoId', 'date'],
+        },
     },
 });
 

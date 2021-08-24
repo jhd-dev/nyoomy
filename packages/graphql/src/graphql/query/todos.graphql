@@ -1,0 +1,36 @@
+query MyTodos {
+    getMyTodos {
+        todoId
+        date
+        title
+        description
+        isCompleted
+        isArchived
+        repeatWeekdays
+    }
+}
+
+mutation AddTodo {
+    addTodo {
+        todoId
+        date
+        title
+        description
+        isCompleted
+        isArchived
+        repeatWeekdays
+    }
+}
+
+mutation UpdateTodo($updateInput: UpdateTodoInput!) {
+    updateTodo(updateInput: $updateInput) {
+        todoId
+        date
+        title
+        description
+    }
+}
+
+mutation DeleteTodo($id: ID!) {
+    deleteTodo(id: $id)
+}
