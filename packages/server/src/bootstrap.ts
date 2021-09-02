@@ -10,7 +10,11 @@ import { __prod__, REDIS_SECRET, PORT } from './env';
 import { createDatabaseConnection } from './utils/createDatabaseConnection';
 import { createSchema } from './utils/createSchema';
 import redis from './utils/redis';
-import type { IContext } from './types/IContext';
+import type { IContext } from './types/interfaces/IContext';
+import { useContainer } from 'typeorm';
+import { Container } from 'typedi';
+
+useContainer(Container);
 
 const WEB_PATH = join(__dirname, '../../web/dist');
 const STATIC_PATH = join(__dirname, '../../web/public');

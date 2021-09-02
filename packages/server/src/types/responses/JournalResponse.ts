@@ -6,7 +6,7 @@ export class JournalResponse {
     public readonly journalId: string;
 
     @Field()
-    public date: string;
+    public date: Date;
 
     @Field()
     public title: string;

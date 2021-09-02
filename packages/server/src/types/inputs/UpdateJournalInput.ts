@@ -1,5 +1,5 @@
 import { Field, ID, InputType, Int } from 'type-graphql';
-import type { JournalResponse } from './JournalResponse';
+import type { JournalResponse } from './responses/JournalResponse';
 
 @InputType()
 export class UpdateJournalInput implements Partial<JournalResponse> {

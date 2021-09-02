@@ -1,7 +1,8 @@
 import type { FC } from 'react';
 import React, { useEffect, useState } from 'react';
 import { useUpdateTodoMutation } from '@nyoomy/graphql';
-import type { TodoResponse, UpdateTodoInput } from '@nyoomy/graphql';
+import type { TodoResponse } from '@nyoomy/graphql';
+import { isValidLabel } from '../utils/format-safety';
 import { DeleteTodoButton } from './DeleteTodoButton';
 
 interface IProps {
@@ -92,7 +93,3 @@ export const TodoItem: FC<IProps> = ({ todo }) => {
         </div>
     );
 };
-
-function isValidLabel(label?: string): boolean {
-    return typeof label === 'string' && label.length > 0;
-}

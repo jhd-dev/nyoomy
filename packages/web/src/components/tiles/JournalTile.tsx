@@ -2,6 +2,7 @@ import type { FC } from 'react';
 import React, { useEffect, useState } from 'react';
 import { useUpdateJournalMutation } from '@nyoomy/graphql';
 import type { JournalResponse } from '@nyoomy/graphql';
+import { attemptParseInt, isValidLabel } from '../../utils/format-safety';
 import { DeleteJournalButton } from '../DeleteJournalButton';
 
 interface IProps {
@@ -97,16 +98,3 @@ export const JournalTile: FC<IProps> = ({ journal }) => {
         </div>
     );
 };
-
-function attemptParseInt(
-    str: string,
-    radix: number = 10,
-    defaultInt: number = 0
-): number {
-    const attempt = parseInt(str, radix);
-    return isNaN(attempt) ? defaultInt : attempt;
-}
-
-function isValidLabel(label?: string): boolean {
-    return typeof label === 'string' && label.length > 0;
-}

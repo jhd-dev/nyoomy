@@ -1,46 +1,23 @@
 import 'reflect-metadata';
 import { Field, ObjectType, Int, ID } from 'type-graphql';
-import {
-    Column,
-    Entity,
-    BaseEntity,
-    PrimaryGeneratedColumn,
-    OneToMany,
-    ManyToOne,
-} from 'typeorm';
-import { IMetric } from '../types/IMetric';
-import MetricType from '../types/MetricType';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import MetricType from '../types/enums/MetricType';
+import { Metric } from '../types/interfaces/Metric';
 import { TimerEntry } from './TimerEntry';
-import { User } from './User';
 
 @Entity('timer_metrics')
-@ObjectType({ implements: IMetric })
-export class TimerMetric extends BaseEntity implements IMetric {
-    @PrimaryGeneratedColumn()
+@ObjectType()
+export class TimerMetric {
+    @PrimaryGeneratedColumn('uuid')
     @Field(() => ID)
     public readonly id: string;
 
+    @Column(() => Metric)
+    @Field(() => Metric)
+    public metric: Metric;
+
     @Field(() => MetricType)
     public readonly metricType: MetricType = MetricType.TIMER;
-
-    @ManyToOne(() => User, (user) => user.metrics, { onDelete: 'CASCADE' })
-    @Field(() => User)
-    public user: User;
-
-    @OneToMany(() => TimerEntry, (entry) => entry.metric, {
-        cascade: true,
-        nullable: false,
-    })
-    @Field(() => [TimerEntry])
-    public metricEntries: TimerEntry[];
-
-    @Column('varchar', { length: 32, default: '' })
-    @Field(() => String)
-    public label: string;
-
-    @Column('varchar', { length: 256, default: '' })
-    @Field(() => String)
-    public description: string;
 
     /* The number of minutes an attempt should last to succeed */
     @Column('integer', { default: 25 })

@@ -1,42 +1,35 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 
 import 'reflect-metadata';
-import { Field, ObjectType, Int, ID, Directive } from 'type-graphql';
+import { Field, ObjectType, Int, Directive, ID } from 'type-graphql';
 import {
-    BaseEntity,
     Column,
     CreateDateColumn,
     DeleteDateColumn,
     Entity,
-    JoinColumn,
-    OneToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
-import { CounterMetric } from './CounterMetric';
-import { Journal } from './Journal';
-import { TimerMetric } from './TimerMetric';
-import { Todo } from './Todo';
 
-const MIDNIGHT: string = new Date(0).toTimeString().split(' ')[0];
+const MIDNIGHT = () => new Date(0).toTimeString().split(' ')[0];
 
 @Entity('users')
 @ObjectType()
-export class User extends BaseEntity {
+export class User {
     @PrimaryGeneratedColumn('uuid')
     @Field(() => ID)
     public readonly id: string;
 
     @Column('varchar', { length: 32 })
-    @Field(() => String)
+    @Field()
     public displayName: string;
 
     @Column('varchar', { unique: true, length: 32 })
-    @Field(() => String)
+    @Field()
     public username: string;
 
     @Column('varchar', { unique: true, length: 254 })
-    @Field(() => String)
+    @Field()
     @Directive('@lowercase')
     public email: string;
 
@@ -50,54 +43,47 @@ export class User extends BaseEntity {
     @Column('varchar', { nullable: true })
     public resetPasswordToken: string;
 
+    @Column('boolean', { default: false })
+    @Field(() => Boolean)
+    public isEmailVerified: boolean;
+
     @Column('date', { nullable: true })
-    @Field(() => String)
-    public birthday: string;
+    @Field()
+    public birthday: Date;
 
     @Column('varchar', { nullable: true })
-    @Field(() => String)
+    @Field()
     public picture: string;
 
     @Column('boolean', { default: true })
     @Field(() => Boolean)
     public isPublic: boolean;
 
-    @Column('boolean', { default: false })
-    @Field(() => Boolean)
-    public isEmailVerified: boolean;
-
     @Column('text', { default: '' })
-    @Field(() => String)
-    public bio: string;
+    @Field()
+    public bio: Date;
 
     @Column('time', { default: MIDNIGHT })
-    @Field(() => String)
-    public cron: string;
+    @Field()
+    public cron: Date;
 
     @Column('varchar', { default: 'en_US', length: 35 })
-    @Field(() => String)
+    @Field()
     public language: string;
 
-    @OneToMany(() => CounterMetric, (metric) => metric.user, {
-        cascade: true,
-    })
-    @Field(() => [CounterMetric])
-    public metrics: CounterMetric[];
+    @Column('varchar', { length: 4, nullable: true })
+    @Field()
+    public pin: string;
 
-    @OneToMany(() => TimerMetric, (metric) => metric.user, { cascade: true })
-    @Field(() => [TimerMetric])
-    public timerMetrics: TimerMetric[];
+    @Column('smallint', { nullable: true })
+    @Field(() => Int)
+    public pinTimeout: number;
 
-    @OneToMany(() => Todo, (todo) => todo.user)
-    @Field(() => [Todo])
-    public todos: Todo[];
-
-    @OneToMany(() => Journal, (journal) => journal.user)
-    @Field(() => [Journal])
-    public journals: Journal[];
+    @Column('integer', { default: 0 })
+    @Field(() => Int)
+    public stars: number;
 
     @CreateDateColumn({ type: 'timestamptz' })
-    @Field(() => Date)
     public readonly createdAt: Date;
 
     @UpdateDateColumn({ type: 'timestamptz' })

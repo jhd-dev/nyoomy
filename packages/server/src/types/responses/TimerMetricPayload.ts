@@ -3,19 +3,19 @@ import MetricType from './MetricType';
 
 @ObjectType()
 export class TimerMetricPayload {
-    @Field(() => String)
+    @Field()
     public readonly metricId: string;
 
-    @Field(() => String)
+    @Field()
     public readonly metricType: string = MetricType.TIMER;
 
-    @Field(() => String)
-    public date: string;
+    @Field()
+    public date: Date;
 
-    @Field(() => String)
+    @Field()
     public label: string;
 
-    @Field(() => String)
+    @Field()
     public description: string;
 
     @Field(() => Int)
@@ -24,6 +24,6 @@ export class TimerMetricPayload {
     @Field(() => Int)
     public goalPerDay: number;
 
-    @Field(() => String, { nullable: true })
+    @Field(, { nullable: true })
     public startTime: string | null;
 }

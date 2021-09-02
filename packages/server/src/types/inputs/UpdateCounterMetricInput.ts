@@ -1,5 +1,5 @@
 import { Field, ID, Int, InputType } from 'type-graphql';
-import type { CounterMetricDailyEntry } from './CounterMetricDailyEntry';
+import type { CounterMetricDailyEntry } from '../CounterMetricDailyEntry';
 
 @InputType()
 export class UpdateCounterMetricInput

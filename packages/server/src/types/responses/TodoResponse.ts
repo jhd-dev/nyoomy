@@ -3,16 +3,16 @@ import Weekday from './Weekday';
 
 @ObjectType()
 export class TodoResponse {
-    @Field(() => String)
+    @Field()
     public readonly todoId: string;
 
-    @Field(() => String)
-    public date: string;
+    @Field()
+    public date: Date;
 
-    @Field(() => String)
+    @Field()
     public title: string;
 
-    @Field(() => String)
+    @Field()
     public description: string;
 
     @Field(() => Boolean)

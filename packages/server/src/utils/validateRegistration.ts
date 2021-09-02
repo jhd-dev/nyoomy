@@ -1,7 +1,8 @@
+import { getConnection } from 'typeorm';
 import isEmail from 'validator/lib/isEmail';
 import { User } from '../entities/User';
-import type { FieldError } from '../types/FieldError';
-import type { UserRegistrationInfo } from '../types/UserRegistrationInfo';
+import type { UserRegistrationInfo } from '../types/inputs/UserRegistrationInfo';
+import type { FieldError } from '../types/responses/FieldError';
 
 export const validateRegistration = async ({
     email,
@@ -32,9 +33,11 @@ export const validateRegistration = async ({
             },
         ];
 
-    const existingUser: User | undefined = await User.findOne({
-        where: [{ email }, { username }],
-    });
+    const existingUser: User | undefined = await getConnection()
+        .getRepository(User)
+        .findOne({
+            where: [{ email }, { username }],
+        });
     if (existingUser !== undefined) {
         const takenField: string =
             existingUser.email === email ? 'email' : 'username';

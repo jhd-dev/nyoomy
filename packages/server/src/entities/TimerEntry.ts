@@ -1,37 +1,24 @@
 import 'reflect-metadata';
-import { Field, ObjectType, Int, ID } from 'type-graphql';
-import {
-    Column,
-    Entity,
-    PrimaryGeneratedColumn,
-    BaseEntity,
-    ManyToOne,
-    OneToMany,
-} from 'typeorm';
-import { TimerAttempt } from './TimerAttempt';
+import { Field, ID, ObjectType } from 'type-graphql';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { TimerMetric } from './TimerMetric';
 
 @Entity('timer_entries')
 @ObjectType()
-export class TimerEntry extends BaseEntity {
-    @PrimaryGeneratedColumn()
+export class TimerEntry {
+    @PrimaryGeneratedColumn('uuid')
     @Field(() => ID)
     public readonly id: string;
 
-    @ManyToOne(() => TimerMetric, (metric) => metric.metricEntries, {
-        onDelete: 'CASCADE',
-    })
+    @ManyToOne(() => TimerMetric, { onDelete: 'CASCADE' })
     @Field(() => TimerMetric)
     public metric: TimerMetric;
 
     @Column('date')
-    @Field(() => String)
-    public date: string;
+    @Field()
+    public date: Date;
 
-    @OneToMany(() => TimerAttempt, (attempt) => attempt.entry, {
-        cascade: true,
-        nullable: false,
-    })
-    @Field(() => [TimerAttempt])
-    public attempts: TimerAttempt[];
+    @Column('boolean', { default: false })
+    @Field()
+    public isArchived: boolean;
 }

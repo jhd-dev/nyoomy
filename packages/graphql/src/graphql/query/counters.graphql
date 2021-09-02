@@ -40,32 +40,6 @@ mutation AddCounter {
     }
 }
 
-mutation AddTimer {
-    addTimer {
-        metricId
-        metricType
-        label
-        description
-        date
-        goalLength
-        goalPerDay
-        startTime
-    }
-}
-
-mutation UpdateTimer($updateInput: UpdateTimerMetricInput!) {
-    updateTimer(updateInput: $updateInput) {
-        metricId
-        metricType
-        label
-        description
-        date
-        goalLength
-        goalPerDay
-        startTime
-    }
-}
-
 mutation UpdateCounter($updateInput: UpdateCounterMetricInput!) {
     updateCounter(updateInput: $updateInput) {
         metricId
@@ -82,8 +56,4 @@ mutation UpdateCounter($updateInput: UpdateCounterMetricInput!) {
 
 mutation DeleteCounter($id: ID!) {
     deleteCounter(id: $id)
-}
-
-mutation DeleteTimer($id: ID!) {
-    deleteTimer(id: $id)
 }

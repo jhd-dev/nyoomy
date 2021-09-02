@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import { Resolver, Mutation, Arg, Query, Ctx, ID } from 'type-graphql';
 import { Journal, JournalEntry, User } from '../entities';
-import { IContext } from '../types/IContext';
-import { JournalResponse } from '../types/JournalResponse';
+import { IContext } from '../types/interfaces/IContext';
+import { JournalResponse } from '../types/responses/JournalResponse';
 import { UpdateJournalInput } from '../types/UpdateJournalInput';
 
 async function getUser(userId?: string): Promise<User | null> {
@@ -10,7 +10,7 @@ async function getUser(userId?: string): Promise<User | null> {
     return (await User.findOne({ id: userId })) ?? null;
 }
 
-@Resolver()
+@Resolver(() => Journal)
 export class JournalResolver {
     @Query(() => [JournalResponse])
     public async getMyJournals(

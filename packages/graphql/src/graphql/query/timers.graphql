@@ -1,0 +1,46 @@
+query MyTimers {
+    getMyTimers {
+        id
+        metricType
+        label
+        description
+        goalLength
+        goalPerDay
+        entries {
+            id
+            date
+            startTime
+            endTime
+        }
+    }
+}
+
+mutation AddTimer {
+    addTimer {
+        metricId
+        metricType
+        label
+        description
+        date
+        goalLength
+        goalPerDay
+        startTime
+    }
+}
+
+mutation UpdateTimer($updateInput: UpdateTimerMetricInput!) {
+    updateTimer(updateInput: $updateInput) {
+        metricId
+        metricType
+        label
+        description
+        date
+        goalLength
+        goalPerDay
+        startTime
+    }
+}
+
+mutation DeleteTimer($id: ID!) {
+    deleteTimer(id: $id)
+}

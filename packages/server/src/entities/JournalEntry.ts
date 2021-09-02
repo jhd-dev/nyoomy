@@ -1,32 +1,24 @@
 import 'reflect-metadata';
 import { Field, ObjectType, ID } from 'type-graphql';
-import {
-    Column,
-    Entity,
-    PrimaryGeneratedColumn,
-    BaseEntity,
-    ManyToOne,
-} from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { Journal } from './Journal';
 
 @Entity('journal_entries')
 @ObjectType({
     description: "A single day's entry in a Journal",
 })
-export class JournalEntry extends BaseEntity {
-    @PrimaryGeneratedColumn()
+export class JournalEntry {
+    @PrimaryGeneratedColumn('uuid')
     @Field(() => ID)
     public readonly id: string;
 
-    @ManyToOne(() => Journal, (journal) => journal.entries, {
-        onDelete: 'CASCADE',
-    })
+    @ManyToOne(() => Journal, { onDelete: 'CASCADE' })
     @Field(() => Journal)
-    public journal: Journal;
+    public metric: Journal;
 
     @Column('date')
     @Field()
-    public date: string;
+    public date: Date;
 
     @Column('text', { default: '' })
     @Field()

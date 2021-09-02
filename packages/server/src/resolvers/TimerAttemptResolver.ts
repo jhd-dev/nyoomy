@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-import { Resolver, FieldResolver, Root } from 'type-graphql';
+import { Resolver, FieldResolver, Root, Query, Mutation } from 'type-graphql';
 import { TimerAttempt } from '../entities';
+import { TimerMetricPayload } from '../types/TimerMetricPayload';
 import type { ResolverInterface } from 'type-graphql';
 
 @Resolver(() => TimerAttempt)

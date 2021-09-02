@@ -1,27 +1,33 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-import { Resolver, Mutation, Arg, Query, Ctx, ID } from 'type-graphql';
+import {
+    Resolver,
+    Mutation,
+    Arg,
+    Query,
+    Ctx,
+    ID,
+    UseMiddleware,
+} from 'type-graphql';
 import { Todo, TodoEntry, User } from '../entities';
-import { IContext } from '../types/IContext';
-import { TodoResponse } from '../types/TodoResponse';
-import { UpdateTodoInput } from '../types/UpdateTodoInput';
+import { IContext } from '../types/interfaces/IContext';
+import { TodoResponse } from '../types/responses/TodoResponse';
+import { UpdateTodoInput } from '../types/inputs/UpdateTodoInput';
+import { getConnection } from 'typeorm';
+import { isAuthorized } from '../middleware/isAuthorized';
 
-async function getUser(userId?: string): Promise<User | null> {
-    if (typeof userId !== 'string' || userId.length === 0) return null;
-    return (await User.findOne({ id: userId })) ?? null;
-}
-
-@Resolver()
+@Resolver(() => Todo)
 export class TodoResolver {
+    private readonly todoRepo = getConnection().getRepository(Todo);
+
     @Query(() => [TodoResponse])
     public async getMyTodos(
         @Ctx() { req }: IContext,
         @Arg('excludeArchived', () => Boolean, { defaultValue: false })
         excludeArchived: boolean
     ): Promise<TodoResponse[]> {
-        const user = await getUser(req?.session?.userId);
-        if (user == null) return [];
+        const user = req.session.user;
 
-        const todos = await Todo.find({ user });
+        const todos = await this.todoRepo.find({ user });
         if (todos == null) return [];
 
         const date = new Date().toDateString();
@@ -54,17 +60,15 @@ export class TodoResolver {
     public async addTodo(
         @Ctx() { req }: IContext
     ): Promise<TodoResponse | null> {
-        const user = await getUser(req?.session?.userId);
-        console.log(user?.email);
-        if (user == null) return null;
+        const user = req.session.user;
 
-        const todo = await Todo.create({ user }).save();
+        const todo = this.todoRepo.create({ user });
+        await this.todoRepo.save(todo);
 
         const entry = await TodoEntry.create({
             todo,
             date: new Date().toDateString(),
         }).save();
-
         await todo.save();
 
         return {
@@ -78,22 +82,16 @@ export class TodoResolver {
         };
     }
 
+    @UseMiddleware(isAuthorized)
     @Mutation(() => TodoResponse, { nullable: true })
     public async updateTodo(
         @Ctx() { req }: IContext,
         @Arg('updateInput') updateInput: UpdateTodoInput
     ): Promise<TodoResponse | null> {
-        console.log('updateInput!');
-        console.log(updateInput);
         try {
-            const user = await getUser(req?.session?.userId);
-            if (user == null) {
-                throw new Error(
-                    `User with id '${req?.session?.userId}' could not be found.`
-                );
-            }
+            const user = req.session.user;
 
-            const todo = await Todo.findOne(updateInput.todoId);
+            const todo = await this.todoRepo.findOne(updateInput.todoId);
             if (todo == null) {
                 throw new Error(
                     `Todo with id '${updateInput.todoId}' could not be found.`
@@ -106,7 +104,7 @@ export class TodoResolver {
             todo.repeatWeekdays =
                 updateInput.repeatWeekdays ?? todo.repeatWeekdays;
 
-            await todo.save();
+            await this.todoRepo.save(todo);
 
             const entry = await TodoEntry.findOne({
                 todo,
@@ -141,8 +139,8 @@ export class TodoResolver {
     @Mutation(() => Boolean)
     public async deleteTodo(@Arg('id', () => ID) id: string): Promise<boolean> {
         try {
-            const todo = await Todo.findOneOrFail(id);
-            await todo.remove();
+            const todo = await this.todoRepo.findOneOrFail(id);
+            await this.todoRepo.remove(todo);
             return true;
         } catch (err: unknown) {
             console.error(err);

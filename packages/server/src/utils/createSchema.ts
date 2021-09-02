@@ -1,6 +1,7 @@
 import { resolve } from 'path';
 import { buildSchema } from 'type-graphql';
-import type { IContext } from '../types/IContext';
+import { Container } from 'typedi';
+import type { IContext } from '../types/interfaces/IContext';
 import type { GraphQLSchema } from 'graphql';
 
 export const createSchema = (): Promise<GraphQLSchema> =>
@@ -13,4 +14,5 @@ export const createSchema = (): Promise<GraphQLSchema> =>
             commentDescriptions: true,
             sortedSchema: true,
         },
+        container: Container,
     });

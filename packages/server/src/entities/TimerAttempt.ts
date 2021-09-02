@@ -1,34 +1,26 @@
 import 'reflect-metadata';
-import { Field, ObjectType, ID } from 'type-graphql';
-import {
-    Column,
-    Entity,
-    PrimaryGeneratedColumn,
-    BaseEntity,
-    ManyToOne,
-} from 'typeorm';
-import { TimerEntry } from './TimerEntry';
+import { Field, ID, ObjectType } from 'type-graphql';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { TimerMetric } from './TimerMetric';
 
 @Entity('timer_attempts')
 @ObjectType()
-export class TimerAttempt extends BaseEntity {
-    @PrimaryGeneratedColumn()
+export class TimerAttempt {
+    @PrimaryGeneratedColumn('uuid')
     @Field(() => ID)
     public readonly id: string;
 
-    @ManyToOne(() => TimerEntry, (entry) => entry.attempts, {
-        onDelete: 'CASCADE',
-    })
-    @Field(() => TimerEntry)
-    public entry: TimerEntry;
+    @ManyToOne(() => TimerMetric, { onDelete: 'CASCADE' })
+    @Field(() => TimerMetric)
+    public metric: TimerMetric;
 
-    @Column('varchar')
-    @Field(() => String)
-    public startTime: string;
+    @Column('timestamptz')
+    @Field(() => Date)
+    public startTime: Date;
 
-    @Column('varchar', { nullable: true })
-    @Field(() => String)
-    public endTime: string;
+    @Column('timestamptz', { nullable: true })
+    @Field(() => Date)
+    public endTime: Date;
 
     @Field(() => Boolean)
     public didFinish: boolean;

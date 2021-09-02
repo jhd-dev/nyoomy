@@ -1,54 +1,50 @@
 import 'reflect-metadata';
-import { Field, ObjectType, Int, ID } from 'type-graphql';
+import { Field, ID, ObjectType } from 'type-graphql';
 import {
-    BaseEntity,
     Column,
     Entity,
     ManyToOne,
-    OneToMany,
     PrimaryGeneratedColumn,
+    TreeChildren,
+    TreeParent,
 } from 'typeorm';
-import { ITodo } from '../types/ITodo';
-import Weekday, { weekdays } from '../types/Weekday';
-import { SubTodo } from './SubTodo';
+import Weekday, { weekdays } from '../types/enums/Weekday';
 import { TodoEntry } from './TodoEntry';
 import { User } from './User';
 
 @Entity('todos')
-@ObjectType({ implements: ITodo })
-export class Todo extends BaseEntity implements ITodo {
-    @PrimaryGeneratedColumn()
+@ObjectType()
+export class Todo {
+    @PrimaryGeneratedColumn('uuid')
     @Field(() => ID)
     public readonly id: string;
 
-    @ManyToOne(() => User, (user) => user.todos, {
-        onDelete: 'CASCADE',
-    })
+    @TreeChildren()
+    @Field(() => [Todo])
+    public subtasks: Todo[];
+
+    @TreeParent()
+    @Field(() => Todo, { nullable: true })
+    public supertask: Todo | null;
+
+    @ManyToOne(() => User)
     @Field(() => User)
     public user: User;
 
-    @OneToMany(() => TodoEntry, (entry) => entry.todo)
-    @Field(() => [TodoEntry])
-    public entries: TodoEntry[];
-
-    @OneToMany(() => SubTodo, (todo) => todo.supertask)
-    @Field(() => [SubTodo])
-    public subtasks: SubTodo[];
-
     @Column('text', { default: 'New task' })
-    @Field(() => String)
+    @Field()
     public title: string;
 
     @Column('text', { default: '' })
-    @Field(() => String)
+    @Field()
     public description: string;
 
     @Column('boolean', { default: false })
-    @Field(() => Boolean)
+    @Field()
     public isCompleted: boolean;
 
     @Column('boolean', { default: false })
-    @Field(() => Boolean)
+    @Field()
     public isArchived: boolean;
 
     @Column('enum', {
@@ -59,7 +55,7 @@ export class Todo extends BaseEntity implements ITodo {
     @Field(() => [Weekday])
     public repeatWeekdays: Weekday[];
 
-    @Field(() => Boolean)
+    @Field()
     public get doesRepeat(): boolean {
         return this.repeatWeekdays.length !== 0;
     }

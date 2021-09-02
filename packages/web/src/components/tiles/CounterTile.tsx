@@ -2,6 +2,7 @@ import type { FC } from 'react';
 import React, { useEffect, useState } from 'react';
 import { useUpdateCounterMutation } from '@nyoomy/graphql';
 import type { CounterMetricDailyEntry } from '@nyoomy/graphql';
+import { attemptParseInt, isValidLabel } from '../../utils/format-safety';
 import { DeleteCounterButton } from '../DeleteCounterButton';
 import { Tile } from './Tile';
 
@@ -62,7 +63,7 @@ export const CounterTile: FC<IProps> = ({ metric }) => {
 
     const updateCount = async (newCount: number): Promise<void> => {
         if (count === newCount) return;
-        const response = await updateCounter({
+        await updateCounter({
             variables: {
                 updateInput: {
                     metricId: metric.metricId,
@@ -133,16 +134,3 @@ export const CounterTile: FC<IProps> = ({ metric }) => {
         </Tile>
     );
 };
-
-function attemptParseInt(
-    str: string,
-    radix: number = 10,
-    defaultInt: number = 0
-): number {
-    const attempt = parseInt(str, radix);
-    return isNaN(attempt) ? defaultInt : attempt;
-}
-
-function isValidLabel(label?: string): boolean {
-    return typeof label === 'string' && label.length > 0;
-}

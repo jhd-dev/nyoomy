@@ -1,5 +1,5 @@
 import { Field, ArgsType } from 'type-graphql';
-import type { User } from '../entities/User';
+import type { User } from '../../entities/User';
 
 @ArgsType()
 export class UserRegistrationInfo implements Partial<User> {

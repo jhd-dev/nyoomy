@@ -6,22 +6,22 @@ import MetricType from './MetricType';
  */
 @ObjectType()
 export class CounterMetricDailyEntry {
-    @Field(() => String)
+    @Field()
     public metricId: string;
 
     @Field(() => MetricType)
     public metricType: MetricType = MetricType.COUNTER;
 
-    @Field(() => String)
-    public date: string;
+    @Field()
+    public date: Date;
 
     @Field(() => Int)
     public count: number;
 
-    @Field(() => String)
+    @Field()
     public label: string;
 
-    @Field(() => String)
+    @Field()
     public description: string;
 
     @Field(() => Int)

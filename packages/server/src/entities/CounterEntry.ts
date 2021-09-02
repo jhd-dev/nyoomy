@@ -2,10 +2,10 @@ import 'reflect-metadata';
 import { Field, ObjectType, Int, ID } from 'type-graphql';
 import {
     Column,
+    CreateDateColumn,
     Entity,
-    PrimaryGeneratedColumn,
-    BaseEntity,
     ManyToOne,
+    PrimaryGeneratedColumn,
 } from 'typeorm';
 import { CounterMetric } from './CounterMetric';
 
@@ -13,20 +13,24 @@ import { CounterMetric } from './CounterMetric';
 @ObjectType({
     description: "A single day's data for a particular CounterMetric",
 })
-export class CounterEntry extends BaseEntity {
-    @PrimaryGeneratedColumn()
+export class CounterEntry {
+    @PrimaryGeneratedColumn('uuid')
     @Field(() => ID)
     public readonly id: string;
 
-    @ManyToOne(() => CounterMetric, (metric) => metric.metricEntries)
+    @ManyToOne(() => CounterMetric)
     @Field(() => CounterMetric)
     public metric: CounterMetric;
 
     @Column('date')
-    @Field(() => String)
-    public date: string;
+    @Field()
+    public date: Date;
 
     @Column('integer', { default: 0 })
     @Field(() => Int)
     public count: number;
+
+    @CreateDateColumn({ type: 'timestamptz' })
+    @Field()
+    public readonly createdAt: Date;
 }

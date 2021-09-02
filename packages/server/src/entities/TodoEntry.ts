@@ -1,32 +1,24 @@
 import 'reflect-metadata';
-import { Field, ObjectType, ID } from 'type-graphql';
-import {
-    Column,
-    Entity,
-    PrimaryGeneratedColumn,
-    BaseEntity,
-    ManyToOne,
-} from 'typeorm';
+import { Field, ID, ObjectType } from 'type-graphql';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Todo } from './Todo';
 
 @Entity('todo_entries')
 @ObjectType({
-    description: "A single day's data for a particular CounterMetric",
+    description: "A single day's data for a particular Todo",
 })
-export class TodoEntry extends BaseEntity {
-    @PrimaryGeneratedColumn()
+export class TodoEntry {
+    @PrimaryGeneratedColumn('uuid')
     @Field(() => ID)
     public readonly id: string;
 
-    @ManyToOne(() => Todo, (todo) => todo.entries, {
-        onDelete: 'CASCADE',
-    })
+    @ManyToOne(() => Todo, { onDelete: 'CASCADE' })
     @Field(() => Todo)
     public todo: Todo;
 
     @Column('date')
-    @Field(() => String)
-    public date: string;
+    @Field()
+    public date: Date;
 
     @Column('boolean', { default: false })
     @Field(() => Boolean)

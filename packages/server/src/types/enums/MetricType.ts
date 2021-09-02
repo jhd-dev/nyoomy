@@ -3,6 +3,11 @@ import { registerEnumType } from 'type-graphql';
 enum MetricType {
     COUNTER = 'COUNTER',
     TIMER = 'TIMER',
+    JOURNAL = 'JOURNAL',
+    SCALE = 'SCALE',
+    SELECTION = 'METRIC',
+    FLOAT = 'FLOAT',
+    STRING = 'STRING',
 }
 
 registerEnumType(MetricType, {
