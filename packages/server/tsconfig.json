@@ -12,6 +12,7 @@
         "noImplicitAny": true,
         "strictNullChecks": true,
         "strictFunctionTypes": true,
+        "strictPropertyInitialization": false,
         "noImplicitThis": true,
         "noUnusedLocals": false,
         "noUnusedParameters": true,
@@ -21,7 +22,6 @@
         "esModuleInterop": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-
         "typeRoots": ["../../node_modules/@types", "src/**/*.d.ts"]
     },
     "exclude": ["node_modules"],

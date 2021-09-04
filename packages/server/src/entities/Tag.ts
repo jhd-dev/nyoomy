@@ -8,7 +8,7 @@ import {
     PrimaryGeneratedColumn,
 } from 'typeorm';
 import CategoryIcon, { categoryIcons } from '../types/enums/CategoryIcon';
-import { Taggable } from '../types/interfaces/Taggable';
+import { Taggable } from './Taggable';
 import { User } from './User';
 
 @Entity('tags')

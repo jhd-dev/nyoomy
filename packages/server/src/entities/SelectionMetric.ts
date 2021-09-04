@@ -2,7 +2,7 @@ import { Min } from 'class-validator';
 import { Field, ID, Int, ObjectType } from 'type-graphql';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import MetricType from '../types/enums/MetricType';
-import { Metric } from '../types/interfaces/Metric';
+import { Metric } from './Metric';
 
 @Entity('selection_metrics')
 @ObjectType({ description: 'A Numeric Rating Selection' })

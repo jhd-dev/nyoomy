@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { Field, ObjectType, Float, ID } from 'type-graphql';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import MetricType from '../types/enums/MetricType';
-import { Metric } from '../types/interfaces/Metric';
+import { Metric } from './Metric';
 
 @Entity('float_metrics')
 @ObjectType()

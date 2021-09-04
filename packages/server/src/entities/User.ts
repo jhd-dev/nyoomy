@@ -63,9 +63,9 @@ export class User {
     @Field()
     public bio: Date;
 
-    @Column('time', { default: MIDNIGHT })
-    @Field()
-    public cron: Date;
+    // @Column('time', { default: MIDNIGHT })
+    // @Field()
+    // public cron: Date;
 
     @Column('varchar', { default: 'en_US', length: 35 })
     @Field()

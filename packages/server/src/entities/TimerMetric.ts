@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { Field, ObjectType, Int, ID } from 'type-graphql';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import MetricType from '../types/enums/MetricType';
-import { Metric } from '../types/interfaces/Metric';
+import { Metric } from './Metric';
 import { TimerEntry } from './TimerEntry';
 
 @Entity('timer_metrics')

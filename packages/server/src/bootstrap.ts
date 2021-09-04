@@ -5,16 +5,14 @@ import cors from 'cors';
 import express, { json, urlencoded } from 'express';
 import session from 'express-session';
 import { join } from 'path';
+import { useContainer } from 'typeorm';
 import { COOKIE_NAME, REDIS_SESSION_PREFIX } from './constants';
 import { __prod__, REDIS_SECRET, PORT } from './env';
+import { Container } from './internal';
 import { createDatabaseConnection } from './utils/createDatabaseConnection';
 import { createSchema } from './utils/createSchema';
 import redis from './utils/redis';
 import type { IContext } from './types/interfaces/IContext';
-import { useContainer } from 'typeorm';
-import { Container } from 'typedi';
-
-useContainer(Container);
 
 const WEB_PATH = join(__dirname, '../../web/dist');
 const STATIC_PATH = join(__dirname, '../../web/public');
@@ -56,11 +54,18 @@ function applyMiddleware(): void {
 }
 
 async function initDatabase(): Promise<void> {
-    await createDatabaseConnection();
+    useContainer(Container, { fallback: false, fallbackOnErrors: false });
+    try {
+        await createDatabaseConnection();
+    } catch (err: unknown) {
+        console.error(err);
+        throw new Error(String(err));
+    }
     new ApolloServer({
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         schema: await createSchema(),
         context: (ctx: IContext): IContext => ctx,
+        tracing: true,
     }).applyMiddleware({
         app,
         cors: false,

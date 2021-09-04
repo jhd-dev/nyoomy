@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { Max, Min } from 'class-validator';
-import { Field, ObjectType, Int } from 'type-graphql';
+import { Field, ObjectType, Int, ID } from 'type-graphql';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Scale } from './Scale';
 

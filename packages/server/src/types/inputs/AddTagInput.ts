@@ -1,6 +1,6 @@
 import { Field, InputType } from 'type-graphql';
+import { Taggable } from '../../entities/Taggable';
 import CategoryIcon from '../enums/CategoryIcon';
-import { Taggable } from '../interfaces/Taggable';
 import type { Tag } from '../../entities/Tag';
 
 @InputType()

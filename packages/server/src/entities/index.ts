@@ -4,6 +4,7 @@ import { DailyFloatEntry } from './DailyFloatEntry';
 import { DailyFloatMetric } from './DailyFloatMetric';
 import { Journal } from './Journal';
 import { JournalEntry } from './JournalEntry';
+import { Metric } from './Metric';
 import { Scale } from './Scale';
 import { ScaleEntry } from './ScaleEntry';
 import { SelectionCategory } from './SelectionCategory';
@@ -11,6 +12,7 @@ import { SelectionEntry } from './SelectionEntry';
 import { SelectionMetric } from './SelectionMetric';
 import { SelectionOption } from './SelectionOption';
 import { Tag } from './Tag';
+import { Taggable } from './Taggable';
 import { TimerAttempt } from './TimerAttempt';
 import { TimerEntry } from './TimerEntry';
 import { TimerMetric } from './TimerMetric';
@@ -25,6 +27,7 @@ const entities = [
     DailyFloatMetric,
     Journal,
     JournalEntry,
+    Metric,
     Scale,
     ScaleEntry,
     SelectionCategory,
@@ -32,6 +35,7 @@ const entities = [
     SelectionMetric,
     SelectionOption,
     Tag,
+    Taggable,
     TimerAttempt,
     TimerEntry,
     TimerMetric,
