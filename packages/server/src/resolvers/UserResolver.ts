@@ -14,6 +14,7 @@ import {
 import { Inject, Service } from 'typedi';
 import { User } from '../entities/User';
 import { isAuthorized } from '../middleware/isAuthorized';
+import { Log } from '../middleware/logger';
 import { UserService } from '../services/UserService';
 import { InvalidCredentialsError } from '../types/errors/InvalidCredentialsError';
 import { UserLoginInfo } from '../types/inputs/UserLoginInfo';
@@ -54,6 +55,7 @@ export class UserResolver {
      * @returns {Promise<RegistrationResponse>} the user
      */
     @Mutation(() => RegistrationResponse)
+    @UseMiddleware(Log())
     public async registerUser(
         @Args() { displayName, email, username, password }: UserRegistrationInfo
     ): Promise<RegistrationResponse> {

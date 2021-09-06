@@ -9,8 +9,8 @@ import { useContainer } from 'typeorm';
 import { COOKIE_NAME, REDIS_SESSION_PREFIX } from './constants';
 import { __prod__, REDIS_SECRET, PORT } from './env';
 import { Container } from './internal';
+import { buildSchema } from './utils/buildSchema';
 import { createDatabaseConnection } from './utils/createDatabaseConnection';
-import { createSchema } from './utils/createSchema';
 import redis from './utils/redis';
 import type { IContext } from './types/interfaces/IContext';
 
@@ -63,7 +63,7 @@ async function initDatabase(): Promise<void> {
     }
     new ApolloServer({
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        schema: await createSchema(),
+        schema: await buildSchema(),
         context: (ctx: IContext): IContext => ctx,
         tracing: true,
     }).applyMiddleware({
