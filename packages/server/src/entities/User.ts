@@ -18,50 +18,50 @@ const MIDNIGHT = () => new Date(0).toTimeString().split(' ')[0];
 export class User {
     @PrimaryGeneratedColumn('uuid')
     @Field(() => ID)
-    public readonly id: string;
+    public readonly id!: string;
 
     @Column('varchar', { length: 32 })
     @Field()
-    public displayName: string;
+    public displayName!: string;
 
     @Column('varchar', { unique: true, length: 32 })
     @Field()
-    public username: string;
+    public username!: string;
 
     @Column('varchar', { unique: true, length: 254 })
     @Field()
     @Directive('@lowercase')
-    public email: string;
+    public email!: string;
 
     @Column('varchar', { length: 256 })
-    public password: string;
+    public password!: string;
 
     @Column('integer', { default: 0, nullable: true })
     @Field(() => Int)
-    public tokenVersion: number;
+    public tokenVersion!: number;
 
     @Column('varchar', { nullable: true })
-    public resetPasswordToken: string;
+    public resetPasswordToken!: string;
 
     @Column('boolean', { default: false })
     @Field(() => Boolean)
-    public isEmailVerified: boolean;
+    public isEmailVerified!: boolean;
 
     @Column('date', { nullable: true })
     @Field()
-    public birthday: Date;
+    public birthday!: Date;
 
     @Column('varchar', { nullable: true })
     @Field()
-    public picture: string;
+    public picture!: string;
 
     @Column('boolean', { default: true })
     @Field(() => Boolean)
-    public isPublic: boolean;
+    public isPublic!: boolean;
 
     @Column('text', { default: '' })
     @Field()
-    public bio: Date;
+    public bio!: Date;
 
     // @Column('time', { default: MIDNIGHT })
     // @Field()
@@ -69,22 +69,22 @@ export class User {
 
     @Column('varchar', { default: 'en_US', length: 35 })
     @Field()
-    public language: string;
+    public language!: string;
 
     @Column('varchar', { length: 4, nullable: true })
     @Field()
-    public pin: string;
+    public pin!: string;
 
     @Column('smallint', { nullable: true })
     @Field(() => Int)
-    public pinTimeout: number;
+    public pinTimeout!: number;
 
     @Column('integer', { default: 0 })
     @Field(() => Int)
-    public stars: number;
+    public stars!: number;
 
     @CreateDateColumn({ type: 'timestamptz' })
-    public readonly createdAt: Date;
+    public readonly createdAt!: Date;
 
     @UpdateDateColumn({ type: 'timestamptz' })
     public lastUpdated: Date;

@@ -1,10 +1,10 @@
-import { Field, ObjectType } from 'type-graphql';
-import Weekday from './Weekday';
+import { Field, ID, ObjectType } from 'type-graphql';
+import Weekday from '../enums/Weekday';
 
 @ObjectType()
 export class TodoResponse {
-    @Field()
-    public readonly todoId: string;
+    @Field(() => ID)
+    public readonly id: string;
 
     @Field()
     public date: Date;

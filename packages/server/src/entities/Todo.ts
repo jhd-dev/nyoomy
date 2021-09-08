@@ -5,39 +5,43 @@ import {
     Entity,
     ManyToOne,
     PrimaryGeneratedColumn,
+    Tree,
     TreeChildren,
     TreeParent,
+    TreeLevelColumn,
 } from 'typeorm';
 import Weekday, { weekdays } from '../types/enums/Weekday';
-import { TodoEntry } from './TodoEntry';
 import { User } from './User';
 
 @Entity('todos')
+@Tree('materialized-path')
 @ObjectType()
 export class Todo {
     @PrimaryGeneratedColumn('uuid')
     @Field(() => ID)
-    public readonly id: string;
+    public readonly id!: string;
 
     @TreeChildren()
     @Field(() => [Todo])
-    public subtasks: Todo[];
+    public subtasks!: Todo[];
 
     @TreeParent()
-    @Field(() => Todo, { nullable: true })
-    public supertask: Todo | null;
+    public supertask!: Todo | null;
+
+    @TreeLevelColumn()
+    public level!: number;
 
     @ManyToOne(() => User)
     @Field(() => User)
-    public user: User;
+    public user!: User;
 
     @Column('text', { default: 'New task' })
     @Field()
-    public title: string;
+    public title!: string;
 
     @Column('text', { default: '' })
     @Field()
-    public description: string;
+    public description!: string;
 
     @Column('boolean', { default: false })
     @Field()
@@ -45,7 +49,7 @@ export class Todo {
 
     @Column('boolean', { default: false })
     @Field()
-    public isArchived: boolean;
+    public isArchived!: boolean;
 
     @Column('enum', {
         enum: weekdays,
@@ -53,7 +57,7 @@ export class Todo {
         default: [],
     })
     @Field(() => [Weekday])
-    public repeatWeekdays: Weekday[];
+    public repeatWeekdays!: Weekday[];
 
     @Field()
     public get doesRepeat(): boolean {

@@ -26,11 +26,13 @@ export function Log(options: ILogInput = defaultInput): MiddlewareFn<IContext> {
         if (options?.context) console.info(context);
         if (options?.info) console.info(info);
         if (options?.root) console.info(root);
+
         const start = Date.now();
-        await next();
+        const result: unknown = await next();
         if (options?.time) {
             const resolveTime = Date.now() - start;
             console.info(`[${resolveTime} ms]`);
         }
+        return result;
     };
 }

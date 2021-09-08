@@ -1,14 +1,14 @@
 import { Field, ID, InputType } from 'type-graphql';
-import Weekday from './Weekday';
-import type { TodoResponse } from './TodoResponse';
+import Weekday from '../enums/Weekday';
+import type { Todo } from '../../entities/Todo';
 
 @InputType()
-export class UpdateTodoInput implements Partial<TodoResponse> {
+export class UpdateTodoInput implements Partial<Todo> {
     @Field(() => ID)
-    public readonly todoId: string;
+    public readonly id!: string;
 
     @Field()
-    public readonly date: string;
+    public readonly date!: string;
 
     @Field({ nullable: true })
     public title?: string;
