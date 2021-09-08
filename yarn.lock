@@ -35,6 +35,35 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@apollo/client@npm:^3.4.10":
+  version: 3.4.10
+  resolution: "@apollo/client@npm:3.4.10"
+  dependencies:
+    "@graphql-typed-document-node/core": ^3.0.0
+    "@wry/context": ^0.6.0
+    "@wry/equality": ^0.5.0
+    "@wry/trie": ^0.3.0
+    graphql-tag: ^2.12.3
+    hoist-non-react-statics: ^3.3.2
+    optimism: ^0.16.1
+    prop-types: ^15.7.2
+    symbol-observable: ^4.0.0
+    ts-invariant: ^0.9.0
+    tslib: ^2.3.0
+    zen-observable-ts: ^1.1.0
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0
+    react: ^16.8.0 || ^17.0.0
+    subscriptions-transport-ws: ^0.9.0
+  peerDependenciesMeta:
+    react:
+      optional: true
+    subscriptions-transport-ws:
+      optional: true
+  checksum: e45610250d952aeae94a25389e257b3be2d7b43b87b453183f5a5f3f5e01d7961851ca7a8ea3e62125b00ac333e7de3c62c593e709e0ebbd9dcfe083604606a7
+  languageName: node
+  linkType: hard
+
 "@apollo/protobufjs@npm:1.2.2":
   version: 1.2.2
   resolution: "@apollo/protobufjs@npm:1.2.2"
@@ -3840,7 +3869,7 @@ __metadata:
     reflect-metadata: ^0.1.13
     ts-node: ^9.1.1
     typescript: ^4.2.4
-    yargs: ^16.2.0
+    yargs: ^17.0.1
   languageName: unknown
   linkType: soft
 
@@ -3867,7 +3896,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@nyoomy/client@workspace:packages/client"
   dependencies:
-    "@apollo/client": ^3.3.12
+    "@apollo/client": ^3.4.10
     apollo-boost: ^0.4.9
     apollo-cache-inmemory: ^1.6.6
     apollo-client: ^2.6.10
@@ -4069,7 +4098,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@nyoomy/graphql@workspace:packages/graphql"
   dependencies:
-    "@apollo/client": ^3.3.19
+    "@apollo/client": ^3.4.10
     "@graphql-codegen/add": ^2.0.2
     "@graphql-codegen/cli": ^1.21.4
     "@graphql-codegen/jsdoc": ^1.17.9
@@ -4200,7 +4229,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@nyoomy/web@workspace:packages/web"
   dependencies:
-    "@apollo/client": ^3.3.12
+    "@apollo/client": ^3.4.10
     "@apollo/react-hooks": ^4.0.0
     "@babel/core": ^7.14.2
     "@babel/plugin-proposal-class-properties": ^7.13.0
@@ -5794,6 +5823,15 @@ __metadata:
   dependencies:
     tslib: ^2.1.0
   checksum: 87c2b705edf0cc81e8b034367765762f3d2a1a0bfd9163b70389398bc0fc0338e1f8d68b2eaa70b0f5101c455bf5d419ae4a4f03f7f7697803e34adb9ca86b72
+  languageName: node
+  linkType: hard
+
+"@wry/equality@npm:^0.5.0":
+  version: 0.5.2
+  resolution: "@wry/equality@npm:0.5.2"
+  dependencies:
+    tslib: ^2.3.0
+  checksum: cdc497fbc9bbb4de0bfd912f31c827111a52ef891e0bce555728fa3d10f551c70fc0e9fc36f124c7afe104688cfcee1cc56d18833e80f617c9b8e739b86e43a0
   languageName: node
   linkType: hard
 
@@ -11911,6 +11949,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"graphql-tag@npm:^2.12.3":
+  version: 2.12.5
+  resolution: "graphql-tag@npm:2.12.5"
+  dependencies:
+    tslib: ^2.1.0
+  peerDependencies:
+    graphql: ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: db324292677bfe1f14e29baea6a4953a756a633a20dfe73939b14bc5f647b981087acf1e8a61245480f57da6587b63bab3562f06bddfda59e6c8233f28042dad
+  languageName: node
+  linkType: hard
+
 "graphql-tools@npm:^4.0.8":
   version: 4.0.8
   resolution: "graphql-tools@npm:4.0.8"
@@ -16476,7 +16525,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"optimism@npm:^0.16.0":
+"optimism@npm:^0.16.0, optimism@npm:^0.16.1":
   version: 0.16.1
   resolution: "optimism@npm:0.16.1"
   dependencies:
@@ -21212,6 +21261,13 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
+"symbol-observable@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "symbol-observable@npm:4.0.0"
+  checksum: 6d184cd370270ab53279d2737c6880d64bbe854dbdf3d759600efbc11bba3d006a9f805070c81c84fae949067c069cd001a1440295ca3b36f705b05293bf8e1e
+  languageName: node
+  linkType: hard
+
 "symbol-tree@npm:^3.2.4":
   version: 3.2.4
   resolution: "symbol-tree@npm:3.2.4"
@@ -21684,6 +21740,15 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
+"ts-invariant@npm:^0.9.0":
+  version: 0.9.1
+  resolution: "ts-invariant@npm:0.9.1"
+  dependencies:
+    tslib: ^2.1.0
+  checksum: a8f37248fc69c85198e495ec1894a670a6978bc03ef110dfe1e48eef9b73f2d4fb111df9b25f02fd33ab8cc64ba9476607200c3e617e89dc77fd8dcc6bb45476
+  languageName: node
+  linkType: hard
+
 "ts-jest@npm:^26.5.5":
   version: 26.5.6
   resolution: "ts-jest@npm:26.5.6"
@@ -21758,6 +21823,13 @@ resolve@^2.0.0-next.3:
   version: 2.2.0
   resolution: "tslib@npm:2.2.0"
   checksum: 2d35468c470410871c5246e43f12dcb6d0fc363b617c176f26443b9530e5c5ee8448966892a42956168d8f495da7865bda33dfe82c26c91991e28999974a618f
+  languageName: node
+  linkType: hard
+
+"tslib@npm:^2.3.0":
+  version: 2.3.1
+  resolution: "tslib@npm:2.3.1"
+  checksum: 5ae2f209c5127bad284974c78916f02c72082615f65889a7ed0c7ca6d5f935c30338a0ee7310e1d9652dabc7b7507fd2905035487446d09d45fc1f19de71cf05
   languageName: node
   linkType: hard
 
@@ -23250,8 +23322,8 @@ typescript@^4.2.4:
   linkType: hard
 
 "yargs@npm:^17.0.1":
-  version: 17.0.1
-  resolution: "yargs@npm:17.0.1"
+  version: 17.1.1
+  resolution: "yargs@npm:17.1.1"
   dependencies:
     cliui: ^7.0.2
     escalade: ^3.1.1
@@ -23260,7 +23332,7 @@ typescript@^4.2.4:
     string-width: ^4.2.0
     y18n: ^5.0.5
     yargs-parser: ^20.2.2
-  checksum: a7969b48d2dea129a7d4fcc3f13e88d4f94bacbd24f720b2ce19946fa9facc42cfed89c059d953091241f4e9e9000ed9dbf86e4bb4b6ceb3a26af10ddebdd0b2
+  checksum: c2a16b61eb0db8882becd0aa382a5c59b87afcd17b35dd7077b3c9d83f77a3ad3de1526e4f1cf940f9481d7ce537e883af7c16879c33258724a09bc43a04e8ea
   languageName: node
   linkType: hard
 
@@ -23298,7 +23370,16 @@ typescript@^4.2.4:
   languageName: node
   linkType: hard
 
-"zen-observable@npm:^0.8.0, zen-observable@npm:^0.8.14, zen-observable@npm:^0.8.15":
+"zen-observable-ts@npm:^1.1.0":
+  version: 1.2.2
+  resolution: "zen-observable-ts@npm:1.2.2"
+  dependencies:
+    zen-observable: 0.8.15
+  checksum: 5f2011d239df95e3f1bb6b5f40c1ee9732cc8118ae3cce36d393bc6237f1be417b62c1605990f9520005a23c9ed0ba999bcd68d526fab1bffe684afaeeee6baa
+  languageName: node
+  linkType: hard
+
+"zen-observable@npm:0.8.15, zen-observable@npm:^0.8.0, zen-observable@npm:^0.8.14, zen-observable@npm:^0.8.15":
   version: 0.8.15
   resolution: "zen-observable@npm:0.8.15"
   checksum: 7d155f8a75b9314f9f31e70a31edcd897b0e8a1313737502ab84a573e49d2c333b738e415c156334a6e910c363ce546b59fa7921eff61440285caa99c843df74

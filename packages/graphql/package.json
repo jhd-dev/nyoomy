@@ -20,7 +20,7 @@
         "generate:watch": "graphql-codegen --config --watch ./codegen.yml"
     },
     "dependencies": {
-        "@apollo/client": "^3.3.19"
+        "@apollo/client": "^3.4.10"
     },
     "devDependencies": {
         "@graphql-codegen/add": "^2.0.2",
