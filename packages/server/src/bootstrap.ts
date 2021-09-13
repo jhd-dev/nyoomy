@@ -12,7 +12,7 @@ import { Container } from './internal';
 import { buildSchema } from './utils/buildSchema';
 import { createDatabaseConnection } from './utils/createDatabaseConnection';
 import redis from './utils/redis';
-import type { IContext } from './types/interfaces/context.interface';
+import type { IContext } from './types/context.interface';
 
 const WEB_PATH = join(__dirname, '../../web/dist');
 const STATIC_PATH = join(__dirname, '../../web/public');
@@ -21,7 +21,6 @@ const app = express();
 void bootstrap();
 
 function applyMiddleware(): void {
-    const RedisStore: connectRedis.RedisStore = connectRedis(session);
     app.use(json())
         .use(urlencoded({ extended: true }))
         .use(
@@ -29,32 +28,10 @@ function applyMiddleware(): void {
                 credentials: true,
                 origin: `http://localhost:${PORT}`,
             })
-        )
-        .use(
-            session({
-                name: COOKIE_NAME,
-                store: new RedisStore({
-                    client: redis as connectRedis.Client,
-                    disableTouch: true,
-                    prefix: REDIS_SESSION_PREFIX,
-                }),
-                secret: REDIS_SECRET,
-                resave: false,
-                saveUninitialized: false,
-                cookie: {
-                    httpOnly: true,
-                    secure: __prod__,
-                    sameSite: 'lax',
-                    maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year
-                },
-            })
-        )
-        .use('/', express.static(WEB_PATH))
-        .use('/static', express.static(STATIC_PATH));
+        );
 }
 
 async function initDatabase(): Promise<void> {
-    useContainer(Container, { fallback: false, fallbackOnErrors: false });
     try {
         await createDatabaseConnection();
     } catch (err: unknown) {
@@ -76,10 +53,6 @@ function startServer(port: number): void {
     const server = app.listen(port, () =>
         console.info(`Server listening on port ${port}.`)
     );
-    process.on('SIGTERM', () => {
-        console.info('SIGTERM signal recieved; closing HTTP server.');
-        server.close(() => console.info('HTTP server closed.'));
-    });
 }
 
 async function bootstrap(): Promise<void> {

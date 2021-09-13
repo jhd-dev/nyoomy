@@ -13,7 +13,7 @@ import { isAuthorized } from '../common/middleware/isAuthorized';
 import { Todo } from '../entities/todo.entity';
 import { TodoService } from '../services/todo.service';
 import { UpdateTodoInput } from '../types/inputs/update-todo.input';
-import { IContext } from '../types/interfaces/context.interface';
+import { IContext } from '../types/context.interface';
 
 @Injectable()
 @Resolver(() => Todo)

@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import Weekday from '../enums/Weekday';
+import Weekday from '../enums/weekday.enum';
 
 @ObjectType()
 export class TodoResponse {

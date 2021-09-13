@@ -10,7 +10,7 @@ import {
     TreeParent,
     TreeLevelColumn,
 } from 'typeorm';
-import Weekday, { weekdays } from '../types/enums/Weekday';
+import Weekday, { weekdays } from '../types/enums/weekday.enum';
 import { User } from './user.entity';
 
 @Entity('todos')

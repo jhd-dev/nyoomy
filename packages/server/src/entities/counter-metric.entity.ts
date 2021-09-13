@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { Field, ObjectType, Int, ID } from '@nestjs/graphql';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import MetricType from '../types/enums/MetricType';
+import MetricType from '../types/enums/metric-type.enum';
 import { Metric } from './metric.entity';
 
 @Entity('counter_metrics')

@@ -7,7 +7,7 @@ import {
     Entity,
     PrimaryGeneratedColumn,
 } from 'typeorm';
-import CategoryIcon, { categoryIcons } from '../types/enums/CategoryIcon';
+import CategoryIcon, { categoryIcons } from '../types/enums/category-icon';
 import { Taggable } from './taggable.entity';
 import { User } from './user.entity';
 

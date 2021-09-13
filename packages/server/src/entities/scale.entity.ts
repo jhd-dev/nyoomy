@@ -1,7 +1,7 @@
 import { Max, Min } from 'class-validator';
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import MetricType from '../types/enums/MetricType';
+import MetricType from '../types/enums/metric-type.enum';
 import { Metric } from './metric.entity';
 
 @Entity('scales')

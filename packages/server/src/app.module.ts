@@ -1,5 +1,6 @@
 import { Module, Logger, Inject } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
+import { ServeStaticModule } from '@nestjs/serve-static';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import RedisStore from 'connect-redis';
 import expressSession from 'express-session';
@@ -7,6 +8,7 @@ import {
     session as passportSession,
     initialize as passportInitialize,
 } from 'passport';
+import { join } from 'path';
 import { RedisClient } from 'redis';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -18,6 +20,8 @@ import { UserModule } from './modules/user/user.module';
 import type { NestModule, MiddlewareConsumer } from '@nestjs/common';
 import type { Client as ConnectRedisClient } from 'connect-redis';
 
+const STATIC_PATH = join(__dirname, '../../web/dist');
+
 const localModules = [AuthModule, RedisModule, UserModule];
 
 @Module({
@@ -28,7 +32,12 @@ const localModules = [AuthModule, RedisModule, UserModule];
             autoSchemaFile: 'schema.graphql',
             sortSchema: true,
             installSubscriptionHandlers: true,
+            path: '/graphql',
             playground: false,
+        }),
+        ServeStaticModule.forRoot({
+            rootPath: STATIC_PATH,
+            exclude: ['/api*'],
         }),
     ],
     controllers: [AppController],

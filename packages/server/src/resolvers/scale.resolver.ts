@@ -5,7 +5,7 @@ import { isAuthorized } from '../common/middleware/isAuthorized';
 import { Scale } from '../entities/scale.entity';
 import { ScaleService } from '../services/scale.service';
 import { UpdateScaleInput } from '../types/inputs/update-scale.input';
-import { IContext } from '../types/interfaces/context.interface';
+import { IContext } from '../types/context.interface';
 import { ScaleResponse } from '../types/responses/scale.model';
 
 @Injectable()

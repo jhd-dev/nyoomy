@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { compare, hash } from 'bcryptjs';
-import { InvalidCredentialsError } from '../../types/errors/InvalidCredentialsError';
+import { InvalidCredentialsError } from '../../common/errors/InvalidCredentialsError';
 import { UserRepo } from '../user/user.repository';
 import type { User } from '../../entities';
 import type { IUser } from '../user/interfaces/user.interface';

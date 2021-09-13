@@ -1,5 +1,5 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
-import Weekday from '../enums/Weekday';
+import Weekday from '../enums/weekday.enum';
 import type { Todo } from '../../entities/todo.entity';
 
 @InputType()

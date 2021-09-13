@@ -1,6 +1,6 @@
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 import { CounterEntry } from '../../entities';
-import MetricType from '../enums/MetricType';
+import MetricType from '../enums/metric-type.enum';
 import { Metric } from '../../entities/metric.entity';
 import type { CounterMetric } from '../../entities';
 

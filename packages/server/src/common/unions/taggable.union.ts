@@ -6,7 +6,7 @@ import {
     Scale,
     SelectionMetric,
 } from '../../entities';
-import MetricType from '../enums/MetricType';
+import MetricType from '../../types/enums/metric-type.enum';
 
 export const MetricUnion = createUnionType({
     name: 'Metric',

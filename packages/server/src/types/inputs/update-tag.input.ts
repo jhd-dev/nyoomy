@@ -1,5 +1,5 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
-import CategoryIcon from '../enums/CategoryIcon';
+import CategoryIcon from '../enums/category-icon';
 import type { Tag } from '../../entities/tag.entity';
 
 @InputType()
