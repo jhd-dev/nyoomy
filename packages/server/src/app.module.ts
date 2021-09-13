@@ -1,4 +1,5 @@
 import { Module, Logger, Inject } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -12,6 +13,7 @@ import { join } from 'path';
 import { RedisClient } from 'redis';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { configuration } from './config/configuration';
 import { COOKIE_NAME } from './constants';
 import { REDIS_SECRET, __prod__ } from './env';
 import { AuthModule } from './modules/auth/auth.module';
@@ -39,6 +41,7 @@ const localModules = [AuthModule, RedisModule, UserModule];
             rootPath: STATIC_PATH,
             exclude: ['/api*'],
         }),
+        ConfigModule.forRoot({ load: [configuration], isGlobal: true }),
     ],
     controllers: [AppController],
     providers: [AppService, Logger],

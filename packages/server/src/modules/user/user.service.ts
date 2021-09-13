@@ -1,10 +1,10 @@
 /* eslint-disable max-classes-per-file */
 import 'reflect-metadata';
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { compare, hash } from 'bcryptjs';
 import { InvalidCredentialsError } from '../../common/errors/InvalidCredentialsError';
-import { PUBLIC_URL } from '../../env';
 import sendEmail from '../../utils/sendEmail';
 import { validateRegistration as validateRegInput } from '../../utils/validateRegistration';
 import { UserRepo } from './user.repository';
@@ -15,7 +15,8 @@ import type { FieldError } from '../../types/responses/field-error.model';
 export class UserService {
     public constructor(
         @InjectRepository(UserRepo)
-        private readonly userRepo: UserRepo
+        private readonly userRepo: UserRepo,
+        private readonly configService: ConfigService
     ) {}
 
     public getAll(): Promise<User[]> {
@@ -112,7 +113,9 @@ export class UserService {
         await sendEmail(
             email,
             'Forgot password',
-            `<a href="${PUBLIC_URL.origin}/reset-password/${token}">
+            `<a href="${
+                this.configService.get<URL>('CLIENT.PUBLIC_URL')?.origin ?? ''
+            }/reset-password/${token}">
                 Click here to reset your password.
             </a>`
         );
