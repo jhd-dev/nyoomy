@@ -12,7 +12,7 @@ import { Container } from './internal';
 import { buildSchema } from './utils/buildSchema';
 import { createDatabaseConnection } from './utils/createDatabaseConnection';
 import redis from './utils/redis';
-import type { IContext } from './types/interfaces/IContext';
+import type { IContext } from './types/interfaces/context.interface';
 
 const WEB_PATH = join(__dirname, '../../web/dist');
 const STATIC_PATH = join(__dirname, '../../web/public');

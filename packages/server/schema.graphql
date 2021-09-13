@@ -1,0 +1,41 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Mutation {
+  deleteUser: Boolean!
+  deleteUserById(id: ID!): Boolean!
+  updateUserPassword(input: UpdatePasswordInput!): Boolean!
+}
+
+type Query {
+  me: User
+}
+
+input UpdatePasswordInput {
+  newPassword: String!
+  oldPassword: String!
+  username: String!
+}
+
+type User {
+  bio: DateTime!
+  birthday: DateTime!
+  displayName: String!
+  email: String!
+  id: ID!
+  isEmailVerified: Boolean!
+  isPublic: Boolean!
+  language: String!
+  picture: String!
+  pin: String!
+  pinTimeout: Int!
+  stars: Int!
+  tokenVersion: Int!
+  username: String!
+}

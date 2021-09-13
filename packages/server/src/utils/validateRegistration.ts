@@ -1,15 +1,15 @@
 import { getConnection } from 'typeorm';
 import isEmail from 'validator/lib/isEmail';
-import { User } from '../entities/User';
-import type { UserRegistrationInfo } from '../types/inputs/UserRegistrationInfo';
-import type { FieldError } from '../types/responses/FieldError';
+import { User } from '../entities/user.entity';
+import type { RegisterUserInput } from '../modules/user/dto/register.input';
+import type { FieldError } from '../types/responses/field-error.model';
 
 export const validateRegistration = async ({
     email,
     username,
     password,
-}: UserRegistrationInfo): Promise<FieldError[]> => {
-    if (!isEmail(email))
+}: RegisterUserInput): Promise<FieldError[]> => {
+    if (!isEmail(String(email)))
         return [
             {
                 field: 'email',

@@ -1,7 +1,6 @@
+import { buildSchema as buildGraphqlSchema } from '@nestjs/graphql';
 import { resolve } from 'path';
-import { buildSchema as buildGraphqlSchema } from 'type-graphql';
-import { Container } from '../internal';
-import type { IContext } from '../types/interfaces/IContext';
+import type { IContext } from '../types/interfaces/context.interface';
 import type { GraphQLSchema } from 'graphql';
 
 export const buildSchema = (): Promise<GraphQLSchema> =>
@@ -14,5 +13,4 @@ export const buildSchema = (): Promise<GraphQLSchema> =>
             commentDescriptions: true,
             sortedSchema: true,
         },
-        container: Container,
     });

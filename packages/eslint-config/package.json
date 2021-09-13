@@ -13,8 +13,7 @@
     "typings": "lib/index.d.ts",
     "scripts": {
         "build": "tsc -b tsconfig.json",
-        "build:watch": "tsc -b --watch",
-        "test": "jest --detectOpenHandles"
+        "build:watch": "tsc -b --watch"
     },
     "dependencies": {
         "@graphql-eslint/eslint-plugin": "^0.9.1",

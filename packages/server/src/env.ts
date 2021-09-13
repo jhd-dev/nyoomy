@@ -41,6 +41,7 @@ export const __test__: boolean = NODE_ENV === 'test';
  * @exports
  */
 export const PORT: number = parseInt(process.env.PORT!, 10);
+export const REDIS_PORT: number = parseInt(process.env.REDIS_PORT!, 10);
 export const PUBLIC_URL: URL = new URL(process.env.PUBLIC_URL!);
 /**
  * The name of the database used to store the model.

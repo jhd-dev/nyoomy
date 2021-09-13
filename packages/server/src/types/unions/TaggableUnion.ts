@@ -1,4 +1,4 @@
-import { createUnionType } from 'type-graphql';
+import { createUnionType } from '@nestjs/graphql';
 import {
     CounterMetric,
     TimerMetric,
