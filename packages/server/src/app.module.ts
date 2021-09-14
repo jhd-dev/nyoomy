@@ -23,15 +23,16 @@ import type { NestModule, MiddlewareConsumer } from '@nestjs/common';
 import type { Client as ConnectRedisClient } from 'connect-redis';
 
 const STATIC_PATH = join(__dirname, '../../web/dist');
-
-const localModules = [AuthModule, RedisModule, UserModule];
+const GRAPHQL_SCHEMA_PATH = join(__dirname, 'schema.graphql');
 
 @Module({
     imports: [
-        ...localModules,
+        AuthModule,
+        RedisModule,
+        UserModule,
         TypeOrmModule.forRoot(),
         GraphQLModule.forRoot({
-            autoSchemaFile: 'schema.graphql',
+            autoSchemaFile: GRAPHQL_SCHEMA_PATH,
             sortSchema: true,
             installSubscriptionHandlers: true,
             path: '/graphql',
@@ -41,7 +42,13 @@ const localModules = [AuthModule, RedisModule, UserModule];
             rootPath: STATIC_PATH,
             exclude: ['/api*'],
         }),
-        ConfigModule.forRoot({ load: [configuration], isGlobal: true }),
+        ConfigModule.forRoot({
+            load: [configuration],
+            ignoreEnvFile: true,
+            ignoreEnvVars: true,
+            isGlobal: true,
+            cache: false,
+        }),
     ],
     controllers: [AppController],
     providers: [AppService, Logger],
@@ -72,6 +79,7 @@ export class AppModule implements NestModule {
                     },
                 }),
                 passportInitialize(),
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                 passportSession()
             )
             .forRoutes('*');

@@ -1,13 +1,17 @@
-import type { IClientConfig } from './client.config';
-import type { IDatabaseConfig } from './database.config';
-import type { IEmailConfig } from './email.config';
-import type { IEnvConfig } from './env.config';
-import type { IRedisConfig } from './redis.config';
+import type { IAuthConfig } from './auth.config.interface';
+import type { IDatabaseConfig } from './database.config.interface';
+import type { IEmailTransporterConfig } from './email-transporter.config.interface';
+import type { IRedisConfig } from './redis.config.interface';
 
 export interface IConfiguration {
-    ENV: IEnvConfig;
-    CLIENT: IClientConfig;
-    DATABASE: IDatabaseConfig;
-    EMAIL_TRANSPORTER: IEmailConfig;
-    REDIS: IRedisConfig;
+    nodeEnv: string;
+    __dev__: boolean;
+    __prod__: boolean;
+    __test__: boolean;
+    port: number;
+    publicUri: string;
+    database: IDatabaseConfig;
+    redis: IRedisConfig;
+    auth: IAuthConfig;
+    emailTransporter: IEmailTransporterConfig;
 }
