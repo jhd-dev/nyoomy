@@ -4490,6 +4490,7 @@ __metadata:
     "@types/supertest": ^2.0.11
     "@types/validator": ^13.1.3
     apollo-server-express: ^3.3.0
+    apollo-server-plugin-base: ^3.2.0
     bcryptjs: ^2.4.3
     class-transformer: ^0.4.0
     class-validator: ^0.13.1
@@ -4500,6 +4501,7 @@ __metadata:
     express: ^4.17.1
     express-session: ^1.17.1
     graphql: ^15.5.0
+    graphql-query-complexity: ^0.9.0
     graphql-tools: ^7.0.4
     http-status-codes: ^2.1.4
     jest: ^26.6.3
@@ -12341,6 +12343,17 @@ __metadata:
   peerDependencies:
     graphql: ^0.13.0 || ^14.0.0 || ^15.0.0
   checksum: dfde1b07aefbc8747d1f6556ad9ff4c9dbd636b10c798c5bb82fbdc80ea1f89674960ed955724b80e8b92f521242375812324dbaf6379db996b2c3dfce285ddf
+  languageName: node
+  linkType: hard
+
+"graphql-query-complexity@npm:^0.9.0":
+  version: 0.9.0
+  resolution: "graphql-query-complexity@npm:0.9.0"
+  dependencies:
+    lodash.get: ^4.4.2
+  peerDependencies:
+    graphql: ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: 91fed27904883c445b62e55c4b15b8b6c6becf15f34e4f310eef2413c1f4bcdbe0f1071337478988e35b6b6bef0834ca1233cf2eccd3d29ecc50dff2a79ca6a5
   languageName: node
   linkType: hard
 

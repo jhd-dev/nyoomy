@@ -13,6 +13,7 @@ import { join } from 'path';
 import { RedisClient } from 'redis';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ComplexityPlugin } from './common/plugins/complexity.plugin';
 import { configuration } from './config/configuration';
 import { COOKIE_NAME } from './constants';
 import { REDIS_SECRET, __prod__ } from './env';
@@ -51,7 +52,7 @@ const GRAPHQL_SCHEMA_PATH = join(__dirname, 'schema.graphql');
         }),
     ],
     controllers: [AppController],
-    providers: [AppService, Logger],
+    providers: [AppService, Logger, ComplexityPlugin],
 })
 export class AppModule implements NestModule {
     public constructor(
