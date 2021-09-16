@@ -10,8 +10,8 @@ import {
     TreeParent,
     TreeLevelColumn,
 } from 'typeorm';
+import { User } from '../modules/user/models/user.entity';
 import Weekday, { weekdays } from '../types/enums/weekday.enum';
-import { User } from './user.entity';
 
 @Entity('todos')
 @Tree('materialized-path')

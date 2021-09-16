@@ -1,6 +1,6 @@
 import { getConnection } from 'typeorm';
 import isEmail from 'validator/lib/isEmail';
-import { User } from '../entities/user.entity';
+import { User } from '../modules/user/models/user.entity';
 import type { RegisterUserInput } from '../modules/user/dto/register.input';
 import type { FieldError } from '../types/responses/field-error.model';
 

@@ -14,7 +14,7 @@ import { Tag } from '../entities';
 import { TagService } from '../services/tag.service';
 import { AddTagInput } from '../types/inputs/add-tag.input';
 import { UpdateTagInput } from '../types/inputs/update-tag.input';
-import { IContext } from '../types/context.interface';
+import { IContext } from '../types/interfaces/context.interface';
 
 @Injectable()
 @Resolver(() => Tag)

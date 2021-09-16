@@ -4519,7 +4519,6 @@ __metadata:
     supertest: ^6.1.3
     ts-custom-error: ^3.2.0
     ts-node: ^9.1.1
-    type-graphql: ^1.1.1
     typeorm: ^0.2.32
     validator: ^13.6.0
   peerDependencies:
@@ -5324,7 +5323,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/glob@npm:*, @types/glob@npm:^7.1.1, @types/glob@npm:^7.1.3":
+"@types/glob@npm:*, @types/glob@npm:^7.1.1":
   version: 7.1.3
   resolution: "@types/glob@npm:7.1.3"
   dependencies:
@@ -5739,13 +5738,6 @@ __metadata:
   version: 0.16.1
   resolution: "@types/scheduler@npm:0.16.1"
   checksum: 0124c2e4dee5e9b8c8524fcd6b1b8ea0b807b132e593925db04cdcc92ca2779a0d27c79414e60454b4458361a4d8319fa2b59d20585054f21617d1e9acf46a6f
-  languageName: node
-  linkType: hard
-
-"@types/semver@npm:^7.3.3":
-  version: 7.3.6
-  resolution: "@types/semver@npm:7.3.6"
-  checksum: 36776caed9a5d80cc7e0dd32fc08ac762918273bef849c369a300895646f9126e9857c9235e130493cf1fb2ee77e44cd1b599eded4fcbd11803962936771506a
   languageName: node
   linkType: hard
 
@@ -12335,17 +12327,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphql-query-complexity@npm:^0.7.0":
-  version: 0.7.2
-  resolution: "graphql-query-complexity@npm:0.7.2"
-  dependencies:
-    lodash.get: ^4.4.2
-  peerDependencies:
-    graphql: ^0.13.0 || ^14.0.0 || ^15.0.0
-  checksum: dfde1b07aefbc8747d1f6556ad9ff4c9dbd636b10c798c5bb82fbdc80ea1f89674960ed955724b80e8b92f521242375812324dbaf6379db996b2c3dfce285ddf
-  languageName: node
-  linkType: hard
-
 "graphql-query-complexity@npm:^0.9.0":
   version: 0.9.0
   resolution: "graphql-query-complexity@npm:0.9.0"
@@ -12367,17 +12348,6 @@ __metadata:
   peerDependencies:
     graphql: 14.x || 15.x
   checksum: d564874ff42ad63f1555ec18f582bfef5a0ca36160cfc4bf20e22211eca6cf5beabb65961ef734817db441508eee81a9332d4d88fe19c335e39342e20f9f303a
-  languageName: node
-  linkType: hard
-
-"graphql-subscriptions@npm:^1.1.0":
-  version: 1.2.1
-  resolution: "graphql-subscriptions@npm:1.2.1"
-  dependencies:
-    iterall: ^1.3.0
-  peerDependencies:
-    graphql: ^0.10.5 || ^0.11.3 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
-  checksum: 9de788213f885de8c2b9cf45f9620d6bcbd7606796f96a1ff7761f0a5c60485e9abb534b8e3080564bc0e923ca24ed6677a24bab04581e646027248b3ebd4cfd
   languageName: node
   linkType: hard
 
@@ -14020,7 +13990,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"iterall@npm:1.3.0, iterall@npm:^1.2.1, iterall@npm:^1.3.0":
+"iterall@npm:1.3.0, iterall@npm:^1.2.1":
   version: 1.3.0
   resolution: "iterall@npm:1.3.0"
   checksum: 25ae2d07cf97fc35d43fa7af814839689416b83d3ade0fec97a62c58b7b9fad5ff89dd0ede99f2d67cae2697ffa6987f0ab10876f40ae6466e802609a05b1006
@@ -22434,7 +22404,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2, tslib@npm:^2.0.0, tslib@npm:^2.0.1, tslib@npm:^2.0.3, tslib@npm:^2.1.0, tslib@npm:~2.2.0":
+"tslib@npm:^2, tslib@npm:^2.0.0, tslib@npm:^2.0.3, tslib@npm:^2.1.0, tslib@npm:~2.2.0":
   version: 2.2.0
   resolution: "tslib@npm:2.2.0"
   checksum: 2d35468c470410871c5246e43f12dcb6d0fc363b617c176f26443b9530e5c5ee8448966892a42956168d8f495da7865bda33dfe82c26c91991e28999974a618f
@@ -22546,25 +22516,6 @@ resolve@^2.0.0-next.3:
   version: 0.8.1
   resolution: "type-fest@npm:0.8.1"
   checksum: f8c4b4249f52e8bea7a4fc55b3653c96c2d547240e4c772e001d02b7cc38b8c3eb493ab9fbe985a76a203cd1aa7044776b728a71ba12bf36e7131f989597885b
-  languageName: node
-  linkType: hard
-
-"type-graphql@npm:^1.1.1":
-  version: 1.1.1
-  resolution: "type-graphql@npm:1.1.1"
-  dependencies:
-    "@types/glob": ^7.1.3
-    "@types/node": "*"
-    "@types/semver": ^7.3.3
-    glob: ^7.1.6
-    graphql-query-complexity: ^0.7.0
-    graphql-subscriptions: ^1.1.0
-    semver: ^7.3.2
-    tslib: ^2.0.1
-  peerDependencies:
-    class-validator: ">=0.12.0"
-    graphql: ^15.3.0
-  checksum: 03da2350d6bc9a5e0dbfe7e838bac3e3ab1ebd3b6a48c406389bad3ac4e80c9115752ad3fd93f864c5e4d0fd611cec60dada0b8e5798d2135ec8f2cc41e98313
   languageName: node
   linkType: hard
 

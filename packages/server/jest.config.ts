@@ -1,15 +1,15 @@
 import 'reflect-metadata';
-import type { Config } from '@jest/types';
 import { defaults } from 'jest-config';
+import type { Config } from '@jest/types';
 
 // https://jestjs.io/docs/configuration
 const getJestConfig = (): Config.InitialOptions => ({
-    verbose: false,
-    moduleFileExtensions: [...defaults.moduleFileExtensions, 'ts', 'tsx'],
+    moduleFileExtensions: [...defaults.moduleFileExtensions, 'ts'],
     transform: {
-        '\\.([jt]sx?|json)$': 'babel-jest',
-        '.+\\.(svg|css|sass|scss|png|jpg|gif)$': 'jest-transform-stub',
+        '^.+\\.(t|j)s$': 'ts-jest',
     },
+    coverageDirectory: './coverage',
+    verbose: false,
 });
 
 export default getJestConfig;

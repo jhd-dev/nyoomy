@@ -2,7 +2,7 @@
 /* eslint-disable jsdoc/require-param */
 // import { getRepository } from 'typeorm';
 // import { User } from '../entities/User';
-import type { IContext } from '../../types/context.interface';
+import type { IContext } from '../../types/interfaces/context.interface';
 import type { MiddlewareFn } from '@nestjs/graphql';
 
 /**

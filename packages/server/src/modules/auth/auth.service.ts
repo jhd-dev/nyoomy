@@ -1,8 +1,13 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import {
+    BadRequestException,
+    HttpException,
+    HttpStatus,
+    Injectable,
+    UnauthorizedException,
+} from '@nestjs/common';
 import { compare, hash } from 'bcryptjs';
-import { InvalidCredentialsError } from '../../common/errors/InvalidCredentialsError';
-import { UserRepo } from '../user/user.repository';
+import { BAD_REQUEST } from 'http-status-codes';
+import { UserService } from '../user/user.service';
 import type { User } from '../../entities';
 import type { IUser } from '../user/interfaces/user.interface';
 import type { UserLoginInput } from './dto/login.input';
@@ -10,56 +15,81 @@ import type { RegisterUserInput } from './dto/register.input';
 
 @Injectable()
 export class AuthService {
-    public constructor(
-        @InjectRepository(UserRepo)
-        private readonly userRepo: UserRepo
-    ) {}
+    public constructor(private readonly userService: UserService) {}
 
-    public findById(id: string): Promise<IUser> {
-        return this.userRepo.findOneOrFail(id);
+    public async register({
+        password,
+        displayName,
+        ...registrationData
+    }: RegisterUserInput): Promise<IUser> {
+        const hashedPassword = await hash(password, 10);
+        try {
+            return this.userService.createUser({
+                ...registrationData,
+                displayName,
+                password: hashedPassword,
+            });
+        } catch (error) {
+            throw new HttpException(
+                'Something went wrong',
+                HttpStatus.BAD_REQUEST
+            );
+        }
     }
 
     public async validateUser({
         usernameOrEmail,
-        password,
-    }: UserLoginInput): Promise<User> {
-        const user: User | undefined = await this.userRepo.findOne({
-            where: usernameOrEmail.includes('@')
-                ? { email: usernameOrEmail }
-                : { username: usernameOrEmail },
-        });
-        if (user === undefined) {
-            throw new InvalidCredentialsError();
-        }
-
-        const isPasswordCorrect = await compare(password, user.password);
-        if (!isPasswordCorrect) {
-            throw new InvalidCredentialsError();
-        }
-
+        passwordInput,
+    }: UserLoginInput): Promise<User | null> {
+        const user = await this.userService.findByCredentials(usernameOrEmail);
+        if (user === undefined) return null;
+        await this.verifyPassword(passwordInput, user.password);
         return user;
     }
 
-    public async registerUser({
-        displayName,
-        username,
-        email,
-        password,
-    }: RegisterUserInput): Promise<User> {
-        const existingUser = await this.userRepo.findByEmail(email);
-        if (typeof existingUser !== 'undefined') {
-            throw new BadRequestException('Bad request: Registration failed.');
+    private async verifyPassword(
+        passwordInput: string,
+        hashedPassword: string
+    ): Promise<void> {
+        const isPasswordCorrect = await compare(passwordInput, hashedPassword);
+        if (!isPasswordCorrect) {
+            throw new UnauthorizedException('Invalid credentials.');
         }
-
-        const hashedPassword: string = await hash(password, 12);
-        const newUser = this.userRepo.create({
-            displayName,
-            username,
-            email,
-            password: hashedPassword,
-        });
-        await this.userRepo.save(newUser);
-
-        return newUser;
     }
+
+    // public async login({
+    //     usernameOrEmail,
+    //     passwordInput,
+    // }: UserLoginInput): Promise<User | null> {
+    //     const user = await this.userService.findByCredentials(usernameOrEmail);
+    //     if (user === undefined) return null;
+
+    //     const isPasswordCorrect = await compare(passwordInput, user.password);
+    //     if (!isPasswordCorrect) return null;
+
+    //     return user;
+    // }
+
+    // public async registerUser({
+    //     displayName,
+    //     username,
+    //     email,
+    //     password,
+    // }: RegisterUserInput): Promise<User> {
+    //     const existingUser = await this.userService.findByCredentials(email);
+    //     if (typeof existingUser !== 'undefined') {
+    //         throw new BadRequestException('Bad request: Registration failed.');
+    //     }
+
+    //     const hashedPassword: string = await hash(password, 12);
+    //     const newUser = this.userService.createUser({
+    //         username,
+    //         displayName,
+    //         email,
+    //         password: hashedPassword,
+    //     });
+    //     await this.userService.save(newUser);
+
+    //     return newUser;
+    // }
 }

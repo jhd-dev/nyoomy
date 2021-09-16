@@ -4,13 +4,13 @@ import { Injectable } from '@nestjs/common';
 import { Resolver, Mutation, Query, Args, ID, Context } from '@nestjs/graphql';
 import { COOKIE_NAME } from '@nyoomy/global';
 import { InvalidCredentialsError } from '../../common/errors/InvalidCredentialsError';
-import { User } from '../../entities/user.entity';
-import { IContext } from '../../types/context.interface';
+import { IContext } from '../../types/interfaces/context.interface';
 import { UserLoginInfo } from './dto/login.input';
 import { RegisterUserInput } from './dto/register.input';
 import { UpdatePasswordInput } from './dto/update-password.input';
 import { LoginResponse } from './models/login-response.model';
 import { RegistrationResponse } from './models/registration-response.model';
+import { User } from './models/user.entity';
 import { UserService } from './user.service';
 import type { FieldError } from '../../types/responses/field-error.model';
 
@@ -27,13 +27,6 @@ export class UserResolver {
         return this.userService.getCurrentUser(req?.session?.userId);
     }
 
-    /**
-     * Attempts to add a user to the database,
-     *
-     * @param {RegisterUserInput} param0 { displayName, email, username, password }
-     * @param id
-     * @returns {Promise<RegistrationResponse>} the user
-     */
     // @Mutation(() => RegistrationResponse)
     // public async registerUser(
     //     @Args('registrationInput')
@@ -125,7 +118,7 @@ export class UserResolver {
         @Args({ name: 'id', type: () => ID }) id: string
     ): Promise<boolean> {
         try {
-            await this.userService.delete(id);
+            await this.userService.deleteById(id);
             return true;
         } catch {
             return false;
@@ -138,7 +131,7 @@ export class UserResolver {
     ): Promise<boolean> {
         try {
             if (typeof req?.session?.userId !== 'string') return false;
-            await this.userService.delete(req.session.userId);
+            await this.userService.deleteById(req.session.userId);
             res.clearCookie(COOKIE_NAME);
             return true;
         } catch (err: unknown) {

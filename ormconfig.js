@@ -1,5 +1,15 @@
 const path = require('path');
 
+const ENTITY_PATH = path.join(__dirname, 'packages/server/src/**/*.entity.ts');
+const MIGRATION_PATH = path.join(
+    __dirname,
+    'packages/server/src/migration/**/*.ts'
+);
+const SUBSCRIBER_PATH = path.join(
+    __dirname,
+    'packages/server/src/**/*.subscriber.ts'
+);
+
 module.exports = [
     {
         name: 'production_connection',
@@ -13,18 +23,9 @@ module.exports = [
         logging: true,
         logNotifications: true,
         dropSchema: true,
-        entities: [path.join(__dirname, 'packages/server/src/entity/**/*.ts')],
-        migrations: [
-            path.join(__dirname, 'packages/server/src/migration/**/*.ts'),
-        ],
-        subscribers: [
-            path.join(__dirname, 'packages/server/src/subscriber/**/*.ts'),
-        ],
-        cli: {
-            entitiesDir: 'packages/server/src/entity',
-            migrationsDir: 'packages/server/src/migration',
-            subscribersDir: 'packages/server/src/subscriber',
-        },
+        entities: [ENTITY_PATH],
+        migrations: [MIGRATION_PATH],
+        subscribers: [SUBSCRIBER_PATH],
     },
     {
         name: 'development_connection',
@@ -38,14 +39,9 @@ module.exports = [
         logging: true,
         logNotifications: true,
         dropSchema: true,
-        entities: ['packages/server/src/entity/**/*.ts'],
-        migrations: ['packages/server/src/migration/**/*.ts'],
-        subscribers: ['packages/server/src/subscriber/**/*.ts'],
-        cli: {
-            entitiesDir: 'packages/server/src/entity',
-            migrationsDir: 'packages/server/src/migration',
-            subscribersDir: 'packages/server/src/subscriber',
-        },
+        entities: [ENTITY_PATH],
+        migrations: [MIGRATION_PATH],
+        subscribers: [SUBSCRIBER_PATH],
     },
     {
         name: 'default',
@@ -59,18 +55,9 @@ module.exports = [
         logging: true,
         logNotifications: true,
         dropSchema: true,
-        entities: [path.join(__dirname, 'packages/server/src/entity/**/*.ts')],
-        migrations: [
-            path.join(__dirname, 'packages/server/src/migration/**/*.ts'),
-        ],
-        subscribers: [
-            path.join(__dirname, 'packages/server/src/subscriber/**/*.ts'),
-        ],
-        cli: {
-            entitiesDir: 'packages/server/src/entity',
-            migrationsDir: 'packages/server/src/migration',
-            subscribersDir: 'packages/server/src/subscriber',
-        },
+        entities: [ENTITY_PATH],
+        migrations: [MIGRATION_PATH],
+        subscribers: [SUBSCRIBER_PATH],
     },
     {
         name: 'test_connection',
@@ -83,13 +70,8 @@ module.exports = [
         synchronize: true,
         logging: true,
         logNotifications: true,
-        entities: ['packages/server/src/entity/**/*.ts'],
-        migrations: ['packages/server/src/migration/**/*.ts'],
-        subscribers: ['packages/server/src/subscriber/**/*.ts'],
-        cli: {
-            entitiesDir: 'packages/server/src/entity',
-            migrationsDir: 'packages/server/src/migration',
-            subscribersDir: 'packages/server/src/subscriber',
-        },
+        entities: [ENTITY_PATH],
+        migrations: [MIGRATION_PATH],
+        subscribers: [SUBSCRIBER_PATH],
     },
 ];

@@ -1,6 +1,5 @@
-import 'reflect-metadata';
 import { EntityRepository, Repository } from 'typeorm';
-import { User } from '../../entities/user.entity';
+import { User } from './models/user.entity';
 import type { IUserRepo } from './interfaces/user.repository.interface';
 
 @EntityRepository(User)

@@ -1,4 +1,4 @@
-import type { IContext } from '../../types/context.interface';
+import type { IContext } from '../../types/interfaces/context.interface';
 import type { MiddlewareFn } from '@nestjs/graphql';
 
 interface ILogInput {

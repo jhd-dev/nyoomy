@@ -7,9 +7,9 @@ import {
     Entity,
     PrimaryGeneratedColumn,
 } from 'typeorm';
+import { User } from '../modules/user/models/user.entity';
 import CategoryIcon, { categoryIcons } from '../types/enums/category-icon';
 import { Taggable } from './taggable.entity';
-import { User } from './user.entity';
 
 @Entity('tags')
 @ObjectType()

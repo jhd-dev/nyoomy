@@ -12,3 +12,13 @@ export enum UserRole {
     USER,
     ADMIN,
 }
+
+class CounterMetric {
+    public interval: number;
+
+    public metric: Metric;
+}
+
+class Metric {
+    public label: string;
+}

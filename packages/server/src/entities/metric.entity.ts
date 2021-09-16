@@ -9,7 +9,7 @@ import {
     PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Taggable } from './taggable.entity';
-import { User } from './user.entity';
+import { User } from '../modules/user/models/user.entity';
 
 @Entity('metrics')
 @ObjectType()

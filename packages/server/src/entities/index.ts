@@ -18,7 +18,7 @@ import { TimerEntry } from './timer-entry.entity';
 import { TimerMetric } from './timer-metric.entity';
 import { Todo } from './todo.entity';
 import { TodoEntry } from './todo-entry.entity';
-import { User } from './user.entity';
+import { User } from '../modules/user/models/user.entity';
 
 const entities = [
     CounterEntry,
@@ -64,4 +64,4 @@ export * from './timer-entry.entity';
 export * from './timer-metric.entity';
 export * from './todo.entity';
 export * from './todo-entry.entity';
-export * from './user.entity';
+export * from '../modules/user/models/user.entity';
