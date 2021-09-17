@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Tag } from '../entities/tag.entity';
-import { Taggable } from '../entities/taggable.entity';
-import { User } from '../modules/user/models/user.entity';
-import type { AddTagInput } from '../types/inputs/add-tag.input';
-import type { UpdateTagInput } from '../types/inputs/update-tag.input';
+import { Tag } from '../../entities/tag.entity';
+import { Taggable } from '../../entities/taggable.entity';
+import { User } from '../user/models/user.entity';
+import type { AddTagInput } from '../../types/inputs/add-tag.input';
+import type { UpdateTagInput } from '../../types/inputs/update-tag.input';
 
 @Injectable()
 export class TagService {

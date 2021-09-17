@@ -1,35 +1,35 @@
-query MyJournals {
-    getMyJournals {
-        journalId
-        date
-        title
-        text
-        dailyWordGoal
-        isArchived
-    }
-}
+# query MyJournals {
+#     getMyJournals {
+#         journalId
+#         date
+#         title
+#         text
+#         dailyWordGoal
+#         isArchived
+#     }
+# }
 
-mutation AddJournal {
-    addJournal {
-        journalId
-        date
-        title
-        text
-        dailyWordGoal
-        isArchived
-    }
-}
+# mutation AddJournal {
+#     addJournal {
+#         journalId
+#         date
+#         title
+#         text
+#         dailyWordGoal
+#         isArchived
+#     }
+# }
 
-mutation UpdateJournal($updateInput: UpdateJournalInput!) {
-    updateJournal(updateInput: $updateInput) {
-        journalId
-        date
-        title
-        dailyWordGoal
-        isArchived
-    }
-}
+# mutation UpdateJournal($updateInput: UpdateJournalInput!) {
+#     updateJournal(updateInput: $updateInput) {
+#         journalId
+#         date
+#         title
+#         dailyWordGoal
+#         isArchived
+#     }
+# }
 
-mutation DeleteJournal($id: ID!) {
-    deleteJournal(id: $id)
-}
+# mutation DeleteJournal($id: ID!) {
+#     deleteJournal(id: $id)
+# }

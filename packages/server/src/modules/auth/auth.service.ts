@@ -1,12 +1,10 @@
 import {
-    BadRequestException,
     HttpException,
     HttpStatus,
     Injectable,
     UnauthorizedException,
 } from '@nestjs/common';
 import { compare, hash } from 'bcryptjs';
-import { BAD_REQUEST } from 'http-status-codes';
 import { UserService } from '../user/user.service';
 import type { User } from '../../entities';
 import type { IUser } from '../user/interfaces/user.interface';

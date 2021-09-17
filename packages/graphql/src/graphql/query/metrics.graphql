@@ -1,23 +1,23 @@
-query Metrics {
-    getCounters {
-        metricId
-        metricType
-        label
-        description
-        maximum
-        minimum
-        interval
-        date
-        count
-    }
-    getTimers {
-        metricId
-        metricType
-        label
-        description
-        date
-        goalLength
-        goalPerDay
-        startTime
-    }
-}
+# query Metrics {
+#     getCounters {
+#         metricId
+#         metricType
+#         label
+#         description
+#         maximum
+#         minimum
+#         interval
+#         date
+#         count
+#     }
+#     getTimers {
+#         metricId
+#         metricType
+#         label
+#         description
+#         date
+#         goalLength
+#         goalPerDay
+#         startTime
+#     }
+# }

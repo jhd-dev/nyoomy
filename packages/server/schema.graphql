@@ -2,19 +2,155 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+"""The icons available to accompany category/tag titles"""
+enum CategoryIcon {
+  GLOBE
+  ROCKET
+  STAR
+  WATER
+}
+
+type CounterMetric {
+  id: ID!
+  interval: Int!
+  maximum: Int!
+  metric: Metric!
+  metricType: MetricType!
+  minimum: Int!
+}
+
+type DailyFloatMetric {
+  id: ID!
+  max: Float!
+  metric: Metric!
+  metricType: MetricType!
+  min: Float!
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
 
+type Journal {
+  dailyWordGoal: Int!
+  id: ID!
+  isArchived: Boolean!
+  metric: Metric!
+  metricType: MetricType!
+}
+
+type Metric {
+  description: String!
+  id: ID!
+  isArchived: Boolean!
+  taggable: Taggable!
+  title: String!
+  user: User!
+}
+
+"""The types of metrics a user can create"""
+enum MetricType {
+  COUNTER
+  FLOAT
+  JOURNAL
+  SCALE
+  SELECTION
+  STRING
+  TIMER
+}
+
 type Mutation {
   deleteUser: Boolean!
   deleteUserById(id: ID!): Boolean!
+  login(input: UserLoginInput!): User
+  logout: Boolean!
+  registerUser(input: RegisterUserInput!): User!
   updateUserPassword(input: UpdatePasswordInput!): Boolean!
 }
 
 type Query {
   me: User
+}
+
+"""User registration data"""
+input RegisterUserInput {
+  displayName: String!
+  email: String!
+  password: String!
+  username: String!
+}
+
+"""A Numeric Rating Scale"""
+type Scale {
+  id: ID!
+  max: Int!
+  metric: Metric!
+  metricType: MetricType!
+  min: Int!
+}
+
+type SelectionCategory {
+  id: ID!
+  metric: SelectionMetric!
+  title: String!
+}
+
+type SelectionEntry {
+  datetime: DateTime!
+  id: ID!
+  metric: SelectionMetric!
+  selectedOptions: [SelectionOption!]!
+}
+
+"""A Numeric Rating Selection"""
+type SelectionMetric {
+  id: ID!
+  maxSelections: Int!
+  metric: Metric!
+  metricType: MetricType!
+  minSelections: Int!
+}
+
+type SelectionOption {
+  category: SelectionCategory!
+  id: ID!
+  metric: SelectionMetric!
+  selectingEntries: [SelectionEntry!]!
+  title: String!
+}
+
+type Tag {
+  icon: CategoryIcon
+  id: ID!
+  taggedItems: [Taggable!]!
+  title: String!
+  user: User!
+}
+
+type Taggable {
+  id: ID!
+  tags: [Tag!]!
+}
+
+type TimerMetric {
+  goalLength: Int!
+  goalPerDay: Int!
+  id: ID!
+  metric: Metric!
+  metricType: MetricType!
+}
+
+type Todo {
+  description: String!
+  doesRepeat: Boolean!
+  id: ID!
+  isArchived: Boolean!
+  isCompleted: Boolean!
+  repeatWeekdays: [Weekday!]!
+  subtasks: [Todo!]!
+  title: String!
+  user: User!
 }
 
 input UpdatePasswordInput {
@@ -23,19 +159,28 @@ input UpdatePasswordInput {
   username: String!
 }
 
+"""Centralized user reference"""
 type User {
-  bio: DateTime!
-  birthday: DateTime!
-  displayName: String!
+  createdAt: DateTime!
   email: String!
   id: ID!
   isEmailVerified: Boolean!
-  isPublic: Boolean!
-  language: String!
-  picture: String!
-  pin: String!
-  pinTimeout: Int!
   stars: Int!
-  tokenVersion: Int!
   username: String!
+}
+
+input UserLoginInput {
+  passwordInput: String!
+  usernameOrEmail: String!
+}
+
+"""The days of the week"""
+enum Weekday {
+  FRIDAY
+  MONDAY
+  SATURDAY
+  SUNDAY
+  THURSDAY
+  TUESDAY
+  WEDNESDAY
 }

@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Scale } from '../entities';
-import type { UpdateScaleEntryInput } from '../types/inputs/update-scale-entry.input';
-import type { ScaleResponse } from '../types/responses/scale.model';
+import { Scale } from '../../entities';
+import type { UpdateScaleEntryInput } from '../../types/inputs/update-scale-entry.input';
+import type { ScaleResponse } from '../../types/responses/scale.model';
 
 @Injectable()
 export class ScaleService {

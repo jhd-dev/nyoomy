@@ -15,7 +15,7 @@
         "build": "yarn generate && yarn build:ts",
         "build:ts": "tsc -p tsconfig.json",
         "watch": "concurrently -n \"gql,tsc\" \"yarn generate:watch\" \"yarn watch:ts\"",
-        "watch:ts": "tsc -w -p tsconfigjson",
+        "watch:ts": "tsc -w -p tsconfig.json",
         "generate": "graphql-codegen --config ./codegen.yml",
         "generate:watch": "graphql-codegen --config --watch ./codegen.yml"
     },

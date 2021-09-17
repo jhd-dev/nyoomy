@@ -26,7 +26,7 @@ export class Profile implements IProfile {
     public displayName: string;
 
     @Column('boolean', { default: true })
-    @Field(() => Boolean)
+    @Field()
     public isPublic: boolean;
 
     @Column('text', { default: '' })

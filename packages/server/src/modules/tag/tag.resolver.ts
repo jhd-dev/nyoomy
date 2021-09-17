@@ -9,12 +9,12 @@ import {
     ID,
     UseMiddleware,
 } from '@nestjs/graphql';
-import { isAuthorized } from '../common/middleware/isAuthorized';
-import { Tag } from '../entities';
-import { TagService } from '../services/tag.service';
-import { AddTagInput } from '../types/inputs/add-tag.input';
-import { UpdateTagInput } from '../types/inputs/update-tag.input';
-import { IContext } from '../types/interfaces/context.interface';
+import { isAuthorized } from '../../common/middleware/isAuthorized';
+import { Tag } from '../../entities';
+import { AddTagInput } from '../../types/inputs/add-tag.input';
+import { UpdateTagInput } from '../../types/inputs/update-tag.input';
+import { IContext } from '../../types/interfaces/context.interface';
+import { TagService } from './tag.service';
 
 @Injectable()
 @Resolver(() => Tag)

@@ -9,11 +9,11 @@ import {
     ID,
     UseMiddleware,
 } from '@nestjs/graphql';
-import { isAuthorized } from '../common/middleware/isAuthorized';
-import { Todo } from '../entities/todo.entity';
-import { TodoService } from '../services/todo.service';
-import { UpdateTodoInput } from '../types/inputs/update-todo.input';
-import { IContext } from '../types/interfaces/context.interface';
+import { isAuthorized } from '../../common/middleware/isAuthorized';
+import { Todo } from '../../entities/todo.entity';
+import { UpdateTodoInput } from '../../types/inputs/update-todo.input';
+import { IContext } from '../../types/interfaces/context.interface';
+import { TodoService } from './todo.service';
 
 @Injectable()
 @Resolver(() => Todo)

@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
+
 import { Injectable } from '@nestjs/common';
 import { Resolver, Mutation, Query, ID, Args, Context } from '@nestjs/graphql';
-import { isAuthorized } from '../common/middleware/isAuthorized';
-import { Scale } from '../entities/scale.entity';
-import { ScaleService } from '../services/scale.service';
-import { UpdateScaleInput } from '../types/inputs/update-scale.input';
-import { IContext } from '../types/interfaces/context.interface';
-import { ScaleResponse } from '../types/responses/scale.model';
+import { isAuthorized } from '../../common/middleware/isAuthorized';
+import { Scale } from '../../entities/scale.entity';
+import { UpdateScaleInput } from '../../types/inputs/update-scale.input';
+import { IContext } from '../../types/interfaces/context.interface';
+import { ScaleResponse } from '../../types/responses/scale.model';
+import { ScaleService } from './scale.service';
 
 @Injectable()
 @Resolver(() => Scale)

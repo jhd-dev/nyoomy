@@ -1,12 +1,5 @@
-query Users {
-    getAllUsers {
-        displayName
-        username
-    }
-}
-
 query Me {
-    currentUser {
+    me {
         id
         displayName
         username

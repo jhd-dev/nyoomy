@@ -1,9 +1,9 @@
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Todo } from '../entities/todo.entity';
-import { TodoEntry } from '../entities/todo-entry.entity';
-import Weekday, { weekdays } from '../types/enums/weekday.enum';
-import type { UpdateTodoInput } from '../types/inputs/update-todo.input';
+import { Todo } from '../../entities/todo.entity';
+import { TodoEntry } from '../../entities/todo-entry.entity';
+import Weekday, { weekdays } from '../../types/enums/weekday.enum';
+import type { UpdateTodoInput } from '../../types/inputs/update-todo.input';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()

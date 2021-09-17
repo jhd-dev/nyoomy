@@ -10,14 +10,6 @@ mutation Register(
         username: $username
         password: $password
     ) {
-        user {
-            id
-            displayName
-            username
-        }
-        errors {
-            field
-            message
-        }
+        id
     }
 }
