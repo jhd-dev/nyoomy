@@ -22,7 +22,8 @@
         "esModuleInterop": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "typeRoots": ["../../node_modules/@types", "src/**/*.d.ts"]
+        "typeRoots": ["../../node_modules/@types", "src/**/*.d.ts"],
+        "skipLibCheck": true
     },
     "exclude": ["node_modules"],
     "include": ["./src/**/*.tsx", "./src/**/*.ts"]

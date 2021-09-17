@@ -1,16 +1,12 @@
 import { Module } from '@nestjs/common';
-import { createClient } from 'redis';
-import { REDIS_PORT } from '../../env';
-
-export const REDIS_SYMBOL = Symbol('REDIS');
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { redisClient } from './providers/redis-client.provider';
+import { REDIS } from './redis.constants';
+import { RedisService } from './redis.service';
 
 @Module({
-    providers: [
-        {
-            provide: REDIS_SYMBOL,
-            useValue: createClient({ port: REDIS_PORT, host: 'localhost' }),
-        },
-    ],
-    exports: [REDIS_SYMBOL],
+    imports: [ConfigModule],
+    providers: [RedisService, redisClient, ConfigService],
+    exports: [RedisService, REDIS],
 })
 export class RedisModule {}

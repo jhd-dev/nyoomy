@@ -6,6 +6,7 @@ import { Profile } from '../user/models/profile.entity';
 import { UserModule } from '../user/user.module';
 import { UserRepo } from '../user/user.repository';
 import { UserService } from '../user/user.service';
+import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
 import { LocalAuthSerializer } from './providers/local.serializer';
 import { LocalStrategy } from './strategies/local.strategy';
@@ -17,6 +18,7 @@ import { LocalStrategy } from './strategies/local.strategy';
         TypeOrmModule.forFeature([Profile]),
     ],
     providers: [
+        AuthResolver,
         AuthService,
         LocalStrategy,
         LocalAuthSerializer,
