@@ -21,6 +21,6 @@
         "jest-transform-stub": "^2.0.0"
     },
     "peerDependencies": {
-        "typescript": "^4.2.4"
+        "typescript": "~4.2.4"
     }
 }
