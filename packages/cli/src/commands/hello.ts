@@ -1,7 +1,6 @@
-import { CommandModule } from 'yargs';
 import { BaseCommand } from './base';
 
-export class HelloCommand extends BaseCommand implements CommandModule {
+export class HelloCommand extends BaseCommand {
     public constructor() {
         super('hello', [], 'Print "Hello!"');
     }
