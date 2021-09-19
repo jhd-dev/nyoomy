@@ -1,28 +1,16 @@
-#!/usr/bin/env ts-node
+#!/usr/bin/env node
 
 import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
 import { SCRIPT_NAME } from './constants';
+import { HelloCommand } from './commands/hello';
 
-interface ICliArgs {
-    help: boolean;
-    _: (string | number)[];
-    $0: string;
-}
-type YargsResult = { argv: ICliArgs };
-
-const { argv }: YargsResult = yargs(hideBin(process.argv))
+yargs(hideBin(process.argv))
     .scriptName(SCRIPT_NAME)
     .usage('$0 [command] [...options]')
+    .command(new HelloCommand())
     .help()
-    .alias('help', 'h')
     .version(true)
+    .alias('help', 'h')
     .alias('version', 'v')
-    .command({
-        command: 'hello',
-        describe: 'Print "Hello!"',
-        handler(args) {
-            console.info('Hello!');
-            console.log(args);
-        },
-    });
+    .strict().argv;

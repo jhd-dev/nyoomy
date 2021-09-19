@@ -4180,13 +4180,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@nyoomy/cli@workspace:packages/cli"
   dependencies:
-    "@nyoomy/client": "workspace:*"
     "@types/yargs": ^16.0.1
+    axios: ^0.21.4
     chalk: ^4.1.1
-    reflect-metadata: ^0.1.13
     ts-node: ^9.1.1
     typescript: ~4.2.4
-    yargs: ^17.0.1
+    yargs: ^17.1.1
   languageName: unknown
   linkType: soft
 
@@ -7211,6 +7210,15 @@ __metadata:
   dependencies:
     follow-redirects: ^1.10.0
   checksum: 864fb7b5d077d236737f10adca53bf451a93f35a15271f56fba8da07265a02d26b7d881b935a6697dc6adb0549ea3e56d2eecb403edaa3bb78f6479901c10f69
+  languageName: node
+  linkType: hard
+
+"axios@npm:^0.21.4":
+  version: 0.21.4
+  resolution: "axios@npm:0.21.4"
+  dependencies:
+    follow-redirects: ^1.14.0
+  checksum: e6d42b269b599d36eb13be0671c237781f32e6ae72be824297c55a3e1ce63b22ba4f46bad5ab28da7d3bae50a72637d55c792cf803be1cf9de6a8bcd6d0dcc1a
   languageName: node
   linkType: hard
 
@@ -11634,6 +11642,16 @@ __metadata:
     debug:
       optional: true
   checksum: 0467b0f5c0d2ccde2d0e684c9346127d746fe27c79af8065e78164f7f88ca78b4873ee12b02e3e1e8d6b6a60dbacba7b002b0e773d1171e4f3a37bdf8423a577
+  languageName: node
+  linkType: hard
+
+"follow-redirects@npm:^1.14.0":
+  version: 1.14.4
+  resolution: "follow-redirects@npm:1.14.4"
+  peerDependenciesMeta:
+    debug:
+      optional: true
+  checksum: 93def3c22eba16caa4ff6f6956ccfda5a50e889545b1ba0046194dd8e368ff79ba6ef681b06e6dc7032b50bc93ca59e9441aa8143cb26f43f40a20bbd6374639
   languageName: node
   linkType: hard
 
@@ -23925,7 +23943,7 @@ typescript@~4.2.4:
   languageName: node
   linkType: hard
 
-"yargs@npm:^17.0.1":
+"yargs@npm:^17.0.1, yargs@npm:^17.1.1":
   version: 17.1.1
   resolution: "yargs@npm:17.1.1"
   dependencies:

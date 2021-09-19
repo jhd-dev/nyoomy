@@ -16,9 +16,6 @@
     "main": "bin/index.js",
     "module": "src/index.ts",
     "typings": "bin/index.d.ts",
-    "bin": {
-        "nyoomy-cli": "./bin/index.js"
-    },
     "scripts": {
         "start": "yarn run watch",
         "build": "tsc -p tsconfig.json",
