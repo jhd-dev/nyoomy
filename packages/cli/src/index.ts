@@ -1,23 +1,28 @@
 #!/usr/bin/env ts-node
 
-import NyoomyClient from '@nyoomy/client';
-import yargs from 'yargs';
+import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
+import { SCRIPT_NAME } from './constants';
 
 interface ICliArgs {
     help: boolean;
     _: (string | number)[];
     $0: string;
 }
+type YargsResult = { argv: ICliArgs };
 
-const argv: ICliArgs = yargs(hideBin(process.argv))
-    .scriptName('nyoomy-cli')
-    .usage('$0 ???')
+const { argv }: YargsResult = yargs(hideBin(process.argv))
+    .scriptName(SCRIPT_NAME)
+    .usage('$0 [command] [...options]')
     .help()
     .alias('help', 'h')
-    .default('help', false)
-    .version(false).argv;
-
-console.log(argv);
-
-const client = new NyoomyClient({});
+    .version(true)
+    .alias('version', 'v')
+    .command({
+        command: 'hello',
+        describe: 'Print "Hello!"',
+        handler(args) {
+            console.info('Hello!');
+            console.log(args);
+        },
+    });
