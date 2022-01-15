@@ -1,5 +1,5 @@
-import { Argv, CommandModule } from 'yargs';
-import { IBaseCliArgs } from '../types';
+import type { IBaseCliArgs } from '../types';
+import type { Argv, CommandModule } from 'yargs';
 
 export abstract class BaseCommand implements CommandModule {
     public constructor(

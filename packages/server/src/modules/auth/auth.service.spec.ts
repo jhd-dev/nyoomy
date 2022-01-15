@@ -1,6 +1,6 @@
 import { AuthService } from './auth.service';
 import { Test, TestingModule } from '@nestjs/testing';
-import { LocalStrategy } from './strategies/local.strategy';
+import { LocalStrategy } from './providers/strategies/local.strategy';
 import { UserRepo } from '../user/user.repository';
 import { UserService } from '../user/user.service';
 import { LocalAuthSerializer } from './providers/local.serializer';
@@ -19,6 +19,7 @@ const mockUser = () => ({
 
 describe('AuthService', () => {
     let authService: AuthService;
+    let userService: UserService;
 
     const mockUserRepo = {
         findOne: jest.fn().mockImplementation(() => mockUser()),
@@ -40,9 +41,6 @@ describe('AuthService', () => {
                     provide: getRepositoryToken(User),
                     useValue: mockUserRepo,
                 },
-                {
-                    provide:
-                }
             ],
         }).compile();
 
@@ -55,18 +53,15 @@ describe('AuthService', () => {
 
     describe('findById', () => {
         it('should return a user', async () => {
-            expect(await authService.findById('')).toBe(mockUser());
+            expect(await userService.findById('')).toBe(mockUser());
         });
     });
 
     describe('validateUser', () => {
         it('should return the validated user', async () => {
-            expect(
-                await authService.validateUser({
-                    usernameOrEmail: '',
-                    passwordInput: '',
-                })
-            ).toBe(mockUser());
+            expect(await authService.validateCredentials('', '')).toBe(
+                mockUser()
+            );
         });
     });
 });

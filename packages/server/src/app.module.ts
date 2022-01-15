@@ -5,6 +5,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import RedisStore from 'connect-redis';
 import expressSession from 'express-session';
+import helmet from 'helmet';
 import {
     session as passportSession,
     initialize as passportInitialize,
@@ -15,11 +16,12 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ComplexityPlugin } from './common/plugins/complexity.plugin';
 import { configuration } from './config/configuration';
-import { COOKIE_NAME } from './constants';
+import { COOKIE_NAME, REDIS_SESSION_PREFIX } from './constants';
 import { AuthModule } from './modules/auth/auth.module';
 import { REDIS } from './modules/redis/redis.constants';
 import { RedisModule } from './modules/redis/redis.module';
 import { UserModule } from './modules/user/user.module';
+import type { IContext } from './types/interfaces/context.interface';
 import type { NestModule, MiddlewareConsumer } from '@nestjs/common';
 import type { Client as ConnectRedisClient } from 'connect-redis';
 
@@ -37,7 +39,14 @@ const GRAPHQL_SCHEMA_PATH = join(__dirname, '../schema.graphql');
             sortSchema: true,
             installSubscriptionHandlers: true,
             path: '/graphql',
-            playground: false,
+            playground: {
+                settings: {
+                    'request.credentials': 'include',
+                    'editor.reuseHeaders': false,
+                },
+            },
+            context: ({ req, res, user }: IContext) => ({ req, res, user }),
+            cors: { origin: 'http://localhost:4001', credentials: true },
         }),
         ServeStaticModule.forRoot({
             rootPath: STATIC_PATH,
@@ -56,27 +65,35 @@ const GRAPHQL_SCHEMA_PATH = join(__dirname, '../schema.graphql');
 })
 export class AppModule implements NestModule {
     public constructor(
-        @Inject(REDIS) private readonly redis: RedisClient
-    ) // private readonly configService: ConfigService
-    {}
+        @Inject(REDIS) private readonly redis: RedisClient,
+        private readonly configService: ConfigService
+    ) {}
 
     public configure(consumer: MiddlewareConsumer): void {
         Logger.log('Configuring AppModule');
         const Store = RedisStore(expressSession);
         consumer
             .apply(
+                // helmet(),
                 expressSession({
                     name: COOKIE_NAME,
                     store: new Store({
                         client: this.redis as ConnectRedisClient,
                         logErrors: true,
+                        prefix: REDIS_SESSION_PREFIX,
                     }),
-                    secret: 'FSDF', // this.configService.get<string>('redis.secret')!,
+                    secret: this.configService.get<string>(
+                        'redis.secret',
+                        'secret'
+                    ),
                     resave: false,
                     saveUninitialized: false,
                     cookie: {
                         httpOnly: true,
-                        secure: true, // this.configService.get<boolean>('__prod__')!,
+                        secure: this.configService.get<boolean>(
+                            '__prod__',
+                            true
+                        ),
                         sameSite: 'lax',
                         maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year
                     },

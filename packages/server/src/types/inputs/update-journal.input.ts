@@ -1,5 +1,5 @@
 import { Field, ID, InputType, Int } from '@nestjs/graphql';
-import type { JournalResponse } from './responses/JournalResponse';
+import type { JournalResponse } from '../responses/journal.model';
 
 @InputType()
 export class UpdateJournalInput implements Partial<JournalResponse> {
@@ -7,7 +7,7 @@ export class UpdateJournalInput implements Partial<JournalResponse> {
     public readonly journalId: string;
 
     @Field()
-    public readonly date: string;
+    public readonly dateString: string;
 
     @Field({ nullable: true })
     public title?: string;

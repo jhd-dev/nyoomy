@@ -1,5 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import MetricType from './MetricType';
+import MetricType from '../enums/metric-type.enum';
 
 /**
  * A single day's CounterMetric Entry, including the metric's info

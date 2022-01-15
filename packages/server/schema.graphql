@@ -32,12 +32,22 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type FieldError {
+  field: String!
+  message: String!
+}
+
 type Journal {
   dailyWordGoal: Int!
   id: ID!
   isArchived: Boolean!
   metric: Metric!
   metricType: MetricType!
+}
+
+type LoginResponse {
+  error: String
+  user: SafeUser
 }
 
 type Metric {
@@ -63,9 +73,9 @@ enum MetricType {
 type Mutation {
   deleteUser: Boolean!
   deleteUserById(id: ID!): Boolean!
-  login(input: UserLoginInput!): User
+  login(input: UserLoginInput!): LoginResponse
   logout: Boolean!
-  registerUser(input: RegisterUserInput!): User!
+  registerUser(input: RegisterUserInput!): RegistrationResponse!
   updateUserPassword(input: UpdatePasswordInput!): Boolean!
 }
 
@@ -78,6 +88,22 @@ input RegisterUserInput {
   displayName: String!
   email: String!
   password: String!
+  username: String!
+}
+
+type RegistrationResponse {
+  errors: [FieldError!]
+  user: SafeUser
+}
+
+"""User data excluding authentication-unsafe fields"""
+type SafeUser {
+  createdAt: DateTime!
+  email: String!
+  googleId: String!
+  id: ID!
+  isEmailVerified: Boolean!
+  stars: Int!
   username: String!
 }
 
@@ -163,6 +189,7 @@ input UpdatePasswordInput {
 type User {
   createdAt: DateTime!
   email: String!
+  googleId: String!
   id: ID!
   isEmailVerified: Boolean!
   stars: Int!

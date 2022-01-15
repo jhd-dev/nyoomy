@@ -20,10 +20,8 @@
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
         "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
-
-        "typeRoots": ["../../node_modules/@types", "src/**/*.d.ts"]
+        "experimentalDecorators": true
     },
     "exclude": ["node_modules"],
-    "include": ["./src/**/*.tsx", "./src/**/*.ts"]
+    "include": ["./src/**/*.ts"]
 }

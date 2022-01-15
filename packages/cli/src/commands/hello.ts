@@ -5,7 +5,7 @@ export class HelloCommand extends BaseCommand {
         super('hello', [], 'Print "Hello!"');
     }
 
-    public handler() {
+    public handler(): void {
         console.info('Hello!');
     }
 }

@@ -2,7 +2,6 @@
 
 import { Injectable } from '@nestjs/common';
 import { Resolver, Mutation, Query, ID, Args, Context } from '@nestjs/graphql';
-import { isAuthorized } from '../../common/middleware/isAuthorized';
 import { Scale } from '../../entities/scale.entity';
 import { UpdateScaleInput } from '../../types/inputs/update-scale.input';
 import { IContext } from '../../types/interfaces/context.interface';
@@ -16,8 +15,8 @@ export class ScaleResolver {
 
     @Query(() => [ScaleResponse])
     public getAllScales(
-        @Args('excludeArchived', () => Boolean, { defaultValue: false })
-        excludingArchived: boolean
+        @Args('excludeArchived', { type: () => Boolean })
+        excludingArchived: boolean = false
     ): Promise<ScaleResponse[]> {
         return this.scaleService.getAllScales(excludingArchived);
     }
@@ -25,8 +24,8 @@ export class ScaleResolver {
     @Query(() => [ScaleResponse])
     public async getMyScales(
         @Context() { req }: IContext,
-        @Args('excludeArchived', () => Boolean, { defaultValue: false })
-        excludingArchived: boolean
+        @Args('excludeArchived', { type: () => Boolean })
+        excludingArchived: boolean = false
     ): Promise<ScaleResponse[]> {
         const userId = req?.session?.userId;
         if (userId == null) return [];
@@ -58,7 +57,7 @@ export class ScaleResolver {
 
     @Mutation(() => Boolean)
     public async deleteScale(
-        @Args('id', () => ID) id: string
+        @Args('id', { type: () => ID }) id: string
     ): Promise<boolean> {
         try {
             await this.scaleService.deleteScale(id);

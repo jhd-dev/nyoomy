@@ -10,8 +10,7 @@ import MetricType from '../../types/enums/metric-type.enum';
 
 export const MetricUnion = createUnionType({
     name: 'Metric',
-    types: () =>
-        [CounterMetric, TimerMetric, Journal, Scale, SelectionMetric] as const,
+    types: () => [CounterMetric, TimerMetric, Journal, Scale, SelectionMetric],
     resolveType: (value) => {
         switch (value.metricType) {
             case MetricType.COUNTER:

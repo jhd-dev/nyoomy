@@ -16,7 +16,7 @@ export class Profile implements IProfile {
     @Field(() => ID)
     public readonly id: number;
 
-    @OneToOne(() => User, { eager: true, onDelete: 'CASCADE' })
+    @OneToOne(() => User, { eager: true, cascade: true, onDelete: 'CASCADE' })
     @JoinColumn()
     @Field(() => User)
     public readonly user: User;

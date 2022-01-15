@@ -1,36 +1,41 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PassportSerializer } from '@nestjs/passport';
 import { UserService } from '../../user/user.service';
+import { AuthService } from '../auth.service';
 import type { IUser } from '../../user/interfaces/user.interface';
+import type { SafeUser } from '../../user/models/safe-user.model';
+import type { User } from '../../user/models/user.entity';
 import type { IAuthPayload } from '../interfaces/auth-payload.interface';
 
 @Injectable()
 export class LocalAuthSerializer extends PassportSerializer {
-    public constructor(private readonly userService: UserService) {
+    public constructor(
+        private readonly authService: AuthService,
+        private readonly userService: UserService
+    ) {
         super();
     }
 
     public serializeUser(
-        user: IUser,
-        done: (err: Error | null, user: IAuthPayload) => void
+        user: User,
+        done: (err: Error | null, user: User) => void
     ): void {
-        done(null, { id: user.id });
+        console.log('serializeUser');
+        done(null, user);
     }
 
     public async deserializeUser(
-        { id }: IAuthPayload,
-        done: (err: Error | null, user: Omit<IUser, 'password'>) => void
+        { id }: User,
+        done: (err: Error | null, user: SafeUser) => void
     ): Promise<void> {
+        console.log('deserializeuser');
         const user = await this.userService.findById(id, false);
-        if (typeof user === 'undefined') {
+        if (user == null) {
             throw new HttpException(
                 'Failed to deserialize user.',
                 HttpStatus.BAD_REQUEST
             );
         }
-
-        const { password, ...secureUser } = user;
-        void password;
-        done(null, secureUser);
+        done(null, this.authService.makeUserSafe(user));
     }
 }

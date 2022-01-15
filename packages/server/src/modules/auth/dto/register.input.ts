@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { Field, InputType } from '@nestjs/graphql';
 import { IsEmail, Length } from 'class-validator';
 

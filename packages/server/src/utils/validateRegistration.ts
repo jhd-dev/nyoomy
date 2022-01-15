@@ -1,7 +1,7 @@
 import { getConnection } from 'typeorm';
 import isEmail from 'validator/lib/isEmail';
 import { User } from '../modules/user/models/user.entity';
-import type { RegisterUserInput } from '../modules/user/dto/register.input';
+import type { RegisterUserInput } from '../modules/auth/dto/register.input';
 import type { FieldError } from '../types/responses/field-error.model';
 
 export const validateRegistration = async ({

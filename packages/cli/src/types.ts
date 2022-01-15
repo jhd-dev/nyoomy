@@ -1,11 +1,11 @@
 export interface ICliArgs {
     help: boolean;
-    _: (string | number)[];
+    _: Array<string | number>;
     $0: string;
 }
 
 export interface IBaseCliArgs {
     [argName: string]: unknown;
-    _: (string | number)[];
+    _: Array<string | number>;
     $0: string;
 }

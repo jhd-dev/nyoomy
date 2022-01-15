@@ -1,18 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import 'reflect-metadata';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger, UseGuards } from '@nestjs/common';
 import { Resolver, Mutation, Query, Args, ID, Context } from '@nestjs/graphql';
 import { COOKIE_NAME } from '@nyoomy/global';
-import { InvalidCredentialsError } from '../../common/errors/InvalidCredentialsError';
+import { CurrentUser } from '../../common/decorators/user.decorator';
 import { IContext } from '../../types/interfaces/context.interface';
-import { UserLoginInfo } from './dto/login.input';
-import { RegisterUserInput } from './dto/register.input';
+import { AuthenticatedGuard } from '../auth/guards/authenticated.guard';
+import { GqlLocalAuthGuard } from '../auth/guards/gql-local-auth.guard';
 import { UpdatePasswordInput } from './dto/update-password.input';
-import { LoginResponse } from './models/login-response.model';
-import { RegistrationResponse } from './models/registration-response.model';
 import { User } from './models/user.entity';
 import { UserService } from './user.service';
-import type { FieldError } from '../../types/responses/field-error.model';
 
 /**
  * GraphQL resolver for the user table.
@@ -23,30 +20,26 @@ export class UserResolver {
     public constructor(private readonly userService: UserService) {}
 
     @Query(() => User, { nullable: true, name: 'me' })
-    public currentUser(@Context() { req }: IContext): Promise<User | null> {
-        return this.userService.getCurrentUser(req?.session?.userId);
+    @UseGuards(AuthenticatedGuard)
+    public getCurrentUser(@CurrentUser() user: User): User {
+        // console.log(req);
+        // const userId = req.user;
+        // console.log(userId);
+        // const user = await this.userService.getCurrentUser(userId);
+        console.log('me');
+        Logger.log(user);
+        return user;
     }
 
-    // @Mutation(() => RegistrationResponse)
+    // @Mutation(() => User)
     // public async registerUser(
-    //     @Args('registrationInput')
-    //     { displayName, email, username, password }: RegisterUserInput
-    // ): Promise<RegistrationResponse> {
-    //     const errors: FieldError[] =
-    //         await this.userService.validateRegistration(
-    //             displayName,
-    //             email,
-    //             username,
-    //             password
-    //         );
-    //     if (errors.length > 0) return { user: null, errors };
-    //     const user = await this.userService.register(
-    //         displayName,
-    //         email,
-    //         username,
-    //         password
-    //     );
-    //     return { user, errors: [] };
+    //     @Args({ name: 'input', type: () => RegisterUserInput })
+    //     input: RegisterUserInput,
+    //     @Context() ctx: IContext
+    // ): Promise<User> {
+    //     const user = await this.authService.registerUser(input);
+    //     ctx.req.session.user = user;
+    //     return user;
     // }
 
     // @Mutation(() => RegistrationResponse)
@@ -57,60 +50,6 @@ export class UserResolver {
     //         username: 'q',
     //         password: 'qqqqqqqq',
     //     });
-    // }
-
-    // @Mutation(() => LoginResponse)
-    // public async login(
-    //     @Args() { usernameOrEmail, password }: UserLoginInfo,
-    //     @Context() { req }: IContext
-    // ): Promise<LoginResponse> {
-    //     try {
-    //         const user = await this.userService.login(
-    //             usernameOrEmail,
-    //             password
-    //         );
-    //         if (req == null) throw new Error('res not defined');
-    //         req.session.userId = user.id;
-    //         return { user, error: null };
-    //     } catch (error: unknown) {
-    //         if (error instanceof InvalidCredentialsError) {
-    //             return {
-    //                 user: null,
-    //                 error: 'Your username or password was incorrect.',
-    //             };
-    //         }
-    //         console.error(error);
-    //         throw error;
-    //     }
-    // }
-
-    // @Mutation(() => Boolean)
-    // public logout(@Context() { req, res }: IContext): Promise<boolean> {
-    //     return new Promise((resolve, reject) =>
-    //         // eslint-disable-next-line promise/prefer-await-to-callbacks
-    //         req.session.destroy((err: unknown): void => {
-    //             res.clearCookie(COOKIE_NAME);
-    //             if (err != null) {
-    //                 console.error(err);
-    //                 reject(new Error(String(err)));
-    //             }
-    //             resolve(true);
-    //         })
-    //     );
-    // }
-
-    // @Mutation(() => Boolean)
-    // public async forgotPassword(
-    //     @Args('email') email: string
-    // ): Promise<boolean> {
-    //     await this.userService.sendForgotPasswordEmail(email);
-    //     return true;
-    // }
-
-    // @Mutation(() => Boolean)
-    // public async resetPassword(@Args('email') email: string): Promise<boolean> {
-    //     await this.userService.resetPassword(email);
-    //     return true;
     // }
 
     @Mutation(() => Boolean)

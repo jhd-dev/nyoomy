@@ -6,14 +6,12 @@ import {
     Scale,
     SelectionMetric,
     DailyFloatMetric,
-    DailyStringMetric,
 } from '../../entities';
 import MetricType from '../../types/enums/metric-type.enum';
 
 export const MetricUnion = createUnionType({
     name: 'Metric',
-    types: () =>
-        [CounterMetric, TimerMetric, Journal, Scale, SelectionMetric] as const,
+    types: () => [CounterMetric, TimerMetric, Journal, Scale, SelectionMetric],
     resolveType: (value) => {
         switch (value.metricType) {
             case MetricType.COUNTER:
@@ -28,8 +26,6 @@ export const MetricUnion = createUnionType({
                 return SelectionMetric;
             case MetricType.FLOAT:
                 return DailyFloatMetric;
-            case MetricType.STRING:
-                return DailyStringMetric;
             default:
                 return undefined;
         }

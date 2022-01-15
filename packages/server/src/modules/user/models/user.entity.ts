@@ -42,6 +42,10 @@ export class User implements IUser {
     @Field()
     public isEmailVerified: boolean;
 
+    @Column('text', { nullable: true })
+    @Field()
+    public googleId?: string;
+
     @Column('varchar', { nullable: true })
     @HideField()
     public resetPasswordToken?: string;

@@ -1,33 +1,34 @@
+/* eslint-disable @typescript-eslint/require-await */
+/* eslint-disable require-await */
+import { UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
 import { COOKIE_NAME } from '../../constants';
 import { IContext } from '../../types/interfaces/context.interface';
-import { User } from '../user/models/user.entity';
 import { AuthService } from './auth.service';
 import { UserLoginInput } from './dto/login.input';
 import { RegisterUserInput } from './dto/register.input';
+import { GqlLocalAuthGuard } from './guards/gql-local-auth.guard';
+import { LoginResponse } from './models/login-response.model';
+import { RegistrationResponse } from './models/registration-response.model';
+import type { User } from '../user/models/user.entity';
 
 @Resolver()
 export class AuthResolver {
     public constructor(private readonly authService: AuthService) {}
 
-    @Mutation(() => User, { name: 'registerUser' })
-    public register(
-        @Args({ name: 'input', type: () => RegisterUserInput })
-        input: RegisterUserInput
-    ): Promise<User> {
-        return this.authService.register(input);
-    }
-
-    @Mutation(() => User, { nullable: true })
+    @Mutation(() => LoginResponse, { nullable: true })
+    @UseGuards(GqlLocalAuthGuard)
     public login(
         @Args({ name: 'input', type: () => UserLoginInput })
         input: UserLoginInput
-    ): Promise<User | null> {
-        return this.authService.validateUser(input);
+    ): Promise<LoginResponse> {
+        console.log('@login');
+        return this.authService.getLoginResponse(input);
     }
 
     @Mutation(() => Boolean)
     public logout(@Context() { req, res }: IContext): Promise<boolean> {
+        console.log('authresolver.logout');
         return new Promise((resolve, reject) =>
             // eslint-disable-next-line promise/prefer-await-to-callbacks
             req.session.destroy((err: unknown): void => {
@@ -39,5 +40,12 @@ export class AuthResolver {
                 resolve(true);
             })
         );
+    }
+
+    @Mutation(() => RegistrationResponse)
+    public registerUser(
+        @Args('input') input: RegisterUserInput
+    ): Promise<RegistrationResponse> {
+        return this.authService.registerUser(input);
     }
 }

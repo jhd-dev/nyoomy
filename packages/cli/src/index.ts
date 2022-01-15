@@ -1,12 +1,10 @@
-#!/usr/bin/env node
-
-import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
-import { SCRIPT_NAME } from './constants';
+import yargs from 'yargs/yargs';
 import { HelloCommand } from './commands/hello';
 import { WhoAmICommand } from './commands/whoami';
+import { SCRIPT_NAME } from './constants';
 
-yargs(hideBin(process.argv))
+void yargs(hideBin(process.argv))
     .scriptName(SCRIPT_NAME)
     .usage('$0 [command] [...options]')
     .command(new HelloCommand())

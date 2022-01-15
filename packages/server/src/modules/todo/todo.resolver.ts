@@ -1,15 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import { Injectable } from '@nestjs/common';
-import {
-    Resolver,
-    Mutation,
-    Arg,
-    Query,
-    Ctx,
-    ID,
-    UseMiddleware,
-} from '@nestjs/graphql';
-import { isAuthorized } from '../../common/middleware/isAuthorized';
+import { Resolver, Mutation, Args, Query, Context, ID } from '@nestjs/graphql';
 import { Todo } from '../../entities/todo.entity';
 import { UpdateTodoInput } from '../../types/inputs/update-todo.input';
 import { IContext } from '../../types/interfaces/context.interface';
@@ -23,8 +14,8 @@ export class TodoResolver {
     @Query(() => [Todo])
     public async myTodos(
         @Context() { req }: IContext,
-        @Args('excludeArchived', () => Boolean, { defaultValue: false })
-        excludingArchived: boolean
+        @Args('excludeArchived', { type: () => Boolean })
+        excludingArchived: boolean = false
     ): Promise<Todo[]> {
         const userId = req?.session?.userId;
         if (userId == null) return [];
@@ -54,7 +45,7 @@ export class TodoResolver {
 
     @Mutation(() => Boolean)
     public async deleteTodo(
-        @Args('id', () => ID) id: string
+        @Args('id', { type: () => ID }) id: string
     ): Promise<boolean> {
         try {
             await this.todoService.deleteTodo(id);

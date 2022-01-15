@@ -1,10 +1,10 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { User } from './user.entity';
+import { SafeUser } from '../../user/models/safe-user.model';
 
 @ObjectType()
 export class LoginResponse {
-    @Field(() => User, { nullable: true })
-    public user: User | null;
+    @Field(() => SafeUser, { nullable: true })
+    public user: SafeUser | null;
 
     @Field(() => String, { nullable: true })
     public error: string | null;

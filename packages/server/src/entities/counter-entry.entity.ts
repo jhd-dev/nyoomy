@@ -1,4 +1,4 @@
-import 'reflect-metadata';
+// import 'reflect-metadata';
 import { Field, ObjectType, Int, ID } from '@nestjs/graphql';
 import {
     Column,

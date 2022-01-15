@@ -1,5 +1,5 @@
 import { Field, ID, Int, InputType } from '@nestjs/graphql';
-import type { CounterMetricDailyEntry } from '../CounterMetricDailyEntry';
+import type { CounterMetricDailyEntry } from '../responses/counter-metric-daily-entry.model';
 
 @InputType()
 export class UpdateCounterMetricInput
@@ -9,7 +9,7 @@ export class UpdateCounterMetricInput
     public readonly metricId: string;
 
     @Field()
-    public readonly date: string;
+    public readonly dateString: string;
 
     @Field({ nullable: true })
     public label?: string;

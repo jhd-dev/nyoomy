@@ -5,14 +5,14 @@ documents: "src/**/*.graphql"
 #   afterAllFileWrite:
 #     - prettier --write
 generates:
-  src/generated/graphql.ts:
-    plugins:
-      - add:
-          content: "/* eslint-disable */"
-      - jsdoc
-      - typescript
-      - typescript-operations
-      - typescript-resolvers
+  # src/generated/graphql.ts:
+  #   plugins:
+  #     - add:
+  #         content: "/* eslint-disable */"
+  #     - jsdoc
+  #     - typescript
+  #     - typescript-operations
+  #     - typescript-resolvers
   src/generated/graphql-hooks.ts:
     plugins:
       - add:

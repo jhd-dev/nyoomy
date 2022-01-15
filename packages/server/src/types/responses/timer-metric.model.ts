@@ -1,5 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import MetricType from './MetricType';
+import MetricType from '../enums/metric-type.enum';
 
 @ObjectType()
 export class TimerMetricPayload {
@@ -24,6 +24,6 @@ export class TimerMetricPayload {
     @Field(() => Int)
     public goalPerDay: number;
 
-    @Field(, { nullable: true })
+    @Field(() => String, { nullable: true })
     public startTime: string | null;
 }

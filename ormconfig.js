@@ -1,6 +1,11 @@
 const path = require('path');
 
-const ENTITY_PATH = path.join(__dirname, 'packages/server/src/**/*.entity.ts');
+const ENTITY_PATH = path.join(
+    __dirname,
+    'packages/server/src/',
+    '**',
+    '/*.entity.ts'
+);
 const MIGRATION_PATH = path.join(
     __dirname,
     'packages/server/src/migration/**/*.ts'

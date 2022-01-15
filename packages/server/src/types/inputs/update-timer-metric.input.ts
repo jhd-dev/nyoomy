@@ -1,5 +1,5 @@
 import { Field, ID, Int, InputType } from '@nestjs/graphql';
-import type { TimerMetricPayload } from './TimerMetricPayload';
+import type { TimerMetricPayload } from '../responses/timer-metric.model';
 
 @InputType()
 export class UpdateTimerMetricInput implements Partial<TimerMetricPayload> {
@@ -7,7 +7,7 @@ export class UpdateTimerMetricInput implements Partial<TimerMetricPayload> {
     public readonly metricId: string;
 
     @Field()
-    public readonly date: string;
+    public readonly dateString: string;
 
     @Field({ nullable: true })
     public label?: string;

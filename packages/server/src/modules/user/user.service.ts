@@ -2,19 +2,18 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { RegistrationProblem } from '../../types/enums/registration-problem';
 import sendEmail from '../../utils/sendEmail';
-import { validateRegistration as validateRegInput } from '../../utils/validateRegistration';
 import { Profile } from './models/profile.entity';
+import { User } from './models/user.entity';
 import { UserRepo } from './user.repository';
-import type { FieldError } from '../../types/responses/field-error.model';
-import type { RegisterUserInput } from './dto/register.input';
+import type { RegisterUserInput } from '../auth/dto/register.input';
 import type { IUser } from './interfaces/user.interface';
-import type { User } from './models/user.entity';
 
 @Injectable()
 export class UserService {
     public constructor(
-        @InjectRepository(UserRepo)
+        @InjectRepository(User)
         private readonly userRepo: UserRepo,
         @InjectRepository(Profile)
         private readonly profileRepo: Repository<Profile>,
@@ -49,70 +48,41 @@ export class UserService {
         });
     }
 
+    public findByGoogleId(googleId: string): Promise<User | undefined> {
+        return this.userRepo.findOne({ where: { googleId } });
+    }
+
     public async createUser({
         displayName,
         email,
         username,
         password,
-    }: RegisterUserInput): Promise<IUser> {
+    }: RegisterUserInput): Promise<User> {
         const user = this.userRepo.create({ username, email, password });
         const profile = this.profileRepo.create({ user, displayName });
-        const { id } = await this.userRepo.save(user);
         await this.profileRepo.save(profile);
-        return this.userRepo.findOneOrFail(id);
+        return this.userRepo.findOneOrFail(user.id);
     }
 
-    // public async login(
-    //     usernameOrEmail: string,
-    //     passwordInput: string
-    // ): Promise<User> {
-    //     const user = await this.userRepo.findOne({
-    //         where: usernameOrEmail.includes('@')
-    //             ? { email: usernameOrEmail }
-    //             : { username: usernameOrEmail },
-    //     });
-    //     if (user === undefined) {
-    //         throw new InvalidCredentialsError();
-    //     }
-
-    //     const isPasswordCorrect = await compare(passwordInput, user.password);
-    //     if (!isPasswordCorrect) {
-    //         throw new InvalidCredentialsError();
-    //     }
-
-    //     return user;
-    // }
-
-    // public async register(
-    //     displayName: string,
-    //     email: string,
-    //     username: string,
-    //     passwordInput: string
-    // ): Promise<User> {
-    //     const hashedPassword: string = await hash(passwordInput, 12);
-    //     const user: User = this.userRepo.create({
-    //         displayName,
-    //         username,
-    //         email,
-    //         password: hashedPassword,
-    //     });
-    //     await this.userRepo.save(user);
-    //     return user;
-    // }
-
-    // public validateRegistration(
-    //     displayName: string,
-    //     email: string,
-    //     username: string,
-    //     passwordInput: string
-    // ): Promise<FieldError[]> {
-    //     return validateRegInput({
-    //         displayName,
-    //         email,
-    //         username,
-    //         password: passwordInput,
-    //     });
-    // }
+    public async createGoogleUser(
+        googleId: string,
+        emails: string[],
+        displayName: string
+    ): Promise<User> {
+        const username = displayName
+            .toLocaleLowerCase()
+            .padEnd(16, String(Math.random()).substring(2));
+        const password = '';
+        const user: User = this.userRepo.create({
+            username,
+            email: emails[0],
+            password,
+            googleId,
+        });
+        const profile = this.profileRepo.create({ user, displayName });
+        await this.profileRepo.save(profile);
+        return this.userRepo.findOneOrFail(user.id);
+    }
 
     public async updatePassword(
         username: string,
@@ -158,5 +128,20 @@ export class UserService {
     public async deleteById(userId: string): Promise<void> {
         const user = await this.userRepo.findOneOrFail(userId);
         await this.userRepo.delete(user);
+    }
+
+    private async validateRegistration({
+        email,
+        username,
+    }: RegisterUserInput): Promise<RegistrationProblem | null> {
+        const existingUsers = await this.userRepo.find({
+            where: [{ username }, { email }],
+        });
+        if (existingUsers.length > 0) {
+            return existingUsers[0].email === email
+                ? RegistrationProblem.EMAIL_TAKEN
+                : RegistrationProblem.USERNAME_TAKEN;
+        }
+        return null;
     }
 }

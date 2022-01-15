@@ -41,6 +41,10 @@ export const configuration = (): IConfiguration => {
         },
         auth: {
             accessTokenSecret: process.env.ACCESS_TOKEN_SECRET!,
+            google: {
+                clientId: process.env.GOOGLE_CLIENT_ID!,
+                clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+            },
         },
         emailTransporter: {
             host: process.env.EMAIL_TRANSPORTER_HOST!,

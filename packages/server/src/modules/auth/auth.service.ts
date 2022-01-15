@@ -1,32 +1,36 @@
-import {
-    HttpException,
-    HttpStatus,
-    Injectable,
-    UnauthorizedException,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { compare, hash } from 'bcryptjs';
 import { UserService } from '../user/user.service';
 import type { User } from '../../entities';
-import type { IUser } from '../user/interfaces/user.interface';
+import type { SafeUser } from '../user/models/safe-user.model';
 import type { UserLoginInput } from './dto/login.input';
 import type { RegisterUserInput } from './dto/register.input';
+import type { IAuthService } from './interfaces/auth.service.interface';
+import type { LoginResponse } from './models/login-response.model';
+import type { RegistrationResponse } from './models/registration-response.model';
+import type { Profile } from 'passport-google-oauth20';
 
 @Injectable()
-export class AuthService {
+export class AuthService implements IAuthService {
     public constructor(private readonly userService: UserService) {}
 
-    public async register({
+    public async registerUser({
         password,
         displayName,
         ...registrationData
-    }: RegisterUserInput): Promise<IUser> {
+    }: RegisterUserInput): Promise<RegistrationResponse> {
         const hashedPassword = await hash(password, 10);
         try {
-            return this.userService.createUser({
+            const user = await this.userService.createUser({
                 ...registrationData,
                 displayName,
                 password: hashedPassword,
             });
+
+            if (user == null) {
+                return { user: null, errors: [] };
+            }
+            return { user: this.makeUserSafe(user), errors: [] };
         } catch (error) {
             throw new HttpException(
                 'Something went wrong',
@@ -35,59 +39,62 @@ export class AuthService {
         }
     }
 
-    public async validateUser({
+    public async getLoginResponse({
         usernameOrEmail,
         passwordInput,
-    }: UserLoginInput): Promise<User | null> {
-        const user = await this.userService.findByCredentials(usernameOrEmail);
-        if (user === undefined) return null;
-        await this.verifyPassword(passwordInput, user.password);
-        return user;
+    }: UserLoginInput): Promise<LoginResponse> {
+        const user = await this.validateCredentials(
+            usernameOrEmail,
+            passwordInput
+        );
+        if (user == null) {
+            return { user: null, error: 'Login failed' };
+        }
+        return { user: this.makeUserSafe(user), error: null };
     }
 
-    private async verifyPassword(
+    public async validateCredentials(
+        usernameOrEmail: string,
+        passwordInput: string
+    ): Promise<User | null> {
+        console.log('authservice.validatecredentials');
+        const user = await this.userService.findByCredentials(usernameOrEmail);
+        if (user === undefined) {
+            return null;
+        }
+        if (await this.doesPasswordMatch(passwordInput, user.password)) {
+            return user;
+        }
+        return null;
+    }
+
+    public async validateGoogle(profile: Profile): Promise<User | null> {
+        const { id, emails, name } = profile;
+        const existingUser = await this.userService.findByGoogleId(id);
+        if (existingUser != null) {
+            return existingUser;
+        }
+        return this.userService.createGoogleUser(
+            id,
+            Array.isArray(emails) ? emails.map(({ value }) => value) : [],
+            name?.givenName ?? 'New User'
+        );
+    }
+
+    private async doesPasswordMatch(
         passwordInput: string,
         hashedPassword: string
-    ): Promise<void> {
+    ): Promise<boolean> {
         const isPasswordCorrect = await compare(passwordInput, hashedPassword);
         if (!isPasswordCorrect) {
-            throw new UnauthorizedException('Invalid credentials.');
+            // throw new UnauthorizedException('Invalid credentials.');
         }
+        return isPasswordCorrect;
     }
 
-    // public async login({
-    //     usernameOrEmail,
-    //     passwordInput,
-    // }: UserLoginInput): Promise<User | null> {
-    //     const user = await this.userService.findByCredentials(usernameOrEmail);
-    //     if (user === undefined) return null;
-
-    //     const isPasswordCorrect = await compare(passwordInput, user.password);
-    //     if (!isPasswordCorrect) return null;
-
-    //     return user;
-    // }
-
-    // public async registerUser({
-    //     displayName,
-    //     username,
-    //     email,
-    //     password,
-    // }: RegisterUserInput): Promise<User> {
-    //     const existingUser = await this.userService.findByCredentials(email);
-    //     if (typeof existingUser !== 'undefined') {
-    //         throw new BadRequestException('Bad request: Registration failed.');
-    //     }
-
-    //     const hashedPassword: string = await hash(password, 12);
-    //     const newUser = this.userService.createUser({
-    //         username,
-    //         displayName,
-    //         email,
-    //         password: hashedPassword,
-    //     });
-    //     await this.userService.save(newUser);
-
-    //     return newUser;
-    // }
+    public makeUserSafe(user: User): SafeUser {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { password, ...safeUser } = user;
+        return safeUser;
+    }
 }

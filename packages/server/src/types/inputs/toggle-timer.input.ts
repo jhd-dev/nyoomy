@@ -1,5 +1,5 @@
 import { Field, ArgsType } from '@nestjs/graphql';
-import type { TimerMetricPayload } from '../TimerMetricPayload';
+import type { TimerMetricPayload } from '../responses/timer-metric.model';
 
 @ArgsType()
 export class ToggleTimerInfo implements Partial<TimerMetricPayload> {
@@ -7,5 +7,5 @@ export class ToggleTimerInfo implements Partial<TimerMetricPayload> {
     public metricId!: string;
 
     @Field()
-    public date!: string;
+    public date!: Date;
 }

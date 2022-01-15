@@ -1,15 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import { Injectable } from '@nestjs/common';
-import {
-    Resolver,
-    Mutation,
-    Arg,
-    Query,
-    Ctx,
-    ID,
-    UseMiddleware,
-} from '@nestjs/graphql';
-import { isAuthorized } from '../../common/middleware/isAuthorized';
+import { Resolver, Mutation, Args, Query, Context, ID } from '@nestjs/graphql';
 import { Tag } from '../../entities';
 import { AddTagInput } from '../../types/inputs/add-tag.input';
 import { UpdateTagInput } from '../../types/inputs/update-tag.input';
@@ -29,7 +20,7 @@ export class TagResolver {
 
     @Mutation(() => Tag, { nullable: true })
     public addTag(
-        @Args('tagInput', () => AddTagInput) tagInput: AddTagInput,
+        @Args('tagInput', { type: () => AddTagInput }) tagInput: AddTagInput,
         @Context() { req }: IContext
     ): Promise<Tag | null> {
         const { userId } = req.session;
@@ -49,7 +40,9 @@ export class TagResolver {
     }
 
     @Mutation(() => Boolean)
-    public async deleteTag(@Args('id', () => ID) id: string): Promise<boolean> {
+    public async deleteTag(
+        @Args('id', { type: () => ID }) id: string
+    ): Promise<boolean> {
         try {
             await this.tagService.deleteTag(id);
             return true;
@@ -61,8 +54,8 @@ export class TagResolver {
 
     @Mutation(() => Tag, { nullable: true })
     public async applyTag(
-        @Args('tagId', () => ID) tagId: string,
-        @Args('taggableId', () => ID) taggableId: string
+        @Args('tagId', { type: () => ID }) tagId: string,
+        @Args('taggableId', { type: () => ID }) taggableId: string
     ): Promise<Tag | null> {
         try {
             return await this.tagService.applyTag(tagId, taggableId);

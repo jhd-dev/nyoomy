@@ -20,21 +20,20 @@
         "generate:watch": "graphql-codegen --config --watch ./codegen.yml"
     },
     "dependencies": {
-        "@apollo/client": "^3.4.10"
+        "@apollo/client": "^3.5.6"
     },
     "devDependencies": {
-        "@graphql-codegen/add": "^2.0.2",
-        "@graphql-codegen/cli": "^1.21.4",
-        "@graphql-codegen/jsdoc": "^1.17.9",
-        "@graphql-codegen/typed-document-node": "^1.18.5",
-        "@graphql-codegen/typescript": "^1.22.0",
-        "@graphql-codegen/typescript-operations": "^1.17.16",
-        "@graphql-codegen/typescript-react-apollo": "2.2.3",
-        "@graphql-codegen/typescript-resolvers": "^1.19.1",
-        "@graphql-codegen/typescript-type-graphql": "^1.18.4",
-        "@types/concurrently": "^6.0.1",
-        "concurrently": "^6.0.2",
-        "graphql-tag": "^2.12.4"
+        "@graphql-codegen/add": "^3.1.1",
+        "@graphql-codegen/cli": "^2.3.1",
+        "@graphql-codegen/jsdoc": "^2.2.2",
+        "@graphql-codegen/typed-document-node": "^2.2.2",
+        "@graphql-codegen/typescript": "^2.4.2",
+        "@graphql-codegen/typescript-operations": "^2.2.2",
+        "@graphql-codegen/typescript-react-apollo": "^3.2.4",
+        "@graphql-codegen/typescript-resolvers": "^2.4.3",
+        "@graphql-codegen/typescript-type-graphql": "^2.2.3",
+        "concurrently": "^7.0.0",
+        "graphql-tag": "^2.12.6"
     },
     "peerDependencies": {
         "graphql": "^15.5.0",

@@ -1,12 +1,18 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type { User } from '../modules/user/models/user.entity';
-import type { SessionData } from 'express-session';
+import type { User as UserEntity } from '../modules/user/models/user.entity';
 
 declare global {
     namespace Express {
         interface SessionData {
-            userId: string;
-            user?: User;
+            userId?: string;
+            user?: UserEntity;
         }
+    }
+}
+
+declare module 'express-session' {
+    interface SessionData {
+        userId?: string;
+        user?: UserEntity;
     }
 }
