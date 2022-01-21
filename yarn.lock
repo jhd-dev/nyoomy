@@ -4790,7 +4790,7 @@ __metadata:
     eslint-plugin-yml: ^0.9.0
   peerDependencies:
     eslint: ^7.25.0
-    graphql: ^15.5.0
+    graphql: ^15.8.0
     prettier: ^2.2.1
     typescript: ~4.2.4
   languageName: node
@@ -4834,7 +4834,7 @@ __metadata:
     eslint-plugin-yml: ^0.9.0
   peerDependencies:
     eslint: ^7.25.0
-    graphql: ^15.5.0
+    graphql: ^15.8.0
     prettier: ^2.2.1
     typescript: ~4.2.4
   languageName: unknown
@@ -4897,11 +4897,10 @@ __metadata:
     "@graphql-codegen/typescript-react-apollo": ^3.2.4
     "@graphql-codegen/typescript-resolvers": ^2.4.3
     "@graphql-codegen/typescript-type-graphql": ^2.2.3
-    "@types/concurrently": ^7.0.0
     concurrently: ^7.0.0
     graphql-tag: ^2.12.6
   peerDependencies:
-    graphql: ^15.5.0
+    graphql: ^15.8.0
     prettier: ^2.2.1
     typescript: ~4.2.4
   languageName: node
@@ -4924,7 +4923,7 @@ __metadata:
     concurrently: ^7.0.0
     graphql-tag: ^2.12.6
   peerDependencies:
-    graphql: ^15.5.0
+    graphql: ^15.8.0
     prettier: ^2.2.1
     typescript: ~4.2.4
   languageName: unknown
@@ -5017,7 +5016,7 @@ __metadata:
     typeorm: ^0.2.41
     validator: ^13.7.0
   peerDependencies:
-    graphql: ^15.5.0
+    graphql: ^15.8.0
     typescript: ~4.2.4
   languageName: unknown
   linkType: soft
@@ -5704,15 +5703,6 @@ __metadata:
   dependencies:
     classnames: "*"
   checksum: e0e96a5f7c7198edb3be39404e1a88873bea191eb5e77e3c23b51777a3006dd497565fa5939c7980ad6a6e0330962fe5f3ca4b5f56c34b4dcc13853932609b7b
-  languageName: node
-  linkType: hard
-
-"@types/concurrently@npm:^7.0.0":
-  version: 7.0.0
-  resolution: "@types/concurrently@npm:7.0.0"
-  dependencies:
-    concurrently: "*"
-  checksum: 8fac99e29eb2c7c2d08523f600f5fc1357e4302f30fe2c578b200dd25057658c36d2077578340244ad202f429621829dc620d20c47562ba1a9dce79cd77ef3e4
   languageName: node
   linkType: hard
 
@@ -9381,7 +9371,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"concurrently@npm:*, concurrently@npm:^7.0.0":
+"concurrently@npm:^7.0.0":
   version: 7.0.0
   resolution: "concurrently@npm:7.0.0"
   dependencies:
