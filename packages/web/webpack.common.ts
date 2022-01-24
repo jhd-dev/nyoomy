@@ -2,6 +2,7 @@ import DotenvPlugin from 'dotenv-webpack';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import { join, resolve } from 'path';
 // import { ProgressPlugin } from 'webpack';
+import { DefinePlugin } from 'webpack';
 import type { Configuration } from 'webpack';
 
 const ROOT: string = '../..';
@@ -68,10 +69,17 @@ const config: Configuration = {
     },
     plugins: [
         new ForkTsCheckerWebpackPlugin({ async: false }),
-        new DotenvPlugin({
-            path: relativeEnvFile,
-            safe: relativeEnvExampleFile,
-            ignoreStub: true,
+        // new DotenvPlugin({
+        //     path: relativeEnvFile,
+        //     safe: relativeEnvExampleFile,
+        //     ignoreStub: true,
+        // }),
+        new DefinePlugin({
+            ...new DotenvPlugin({
+                path: relativeEnvFile,
+                safe: relativeEnvExampleFile,
+                ignoreStub: true,
+            }),
         }),
         // new ProgressPlugin((percentage, message, ...args) => {
         //     console.info(percentage, message, ...args);

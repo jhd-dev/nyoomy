@@ -9,9 +9,9 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { Header } from '../components/Header';
 import InputTextField from '../components/InputTextField';
-import type { RouteComponentProps } from 'react-router-dom';
+// import type { RouteComponentProps } from 'react-router-dom';
 
-const RegistrationPage: FC<RouteComponentProps> = ({ history }) => {
+const RegistrationPage: FC = ({ history }) => {
     const [displayName, setName] = useState('');
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
