@@ -1,12 +1,30 @@
-"""Centralized user reference"""
-type User {
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""The icons available to accompany category/tag titles"""
+enum CategoryIcon {
+  GLOBE
+  ROCKET
+  STAR
+  WATER
+}
+
+type CounterMetric {
   id: ID!
-  username: String!
-  email: String!
-  isEmailVerified: Boolean!
-  googleId: String!
-  createdAt: DateTime!
-  stars: Int!
+  interval: Int!
+  maximum: Int!
+  metric: Metric!
+  metricType: MetricType!
+  minimum: Int!
+}
+
+type DailyFloatMetric {
+  id: ID!
+  max: Float!
+  metric: Metric!
+  metricType: MetricType!
+  min: Float!
 }
 
 """
@@ -14,88 +32,88 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type Tag {
-  id: ID!
-  user: User!
-  taggedItems: [Taggable!]!
-  title: String!
-  icon: CategoryIcon
+type FieldError {
+  field: String!
+  message: String!
 }
 
-"""The icons available to accompany category/tag titles"""
-enum CategoryIcon {
-  GLOBE
-  STAR
-  WATER
-  ROCKET
+type Journal {
+  dailyWordGoal: Int!
+  id: ID!
+  isArchived: Boolean!
+  metric: Metric!
+  metricType: MetricType!
 }
 
-type Taggable {
-  id: ID!
-  tags: [Tag!]!
+type LoginResponse {
+  error: String
+  user: SafeUser
 }
 
 type Metric {
-  id: ID!
-  taggable: Taggable!
-  user: User!
-  title: String!
   description: String!
-  isArchived: Boolean!
-}
-
-type CounterMetric {
   id: ID!
-  metric: Metric!
-  metricType: MetricType!
-  maximum: Int!
-  minimum: Int!
-  interval: Int!
+  isArchived: Boolean!
+  taggable: Taggable!
+  title: String!
+  user: User!
 }
 
 """The types of metrics a user can create"""
 enum MetricType {
   COUNTER
-  TIMER
+  FLOAT
   JOURNAL
   SCALE
   SELECTION
-  FLOAT
   STRING
+  TIMER
 }
 
-type DailyFloatMetric {
-  id: ID!
-  metric: Metric!
-  metricType: MetricType!
-  max: Float!
-  min: Float!
+type Mutation {
+  deleteUser: Boolean!
+  deleteUserById(id: ID!): Boolean!
+  login(input: UserLoginInput!): LoginResponse
+  logout: Boolean!
+  registerUser(input: RegisterUserInput!): RegistrationResponse!
+  updateUserPassword(input: UpdatePasswordInput!): Boolean!
 }
 
-type Journal {
+type Query {
+  me: User
+}
+
+"""User registration data"""
+input RegisterUserInput {
+  displayName: String!
+  email: String!
+  password: String!
+  username: String!
+}
+
+type RegistrationResponse {
+  errors: [FieldError!]
+  user: SafeUser
+}
+
+"""User data excluding authentication-unsafe fields"""
+type SafeUser {
+  createdAt: DateTime!
+  email: String!
+  googleId: String!
   id: ID!
-  metric: Metric!
-  metricType: MetricType!
-  dailyWordGoal: Int!
-  isArchived: Boolean!
+  isEmailVerified: Boolean!
+  stars: Int!
+  username: String!
 }
 
 """A Numeric Rating Scale"""
 type Scale {
   id: ID!
+  max: Int!
   metric: Metric!
   metricType: MetricType!
   min: Int!
-  max: Int!
-}
-
-"""A Numeric Rating Selection"""
-type SelectionMetric {
-  id: ID!
-  metric: Metric!
-  metricType: MetricType!
-  minSelections: Int!
-  maxSelections: Int!
 }
 
 type SelectionCategory {
@@ -104,106 +122,92 @@ type SelectionCategory {
   title: String!
 }
 
-type SelectionOption {
-  id: ID!
-  metric: SelectionMetric!
-  selectingEntries: [SelectionEntry!]!
-  category: SelectionCategory!
-  title: String!
-}
-
 type SelectionEntry {
+  datetime: DateTime!
   id: ID!
   metric: SelectionMetric!
   selectedOptions: [SelectionOption!]!
-  datetime: DateTime!
+}
+
+"""A Numeric Rating Selection"""
+type SelectionMetric {
+  id: ID!
+  maxSelections: Int!
+  metric: Metric!
+  metricType: MetricType!
+  minSelections: Int!
+}
+
+type SelectionOption {
+  category: SelectionCategory!
+  id: ID!
+  metric: SelectionMetric!
+  selectingEntries: [SelectionEntry!]!
+  title: String!
+}
+
+type Tag {
+  icon: CategoryIcon
+  id: ID!
+  taggedItems: [Taggable!]!
+  title: String!
+  user: User!
+}
+
+type Taggable {
+  id: ID!
+  tags: [Tag!]!
 }
 
 type TimerMetric {
+  goalLength: Int!
+  goalPerDay: Int!
   id: ID!
   metric: Metric!
   metricType: MetricType!
-  goalLength: Int!
-  goalPerDay: Int!
 }
 
 type Todo {
-  id: ID!
-  subtasks: [Todo!]!
-  user: User!
-  title: String!
   description: String!
-  isCompleted: Boolean!
-  isArchived: Boolean!
-  repeatWeekdays: [Weekday!]!
   doesRepeat: Boolean!
+  id: ID!
+  isArchived: Boolean!
+  isCompleted: Boolean!
+  repeatWeekdays: [Weekday!]!
+  subtasks: [Todo!]!
+  title: String!
+  user: User!
+}
+
+input UpdatePasswordInput {
+  newPassword: String!
+  oldPassword: String!
+  username: String!
+}
+
+"""Centralized user reference"""
+type User {
+  createdAt: DateTime!
+  email: String!
+  googleId: String!
+  id: ID!
+  isEmailVerified: Boolean!
+  stars: Int!
+  username: String!
+}
+
+input UserLoginInput {
+  passwordInput: String!
+  usernameOrEmail: String!
 }
 
 """The days of the week"""
 enum Weekday {
-  SUNDAY
+  FRIDAY
   MONDAY
+  SATURDAY
+  SUNDAY
+  THURSDAY
   TUESDAY
   WEDNESDAY
-  THURSDAY
-  FRIDAY
-  SATURDAY
-}
-
-"""User data excluding authentication-unsafe fields"""
-type SafeUser {
-  id: ID!
-  username: String!
-  email: String!
-  isEmailVerified: Boolean!
-  googleId: String!
-  createdAt: DateTime!
-  stars: Int!
-}
-
-type LoginResponse {
-  user: SafeUser
-  error: String
-}
-
-type FieldError {
-  field: String!
-  message: String!
-}
-
-type RegistrationResponse {
-  errors: [FieldError!]
-  user: SafeUser
-}
-
-type Query {
-  me: User
-}
-
-type Mutation {
-  login(input: UserLoginInput!): LoginResponse
-  logout: Boolean!
-  registerUser(input: RegisterUserInput!): RegistrationResponse!
-  deleteUserById(id: ID!): Boolean!
-  deleteUser: Boolean!
-  updateUserPassword(input: UpdatePasswordInput!): Boolean!
-}
-
-input UserLoginInput {
-  usernameOrEmail: String!
-  passwordInput: String!
-}
-
-"""User registration data"""
-input RegisterUserInput {
-  displayName: String!
-  email: String!
-  username: String!
-  password: String!
-}
-
-input UpdatePasswordInput {
-  username: String!
-  oldPassword: String!
-  newPassword: String!
 }

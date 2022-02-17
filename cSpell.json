@@ -72,6 +72,7 @@
         "sqljs",
         "stylelint",
         "testid",
+        "Todos",
         "tsbuildinfo",
         "typeorm",
         "yarnpkg"

@@ -6,7 +6,6 @@ import { COOKIE_NAME } from '@nyoomy/global';
 import { CurrentUser } from '../../common/decorators/user.decorator';
 import { IContext } from '../../types/interfaces/context.interface';
 import { AuthenticatedGuard } from '../auth/guards/authenticated.guard';
-import { GqlLocalAuthGuard } from '../auth/guards/gql-local-auth.guard';
 import { UpdatePasswordInput } from './dto/update-password.input';
 import { User } from './models/user.entity';
 import { UserService } from './user.service';
@@ -22,11 +21,6 @@ export class UserResolver {
     @Query(() => User, { nullable: true, name: 'me' })
     @UseGuards(AuthenticatedGuard)
     public getCurrentUser(@CurrentUser() user: User): User {
-        // console.log(req);
-        // const userId = req.user;
-        // console.log(userId);
-        // const user = await this.userService.getCurrentUser(userId);
-        console.log('me');
         Logger.log(user);
         return user;
     }

@@ -12,7 +12,7 @@ export class TodoResolver {
     public constructor(private readonly todoService: TodoService) {}
 
     @Query(() => [Todo])
-    public async myTodos(
+    public async getMyTodos(
         @Context() { req }: IContext,
         @Args('excludeArchived', { type: () => Boolean })
         excludingArchived: boolean = false
