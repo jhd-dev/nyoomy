@@ -71,15 +71,19 @@ enum MetricType {
 }
 
 type Mutation {
+  addTodo: Todo
+  deleteTodo(id: ID!): Boolean!
   deleteUser: Boolean!
   deleteUserById(id: ID!): Boolean!
   login(input: UserLoginInput!): LoginResponse
   logout: Boolean!
   registerUser(input: RegisterUserInput!): RegistrationResponse!
+  updateTodo(updateInput: UpdateTodoInput!): Todo
   updateUserPassword(input: UpdatePasswordInput!): Boolean!
 }
 
 type Query {
+  getMyTodos(excludeArchived: Boolean!): [Todo!]!
   me: User
 }
 
@@ -183,6 +187,16 @@ input UpdatePasswordInput {
   newPassword: String!
   oldPassword: String!
   username: String!
+}
+
+input UpdateTodoInput {
+  date: String!
+  description: String
+  id: ID!
+  isArchived: Boolean
+  isCompleted: Boolean
+  repeatWeekdays: [Weekday!]
+  title: String
 }
 
 """Centralized user reference"""

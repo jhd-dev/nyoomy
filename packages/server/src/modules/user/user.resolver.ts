@@ -25,17 +25,6 @@ export class UserResolver {
         return user;
     }
 
-    // @Mutation(() => User)
-    // public async registerUser(
-    //     @Args({ name: 'input', type: () => RegisterUserInput })
-    //     input: RegisterUserInput,
-    //     @Context() ctx: IContext
-    // ): Promise<User> {
-    //     const user = await this.authService.registerUser(input);
-    //     ctx.req.session.user = user;
-    //     return user;
-    // }
-
     // @Mutation(() => RegistrationResponse)
     // public addDummyUser(): Promise<RegistrationResponse> {
     //     return this.registerUser({

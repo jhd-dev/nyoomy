@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, HideField, ID, ObjectType } from '@nestjs/graphql';
 import {
     Column,
     Entity,
@@ -10,8 +10,8 @@ import {
     TreeParent,
     TreeLevelColumn,
 } from 'typeorm';
-import { User } from '../modules/user/models/user.entity';
-import Weekday, { weekdays } from '../types/enums/weekday.enum';
+import Weekday, { weekdays } from '../../../types/enums/weekday.enum';
+import { User } from '../../user/models/user.entity';
 
 @Entity('todos')
 @Tree('materialized-path')
@@ -26,9 +26,11 @@ export class Todo {
     public subtasks!: Todo[];
 
     @TreeParent()
+    @HideField()
     public supertask!: Todo | null;
 
     @TreeLevelColumn()
+    @HideField()
     public level!: number;
 
     @ManyToOne(() => User)

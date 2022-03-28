@@ -10,7 +10,6 @@ import { RegisterUserInput } from './dto/register.input';
 import { GqlLocalAuthGuard } from './guards/gql-local-auth.guard';
 import { LoginResponse } from './models/login-response.model';
 import { RegistrationResponse } from './models/registration-response.model';
-import type { User } from '../user/models/user.entity';
 
 @Resolver()
 export class AuthResolver {
@@ -22,13 +21,11 @@ export class AuthResolver {
         @Args({ name: 'input', type: () => UserLoginInput })
         input: UserLoginInput
     ): Promise<LoginResponse> {
-        console.log('@login');
         return this.authService.getLoginResponse(input);
     }
 
     @Mutation(() => Boolean)
     public logout(@Context() { req, res }: IContext): Promise<boolean> {
-        console.log('authresolver.logout');
         return new Promise((resolve, reject) =>
             // eslint-disable-next-line promise/prefer-await-to-callbacks
             req.session.destroy((err: unknown): void => {

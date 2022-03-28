@@ -1,10 +1,11 @@
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Todo } from '../../entities/todo.entity';
-import { TodoEntry } from '../../entities/todo-entry.entity';
+import { Todo } from './models/todo.entity';
+import { TodoEntry } from './models/todo-entry.entity';
 import Weekday, { weekdays } from '../../types/enums/weekday.enum';
-import type { UpdateTodoInput } from '../../types/inputs/update-todo.input';
-import { Injectable } from '@nestjs/common';
+import type { UpdateTodoInput } from './dto/update-todo.input';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { User } from '../user/models/user.entity';
 
 @Injectable()
 export class TodoService {
@@ -29,19 +30,25 @@ export class TodoService {
                 user: { id: userId },
                 isArchived: excludingArchived ? false : undefined,
             },
-            relations: ['user', 'user.id'],
+            relations: ['user'],
         });
     }
 
     public async addTodo(userId: string): Promise<Todo> {
-        const vals = { user: { id: userId } };
-        const todo = this.todoRepo.create({ ...vals });
+        const values = { user: { id: userId }, level: 0 };
+        const todo = this.todoRepo.create({ ...values });
         await this.todoRepo.save(todo);
         return todo;
     }
 
-    public async updateTodo(updateInput: UpdateTodoInput): Promise<Todo> {
+    public async updateTodo(
+        updateInput: UpdateTodoInput,
+        user: User
+    ): Promise<Todo> {
         const todo = await this.todoRepo.findOneOrFail(updateInput.id);
+        if (todo.user.id !== user.id) {
+            throw new UnauthorizedException('incorrect user');
+        }
         await this.todoRepo.update(todo, updateInput);
         return this.todoRepo.findOneOrFail(updateInput.id);
     }

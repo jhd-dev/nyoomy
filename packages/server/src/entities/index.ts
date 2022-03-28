@@ -1,12 +1,15 @@
+import { TodoEntry } from '../modules/todo/models/todo-entry.entity';
+import { Todo } from '../modules/todo/models/todo.entity';
+import { User } from '../modules/user/models/user.entity';
 import { CounterEntry } from './counter-entry.entity';
 import { CounterMetric } from './counter-metric.entity';
 import { DailyFloatEntry } from './daily-float-entry.entity';
 import { DailyFloatMetric } from './daily-float-metric.entity';
-import { Journal } from './journal.entity';
 import { JournalEntry } from './journal-entry.entity';
+import { Journal } from './journal.entity';
 import { Metric } from './metric.entity';
-import { Scale } from './scale.entity';
 import { ScaleEntry } from './scale-entry.entity';
+import { Scale } from './scale.entity';
 import { SelectionCategory } from './selection-category.entity';
 import { SelectionEntry } from './selection-entry.entity';
 import { SelectionMetric } from './selection-metric.entity';
@@ -16,9 +19,6 @@ import { Taggable } from './taggable.entity';
 import { TimerAttempt } from './timer-attempt.entity';
 import { TimerEntry } from './timer-entry.entity';
 import { TimerMetric } from './timer-metric.entity';
-import { Todo } from './todo.entity';
-import { TodoEntry } from './todo-entry.entity';
-import { User } from '../modules/user/models/user.entity';
 
 const entities = [
     CounterEntry,
@@ -62,6 +62,6 @@ export * from './tag.entity';
 export * from './timer-attempt.entity';
 export * from './timer-entry.entity';
 export * from './timer-metric.entity';
-export * from './todo.entity';
-export * from './todo-entry.entity';
+export * from '../modules/todo/models/todo.entity';
+export * from '../modules/todo/models/todo-entry.entity';
 export * from '../modules/user/models/user.entity';

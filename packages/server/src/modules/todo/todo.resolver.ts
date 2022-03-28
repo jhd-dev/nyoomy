@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import { Injectable } from '@nestjs/common';
-import { Resolver, Mutation, Args, Query, Context, ID } from '@nestjs/graphql';
-import { Todo } from '../../entities/todo.entity';
-import { UpdateTodoInput } from '../../types/inputs/update-todo.input';
-import { IContext } from '../../types/interfaces/context.interface';
+import { Resolver, Mutation, Args, Query, ID } from '@nestjs/graphql';
+import { CurrentUser } from '../../common/decorators/user.decorator';
+import { User } from '../user/models/user.entity';
+import { UpdateTodoInput } from './dto/update-todo.input';
+import { Todo } from './models/todo.entity';
 import { TodoService } from './todo.service';
 
 @Injectable()
@@ -13,19 +14,19 @@ export class TodoResolver {
 
     @Query(() => [Todo])
     public async getMyTodos(
-        @Context() { req }: IContext,
+        @CurrentUser() user: User,
         @Args('excludeArchived', { type: () => Boolean })
         excludingArchived: boolean = false
     ): Promise<Todo[]> {
-        const userId = req?.session?.userId;
+        const userId = user.id;
         if (userId == null) return [];
         // eslint-disable-next-line no-return-await
         return await this.todoService.getUserTodos(userId, excludingArchived);
     }
 
     @Mutation(() => Todo, { nullable: true })
-    public async addTodo(@Context() { req }: IContext): Promise<Todo | null> {
-        const userId = req?.session?.userId;
+    public async addTodo(@CurrentUser() user: User): Promise<Todo | null> {
+        const userId = user.id;
         if (userId == null) return null;
         // eslint-disable-next-line no-return-await
         return await this.todoService.addTodo(userId);
@@ -33,10 +34,11 @@ export class TodoResolver {
 
     @Mutation(() => Todo, { nullable: true })
     public async updateTodo(
-        @Args('updateInput') updateInput: UpdateTodoInput
+        @Args('updateInput') updateInput: UpdateTodoInput,
+        @CurrentUser() user: User
     ): Promise<Todo | null> {
         try {
-            return await this.todoService.updateTodo(updateInput);
+            return await this.todoService.updateTodo(updateInput, user);
         } catch (err: unknown) {
             console.error(err);
             return null;

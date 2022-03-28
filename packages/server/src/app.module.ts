@@ -20,6 +20,7 @@ import { COOKIE_NAME, REDIS_SESSION_PREFIX } from './constants';
 import { AuthModule } from './modules/auth/auth.module';
 import { REDIS } from './modules/redis/redis.constants';
 import { RedisModule } from './modules/redis/redis.module';
+import { TodoModule } from './modules/todo/todo.module';
 import { UserModule } from './modules/user/user.module';
 import type { IContext } from './types/interfaces/context.interface';
 import type { NestModule, MiddlewareConsumer } from '@nestjs/common';
@@ -32,6 +33,7 @@ const GRAPHQL_SCHEMA_PATH = join(__dirname, '../schema.graphql');
     imports: [
         AuthModule,
         RedisModule,
+        TodoModule,
         UserModule,
         TypeOrmModule.forRoot(),
         GraphQLModule.forRoot({
