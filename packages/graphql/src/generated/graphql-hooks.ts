@@ -89,12 +89,20 @@ export enum MetricType {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addTodo?: Maybe<Todo>;
+  deleteTodo: Scalars['Boolean'];
   deleteUser: Scalars['Boolean'];
   deleteUserById: Scalars['Boolean'];
   login?: Maybe<LoginResponse>;
   logout: Scalars['Boolean'];
   registerUser: RegistrationResponse;
+  updateTodo?: Maybe<Todo>;
   updateUserPassword: Scalars['Boolean'];
+};
+
+
+export type MutationDeleteTodoArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -113,13 +121,24 @@ export type MutationRegisterUserArgs = {
 };
 
 
+export type MutationUpdateTodoArgs = {
+  updateInput: UpdateTodoInput;
+};
+
+
 export type MutationUpdateUserPasswordArgs = {
   input: UpdatePasswordInput;
 };
 
 export type Query = {
   __typename?: 'Query';
+  getMyTodos: Array<Todo>;
   me?: Maybe<User>;
+};
+
+
+export type QueryGetMyTodosArgs = {
+  excludeArchived: Scalars['Boolean'];
 };
 
 /** User registration data */
@@ -233,6 +252,16 @@ export type UpdatePasswordInput = {
   newPassword: Scalars['String'];
   oldPassword: Scalars['String'];
   username: Scalars['String'];
+};
+
+export type UpdateTodoInput = {
+  date: Scalars['String'];
+  description?: InputMaybe<Scalars['String']>;
+  id: Scalars['ID'];
+  isArchived?: InputMaybe<Scalars['Boolean']>;
+  isCompleted?: InputMaybe<Scalars['Boolean']>;
+  repeatWeekdays?: InputMaybe<Array<Weekday>>;
+  title?: InputMaybe<Scalars['String']>;
 };
 
 /** Centralized user reference */

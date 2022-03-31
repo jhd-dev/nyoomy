@@ -1,18 +1,18 @@
 import React from 'react';
 import type { FC } from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LoginPage from './routes/LoginPage';
 import MainPage from './routes/MainPage';
 import RegistrationPage from './routes/RegistrationPage';
 
-const Routes: FC = () => (
+const Router: FC = () => (
     <BrowserRouter>
-        <Switch>
-            <Route exact path="/" component={MainPage} />
-            <Route exact path="/register" component={RegistrationPage} />
-            <Route exact path="/login" component={LoginPage} />
-        </Switch>
+        <Routes>
+            <Route path="/" element={<MainPage />} />
+            <Route path="/register" element={<RegistrationPage />} />
+            <Route path="/login" element={<LoginPage />} />
+        </Routes>
     </BrowserRouter>
 );
 
-export default Routes;
+export default Router;

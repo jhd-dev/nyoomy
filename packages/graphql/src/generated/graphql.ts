@@ -73,16 +73,20 @@ export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?:
 
 /**
  * @typedef {Object} Mutation
+ * @property {Todo} [addTodo]
+ * @property {boolean} deleteTodo
  * @property {boolean} deleteUser
  * @property {boolean} deleteUserById
  * @property {LoginResponse} [login]
  * @property {boolean} logout
  * @property {RegistrationResponse} registerUser
+ * @property {Todo} [updateTodo]
  * @property {boolean} updateUserPassword
  */
 
 /**
  * @typedef {Object} Query
+ * @property {Array<Todo>} getMyTodos
  * @property {User} [me]
  */
 
@@ -202,6 +206,17 @@ export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?:
  */
 
 /**
+ * @typedef {Object} UpdateTodoInput
+ * @property {string} date
+ * @property {string} [description]
+ * @property {string} id
+ * @property {boolean} [isArchived]
+ * @property {boolean} [isCompleted]
+ * @property {Array<Weekday>} [repeatWeekdays]
+ * @property {string} [title]
+ */
+
+/**
  * Centralized user reference
  * @typedef {Object} User
  * @property {DateTime} createdAt
@@ -305,12 +320,20 @@ export enum MetricType {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addTodo?: Maybe<Todo>;
+  deleteTodo: Scalars['Boolean'];
   deleteUser: Scalars['Boolean'];
   deleteUserById: Scalars['Boolean'];
   login?: Maybe<LoginResponse>;
   logout: Scalars['Boolean'];
   registerUser: RegistrationResponse;
+  updateTodo?: Maybe<Todo>;
   updateUserPassword: Scalars['Boolean'];
+};
+
+
+export type MutationDeleteTodoArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -329,13 +352,24 @@ export type MutationRegisterUserArgs = {
 };
 
 
+export type MutationUpdateTodoArgs = {
+  updateInput: UpdateTodoInput;
+};
+
+
 export type MutationUpdateUserPasswordArgs = {
   input: UpdatePasswordInput;
 };
 
 export type Query = {
   __typename?: 'Query';
+  getMyTodos: Array<Todo>;
   me?: Maybe<User>;
+};
+
+
+export type QueryGetMyTodosArgs = {
+  excludeArchived: Scalars['Boolean'];
 };
 
 /** User registration data */
@@ -449,6 +483,16 @@ export type UpdatePasswordInput = {
   newPassword: Scalars['String'];
   oldPassword: Scalars['String'];
   username: Scalars['String'];
+};
+
+export type UpdateTodoInput = {
+  date: Scalars['String'];
+  description?: InputMaybe<Scalars['String']>;
+  id: Scalars['ID'];
+  isArchived?: InputMaybe<Scalars['Boolean']>;
+  isCompleted?: InputMaybe<Scalars['Boolean']>;
+  repeatWeekdays?: InputMaybe<Array<Weekday>>;
+  title?: InputMaybe<Scalars['String']>;
 };
 
 /** Centralized user reference */
@@ -601,6 +645,7 @@ export type ResolversTypes = {
   TimerMetric: ResolverTypeWrapper<TimerMetric>;
   Todo: ResolverTypeWrapper<Todo>;
   UpdatePasswordInput: UpdatePasswordInput;
+  UpdateTodoInput: UpdateTodoInput;
   User: ResolverTypeWrapper<User>;
   UserLoginInput: UserLoginInput;
   Weekday: Weekday;
@@ -635,6 +680,7 @@ export type ResolversParentTypes = {
   TimerMetric: TimerMetric;
   Todo: Todo;
   UpdatePasswordInput: UpdatePasswordInput;
+  UpdateTodoInput: UpdateTodoInput;
   User: User;
   UserLoginInput: UserLoginInput;
 };
@@ -694,15 +740,19 @@ export type MetricResolvers<ContextType = any, ParentType extends ResolversParen
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  addTodo?: Resolver<Maybe<ResolversTypes['Todo']>, ParentType, ContextType>;
+  deleteTodo?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteTodoArgs, 'id'>>;
   deleteUser?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   deleteUserById?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteUserByIdArgs, 'id'>>;
   login?: Resolver<Maybe<ResolversTypes['LoginResponse']>, ParentType, ContextType, RequireFields<MutationLoginArgs, 'input'>>;
   logout?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   registerUser?: Resolver<ResolversTypes['RegistrationResponse'], ParentType, ContextType, RequireFields<MutationRegisterUserArgs, 'input'>>;
+  updateTodo?: Resolver<Maybe<ResolversTypes['Todo']>, ParentType, ContextType, RequireFields<MutationUpdateTodoArgs, 'updateInput'>>;
   updateUserPassword?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationUpdateUserPasswordArgs, 'input'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  getMyTodos?: Resolver<Array<ResolversTypes['Todo']>, ParentType, ContextType, RequireFields<QueryGetMyTodosArgs, 'excludeArchived'>>;
   me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
 };
 

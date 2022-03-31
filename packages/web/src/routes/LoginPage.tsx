@@ -7,9 +7,8 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import InputTextField from '../components/InputTextField';
-import type { RouteComponentProps } from 'react-router-dom';
 
-const LoginPage: FC<RouteComponentProps> = ({ history }) => {
+const LoginPage: FC = () => {
     const [usernameOrEmail, setUsernameOrEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -20,21 +19,23 @@ const LoginPage: FC<RouteComponentProps> = ({ history }) => {
         e.preventDefault();
         const response = await login({
             variables: {
-                usernameOrEmail,
-                password,
+                input: {
+                    usernameOrEmail,
+                    passwordInput: password,
+                },
             },
             update: (store, { data }): void => {
                 if (data == null) return;
                 store.writeQuery<MeQuery>({
                     query: MeDocument,
                     data: {
-                        currentUser: data.login.user,
+                        me: data.login.user,
                     },
                 });
             },
         });
         console.log(response);
-        history.push('/');
+        // history.push('/');
     };
 
     return (
@@ -62,7 +63,6 @@ const LoginPage: FC<RouteComponentProps> = ({ history }) => {
                     required
                 />
                 <Button type="submit">Login</Button>
-                <Button type="" />
             </Container>
         </Form>
     );
