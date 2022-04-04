@@ -1,11 +1,11 @@
 import type { FormEvent, FC } from 'react';
 import React, { useState } from 'react';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 import type { IInputEvent } from '@nyoomy/common';
-// import type { MeQuery } from '@nyoomy/graphql';
-import { /* MeDocument, */ useLoginMutation } from '@nyoomy/graphql';
-import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
-import Form from 'react-bootstrap/Form';
+import { useLoginMutation } from '@nyoomy/graphql';
+import { Header } from '../components/Header';
 import InputTextField from '../components/InputTextField';
 
 const LoginPage: FC = () => {
@@ -17,30 +17,33 @@ const LoginPage: FC = () => {
 
     const handleSubmit = async (e: FormEvent): Promise<void> => {
         e.preventDefault();
-        const response = await login({
+        await login({
             variables: {
                 input: {
                     usernameOrEmail,
                     passwordInput: password,
                 },
             },
-            // update: (store, { data }): void => {
-            //     if (data == null) return;
-            //     store.writeQuery<MeQuery>({
-            //         query: MeDocument,
-            //         data: {
-            //             me: data.login.user,
-            //         },
-            //     });
-            // },
         });
-        console.log(response);
-        // history.push('/');
     };
 
     return (
-        <Form className="credentialsForm loginForm" onSubmit={handleSubmit}>
-            <Container>
+        <>
+            <Header />
+            <Typography component="h1" variant="h5">
+                Log In
+            </Typography>
+            <Box
+                component="form"
+                onSubmit={handleSubmit}
+                sx={{
+                    marginTop: 8,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                }}
+                className="credentialsForm loginForm"
+            >
                 <InputTextField
                     field="usernameOrEmail"
                     label="Username/Email"
@@ -62,9 +65,16 @@ const LoginPage: FC = () => {
                     placeholder="********"
                     required
                 />
-                <Button type="submit">Login</Button>
-            </Container>
-        </Form>
+                <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2 }}
+                >
+                    Login
+                </Button>
+            </Box>
+        </>
     );
 };
 

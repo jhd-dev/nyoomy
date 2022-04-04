@@ -1,5 +1,7 @@
 import type { FC } from 'react';
 import React from 'react';
+import { Button, Box } from '@mui/material';
+import Typography from '@mui/material/Typography';
 import { useMeQuery, useLogoutMutation } from '@nyoomy/graphql';
 import { Link } from 'react-router-dom';
 
@@ -12,13 +14,13 @@ export const LoginStatus: FC = () => {
         return <></>;
     }
     if (loading) {
-        return <div>Loading...</div>;
+        return <Typography>Loading...</Typography>;
     }
     if (data?.me != null) {
         return (
-            <div>
-                <div>Logged in as: {data.me.username}</div>
-                <button
+            <Box>
+                <Typography>Logged in as: {data.me.username}</Typography>
+                <Button
                     className="btn"
                     type="button"
                     onClick={async () => {
@@ -27,18 +29,18 @@ export const LoginStatus: FC = () => {
                     }}
                 >
                     Logout
-                </button>
-            </div>
+                </Button>
+            </Box>
         );
     }
     return (
         <>
-            <button type="button">
+            <Button type="button">
                 <Link to="/register">Register</Link>
-            </button>
-            <button type="button">
+            </Button>
+            <Button type="button">
                 <Link to="/login">Login</Link>
-            </button>
+            </Button>
         </>
     );
 };

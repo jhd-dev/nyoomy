@@ -1,11 +1,10 @@
 import type { FC } from 'react';
 import React from 'react';
+import { TextField } from '@mui/material';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 import type { IInputEvent } from '@nyoomy/common';
 import type { FieldError } from '@nyoomy/graphql';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
-import Row from 'react-bootstrap/Row';
 
 interface InputTextFieldProps {
     field: string;
@@ -30,31 +29,21 @@ const InputTextField: FC<InputTextFieldProps> = ({
     autoFocus,
     children,
 }) => (
-    <Form.Group>
-        <Row>
-            <Col md>
-                <Form.Label>{label}: </Form.Label>
-            </Col>
-            <Col xs={12} md={9}>
-                <InputGroup>
-                    {children ?? null}
-                    <Form.Control
-                        type={inputType}
-                        id={field}
-                        onChange={(e: IInputEvent) => handleChange(e)}
-                        placeholder={placeholder ?? ''}
-                        required={required ?? false}
-                        autoFocus={autoFocus ?? false}
-                    />
-                </InputGroup>
-            </Col>
-        </Row>
+    <Grid item xs={12} sm={6}>
+        {children ?? null}
+        <TextField
+            type={inputType}
+            id={field}
+            label={label}
+            onChange={(e: IInputEvent) => handleChange(e)}
+            placeholder={placeholder ?? ''}
+            required={required ?? false}
+            autoFocus={autoFocus ?? false}
+        />
         {errors?.map((err, i) => (
-            <Form.Control.Feedback type="invalid" key={err.field + String(i)}>
-                {err.message}
-            </Form.Control.Feedback>
+            <Typography key={err.field + String(i)}>{err.message}</Typography>
         ))}
-    </Form.Group>
+    </Grid>
 );
 
 export default InputTextField;
