@@ -1,4 +1,8 @@
 import 'reflect-metadata';
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
 import './utils/i18n';
 import './style/index.scss';
 import './style/App.scss';
@@ -7,9 +11,6 @@ import fetch from 'cross-fetch';
 import { render } from 'react-dom';
 import Router from './Router';
 import { ApolloWrapper } from './components/ApolloWrapper';
-// import { __dev__ } from './env';
-// import registerServiceWorker from './utils/registerServiceWorker';
-// import { reportWebVitals } from './utils/reportWebVitals';
 
 global.fetch = fetch;
 
@@ -26,7 +27,3 @@ render(
     </StrictMode>,
     rootElement
 );
-
-// registerServiceWorker();
-
-// if (__dev__) reportWebVitals(console.info);
