@@ -7,11 +7,14 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
+import { useNavigate } from 'react-router-dom';
 import { Header } from '../components/Header';
 import InputTextField from '../components/InputTextField';
 // import type { RouteComponentProps } from 'react-router-dom';
 
-const RegistrationPage: FC = ({ history }) => {
+const RegistrationPage: FC = () => {
+    const navigate = useNavigate();
+
     const [displayName, setName] = useState('');
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -25,18 +28,15 @@ const RegistrationPage: FC = ({ history }) => {
         e.preventDefault();
         const response = await register({
             variables: {
-                displayName,
-                email,
-                username,
-                password,
+                input: { displayName, email, username, password },
             },
         });
         console.log(response);
-        if (response?.data?.registerUser?.errors == null) {
-            history.push('/');
-            return;
+        if (response?.data?.registerUser?.user) {
+            navigate('/');
+            // return;
         }
-        setFieldErrors(response.data.registerUser.errors);
+        // setFieldErrors(response.data.registerUser.errors);
     };
 
     const handleChangeBuilder =
@@ -96,11 +96,11 @@ const RegistrationPage: FC = ({ history }) => {
                         placeholder="johnny_123"
                         required
                     >
-                        <InputGroup.Prepend>
+                        <InputGroup>
                             <InputGroup.Text id="Form.ControlGroupPrepend">
                                 @
                             </InputGroup.Text>
-                        </InputGroup.Prepend>
+                        </InputGroup>
                     </InputTextField>
                     <InputTextField
                         field="password"

@@ -7,9 +7,9 @@ import fetch from 'cross-fetch';
 import { render } from 'react-dom';
 import Router from './Router';
 import { ApolloWrapper } from './components/ApolloWrapper';
-import { __dev__ } from './env';
-import registerServiceWorker from './utils/registerServiceWorker';
-import { reportWebVitals } from './utils/reportWebVitals';
+// import { __dev__ } from './env';
+// import registerServiceWorker from './utils/registerServiceWorker';
+// import { reportWebVitals } from './utils/reportWebVitals';
 
 global.fetch = fetch;
 
@@ -27,6 +27,6 @@ render(
     rootElement
 );
 
-registerServiceWorker();
+// registerServiceWorker();
 
-if (__dev__) reportWebVitals(console.info);
+// if (__dev__) reportWebVitals(console.info);

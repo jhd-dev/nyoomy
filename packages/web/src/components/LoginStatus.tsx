@@ -14,10 +14,10 @@ export const LoginStatus: FC = () => {
     if (loading) {
         return <div>Loading...</div>;
     }
-    if (data?.currentUser != null) {
+    if (data?.me != null) {
         return (
             <div>
-                <div>Logged in as: {data.currentUser.displayName}</div>
+                <div>Logged in as: {data.me.username}</div>
                 <button
                     className="btn"
                     type="button"

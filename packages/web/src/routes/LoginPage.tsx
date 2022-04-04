@@ -1,8 +1,8 @@
 import type { FormEvent, FC } from 'react';
 import React, { useState } from 'react';
 import type { IInputEvent } from '@nyoomy/common';
-import type { MeQuery } from '@nyoomy/graphql';
-import { MeDocument, useLoginMutation } from '@nyoomy/graphql';
+// import type { MeQuery } from '@nyoomy/graphql';
+import { /* MeDocument, */ useLoginMutation } from '@nyoomy/graphql';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
@@ -24,15 +24,15 @@ const LoginPage: FC = () => {
                     passwordInput: password,
                 },
             },
-            update: (store, { data }): void => {
-                if (data == null) return;
-                store.writeQuery<MeQuery>({
-                    query: MeDocument,
-                    data: {
-                        me: data.login.user,
-                    },
-                });
-            },
+            // update: (store, { data }): void => {
+            //     if (data == null) return;
+            //     store.writeQuery<MeQuery>({
+            //         query: MeDocument,
+            //         data: {
+            //             me: data.login.user,
+            //         },
+            //     });
+            // },
         });
         console.log(response);
         // history.push('/');
