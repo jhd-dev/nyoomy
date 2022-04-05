@@ -2,6 +2,7 @@ import type { FormEvent, FC } from 'react';
 import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import type { IInputEvent } from '@nyoomy/common';
 import { useLoginMutation } from '@nyoomy/graphql';
@@ -44,27 +45,29 @@ const LoginPage: FC = () => {
                 }}
                 className="credentialsForm loginForm"
             >
-                <InputTextField
-                    field="usernameOrEmail"
-                    label="Username/Email"
-                    inputType="text"
-                    handleChange={(e: IInputEvent) =>
-                        setUsernameOrEmail(e.target.value)
-                    }
-                    placeholder="Username or Email Address"
-                    required
-                    autoFocus
-                />
-                <InputTextField
-                    field="password"
-                    label="Password"
-                    inputType="password"
-                    handleChange={(e: IInputEvent) =>
-                        setPassword(e.target.value)
-                    }
-                    placeholder="********"
-                    required
-                />
+                <Grid container spacing={2}>
+                    <InputTextField
+                        field="usernameOrEmail"
+                        label="Username/Email"
+                        inputType="text"
+                        handleChange={(e: IInputEvent) =>
+                            setUsernameOrEmail(e.target.value)
+                        }
+                        placeholder="Username or Email Address"
+                        required
+                        autoFocus
+                    />
+                    <InputTextField
+                        field="password"
+                        label="Password"
+                        inputType="password"
+                        handleChange={(e: IInputEvent) =>
+                            setPassword(e.target.value)
+                        }
+                        placeholder="********"
+                        required
+                    />
+                </Grid>
                 <Button
                     type="submit"
                     fullWidth
