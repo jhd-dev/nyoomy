@@ -8,7 +8,6 @@ import './style/index.scss';
 import './style/App.scss';
 import React, { StrictMode } from 'react';
 import { CssBaseline, ThemeProvider } from '@mui/material';
-import Container from '@mui/material/Container';
 import fetch from 'cross-fetch';
 import { render } from 'react-dom';
 import Router from './Router';
@@ -25,14 +24,7 @@ render(
         <ApolloWrapper>
             <ThemeProvider theme={defaultTheme}>
                 <CssBaseline />
-                <Container
-                    component="main"
-                    maxWidth="md"
-                    data-testid="App"
-                    className="App"
-                >
-                    <Router />
-                </Container>
+                <Router />
             </ThemeProvider>
         </ApolloWrapper>
     </StrictMode>,

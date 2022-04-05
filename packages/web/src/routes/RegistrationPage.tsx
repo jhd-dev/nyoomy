@@ -5,7 +5,6 @@ import type { IInputEvent } from '@nyoomy/common';
 import type { FieldError } from '@nyoomy/graphql';
 import { useRegisterMutation } from '@nyoomy/graphql';
 import { useNavigate } from 'react-router-dom';
-import { Header } from '../components/Header';
 import InputTextField from '../components/InputTextField';
 
 const RegistrationPage: FC = () => {
@@ -27,7 +26,6 @@ const RegistrationPage: FC = () => {
                 input: { displayName, email, username, password },
             },
         });
-        console.log(response);
         if (response?.data?.registerUser?.user) {
             navigate('/');
             // return;
@@ -47,7 +45,6 @@ const RegistrationPage: FC = () => {
 
     return (
         <>
-            <Header />
             <Typography component="h1" variant="h5">
                 Register
             </Typography>

@@ -6,7 +6,6 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import type { IInputEvent } from '@nyoomy/common';
 import { useLoginMutation } from '@nyoomy/graphql';
-import { Header } from '../components/Header';
 import InputTextField from '../components/InputTextField';
 
 const LoginPage: FC = () => {
@@ -30,7 +29,6 @@ const LoginPage: FC = () => {
 
     return (
         <>
-            <Header />
             <Typography component="h1" variant="h5">
                 Log In
             </Typography>

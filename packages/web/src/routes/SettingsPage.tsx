@@ -18,7 +18,6 @@ import {
     Typography,
 } from '@mui/material';
 import { useMeQuery } from '@nyoomy/graphql';
-import { Header } from '../components/Header';
 
 interface ISettingsPageProps {
     drawerWidth: number;
@@ -30,7 +29,6 @@ const SettingsPage: FC<ISettingsPageProps> = ({
     const { data, loading } = useMeQuery();
     return (
         <Box>
-            <Header />
             <Drawer
                 variant="permanent"
                 sx={{
