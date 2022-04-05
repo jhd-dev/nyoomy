@@ -22,17 +22,6 @@ export const LoginStatus: FC = () => {
         return (
             <>
                 <AvatarButton />
-                <Typography>Logged in as: {data.me.username}</Typography>
-                <Button
-                    className="btn"
-                    type="button"
-                    onClick={async () => {
-                        await logout();
-                        await client.resetStore();
-                    }}
-                >
-                    Logout
-                </Button>
             </>
         );
     }
