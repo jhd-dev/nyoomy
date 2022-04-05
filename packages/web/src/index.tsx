@@ -27,7 +27,7 @@ render(
                 <CssBaseline />
                 <Container
                     component="main"
-                    maxWidth="xs"
+                    maxWidth="md"
                     data-testid="App"
                     className="App"
                 >

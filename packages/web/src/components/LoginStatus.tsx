@@ -1,9 +1,11 @@
 import type { FC } from 'react';
 import React from 'react';
-import { Button, Box } from '@mui/material';
+import { AppRegistration, Person } from '@mui/icons-material';
+import { Button } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { useMeQuery, useLogoutMutation } from '@nyoomy/graphql';
 import { Link } from 'react-router-dom';
+import { AvatarButton } from './AvatarButton';
 
 export const LoginStatus: FC = () => {
     const { data, loading, error } = useMeQuery();
@@ -18,7 +20,8 @@ export const LoginStatus: FC = () => {
     }
     if (data?.me != null) {
         return (
-            <Box>
+            <>
+                <AvatarButton />
                 <Typography>Logged in as: {data.me.username}</Typography>
                 <Button
                     className="btn"
@@ -30,17 +33,31 @@ export const LoginStatus: FC = () => {
                 >
                     Logout
                 </Button>
-            </Box>
+            </>
         );
     }
     return (
         <>
-            <Button type="button">
-                <Link to="/register">Register</Link>
-            </Button>
-            <Button type="button">
-                <Link to="/login">Login</Link>
-            </Button>
+            <Link to="/login">
+                <Button
+                    variant="contained"
+                    type="button"
+                    endIcon={<Person />}
+                    color="primary"
+                >
+                    Login
+                </Button>
+            </Link>
+            <Link to="/register">
+                <Button
+                    variant="contained"
+                    type="button"
+                    endIcon={<AppRegistration />}
+                    color="secondary"
+                >
+                    Register
+                </Button>
+            </Link>
         </>
     );
 };
