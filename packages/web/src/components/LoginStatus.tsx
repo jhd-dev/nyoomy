@@ -3,13 +3,12 @@ import React from 'react';
 import { AppRegistration, Person } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import { useMeQuery, useLogoutMutation } from '@nyoomy/graphql';
+import { useMeQuery } from '@nyoomy/graphql';
 import { Link } from 'react-router-dom';
 import { AvatarButton } from './AvatarButton';
 
 export const LoginStatus: FC = () => {
     const { data, loading, error } = useMeQuery();
-    const [logout, { client }] = useLogoutMutation();
 
     if (error !== undefined) {
         console.error(error);

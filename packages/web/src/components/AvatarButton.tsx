@@ -12,21 +12,24 @@ import {
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import { useLogoutMutation, useMeQuery } from '@nyoomy/graphql';
+import { Link } from 'react-router-dom';
 
 export const AvatarButton: FC = () => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const { data, loading } = useMeQuery();
     const [logout, { client }] = useLogoutMutation();
-    if (loading || data?.me == null) {
-        return <Avatar />;
-    }
+
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     };
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    if (loading || data?.me == null) {
+        return <Avatar />;
+    }
 
     return (
         <div>
@@ -49,11 +52,13 @@ export const AvatarButton: FC = () => {
                 <MenuItem>
                     <Avatar /> Profile
                 </MenuItem>
-                <MenuItem>
-                    <ListItemIcon>
-                        <Settings fontSize="small" /> Settings
-                    </ListItemIcon>
-                </MenuItem>
+                <Link to="/settings">
+                    <MenuItem>
+                        <ListItemIcon>
+                            <Settings fontSize="small" /> Settings
+                        </ListItemIcon>
+                    </MenuItem>
+                </Link>
                 <MenuItem
                     onClick={async () => {
                         await logout();
