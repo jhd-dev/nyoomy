@@ -26,9 +26,7 @@
         "setup": "yarn install && yarn link -Apr . && yarn workspace @nyoomy/eslint-config build",
         "start": "concurrently --names \"CLIENT,SERVER\" \"yarn workspace @nyoomy/web start\" \"yarn workspace @nyoomy/server start\"",
         "watch": "concurrently --names \"CLIENT,SERVER\" \"yarn workspace @nyoomy/web watch\" \"yarn workspace @nyoomy/server watch\"",
-        "build": "yarn run clean && lerna run build",
         "build:ts": "tsc -b tsconfig-composite.json",
-        "test": "lerna run test",
         "lint": "yarn lint:eslint && yarn lint:style && yarn lint:markdown && yarn lint:format",
         "lint:eslint": "eslint \"**/*.{js,jsx,ts,tsx,html,json,yml}\" --cache --fix --color",
         "lint:markdown": "markdownlint --fix --config .markdownlintrc.jsonc --ignore-path .markdownlintignore ./",
@@ -39,8 +37,7 @@
         "check:types": "tsc",
         "check:spelling": "cspell \"packages/**/*.*\" --config ./cSpell.json",
         "clean": "./scripts/clean.ts -vm",
-        "clean:fast": "./scripts/clean.ts",
-        "diff": "lerna diff"
+        "clean:fast": "./scripts/clean.ts"
     },
     "resolutions": {
         "@nyoomy/api": "portal:packages/api",
@@ -74,7 +71,6 @@
         "husky": "^6.0.0",
         "jest": "^27.4.7",
         "jest-transform-stub": "^2.0.0",
-        "lerna": "^4.0.0",
         "lint-staged": "^10.5.4",
         "markdownlint": "^0.23.1",
         "markdownlint-cli": "^0.27.1",
