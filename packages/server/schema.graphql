@@ -10,6 +10,13 @@ enum CategoryIcon {
   WATER
 }
 
+type Chat {
+  createdAt: DateTime!
+  id: ID!
+  isArchived: Boolean!
+  members: User!
+}
+
 type CounterMetric {
   id: ID!
   interval: Int!

@@ -18,6 +18,7 @@ import { ComplexityPlugin } from './common/plugins/complexity.plugin';
 import { configuration } from './config/configuration';
 import { COOKIE_NAME, REDIS_SESSION_PREFIX } from './constants';
 import { AuthModule } from './modules/auth/auth.module';
+import { ChatModule } from './modules/chat/chat.module';
 import { REDIS } from './modules/redis/redis.constants';
 import { RedisModule } from './modules/redis/redis.module';
 import { TodoModule } from './modules/todo/todo.module';
@@ -34,6 +35,7 @@ const GRAPHQL_SCHEMA_PATH = join(__dirname, '../schema.graphql');
         AuthModule,
         RedisModule,
         TodoModule,
+        ChatModule,
         UserModule,
         TypeOrmModule.forRoot(),
         GraphQLModule.forRoot({
