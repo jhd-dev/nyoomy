@@ -13,7 +13,6 @@
         "type": "git",
         "url": "git+https://github.com/jhd-dev/nyoomy.git"
     },
-    "funding": [],
     "license": "GPL-3.0",
     "author": {
         "name": "Jonathan Doliver",
@@ -56,7 +55,8 @@
         "@nyoomy/server": "portal:packages/server",
         "@nyoomy/stylelint-config": "portal:packages/stylelint-config",
         "@nyoomy/web": "portal:packages/web",
-        "nyoomy": "portal:"
+        "nyoomy": "portal:",
+        "url-parse@npm:1.5.1": "1.5.8"
     },
     "devDependencies": {
         "@nyoomy/eslint-config": "workspace:*",
