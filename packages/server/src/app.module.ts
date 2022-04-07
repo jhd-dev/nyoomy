@@ -1,3 +1,4 @@
+import { ApolloDriver } from '@nestjs/apollo';
 import { Module, Logger, Inject } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
@@ -24,6 +25,7 @@ import { RedisModule } from './modules/redis/redis.module';
 import { TodoModule } from './modules/todo/todo.module';
 import { UserModule } from './modules/user/user.module';
 import type { IContext } from './types/interfaces/context.interface';
+import type { ApolloDriverConfig } from '@nestjs/apollo';
 import type { NestModule, MiddlewareConsumer } from '@nestjs/common';
 import type { Client as ConnectRedisClient } from 'connect-redis';
 
@@ -38,7 +40,8 @@ const GRAPHQL_SCHEMA_PATH = join(__dirname, '../schema.graphql');
         ChatModule,
         UserModule,
         TypeOrmModule.forRoot(),
-        GraphQLModule.forRoot({
+        GraphQLModule.forRoot<ApolloDriverConfig>({
+            driver: ApolloDriver,
             autoSchemaFile: GRAPHQL_SCHEMA_PATH,
             sortSchema: true,
             installSubscriptionHandlers: true,

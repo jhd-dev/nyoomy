@@ -1,5 +1,5 @@
 import { Injectable, UseGuards } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CurrentUser } from '../../common/decorators/user.decorator';
 import { AuthenticatedGuard } from '../auth/guards/authenticated.guard';
 import { User } from '../user/models/user.entity';
@@ -59,7 +59,7 @@ export class ChatResolver {
     @UseGuards(AuthenticatedGuard)
     public deleteMessage(
         @CurrentUser() sender: User,
-        @Args('messageId') messageId: number
+        @Args('messageId', { type: () => ID }) messageId: number
     ): Promise<boolean> {
         return this.chatService.deleteMessage(sender.id, messageId);
     }

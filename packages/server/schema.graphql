@@ -39,6 +39,11 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+input EditMessageInput {
+  content: String!
+  messageId: Float!
+}
+
 type FieldError {
   field: String!
   message: String!
@@ -55,6 +60,15 @@ type Journal {
 type LoginResponse {
   error: String
   user: SafeUser
+}
+
+type Message {
+  chat: Chat!
+  content: String!
+  edittedAt: DateTime!
+  id: ID!
+  sender: User!
+  sentAt: DateTime!
 }
 
 type Metric {
@@ -79,12 +93,16 @@ enum MetricType {
 
 type Mutation {
   addTodo: Todo
+  deleteMessage(messageId: ID!): Boolean
   deleteTodo(id: ID!): Boolean!
   deleteUser: Boolean!
   deleteUserById(id: ID!): Boolean!
+  editMessage(input: EditMessageInput!): Message
   login(input: UserLoginInput!): LoginResponse
   logout: Boolean!
   registerUser(input: RegisterUserInput!): RegistrationResponse!
+  sendMessageToChat(input: SendMessageToChatInput!): Message
+  sendMessageToUser(input: SendMessageToUserInput!): Message
   updateTodo(updateInput: UpdateTodoInput!): Todo
   updateUserPassword(input: UpdatePasswordInput!): Boolean!
 }
@@ -92,6 +110,7 @@ type Mutation {
 type Query {
   getMyTodos(excludeArchived: Boolean!): [Todo!]!
   me: User
+  myChats(excludeArchived: Boolean!): [Chat!]!
 }
 
 """User registration data"""
@@ -155,6 +174,16 @@ type SelectionOption {
   metric: SelectionMetric!
   selectingEntries: [SelectionEntry!]!
   title: String!
+}
+
+input SendMessageToChatInput {
+  chatId: Float!
+  content: String!
+}
+
+input SendMessageToUserInput {
+  content: String!
+  recipientId: String!
 }
 
 type Tag {

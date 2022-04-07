@@ -26,6 +26,14 @@ export enum CategoryIcon {
   Water = 'WATER'
 }
 
+export type Chat = {
+  __typename?: 'Chat';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  isArchived: Scalars['Boolean'];
+  members: User;
+};
+
 export type CounterMetric = {
   __typename?: 'CounterMetric';
   id: Scalars['ID'];
@@ -43,6 +51,11 @@ export type DailyFloatMetric = {
   metric: Metric;
   metricType: MetricType;
   min: Scalars['Float'];
+};
+
+export type EditMessageInput = {
+  content: Scalars['String'];
+  messageId: Scalars['Float'];
 };
 
 export type FieldError = {
@@ -64,6 +77,16 @@ export type LoginResponse = {
   __typename?: 'LoginResponse';
   error?: Maybe<Scalars['String']>;
   user?: Maybe<SafeUser>;
+};
+
+export type Message = {
+  __typename?: 'Message';
+  chat: Chat;
+  content: Scalars['String'];
+  edittedAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  sender: User;
+  sentAt: Scalars['DateTime'];
 };
 
 export type Metric = {
@@ -90,14 +113,23 @@ export enum MetricType {
 export type Mutation = {
   __typename?: 'Mutation';
   addTodo?: Maybe<Todo>;
+  deleteMessage?: Maybe<Scalars['Boolean']>;
   deleteTodo: Scalars['Boolean'];
   deleteUser: Scalars['Boolean'];
   deleteUserById: Scalars['Boolean'];
+  editMessage?: Maybe<Message>;
   login?: Maybe<LoginResponse>;
   logout: Scalars['Boolean'];
   registerUser: RegistrationResponse;
+  sendMessageToChat?: Maybe<Message>;
+  sendMessageToUser?: Maybe<Message>;
   updateTodo?: Maybe<Todo>;
   updateUserPassword: Scalars['Boolean'];
+};
+
+
+export type MutationDeleteMessageArgs = {
+  messageId: Scalars['ID'];
 };
 
 
@@ -111,6 +143,11 @@ export type MutationDeleteUserByIdArgs = {
 };
 
 
+export type MutationEditMessageArgs = {
+  input: EditMessageInput;
+};
+
+
 export type MutationLoginArgs = {
   input: UserLoginInput;
 };
@@ -118,6 +155,16 @@ export type MutationLoginArgs = {
 
 export type MutationRegisterUserArgs = {
   input: RegisterUserInput;
+};
+
+
+export type MutationSendMessageToChatArgs = {
+  input: SendMessageToChatInput;
+};
+
+
+export type MutationSendMessageToUserArgs = {
+  input: SendMessageToUserInput;
 };
 
 
@@ -134,10 +181,16 @@ export type Query = {
   __typename?: 'Query';
   getMyTodos: Array<Todo>;
   me?: Maybe<User>;
+  myChats: Array<Chat>;
 };
 
 
 export type QueryGetMyTodosArgs = {
+  excludeArchived: Scalars['Boolean'];
+};
+
+
+export type QueryMyChatsArgs = {
   excludeArchived: Scalars['Boolean'];
 };
 
@@ -209,6 +262,16 @@ export type SelectionOption = {
   metric: SelectionMetric;
   selectingEntries: Array<SelectionEntry>;
   title: Scalars['String'];
+};
+
+export type SendMessageToChatInput = {
+  chatId: Scalars['Float'];
+  content: Scalars['String'];
+};
+
+export type SendMessageToUserInput = {
+  content: Scalars['String'];
+  recipientId: Scalars['String'];
 };
 
 export type Tag = {
@@ -292,24 +355,59 @@ export enum Weekday {
   Wednesday = 'WEDNESDAY'
 }
 
+export type MyChatsQueryVariables = Exact<{
+  excludeArchived: Scalars['Boolean'];
+}>;
+
+
+export type MyChatsQuery = { __typename?: 'Query', myChats: Array<{ __typename?: 'Chat', id: string, members: { __typename?: 'User', id: string, username: string } }> };
+
+export type SendMessageToUserMutationVariables = Exact<{
+  input: SendMessageToUserInput;
+}>;
+
+
+export type SendMessageToUserMutation = { __typename?: 'Mutation', sendMessageToUser?: { __typename?: 'Message', id: string } | null };
+
+export type SendMessageToChatMutationVariables = Exact<{
+  input: SendMessageToChatInput;
+}>;
+
+
+export type SendMessageToChatMutation = { __typename?: 'Mutation', sendMessageToChat?: { __typename?: 'Message', id: string, content: string, sentAt: any, chat: { __typename?: 'Chat', id: string } } | null };
+
+export type EditMessageMutationVariables = Exact<{
+  input: EditMessageInput;
+}>;
+
+
+export type EditMessageMutation = { __typename?: 'Mutation', editMessage?: { __typename?: 'Message', id: string, content: string, sentAt: any, edittedAt: any, chat: { __typename?: 'Chat', id: string } } | null };
+
+export type DeleteMessageMutationVariables = Exact<{
+  messageId: Scalars['ID'];
+}>;
+
+
+export type DeleteMessageMutation = { __typename?: 'Mutation', deleteMessage?: boolean | null };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, username: string, email: string } | null | undefined };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, username: string, email: string } | null };
 
 export type RegisterMutationVariables = Exact<{
   input: RegisterUserInput;
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', registerUser: { __typename?: 'RegistrationResponse', user?: { __typename?: 'SafeUser', id: string, username: string } | null | undefined } };
+export type RegisterMutation = { __typename?: 'Mutation', registerUser: { __typename?: 'RegistrationResponse', user?: { __typename?: 'SafeUser', id: string, username: string } | null } };
 
 export type LoginMutationVariables = Exact<{
   input: UserLoginInput;
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login?: { __typename?: 'LoginResponse', user?: { __typename?: 'SafeUser', id: string, username: string } | null | undefined } | null | undefined };
+export type LoginMutation = { __typename?: 'Mutation', login?: { __typename?: 'LoginResponse', user?: { __typename?: 'SafeUser', id: string, username: string } | null } | null };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -317,6 +415,189 @@ export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
 
 
+export const MyChatsDocument = gql`
+    query MyChats($excludeArchived: Boolean!) {
+  myChats(excludeArchived: $excludeArchived) {
+    id
+    members {
+      id
+      username
+    }
+  }
+}
+    `;
+
+/**
+ * __useMyChatsQuery__
+ *
+ * To run a query within a React component, call `useMyChatsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMyChatsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMyChatsQuery({
+ *   variables: {
+ *      excludeArchived: // value for 'excludeArchived'
+ *   },
+ * });
+ */
+export function useMyChatsQuery(baseOptions: Apollo.QueryHookOptions<MyChatsQuery, MyChatsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MyChatsQuery, MyChatsQueryVariables>(MyChatsDocument, options);
+      }
+export function useMyChatsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MyChatsQuery, MyChatsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MyChatsQuery, MyChatsQueryVariables>(MyChatsDocument, options);
+        }
+export type MyChatsQueryHookResult = ReturnType<typeof useMyChatsQuery>;
+export type MyChatsLazyQueryHookResult = ReturnType<typeof useMyChatsLazyQuery>;
+export type MyChatsQueryResult = Apollo.QueryResult<MyChatsQuery, MyChatsQueryVariables>;
+export function refetchMyChatsQuery(variables: MyChatsQueryVariables) {
+      return { query: MyChatsDocument, variables: variables }
+    }
+export const SendMessageToUserDocument = gql`
+    mutation SendMessageToUser($input: SendMessageToUserInput!) {
+  sendMessageToUser(input: $input) {
+    id
+  }
+}
+    `;
+export type SendMessageToUserMutationFn = Apollo.MutationFunction<SendMessageToUserMutation, SendMessageToUserMutationVariables>;
+
+/**
+ * __useSendMessageToUserMutation__
+ *
+ * To run a mutation, you first call `useSendMessageToUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendMessageToUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendMessageToUserMutation, { data, loading, error }] = useSendMessageToUserMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSendMessageToUserMutation(baseOptions?: Apollo.MutationHookOptions<SendMessageToUserMutation, SendMessageToUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SendMessageToUserMutation, SendMessageToUserMutationVariables>(SendMessageToUserDocument, options);
+      }
+export type SendMessageToUserMutationHookResult = ReturnType<typeof useSendMessageToUserMutation>;
+export type SendMessageToUserMutationResult = Apollo.MutationResult<SendMessageToUserMutation>;
+export type SendMessageToUserMutationOptions = Apollo.BaseMutationOptions<SendMessageToUserMutation, SendMessageToUserMutationVariables>;
+export const SendMessageToChatDocument = gql`
+    mutation SendMessageToChat($input: SendMessageToChatInput!) {
+  sendMessageToChat(input: $input) {
+    id
+    chat {
+      id
+    }
+    content
+    sentAt
+  }
+}
+    `;
+export type SendMessageToChatMutationFn = Apollo.MutationFunction<SendMessageToChatMutation, SendMessageToChatMutationVariables>;
+
+/**
+ * __useSendMessageToChatMutation__
+ *
+ * To run a mutation, you first call `useSendMessageToChatMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendMessageToChatMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendMessageToChatMutation, { data, loading, error }] = useSendMessageToChatMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSendMessageToChatMutation(baseOptions?: Apollo.MutationHookOptions<SendMessageToChatMutation, SendMessageToChatMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SendMessageToChatMutation, SendMessageToChatMutationVariables>(SendMessageToChatDocument, options);
+      }
+export type SendMessageToChatMutationHookResult = ReturnType<typeof useSendMessageToChatMutation>;
+export type SendMessageToChatMutationResult = Apollo.MutationResult<SendMessageToChatMutation>;
+export type SendMessageToChatMutationOptions = Apollo.BaseMutationOptions<SendMessageToChatMutation, SendMessageToChatMutationVariables>;
+export const EditMessageDocument = gql`
+    mutation EditMessage($input: EditMessageInput!) {
+  editMessage(input: $input) {
+    id
+    chat {
+      id
+    }
+    content
+    sentAt
+    edittedAt
+  }
+}
+    `;
+export type EditMessageMutationFn = Apollo.MutationFunction<EditMessageMutation, EditMessageMutationVariables>;
+
+/**
+ * __useEditMessageMutation__
+ *
+ * To run a mutation, you first call `useEditMessageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditMessageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [editMessageMutation, { data, loading, error }] = useEditMessageMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useEditMessageMutation(baseOptions?: Apollo.MutationHookOptions<EditMessageMutation, EditMessageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<EditMessageMutation, EditMessageMutationVariables>(EditMessageDocument, options);
+      }
+export type EditMessageMutationHookResult = ReturnType<typeof useEditMessageMutation>;
+export type EditMessageMutationResult = Apollo.MutationResult<EditMessageMutation>;
+export type EditMessageMutationOptions = Apollo.BaseMutationOptions<EditMessageMutation, EditMessageMutationVariables>;
+export const DeleteMessageDocument = gql`
+    mutation DeleteMessage($messageId: ID!) {
+  deleteMessage(messageId: $messageId)
+}
+    `;
+export type DeleteMessageMutationFn = Apollo.MutationFunction<DeleteMessageMutation, DeleteMessageMutationVariables>;
+
+/**
+ * __useDeleteMessageMutation__
+ *
+ * To run a mutation, you first call `useDeleteMessageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteMessageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteMessageMutation, { data, loading, error }] = useDeleteMessageMutation({
+ *   variables: {
+ *      messageId: // value for 'messageId'
+ *   },
+ * });
+ */
+export function useDeleteMessageMutation(baseOptions?: Apollo.MutationHookOptions<DeleteMessageMutation, DeleteMessageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteMessageMutation, DeleteMessageMutationVariables>(DeleteMessageDocument, options);
+      }
+export type DeleteMessageMutationHookResult = ReturnType<typeof useDeleteMessageMutation>;
+export type DeleteMessageMutationResult = Apollo.MutationResult<DeleteMessageMutation>;
+export type DeleteMessageMutationOptions = Apollo.BaseMutationOptions<DeleteMessageMutation, DeleteMessageMutationVariables>;
 export const MeDocument = gql`
     query Me {
   me {

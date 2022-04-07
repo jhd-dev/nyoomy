@@ -5,10 +5,18 @@ export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };
+export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /**
  * The icons available to accompany category/tag titles
  * @typedef {("GLOBE"|"ROCKET"|"STAR"|"WATER")} CategoryIcon
+ */
+
+/**
+ * @typedef {Object} Chat
+ * @property {DateTime} createdAt
+ * @property {string} id
+ * @property {boolean} isArchived
+ * @property {User} members
  */
 
 /**
@@ -36,6 +44,12 @@ export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?:
  */
 
 /**
+ * @typedef {Object} EditMessageInput
+ * @property {string} content
+ * @property {number} messageId
+ */
+
+/**
  * @typedef {Object} FieldError
  * @property {string} field
  * @property {string} message
@@ -57,6 +71,16 @@ export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?:
  */
 
 /**
+ * @typedef {Object} Message
+ * @property {Chat} chat
+ * @property {string} content
+ * @property {DateTime} edittedAt
+ * @property {string} id
+ * @property {User} sender
+ * @property {DateTime} sentAt
+ */
+
+/**
  * @typedef {Object} Metric
  * @property {string} description
  * @property {string} id
@@ -74,12 +98,16 @@ export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?:
 /**
  * @typedef {Object} Mutation
  * @property {Todo} [addTodo]
+ * @property {boolean} [deleteMessage]
  * @property {boolean} deleteTodo
  * @property {boolean} deleteUser
  * @property {boolean} deleteUserById
+ * @property {Message} [editMessage]
  * @property {LoginResponse} [login]
  * @property {boolean} logout
  * @property {RegistrationResponse} registerUser
+ * @property {Message} [sendMessageToChat]
+ * @property {Message} [sendMessageToUser]
  * @property {Todo} [updateTodo]
  * @property {boolean} updateUserPassword
  */
@@ -88,6 +116,7 @@ export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?:
  * @typedef {Object} Query
  * @property {Array<Todo>} getMyTodos
  * @property {User} [me]
+ * @property {Array<Chat>} myChats
  */
 
 /**
@@ -159,6 +188,18 @@ export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?:
  * @property {SelectionMetric} metric
  * @property {Array<SelectionEntry>} selectingEntries
  * @property {string} title
+ */
+
+/**
+ * @typedef {Object} SendMessageToChatInput
+ * @property {number} chatId
+ * @property {string} content
+ */
+
+/**
+ * @typedef {Object} SendMessageToUserInput
+ * @property {string} content
+ * @property {string} recipientId
  */
 
 /**
@@ -257,6 +298,14 @@ export enum CategoryIcon {
   Water = 'WATER'
 }
 
+export type Chat = {
+  __typename?: 'Chat';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  isArchived: Scalars['Boolean'];
+  members: User;
+};
+
 export type CounterMetric = {
   __typename?: 'CounterMetric';
   id: Scalars['ID'];
@@ -274,6 +323,11 @@ export type DailyFloatMetric = {
   metric: Metric;
   metricType: MetricType;
   min: Scalars['Float'];
+};
+
+export type EditMessageInput = {
+  content: Scalars['String'];
+  messageId: Scalars['Float'];
 };
 
 export type FieldError = {
@@ -295,6 +349,16 @@ export type LoginResponse = {
   __typename?: 'LoginResponse';
   error?: Maybe<Scalars['String']>;
   user?: Maybe<SafeUser>;
+};
+
+export type Message = {
+  __typename?: 'Message';
+  chat: Chat;
+  content: Scalars['String'];
+  edittedAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  sender: User;
+  sentAt: Scalars['DateTime'];
 };
 
 export type Metric = {
@@ -321,14 +385,23 @@ export enum MetricType {
 export type Mutation = {
   __typename?: 'Mutation';
   addTodo?: Maybe<Todo>;
+  deleteMessage?: Maybe<Scalars['Boolean']>;
   deleteTodo: Scalars['Boolean'];
   deleteUser: Scalars['Boolean'];
   deleteUserById: Scalars['Boolean'];
+  editMessage?: Maybe<Message>;
   login?: Maybe<LoginResponse>;
   logout: Scalars['Boolean'];
   registerUser: RegistrationResponse;
+  sendMessageToChat?: Maybe<Message>;
+  sendMessageToUser?: Maybe<Message>;
   updateTodo?: Maybe<Todo>;
   updateUserPassword: Scalars['Boolean'];
+};
+
+
+export type MutationDeleteMessageArgs = {
+  messageId: Scalars['ID'];
 };
 
 
@@ -342,6 +415,11 @@ export type MutationDeleteUserByIdArgs = {
 };
 
 
+export type MutationEditMessageArgs = {
+  input: EditMessageInput;
+};
+
+
 export type MutationLoginArgs = {
   input: UserLoginInput;
 };
@@ -349,6 +427,16 @@ export type MutationLoginArgs = {
 
 export type MutationRegisterUserArgs = {
   input: RegisterUserInput;
+};
+
+
+export type MutationSendMessageToChatArgs = {
+  input: SendMessageToChatInput;
+};
+
+
+export type MutationSendMessageToUserArgs = {
+  input: SendMessageToUserInput;
 };
 
 
@@ -365,10 +453,16 @@ export type Query = {
   __typename?: 'Query';
   getMyTodos: Array<Todo>;
   me?: Maybe<User>;
+  myChats: Array<Chat>;
 };
 
 
 export type QueryGetMyTodosArgs = {
+  excludeArchived: Scalars['Boolean'];
+};
+
+
+export type QueryMyChatsArgs = {
   excludeArchived: Scalars['Boolean'];
 };
 
@@ -440,6 +534,16 @@ export type SelectionOption = {
   metric: SelectionMetric;
   selectingEntries: Array<SelectionEntry>;
   title: Scalars['String'];
+};
+
+export type SendMessageToChatInput = {
+  chatId: Scalars['Float'];
+  content: Scalars['String'];
+};
+
+export type SendMessageToUserInput = {
+  content: Scalars['String'];
+  recipientId: Scalars['String'];
 };
 
 export type Tag = {
@@ -523,24 +627,59 @@ export enum Weekday {
   Wednesday = 'WEDNESDAY'
 }
 
+export type MyChatsQueryVariables = Exact<{
+  excludeArchived: Scalars['Boolean'];
+}>;
+
+
+export type MyChatsQuery = { __typename?: 'Query', myChats: Array<{ __typename?: 'Chat', id: string, members: { __typename?: 'User', id: string, username: string } }> };
+
+export type SendMessageToUserMutationVariables = Exact<{
+  input: SendMessageToUserInput;
+}>;
+
+
+export type SendMessageToUserMutation = { __typename?: 'Mutation', sendMessageToUser?: { __typename?: 'Message', id: string } | null };
+
+export type SendMessageToChatMutationVariables = Exact<{
+  input: SendMessageToChatInput;
+}>;
+
+
+export type SendMessageToChatMutation = { __typename?: 'Mutation', sendMessageToChat?: { __typename?: 'Message', id: string, content: string, sentAt: any, chat: { __typename?: 'Chat', id: string } } | null };
+
+export type EditMessageMutationVariables = Exact<{
+  input: EditMessageInput;
+}>;
+
+
+export type EditMessageMutation = { __typename?: 'Mutation', editMessage?: { __typename?: 'Message', id: string, content: string, sentAt: any, edittedAt: any, chat: { __typename?: 'Chat', id: string } } | null };
+
+export type DeleteMessageMutationVariables = Exact<{
+  messageId: Scalars['ID'];
+}>;
+
+
+export type DeleteMessageMutation = { __typename?: 'Mutation', deleteMessage?: boolean | null };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, username: string, email: string } | null | undefined };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, username: string, email: string } | null };
 
 export type RegisterMutationVariables = Exact<{
   input: RegisterUserInput;
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', registerUser: { __typename?: 'RegistrationResponse', user?: { __typename?: 'SafeUser', id: string, username: string } | null | undefined } };
+export type RegisterMutation = { __typename?: 'Mutation', registerUser: { __typename?: 'RegistrationResponse', user?: { __typename?: 'SafeUser', id: string, username: string } | null } };
 
 export type LoginMutationVariables = Exact<{
   input: UserLoginInput;
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login?: { __typename?: 'LoginResponse', user?: { __typename?: 'SafeUser', id: string, username: string } | null | undefined } | null | undefined };
+export type LoginMutation = { __typename?: 'Mutation', login?: { __typename?: 'LoginResponse', user?: { __typename?: 'SafeUser', id: string, username: string } | null } | null };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -618,15 +757,18 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   CategoryIcon: CategoryIcon;
+  Chat: ResolverTypeWrapper<Chat>;
   CounterMetric: ResolverTypeWrapper<CounterMetric>;
   DailyFloatMetric: ResolverTypeWrapper<DailyFloatMetric>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
+  EditMessageInput: EditMessageInput;
   FieldError: ResolverTypeWrapper<FieldError>;
   Float: ResolverTypeWrapper<Scalars['Float']>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Journal: ResolverTypeWrapper<Journal>;
   LoginResponse: ResolverTypeWrapper<LoginResponse>;
+  Message: ResolverTypeWrapper<Message>;
   Metric: ResolverTypeWrapper<Metric>;
   MetricType: MetricType;
   Mutation: ResolverTypeWrapper<{}>;
@@ -639,6 +781,8 @@ export type ResolversTypes = {
   SelectionEntry: ResolverTypeWrapper<SelectionEntry>;
   SelectionMetric: ResolverTypeWrapper<SelectionMetric>;
   SelectionOption: ResolverTypeWrapper<SelectionOption>;
+  SendMessageToChatInput: SendMessageToChatInput;
+  SendMessageToUserInput: SendMessageToUserInput;
   String: ResolverTypeWrapper<Scalars['String']>;
   Tag: ResolverTypeWrapper<Tag>;
   Taggable: ResolverTypeWrapper<Taggable>;
@@ -654,15 +798,18 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
+  Chat: Chat;
   CounterMetric: CounterMetric;
   DailyFloatMetric: DailyFloatMetric;
   DateTime: Scalars['DateTime'];
+  EditMessageInput: EditMessageInput;
   FieldError: FieldError;
   Float: Scalars['Float'];
   ID: Scalars['ID'];
   Int: Scalars['Int'];
   Journal: Journal;
   LoginResponse: LoginResponse;
+  Message: Message;
   Metric: Metric;
   Mutation: {};
   Query: {};
@@ -674,6 +821,8 @@ export type ResolversParentTypes = {
   SelectionEntry: SelectionEntry;
   SelectionMetric: SelectionMetric;
   SelectionOption: SelectionOption;
+  SendMessageToChatInput: SendMessageToChatInput;
+  SendMessageToUserInput: SendMessageToUserInput;
   String: Scalars['String'];
   Tag: Tag;
   Taggable: Taggable;
@@ -683,6 +832,14 @@ export type ResolversParentTypes = {
   UpdateTodoInput: UpdateTodoInput;
   User: User;
   UserLoginInput: UserLoginInput;
+};
+
+export type ChatResolvers<ContextType = any, ParentType extends ResolversParentTypes['Chat'] = ResolversParentTypes['Chat']> = {
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  isArchived?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  members?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type CounterMetricResolvers<ContextType = any, ParentType extends ResolversParentTypes['CounterMetric'] = ResolversParentTypes['CounterMetric']> = {
@@ -729,6 +886,16 @@ export type LoginResponseResolvers<ContextType = any, ParentType extends Resolve
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type MessageResolvers<ContextType = any, ParentType extends ResolversParentTypes['Message'] = ResolversParentTypes['Message']> = {
+  chat?: Resolver<ResolversTypes['Chat'], ParentType, ContextType>;
+  content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  edittedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  sender?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  sentAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type MetricResolvers<ContextType = any, ParentType extends ResolversParentTypes['Metric'] = ResolversParentTypes['Metric']> = {
   description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -741,12 +908,16 @@ export type MetricResolvers<ContextType = any, ParentType extends ResolversParen
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   addTodo?: Resolver<Maybe<ResolversTypes['Todo']>, ParentType, ContextType>;
+  deleteMessage?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteMessageArgs, 'messageId'>>;
   deleteTodo?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteTodoArgs, 'id'>>;
   deleteUser?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   deleteUserById?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteUserByIdArgs, 'id'>>;
+  editMessage?: Resolver<Maybe<ResolversTypes['Message']>, ParentType, ContextType, RequireFields<MutationEditMessageArgs, 'input'>>;
   login?: Resolver<Maybe<ResolversTypes['LoginResponse']>, ParentType, ContextType, RequireFields<MutationLoginArgs, 'input'>>;
   logout?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   registerUser?: Resolver<ResolversTypes['RegistrationResponse'], ParentType, ContextType, RequireFields<MutationRegisterUserArgs, 'input'>>;
+  sendMessageToChat?: Resolver<Maybe<ResolversTypes['Message']>, ParentType, ContextType, RequireFields<MutationSendMessageToChatArgs, 'input'>>;
+  sendMessageToUser?: Resolver<Maybe<ResolversTypes['Message']>, ParentType, ContextType, RequireFields<MutationSendMessageToUserArgs, 'input'>>;
   updateTodo?: Resolver<Maybe<ResolversTypes['Todo']>, ParentType, ContextType, RequireFields<MutationUpdateTodoArgs, 'updateInput'>>;
   updateUserPassword?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationUpdateUserPasswordArgs, 'input'>>;
 };
@@ -754,6 +925,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   getMyTodos?: Resolver<Array<ResolversTypes['Todo']>, ParentType, ContextType, RequireFields<QueryGetMyTodosArgs, 'excludeArchived'>>;
   me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  myChats?: Resolver<Array<ResolversTypes['Chat']>, ParentType, ContextType, RequireFields<QueryMyChatsArgs, 'excludeArchived'>>;
 };
 
 export type RegistrationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['RegistrationResponse'] = ResolversParentTypes['RegistrationResponse']> = {
@@ -864,12 +1036,14 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 };
 
 export type Resolvers<ContextType = any> = {
+  Chat?: ChatResolvers<ContextType>;
   CounterMetric?: CounterMetricResolvers<ContextType>;
   DailyFloatMetric?: DailyFloatMetricResolvers<ContextType>;
   DateTime?: GraphQLScalarType;
   FieldError?: FieldErrorResolvers<ContextType>;
   Journal?: JournalResolvers<ContextType>;
   LoginResponse?: LoginResponseResolvers<ContextType>;
+  Message?: MessageResolvers<ContextType>;
   Metric?: MetricResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
