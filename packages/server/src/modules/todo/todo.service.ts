@@ -53,9 +53,11 @@ export class TodoService {
         return this.todoRepo.findOneOrFail(updateInput.id);
     }
 
-    public async deleteTodo(id: string): Promise<void> {
+    public async deleteTodo(user: User, id: string): Promise<void> {
         const todo = await this.todoRepo.findOneOrFail(id);
-        await this.todoRepo.remove(todo);
+        if (user.id === todo.user.id) {
+            await this.todoRepo.remove(todo);
+        }
     }
 
     public async refreshEntries(userId: string): Promise<void> {

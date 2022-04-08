@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-import { Injectable } from '@nestjs/common';
+import { Injectable, UseGuards } from '@nestjs/common';
 import { Resolver, Mutation, Args, Query, ID } from '@nestjs/graphql';
 import { CurrentUser } from '../../common/decorators/user.decorator';
+import { AuthenticatedGuard } from '../auth/guards/authenticated.guard';
 import { User } from '../user/models/user.entity';
 import { UpdateTodoInput } from './dto/update-todo.input';
 import { Todo } from './models/todo.entity';
@@ -12,8 +13,9 @@ import { TodoService } from './todo.service';
 export class TodoResolver {
     public constructor(private readonly todoService: TodoService) {}
 
-    @Query(() => [Todo])
-    public async getMyTodos(
+    @Query(() => [Todo], { name: 'getMyTodos' })
+    @UseGuards(AuthenticatedGuard)
+    public async getUserTodos(
         @CurrentUser() user: User,
         @Args('excludeArchived', { type: () => Boolean })
         excludingArchived: boolean = false
@@ -25,6 +27,7 @@ export class TodoResolver {
     }
 
     @Mutation(() => Todo, { nullable: true })
+    @UseGuards(AuthenticatedGuard)
     public async addTodo(@CurrentUser() user: User): Promise<Todo | null> {
         const userId = user.id;
         if (userId == null) return null;
@@ -33,6 +36,7 @@ export class TodoResolver {
     }
 
     @Mutation(() => Todo, { nullable: true })
+    @UseGuards(AuthenticatedGuard)
     public async updateTodo(
         @Args('updateInput') updateInput: UpdateTodoInput,
         @CurrentUser() user: User
@@ -46,11 +50,13 @@ export class TodoResolver {
     }
 
     @Mutation(() => Boolean)
+    @UseGuards(AuthenticatedGuard)
     public async deleteTodo(
+        @CurrentUser() user: User,
         @Args('id', { type: () => ID }) id: string
     ): Promise<boolean> {
         try {
-            await this.todoService.deleteTodo(id);
+            await this.todoService.deleteTodo(user, id);
             return true;
         } catch (err: unknown) {
             console.error(err);
