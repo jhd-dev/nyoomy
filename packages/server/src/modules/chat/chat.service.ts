@@ -21,7 +21,7 @@ export class ChatService {
                 where: {
                     isArchived: excludingArchived ? false : undefined,
                 },
-                relations: ['users'],
+                // relations: ['users'],
             })
         ).filter((chat) => this.doesChatHaveMember(userId, chat));
     }

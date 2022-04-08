@@ -1,7 +1,11 @@
 import type { FC } from 'react';
 import React from 'react';
-import { AppRegistration, Person } from '@mui/icons-material';
-import { Button } from '@mui/material';
+import {
+    AppRegistration,
+    Message as MessageIcon,
+    Person,
+} from '@mui/icons-material';
+import { Button, IconButton } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { useMeQuery } from '@nyoomy/graphql';
 import { Link } from 'react-router-dom';
@@ -20,6 +24,11 @@ export const LoginStatus: FC = () => {
     if (data?.me != null) {
         return (
             <>
+                <Link to="/messages">
+                    <IconButton color="secondary">
+                        <MessageIcon />
+                    </IconButton>
+                </Link>
                 <AvatarButton />
             </>
         );
