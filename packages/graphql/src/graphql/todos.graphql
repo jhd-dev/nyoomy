@@ -1,5 +1,6 @@
 query MyTodos {
     getMyTodos(excludeArchived: true) {
+        id
         title
         description
         isCompleted
@@ -10,6 +11,7 @@ query MyTodos {
 
 mutation AddTodo {
     addTodo {
+        id
         title
         description
         isCompleted
@@ -20,6 +22,7 @@ mutation AddTodo {
 
 mutation UpdateTodo($updateInput: UpdateTodoInput!) {
     updateTodo(updateInput: $updateInput) {
+        id
         title
         description
     }

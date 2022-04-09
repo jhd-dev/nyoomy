@@ -45,7 +45,9 @@ export class TodoService {
         updateInput: UpdateTodoInput,
         user: User
     ): Promise<Todo> {
-        const todo = await this.todoRepo.findOneOrFail(updateInput.id);
+        const todo = await this.todoRepo.findOneOrFail(updateInput.id, {
+            relations: ['user'],
+        });
         if (todo.user.id !== user.id) {
             throw new UnauthorizedException('incorrect user');
         }

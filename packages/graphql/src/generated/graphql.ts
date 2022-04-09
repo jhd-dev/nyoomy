@@ -665,19 +665,19 @@ export type DeleteMessageMutation = { __typename?: 'Mutation', deleteMessage?: b
 export type MyTodosQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MyTodosQuery = { __typename?: 'Query', getMyTodos: Array<{ __typename?: 'Todo', title: string, description: string, isCompleted: boolean, isArchived: boolean, repeatWeekdays: Array<Weekday> }> };
+export type MyTodosQuery = { __typename?: 'Query', getMyTodos: Array<{ __typename?: 'Todo', id: string, title: string, description: string, isCompleted: boolean, isArchived: boolean, repeatWeekdays: Array<Weekday> }> };
 
 export type AddTodoMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AddTodoMutation = { __typename?: 'Mutation', addTodo?: { __typename?: 'Todo', title: string, description: string, isCompleted: boolean, isArchived: boolean, repeatWeekdays: Array<Weekday> } | null };
+export type AddTodoMutation = { __typename?: 'Mutation', addTodo?: { __typename?: 'Todo', id: string, title: string, description: string, isCompleted: boolean, isArchived: boolean, repeatWeekdays: Array<Weekday> } | null };
 
 export type UpdateTodoMutationVariables = Exact<{
   updateInput: UpdateTodoInput;
 }>;
 
 
-export type UpdateTodoMutation = { __typename?: 'Mutation', updateTodo?: { __typename?: 'Todo', title: string, description: string } | null };
+export type UpdateTodoMutation = { __typename?: 'Mutation', updateTodo?: { __typename?: 'Todo', id: string, title: string, description: string } | null };
 
 export type DeleteTodoMutationVariables = Exact<{
   id: Scalars['ID'];

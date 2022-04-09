@@ -1,8 +1,7 @@
 import type { FC } from 'react';
 import React from 'react';
-import { Add as AddIcon } from '@mui/icons-material';
+import { Add as AddIcon, Edit as EditIcon } from '@mui/icons-material';
 import {
-    Avatar,
     Box,
     Checkbox,
     CircularProgress,
@@ -15,6 +14,7 @@ import {
     Tooltip,
 } from '@mui/material';
 import { useAddTodoMutation, useMyTodosQuery } from '@nyoomy/graphql';
+import { Link, Outlet } from 'react-router-dom';
 
 const TodoPage: FC = () => {
     const { data, loading, error } = useMyTodosQuery();
@@ -27,13 +27,18 @@ const TodoPage: FC = () => {
                 {loading ? (
                     <CircularProgress />
                 ) : (
-                    data?.getMyTodos.map((chat) => (
-                        <ListItem key={chat.title}>
+                    data?.getMyTodos.map(({ id, title, description }) => (
+                        <ListItem key={id}>
                             <Checkbox />
                             <ListItemText
-                                primary={chat.title}
-                                secondary={chat.description}
+                                primary={title}
+                                secondary={description}
                             />
+                            <Link to={`/todo/${String(id)}`}>
+                                <IconButton color="info">
+                                    <EditIcon />
+                                </IconButton>
+                            </Link>
                         </ListItem>
                     ))
                 )}
@@ -58,6 +63,7 @@ const TodoPage: FC = () => {
             >
                 <AddIcon />
             </Fab>
+            <Outlet />
         </Box>
     );
 };
