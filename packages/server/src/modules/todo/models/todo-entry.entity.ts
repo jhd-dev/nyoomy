@@ -16,9 +16,9 @@ export class TodoEntry {
     @Field(() => Todo)
     public todo: Todo;
 
-    @Column('date')
+    @Column()
     @Field()
-    public date: Date;
+    public date: string;
 
     @Column('boolean', { default: false })
     @Field(() => Boolean)

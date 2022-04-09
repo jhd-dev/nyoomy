@@ -2,6 +2,7 @@ import type { FC } from 'react';
 import React, { useState } from 'react';
 import { Close as CloseIcon } from '@mui/icons-material';
 import {
+    Alert,
     Dialog,
     DialogActions,
     DialogContent,
@@ -13,16 +14,22 @@ import {
 import Button from '@mui/material/Button';
 import { useUpdateTodoMutation } from '@nyoomy/graphql';
 import { useNavigate, useParams } from 'react-router-dom';
+import type { UpdateTodoMutation } from '../../../graphql/src/generated/graphql';
+import type { ApolloError } from '@apollo/client';
 
 const TodoDetailsRoute: FC = () => {
     const params = useParams();
     const navigate = useNavigate();
     const [updateTodo] = useUpdateTodoMutation();
+
     const [open, setOpen] = useState(true);
+    const [errorMsg, setErrorMsg] = useState('');
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
 
     const handleClose = () => {
         setOpen(true);
-        navigate('todo');
+        navigate('..');
     };
 
     const handleSave = async () => {
@@ -30,11 +37,21 @@ const TodoDetailsRoute: FC = () => {
             variables: {
                 updateInput: {
                     id: String(params.todoId),
-                    date: Date.now().toString(),
+                    date: new Date().toDateString(),
+                    title,
+                    description,
                 },
             },
+            onCompleted(data: UpdateTodoMutation): void {
+                if (data?.updateTodo) {
+                    setErrorMsg('');
+                    handleClose();
+                }
+            },
+            onError(error: ApolloError): void {
+                setErrorMsg(error.message);
+            },
         });
-        handleClose();
     };
 
     return (
@@ -57,8 +74,23 @@ const TodoDetailsRoute: FC = () => {
                 <DialogContentText>
                     Here, you can edit details such as title or description.
                 </DialogContentText>
-                <TextField autoFocus label="Title" margin="dense" />
-                <TextField label="Description" margin="dense" />
+                <TextField
+                    autoFocus
+                    label="Title"
+                    margin="dense"
+                    name="title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                />
+                <TextField
+                    label="Description"
+                    margin="dense"
+                    multiline
+                    name="description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                />
+                {errorMsg && <Alert severity="error">{errorMsg}</Alert>}
             </DialogContent>
             <DialogActions>
                 <Button color="secondary">Cancel</Button>

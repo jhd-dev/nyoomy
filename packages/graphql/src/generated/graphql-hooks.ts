@@ -405,7 +405,7 @@ export type UpdateTodoMutationVariables = Exact<{
 }>;
 
 
-export type UpdateTodoMutation = { __typename?: 'Mutation', updateTodo?: { __typename?: 'Todo', id: string, title: string, description: string } | null };
+export type UpdateTodoMutation = { __typename?: 'Mutation', updateTodo?: { __typename?: 'Todo', id: string, title: string, description: string, isCompleted: boolean, isArchived: boolean } | null };
 
 export type DeleteTodoMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -707,6 +707,8 @@ export const UpdateTodoDocument = gql`
     id
     title
     description
+    isCompleted
+    isArchived
   }
 }
     `;

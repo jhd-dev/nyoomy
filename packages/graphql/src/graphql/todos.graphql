@@ -25,6 +25,8 @@ mutation UpdateTodo($updateInput: UpdateTodoInput!) {
         id
         title
         description
+        isCompleted
+        isArchived
     }
 }
 

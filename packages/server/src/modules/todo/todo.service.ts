@@ -1,11 +1,11 @@
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Todo } from './models/todo.entity';
-import { TodoEntry } from './models/todo-entry.entity';
-import Weekday, { weekdays } from '../../types/enums/weekday.enum';
-import type { UpdateTodoInput } from './dto/update-todo.input';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { User } from '../user/models/user.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import Weekday, { weekdays } from '../../types/enums/weekday.enum';
+import { TodoEntry } from './models/todo-entry.entity';
+import { Todo } from './models/todo.entity';
+import type { User } from '../user/models/user.entity';
+import type { UpdateTodoInput } from './dto/update-todo.input';
 
 @Injectable()
 export class TodoService {
@@ -51,7 +51,13 @@ export class TodoService {
         if (todo.user.id !== user.id) {
             throw new UnauthorizedException('incorrect user');
         }
-        await this.todoRepo.update(todo, updateInput);
+
+        await this.updateTodoEntry(todo, updateInput);
+
+        await this.todoRepo.update(todo, {
+            title: updateInput?.title ?? todo.title,
+            description: updateInput?.description ?? todo.description,
+        });
         return this.todoRepo.findOneOrFail(updateInput.id);
     }
 
@@ -62,25 +68,45 @@ export class TodoService {
         }
     }
 
-    public async refreshEntries(userId: string): Promise<void> {
-        const todos = await this.getUserTodos(userId, true);
-        const date = new Date();
-        for (const todo of todos) {
-            if (
-                todo.repeatWeekdays
-                    .map((day) => weekdays.indexOf(day))
-                    .includes(date.getDay())
-            ) {
-            }
-            const existingEntry = await this.todoEntryRepo
-                .createQueryBuilder('entry')
-                .innerJoinAndSelect('entry.user', 'user')
-                .where('user.id = :userId', { userId })
-                .andWhere('entry.date = :date', { date })
-                .getOne();
-            const entry =
-                existingEntry ??
-                (await this.todoEntryRepo.save({ date, todo }));
+    // public async refreshEntries(userId: string): Promise<void> {
+    //     const todos = await this.getUserTodos(userId, true);
+    //     const date = new Date();
+    //     for (const todo of todos) {
+    //         if (
+    //             todo.repeatWeekdays
+    //                 .map((day) => weekdays.indexOf(day))
+    //                 .includes(date.getDay())
+    //         ) {
+    //         }
+    //         const existingEntry = await this.todoEntryRepo
+    //             .createQueryBuilder('entry')
+    //             .innerJoinAndSelect('entry.user', 'user')
+    //             .where('user.id = :userId', { userId })
+    //             .andWhere('entry.date = :date', { date })
+    //             .getOne();
+    //         const entry =
+    //             existingEntry ??
+    //             (await this.todoEntryRepo.save({ date, todo }));
+    //     }
+    // }
+
+    private async updateTodoEntry(todo: Todo, updateInput: UpdateTodoInput) {
+        const entry = await this.todoEntryRepo.findOne({
+            where: {
+                todo: { id: todo.id },
+                date: updateInput.date,
+            },
+        });
+        const updateProps = {
+            todo: { id: todo.id },
+            date: updateInput.date,
+            isCompleted: updateInput?.isCompleted,
+        };
+        if (entry == null) {
+            const newEntry = this.todoEntryRepo.create(updateProps);
+            return this.todoEntryRepo.save(newEntry);
         }
+        await this.todoEntryRepo.update(entry, updateProps);
+        return this.todoEntryRepo.findOneOrFail(entry.id);
     }
 }
