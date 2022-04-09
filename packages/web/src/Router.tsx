@@ -7,6 +7,7 @@ import MainPage from './routes/MainPage';
 import PageNotFoundAlert from './routes/PageNotFoundAlert';
 import RegistrationPage from './routes/RegistrationPage';
 import SettingsPage from './routes/SettingsPage';
+import TodoPage from './routes/TodoPage';
 
 const Router: FC = () => (
     <BrowserRouter>
@@ -15,6 +16,7 @@ const Router: FC = () => (
                 <Route path="register" element={<RegistrationPage />} />
                 <Route path="login" element={<LoginPage />} />
                 <Route path="messages" element={<ChatPage />} />
+                <Route path="todo" element={<TodoPage />} />
                 <Route
                     path="settings"
                     element={<SettingsPage drawerWidth={236} />}
