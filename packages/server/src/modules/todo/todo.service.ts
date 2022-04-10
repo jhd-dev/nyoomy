@@ -5,6 +5,7 @@ import Weekday, { weekdays } from '../../types/enums/weekday.enum';
 import { TodoEntry } from './models/todo-entry.entity';
 import { Todo } from './models/todo.entity';
 import type { User } from '../user/models/user.entity';
+import type { AddTodoInput } from './dto/add-todo.input';
 import type { UpdateTodoInput } from './dto/update-todo.input';
 
 @Injectable()
@@ -34,9 +35,12 @@ export class TodoService {
         });
     }
 
-    public async addTodo(userId: string): Promise<Todo> {
-        const values = { user: { id: userId }, level: 0 };
-        const todo = this.todoRepo.create({ ...values });
+    public async addTodo(user: User, input: AddTodoInput): Promise<Todo> {
+        const todo = this.todoRepo.create({
+            user: { id: user.id },
+            level: 0,
+            ...input,
+        });
         await this.todoRepo.save(todo);
         return todo;
     }
