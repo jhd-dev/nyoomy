@@ -1,6 +1,6 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
 import Weekday from '../../../types/enums/weekday.enum';
-import { Todo } from '../models/todo.entity';
+import type { Todo } from '../models/todo.entity';
 
 @InputType()
 export class UpdateTodoInput implements Partial<Todo> {
@@ -10,8 +10,8 @@ export class UpdateTodoInput implements Partial<Todo> {
     @Field()
     public readonly date!: string;
 
-    @Field(() => Todo, { nullable: true })
-    public supertask?: Todo | null;
+    // @Field(() => Todo, { nullable: true })
+    // public supertask?: Todo | null;
 
     @Field({ nullable: true })
     public title?: string;

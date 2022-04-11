@@ -16,6 +16,7 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
+import Role from '../../../types/enums/role.enum';
 import type { IUser } from '../interfaces/user.interface';
 
 @Entity('users')
@@ -24,6 +25,10 @@ export class User implements IUser {
     @PrimaryGeneratedColumn('uuid')
     @Field(() => ID)
     public readonly id: string;
+
+    @Column('enum', { enum: Role, array: false, default: Role.USER })
+    @HideField()
+    public role: Role;
 
     @Column('varchar', { unique: true, length: 32 })
     @Field()

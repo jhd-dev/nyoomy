@@ -1,6 +1,9 @@
+import type Role from '../../../types/enums/role.enum';
+
 export interface IUser {
     readonly id: string;
 
+    role: Role;
     username: string;
     email: string;
     isEmailVerified: boolean;

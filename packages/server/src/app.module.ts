@@ -19,7 +19,9 @@ import { ComplexityPlugin } from './common/plugins/complexity.plugin';
 import { configuration } from './config/configuration';
 import { COOKIE_NAME, REDIS_SESSION_PREFIX } from './constants';
 import { AuthModule } from './modules/auth/auth.module';
+import { CaslModule } from './modules/casl/casl.module';
 import { ChatModule } from './modules/chat/chat.module';
+import { JournalModule } from './modules/journal/journal.module';
 import { REDIS } from './modules/redis/redis.constants';
 import { RedisModule } from './modules/redis/redis.module';
 import { TodoModule } from './modules/todo/todo.module';
@@ -37,6 +39,7 @@ const GRAPHQL_SCHEMA_PATH = join(__dirname, '../schema.graphql');
         AuthModule,
         RedisModule,
         TodoModule,
+        JournalModule,
         ChatModule,
         UserModule,
         TypeOrmModule.forRoot(),
@@ -66,6 +69,7 @@ const GRAPHQL_SCHEMA_PATH = join(__dirname, '../schema.graphql');
             isGlobal: true,
             cache: false,
         }),
+        CaslModule,
     ],
     controllers: [AppController],
     providers: [AppService, Logger, ComplexityPlugin, ConfigService],
@@ -81,7 +85,7 @@ export class AppModule implements NestModule {
         const Store = RedisStore(expressSession);
         consumer
             .apply(
-                // helmet(),
+                helmet(),
                 expressSession({
                     name: COOKIE_NAME,
                     store: new Store({

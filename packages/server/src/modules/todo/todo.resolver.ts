@@ -4,6 +4,7 @@ import { Resolver, Mutation, Args, Query, ID } from '@nestjs/graphql';
 import { CurrentUser } from '../../common/decorators/user.decorator';
 import { AuthenticatedGuard } from '../auth/guards/authenticated.guard';
 import { User } from '../user/models/user.entity';
+import { AddTodoInput } from './dto/add-todo.input';
 import { UpdateTodoInput } from './dto/update-todo.input';
 import { Todo } from './models/todo.entity';
 import { TodoService } from './todo.service';
@@ -28,11 +29,14 @@ export class TodoResolver {
 
     @Mutation(() => Todo, { nullable: true })
     @UseGuards(AuthenticatedGuard)
-    public async addTodo(@CurrentUser() user: User): Promise<Todo | null> {
+    public async addTodo(
+        @CurrentUser() user: User,
+        @Args('input') input: AddTodoInput
+    ): Promise<Todo | null> {
         const userId = user.id;
         if (userId == null) return null;
         // eslint-disable-next-line no-return-await
-        return await this.todoService.addTodo(userId);
+        return await this.todoService.addTodo(user, input);
     }
 
     @Mutation(() => Todo, { nullable: true })

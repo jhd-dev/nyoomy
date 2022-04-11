@@ -26,7 +26,7 @@ export class Todo {
     public subtasks!: Todo[];
 
     @TreeParent()
-    @HideField()
+    @Field(() => Todo, { nullable: true, defaultValue: null })
     public supertask!: Todo | null;
 
     @TreeLevelColumn()

@@ -2,6 +2,13 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input AddTodoInput {
+  description: String
+  isArchived: Boolean
+  repeatWeekdays: [Weekday!]
+  title: String
+}
+
 """The icons available to accompany category/tag titles"""
 enum CategoryIcon {
   GLOBE
@@ -53,8 +60,7 @@ type Journal {
   dailyWordGoal: Int!
   id: ID!
   isArchived: Boolean!
-  metric: Metric!
-  metricType: MetricType!
+  user: User!
 }
 
 type LoginResponse {
@@ -92,7 +98,7 @@ enum MetricType {
 }
 
 type Mutation {
-  addTodo: Todo
+  addTodo(input: AddTodoInput!): Todo
   deleteMessage(messageId: ID!): Boolean
   deleteTodo(id: ID!): Boolean!
   deleteUser: Boolean!
@@ -215,6 +221,7 @@ type Todo {
   isCompleted: Boolean!
   repeatWeekdays: [Weekday!]!
   subtasks: [Todo!]!
+  supertask: Todo
   title: String!
   user: User!
 }

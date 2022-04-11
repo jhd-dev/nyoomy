@@ -7,6 +7,14 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /**
+ * @typedef {Object} AddTodoInput
+ * @property {string} [description]
+ * @property {boolean} [isArchived]
+ * @property {Array<Weekday>} [repeatWeekdays]
+ * @property {string} [title]
+ */
+
+/**
  * The icons available to accompany category/tag titles
  * @typedef {("GLOBE"|"ROCKET"|"STAR"|"WATER")} CategoryIcon
  */
@@ -60,8 +68,7 @@ export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: Non
  * @property {number} dailyWordGoal
  * @property {string} id
  * @property {boolean} isArchived
- * @property {Metric} metric
- * @property {MetricType} metricType
+ * @property {User} user
  */
 
 /**
@@ -235,6 +242,7 @@ export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: Non
  * @property {boolean} isCompleted
  * @property {Array<Weekday>} repeatWeekdays
  * @property {Array<Todo>} subtasks
+ * @property {Todo} [supertask]
  * @property {string} title
  * @property {User} user
  */
@@ -290,6 +298,13 @@ export type Scalars = {
   DateTime: any;
 };
 
+export type AddTodoInput = {
+  description?: InputMaybe<Scalars['String']>;
+  isArchived?: InputMaybe<Scalars['Boolean']>;
+  repeatWeekdays?: InputMaybe<Array<Weekday>>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
 /** The icons available to accompany category/tag titles */
 export enum CategoryIcon {
   Globe = 'GLOBE',
@@ -341,8 +356,7 @@ export type Journal = {
   dailyWordGoal: Scalars['Int'];
   id: Scalars['ID'];
   isArchived: Scalars['Boolean'];
-  metric: Metric;
-  metricType: MetricType;
+  user: User;
 };
 
 export type LoginResponse = {
@@ -397,6 +411,11 @@ export type Mutation = {
   sendMessageToUser?: Maybe<Message>;
   updateTodo?: Maybe<Todo>;
   updateUserPassword: Scalars['Boolean'];
+};
+
+
+export type MutationAddTodoArgs = {
+  input: AddTodoInput;
 };
 
 
@@ -579,6 +598,7 @@ export type Todo = {
   isCompleted: Scalars['Boolean'];
   repeatWeekdays: Array<Weekday>;
   subtasks: Array<Todo>;
+  supertask?: Maybe<Todo>;
   title: Scalars['String'];
   user: User;
 };
@@ -779,6 +799,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  AddTodoInput: AddTodoInput;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   CategoryIcon: CategoryIcon;
   Chat: ResolverTypeWrapper<Chat>;
@@ -821,6 +842,7 @@ export type ResolversTypes = {
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
+  AddTodoInput: AddTodoInput;
   Boolean: Scalars['Boolean'];
   Chat: Chat;
   CounterMetric: CounterMetric;
@@ -899,8 +921,7 @@ export type JournalResolvers<ContextType = any, ParentType extends ResolversPare
   dailyWordGoal?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   isArchived?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  metric?: Resolver<ResolversTypes['Metric'], ParentType, ContextType>;
-  metricType?: Resolver<ResolversTypes['MetricType'], ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -931,7 +952,7 @@ export type MetricResolvers<ContextType = any, ParentType extends ResolversParen
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  addTodo?: Resolver<Maybe<ResolversTypes['Todo']>, ParentType, ContextType>;
+  addTodo?: Resolver<Maybe<ResolversTypes['Todo']>, ParentType, ContextType, RequireFields<MutationAddTodoArgs, 'input'>>;
   deleteMessage?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteMessageArgs, 'messageId'>>;
   deleteTodo?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteTodoArgs, 'id'>>;
   deleteUser?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
@@ -1043,6 +1064,7 @@ export type TodoResolvers<ContextType = any, ParentType extends ResolversParentT
   isCompleted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   repeatWeekdays?: Resolver<Array<ResolversTypes['Weekday']>, ParentType, ContextType>;
   subtasks?: Resolver<Array<ResolversTypes['Todo']>, ParentType, ContextType>;
+  supertask?: Resolver<Maybe<ResolversTypes['Todo']>, ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;

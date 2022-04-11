@@ -1,7 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import Weekday, { weekdays } from '../../types/enums/weekday.enum';
 import { TodoEntry } from './models/todo-entry.entity';
 import { Todo } from './models/todo.entity';
 import type { User } from '../user/models/user.entity';

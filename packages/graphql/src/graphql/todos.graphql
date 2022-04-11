@@ -10,7 +10,7 @@ query MyTodos {
 }
 
 mutation AddTodo {
-    addTodo {
+    addTodo(input: {}) {
         id
         title
         description

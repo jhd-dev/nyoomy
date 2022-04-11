@@ -18,6 +18,13 @@ export type Scalars = {
   DateTime: any;
 };
 
+export type AddTodoInput = {
+  description?: InputMaybe<Scalars['String']>;
+  isArchived?: InputMaybe<Scalars['Boolean']>;
+  repeatWeekdays?: InputMaybe<Array<Weekday>>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
 /** The icons available to accompany category/tag titles */
 export enum CategoryIcon {
   Globe = 'GLOBE',
@@ -69,8 +76,7 @@ export type Journal = {
   dailyWordGoal: Scalars['Int'];
   id: Scalars['ID'];
   isArchived: Scalars['Boolean'];
-  metric: Metric;
-  metricType: MetricType;
+  user: User;
 };
 
 export type LoginResponse = {
@@ -125,6 +131,11 @@ export type Mutation = {
   sendMessageToUser?: Maybe<Message>;
   updateTodo?: Maybe<Todo>;
   updateUserPassword: Scalars['Boolean'];
+};
+
+
+export type MutationAddTodoArgs = {
+  input: AddTodoInput;
 };
 
 
@@ -307,6 +318,7 @@ export type Todo = {
   isCompleted: Scalars['Boolean'];
   repeatWeekdays: Array<Weekday>;
   subtasks: Array<Todo>;
+  supertask?: Maybe<Todo>;
   title: Scalars['String'];
   user: User;
 };
@@ -666,7 +678,7 @@ export function refetchMyTodosQuery(variables?: MyTodosQueryVariables) {
     }
 export const AddTodoDocument = gql`
     mutation AddTodo {
-  addTodo {
+  addTodo(input: {}) {
     id
     title
     description
