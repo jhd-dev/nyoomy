@@ -24,7 +24,7 @@ export class TodoResolver {
         const userId = user.id;
         if (userId == null) return [];
         // eslint-disable-next-line no-return-await
-        return await this.todoService.getUserTodos(userId, excludingArchived);
+        return await this.todoService.getUserTodos(user, excludingArchived);
     }
 
     @Mutation(() => Todo, { nullable: true })

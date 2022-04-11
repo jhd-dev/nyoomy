@@ -1,6 +1,8 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import EntityAction from '../../types/enums/entity-action.enum';
+import { CaslAbilityFactory } from '../casl/casl-ability.factory';
 import { TodoEntry } from './models/todo-entry.entity';
 import { Todo } from './models/todo.entity';
 import type { User } from '../user/models/user.entity';
@@ -9,29 +11,40 @@ import type { UpdateTodoInput } from './dto/update-todo.input';
 
 @Injectable()
 export class TodoService {
-    @InjectRepository(Todo)
-    private readonly todoRepo: Repository<Todo>;
+    public constructor(
+        @InjectRepository(Todo)
+        private readonly todoRepo: Repository<Todo>,
+        @InjectRepository(TodoEntry)
+        private readonly todoEntryRepo: Repository<TodoEntry>,
+        private readonly caslAbilityFactory: CaslAbilityFactory
+    ) {}
 
-    @InjectRepository(TodoEntry)
-    private readonly todoEntryRepo: Repository<TodoEntry>;
-
-    public getAllTodos(excludingArchived: boolean): Promise<Todo[]> {
+    public getAllTodos(
+        user: User,
+        excludingArchived: boolean
+    ): Promise<Todo[]> {
+        const ability = this.caslAbilityFactory.createForUser(user);
+        if (!ability.can(EntityAction.READ, Todo)) {
+            throw new UnauthorizedException();
+        }
         return this.todoRepo.find({
             where: { isArchived: excludingArchived ? false : undefined },
         });
     }
 
-    public getUserTodos(
-        userId: string,
+    public async getUserTodos(
+        user: User,
         excludingArchived: boolean
     ): Promise<Todo[]> {
-        return this.todoRepo.find({
+        const todos = await this.todoRepo.find({
             where: {
-                user: { id: userId },
+                user: { id: user.id },
                 isArchived: excludingArchived ? false : undefined,
             },
             relations: ['user'],
         });
+        const ability = this.caslAbilityFactory.createForUser(user);
+        return todos.filter((todo) => ability.can(EntityAction.READ, todo));
     }
 
     public async addTodo(user: User, input: AddTodoInput): Promise<Todo> {
@@ -40,6 +53,12 @@ export class TodoService {
             level: 0,
             ...input,
         });
+
+        const ability = this.caslAbilityFactory.createForUser(user);
+        if (!ability.can(EntityAction.CREATE, todo)) {
+            throw new UnauthorizedException();
+        }
+
         await this.todoRepo.save(todo);
         return todo;
     }
@@ -51,7 +70,9 @@ export class TodoService {
         const todo = await this.todoRepo.findOneOrFail(updateInput.id, {
             relations: ['user'],
         });
-        if (todo.user.id !== user.id) {
+
+        const ability = this.caslAbilityFactory.createForUser(user);
+        if (!ability.can(EntityAction.UPDATE, todo)) {
             throw new UnauthorizedException('incorrect user');
         }
 
@@ -66,7 +87,8 @@ export class TodoService {
 
     public async deleteTodo(user: User, id: string): Promise<void> {
         const todo = await this.todoRepo.findOneOrFail(id);
-        if (user.id === todo.user.id) {
+        const ability = this.caslAbilityFactory.createForUser(user);
+        if (ability.can(EntityAction.DELETE, todo)) {
             await this.todoRepo.remove(todo);
         }
     }
