@@ -117,6 +117,7 @@ type Query {
   getMyTodos(excludeArchived: Boolean!): [Todo!]!
   me: User
   myChats(excludeArchived: Boolean!): [Chat!]!
+  users: [User!]
 }
 
 """User registration data"""

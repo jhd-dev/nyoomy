@@ -2,8 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import EntityAction from '../../types/enums/entity-action.enum';
 import { RegistrationProblem } from '../../types/enums/registration-problem';
 import sendEmail from '../../utils/sendEmail';
+import { CaslAbilityFactory } from '../casl/casl-ability.factory';
 import { Profile } from './models/profile.entity';
 import { User } from './models/user.entity';
 import { UserRepo } from './user.repository';
@@ -17,11 +19,17 @@ export class UserService {
         private readonly userRepo: UserRepo,
         @InjectRepository(Profile)
         private readonly profileRepo: Repository<Profile>,
-        private readonly configService: ConfigService
+        private readonly configService: ConfigService,
+        private readonly caslAbilityFactory: CaslAbilityFactory
     ) {}
 
-    public getAll(): Promise<IUser[]> {
-        return this.userRepo.find();
+    // eslint-disable-next-line require-await
+    public async getAll(user: User): Promise<User[]> {
+        const ability = this.caslAbilityFactory.createForUser(user);
+        if (ability.can(EntityAction.READ, User)) {
+            return await this.userRepo.find();
+        }
+        return [user];
     }
 
     public async getCurrentUser(id: unknown): Promise<IUser | null> {

@@ -2,10 +2,8 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PassportSerializer } from '@nestjs/passport';
 import { UserService } from '../../user/user.service';
 import { AuthService } from '../auth.service';
-import type { IUser } from '../../user/interfaces/user.interface';
 import type { SafeUser } from '../../user/models/safe-user.model';
 import type { User } from '../../user/models/user.entity';
-import type { IAuthPayload } from '../interfaces/auth-payload.interface';
 
 @Injectable()
 export class LocalAuthSerializer extends PassportSerializer {

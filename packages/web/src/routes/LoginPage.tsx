@@ -1,16 +1,23 @@
 import type { FormEvent, FC } from 'react';
 import React, { useState } from 'react';
+import { CircleOutlined, Google as GoogleIcon } from '@mui/icons-material';
+import { Divider, Link, Stack, Tooltip } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import type { IInputEvent } from '@nyoomy/common';
 import { useLoginMutation } from '@nyoomy/graphql';
+import { useNavigate } from 'react-router-dom';
 import InputTextField from '../components/InputTextField';
+import type { LoginMutation } from '../../../graphql/src/generated/graphql-hooks';
 
 const LoginPage: FC = () => {
     const [usernameOrEmail, setUsernameOrEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    const navigate = useNavigate();
 
     const [login, { error }] = useLoginMutation();
     if (error !== undefined) console.error(error);
@@ -23,6 +30,11 @@ const LoginPage: FC = () => {
                     usernameOrEmail,
                     passwordInput: password,
                 },
+            },
+            onCompleted(data: LoginMutation) {
+                if (data?.login?.user != null) {
+                    navigate('/', { replace: true });
+                }
             },
         });
     };
@@ -74,6 +86,39 @@ const LoginPage: FC = () => {
                 >
                     Login
                 </Button>
+                <Divider />
+                <Typography>Or log in with:</Typography>
+                <Stack
+                    direction="row"
+                    spacing={2}
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                    }}
+                >
+                    <Tooltip title="Log in with Google">
+                        <Link href="auth/google/">
+                            <IconButton
+                                sx={{
+                                    backgroundColor: '#ddeeff',
+                                }}
+                            >
+                                <GoogleIcon />
+                            </IconButton>
+                        </Link>
+                    </Tooltip>
+                    <Tooltip title="Coming soon...">
+                        <IconButton disabled>
+                            <CircleOutlined />
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Coming soon...">
+                        <IconButton disabled>
+                            <CircleOutlined />
+                        </IconButton>
+                    </Tooltip>
+                </Stack>
             </Box>
         </>
     );

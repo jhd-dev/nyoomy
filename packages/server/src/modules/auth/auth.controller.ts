@@ -7,8 +7,9 @@ import { AuthService } from './auth.service';
 export class AuthController {
     public constructor(private readonly authService: AuthService) {}
 
+    @Get()
     @Post()
-    @UseGuards(AuthGuard('local'))
+    @UseGuards(AuthGuard('google'))
     public login(): void {
         console.log('login');
     }
@@ -16,20 +17,20 @@ export class AuthController {
     @Get('google')
     @Post('google')
     @UseGuards(AuthGuard('google'))
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public googleAuth(@Req() _req: Request): void {
-        console.log('google');
-    }
+    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
+    public googleAuth(@Req() _req: Request): void {}
 
     @Get('google/redirect')
     @Post('google/redirect')
     @UseGuards(AuthGuard('google'))
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public googleAuthRedirect(@Req() req: Request, @Res() res: Response): void {
-        console.log('google/redirec');
+    public googleAuthRedirect(@Req() req: Request): void {
         if (req.user == null) {
             throw new Error('no google user found in request');
         }
-        res.redirect('/');
+        console.log(req.isAuthenticated());
+        // console.log(req.session.user?.id);
+        // res.redirect('/');
     }
 }

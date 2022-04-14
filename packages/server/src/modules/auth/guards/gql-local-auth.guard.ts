@@ -13,17 +13,11 @@ import type { Request } from 'express';
 export class GqlLocalAuthGuard extends AuthGuard('local') {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public async canActivate(context: ExecutionContext): Promise<boolean> {
-        console.log('gqllocalauthguard.canactivate');
         try {
             const gqlCtx = GqlExecutionContext.create(context);
             const ctx = gqlCtx.getContext<IContext>();
-            console.log(ctx);
-            console.log('localauthguard.canactivate');
             await super.canActivate(context);
-            console.log('super.login');
-            console.log(ctx.req);
             await super.logIn(ctx.req);
-            console.log('/localauthguard.canactivate');
         } catch (err: unknown) {
             Logger.log(err);
         }
@@ -31,18 +25,10 @@ export class GqlLocalAuthGuard extends AuthGuard('local') {
     }
 
     public getRequest(context: ExecutionContext): Request {
-        console.log('getRequest');
         const contextType = context.getType<GqlContextType>();
-        console.log(contextType);
         if (contextType === 'graphql') {
             const gqlCtx = GqlExecutionContext.create(context);
-            // const req = gqlCtx.getContext<Request>();
-            // const loginInput =
-            //     gqlCtx.getArgs<{ input: UserLoginInput }>().input;
-            // req.body = loginInput;
-            // console.log(loginInput);
             const { req } = gqlCtx.getContext<IContext>();
-            console.log(gqlCtx.getArgs<{ input: UserLoginInput }>());
             const { usernameOrEmail, passwordInput } =
                 gqlCtx.getArgs<{ input: UserLoginInput }>().input;
             req.body = {
@@ -57,11 +43,8 @@ export class GqlLocalAuthGuard extends AuthGuard('local') {
                 username: usernameOrEmail,
                 password: passwordInput,
             };
-            console.log(req.body);
-            console.log('/gqllocalauthguard.getRequest');
             return req;
         }
-        console.log('not graphql');
         return context.switchToHttp().getRequest<Request>();
     }
 

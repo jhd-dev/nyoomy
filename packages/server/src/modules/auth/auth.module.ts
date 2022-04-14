@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CaslAbilityFactory } from '../casl/casl-ability.factory';
+import { CaslModule } from '../casl/casl.module';
 import { Profile } from '../user/models/profile.entity';
 import { User } from '../user/models/user.entity';
 import { UserModule } from '../user/user.module';
@@ -16,9 +18,13 @@ import { LocalStrategy } from './providers/strategies/local.strategy';
 
 @Module({
     imports: [
-        PassportModule.register({ session: true, defaultStrategy: 'local' }),
+        PassportModule.register({
+            session: true,
+            defaultStrategy: 'local',
+        }),
         UserModule,
         TypeOrmModule.forFeature([User, Profile]),
+        CaslModule,
     ],
     providers: [
         AuthResolver,
@@ -29,6 +35,7 @@ import { LocalStrategy } from './providers/strategies/local.strategy';
         ConfigService,
         UserService,
         UserRepo,
+        CaslAbilityFactory,
     ],
     controllers: [AuthController],
     exports: [AuthService],
