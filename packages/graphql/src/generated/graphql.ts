@@ -124,6 +124,7 @@ export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: Non
  * @property {Array<Todo>} getMyTodos
  * @property {User} [me]
  * @property {Array<Chat>} myChats
+ * @property {Array<User>} [users]
  */
 
 /**
@@ -473,6 +474,7 @@ export type Query = {
   getMyTodos: Array<Todo>;
   me?: Maybe<User>;
   myChats: Array<Chat>;
+  users?: Maybe<Array<User>>;
 };
 
 
@@ -971,6 +973,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getMyTodos?: Resolver<Array<ResolversTypes['Todo']>, ParentType, ContextType, RequireFields<QueryGetMyTodosArgs, 'excludeArchived'>>;
   me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   myChats?: Resolver<Array<ResolversTypes['Chat']>, ParentType, ContextType, RequireFields<QueryMyChatsArgs, 'excludeArchived'>>;
+  users?: Resolver<Maybe<Array<ResolversTypes['User']>>, ParentType, ContextType>;
 };
 
 export type RegistrationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['RegistrationResponse'] = ResolversParentTypes['RegistrationResponse']> = {

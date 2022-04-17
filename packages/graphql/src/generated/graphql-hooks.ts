@@ -193,6 +193,7 @@ export type Query = {
   getMyTodos: Array<Todo>;
   me?: Maybe<User>;
   myChats: Array<Chat>;
+  users?: Maybe<Array<User>>;
 };
 
 
