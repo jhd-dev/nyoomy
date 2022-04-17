@@ -4,6 +4,7 @@ import Action from '../../types/enums/entity-action.enum';
 import Role from '../../types/enums/role.enum';
 import { Chat } from '../chat/models/chat.entity';
 import { Message } from '../chat/models/message.entity';
+import { Tag } from '../tag/models/tag.entity';
 import { Todo } from '../todo/models/todo.entity';
 import { Profile } from '../user/models/profile.entity';
 import { User } from '../user/models/user.entity';
@@ -18,6 +19,7 @@ import type { AnyObject } from '@casl/ability/dist/types/types';
 type Subjects =
     | InferSubjects<
           | typeof User
+          | typeof Tag
           | typeof Todo
           | typeof Profile
           | typeof Chat
@@ -89,6 +91,10 @@ export class CaslAbilityFactory {
                 can<FlatMetric<Todo>>(Action.MANAGE, Todo, {
                     'user.id': user.id,
                 }).because('Users may manage their own metrics.');
+
+                can<FlatMetric<Tag>>(Action.MANAGE, Tag, {
+                    'user.id': user.id,
+                }).because('Users may manage their own tags.');
                 break;
             default:
                 throw new Error('User does not have a recognized role.');

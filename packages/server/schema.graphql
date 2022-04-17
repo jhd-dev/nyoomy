@@ -196,8 +196,8 @@ input SendMessageToUserInput {
 type Tag {
   icon: CategoryIcon
   id: ID!
+  label: String!
   taggedItems: [Taggable!]!
-  title: String!
   user: User!
 }
 

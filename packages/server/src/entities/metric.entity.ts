@@ -8,7 +8,7 @@ import {
     JoinColumn,
     PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Taggable } from './taggable.entity';
+import { Taggable } from '../modules/tag/models/taggable.entity';
 import { User } from '../modules/user/models/user.entity';
 
 @Entity('metrics')

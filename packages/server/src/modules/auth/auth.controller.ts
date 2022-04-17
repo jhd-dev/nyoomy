@@ -2,6 +2,7 @@ import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
+import { GqlLocalAuthGuard } from './guards/gql-local-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -23,14 +24,14 @@ export class AuthController {
 
     @Get('google/redirect')
     @Post('google/redirect')
-    @UseGuards(AuthGuard('google'))
+    @UseGuards(GqlLocalAuthGuard)
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public googleAuthRedirect(@Req() req: Request): void {
+    public googleAuthRedirect(@Req() req: Request, @Res() res: Response): void {
         if (req.user == null) {
             throw new Error('no google user found in request');
         }
         console.log(req.isAuthenticated());
         // console.log(req.session.user?.id);
-        // res.redirect('/');
+        res.redirect('/');
     }
 }

@@ -14,7 +14,7 @@ registerEnumType(CategoryIcon, {
 
 export default CategoryIcon;
 
-export const categoryIcons = [
+export const categoryIcons: CategoryIcon[] = [
     CategoryIcon.GLOBE,
     CategoryIcon.STAR,
     CategoryIcon.WATER,

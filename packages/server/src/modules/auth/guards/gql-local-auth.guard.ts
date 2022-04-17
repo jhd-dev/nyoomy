@@ -10,7 +10,7 @@ import type { GqlContextType } from '@nestjs/graphql';
 import type { Request } from 'express';
 
 @Injectable()
-export class GqlLocalAuthGuard extends AuthGuard('local') {
+export class GqlLocalAuthGuard extends AuthGuard(['local', 'google']) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public async canActivate(context: ExecutionContext): Promise<boolean> {
         try {

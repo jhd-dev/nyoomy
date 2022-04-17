@@ -1,10 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-import { Injectable } from '@nestjs/common';
+import { Injectable, UseGuards } from '@nestjs/common';
 import { Resolver, Mutation, Args, Query, Context, ID } from '@nestjs/graphql';
+import { CurrentUser } from '../../common/decorators/user.decorator';
 import { Tag } from '../../entities';
-import { AddTagInput } from '../../types/inputs/add-tag.input';
 import { UpdateTagInput } from '../../types/inputs/update-tag.input';
 import { IContext } from '../../types/interfaces/context.interface';
+import { AuthenticatedGuard } from '../auth/guards/authenticated.guard';
+import { User } from '../user/models/user.entity';
+import { AddTagInput } from './dto/add-tag.input';
 import { TagService } from './tag.service';
 
 @Injectable()
@@ -12,27 +15,29 @@ import { TagService } from './tag.service';
 export class TagResolver {
     public constructor(private readonly tagService: TagService) {}
 
-    @Query(() => [Tag])
-    public myTags(@Context() { req }: IContext): Promise<Tag[]> {
-        const { userId } = req.session;
-        return this.tagService.getUserTags(userId!, false);
+    @Query(() => [Tag], { name: 'myTags' })
+    @UseGuards(AuthenticatedGuard)
+    public myTags(@CurrentUser() user: User): Promise<Tag[]> {
+        return this.tagService.getUserTags(user.id, false);
     }
 
     @Mutation(() => Tag, { nullable: true })
+    @UseGuards(AuthenticatedGuard)
     public addTag(
         @Args('tagInput', { type: () => AddTagInput }) tagInput: AddTagInput,
-        @Context() { req }: IContext
+        @CurrentUser() user: User
     ): Promise<Tag | null> {
-        const { userId } = req.session;
-        return this.tagService.addTag(userId!, tagInput);
+        return this.tagService.addTag(user, tagInput);
     }
 
     @Mutation(() => Tag, { nullable: true })
+    @UseGuards(AuthenticatedGuard)
     public async updateTag(
-        @Args('updateInput') updateInput: UpdateTagInput
+        @Args('updateInput') updateInput: UpdateTagInput,
+        @CurrentUser() user: User
     ): Promise<Tag | null> {
         try {
-            return await this.tagService.updateTag(updateInput);
+            return await this.tagService.updateTag(user, updateInput);
         } catch (err: unknown) {
             console.error(err);
             return null;
@@ -40,8 +45,9 @@ export class TagResolver {
     }
 
     @Mutation(() => Boolean)
+    @UseGuards(AuthenticatedGuard)
     public async deleteTag(
-        @Args('id', { type: () => ID }) id: string
+        @Args('tagId', { type: () => ID }) id: number
     ): Promise<boolean> {
         try {
             await this.tagService.deleteTag(id);
@@ -53,6 +59,7 @@ export class TagResolver {
     }
 
     @Mutation(() => Tag, { nullable: true })
+    @UseGuards(AuthenticatedGuard)
     public async applyTag(
         @Args('tagId', { type: () => ID }) tagId: string,
         @Args('taggableId', { type: () => ID }) taggableId: string

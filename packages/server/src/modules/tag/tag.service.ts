@@ -1,22 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Tag } from '../../entities/tag.entity';
-import { Taggable } from '../../entities/taggable.entity';
-import { User } from '../user/models/user.entity';
-import type { AddTagInput } from '../../types/inputs/add-tag.input';
-import type { UpdateTagInput } from '../../types/inputs/update-tag.input';
+import CategoryIcon, { categoryIcons } from '../../types/enums/category-icon';
+import EntityAction from '../../types/enums/entity-action.enum';
+import { CaslAbilityFactory } from '../casl/casl-ability.factory';
+import { Tag } from './models/tag.entity';
+import { Taggable } from './models/taggable.entity';
+import type { User } from '../user/models/user.entity';
+import type { AddTagInput } from './dto/add-tag.input';
+import type { UpdateTagInput } from './dto/update-tag.input';
 
 @Injectable()
 export class TagService {
-    @InjectRepository(Tag)
-    private readonly tagRepo: Repository<Tag>;
-
-    @InjectRepository(Taggable)
-    private readonly taggableRepo: Repository<Taggable>;
-
-    @InjectRepository(User)
-    private readonly userRepo: Repository<User>;
+    public constructor(
+        @InjectRepository(Tag)
+        private readonly tagRepo: Repository<Tag>,
+        @InjectRepository(Taggable)
+        private readonly taggableRepo: Repository<Taggable>,
+        private readonly caslAbilityFactory: CaslAbilityFactory
+    ) {}
 
     public getUserTags(
         userId: string,
@@ -32,31 +34,38 @@ export class TagService {
     }
 
     public async addTag(
-        userId: string,
-        { title, taggedItem, icon }: AddTagInput
+        user: User,
+        { label, icon }: AddTagInput
     ): Promise<Tag | null> {
-        const user = await this.userRepo.findOneOrFail(userId);
         const tag = this.tagRepo.create({
-            user,
-            title,
-            taggedItems: taggedItem == null ? [] : [taggedItem],
+            user: { id: user.id },
+            label,
+            taggedItems: [],
             icon: icon ?? null,
         });
-        return this.tagRepo.save(tag);
+        const ability = this.caslAbilityFactory.createForUser(user);
+        if (ability.can(EntityAction.CREATE, tag)) {
+            return this.tagRepo.save(tag);
+        }
+        return null;
     }
 
-    public async updateTag(updateInput: UpdateTagInput): Promise<Tag> {
+    public async updateTag(
+        user: User,
+        updateInput: UpdateTagInput
+    ): Promise<Tag> {
         const tag = await this.tagRepo.findOneOrFail(updateInput.id);
-        tag.title = updateInput.title ?? tag.title;
-        tag.icon =
-            typeof updateInput.icon !== 'undefined'
-                ? updateInput.icon
-                : tag.icon;
-        await this.tagRepo.save(tag);
+        tag.label = updateInput.label ?? tag.label;
+        tag.icon = updateInput.icon !== undefined ? updateInput.icon : tag.icon;
+        const ability = this.caslAbilityFactory.createForUser(user);
+        if (ability.can(EntityAction.UPDATE, tag)) {
+            await this.tagRepo.save(tag);
+        }
         return tag;
     }
 
     public async applyTag(
+        user: User,
         tagId: string,
         taggableId: string
     ): Promise<Tag | null> {
@@ -66,13 +75,16 @@ export class TagService {
             id: taggable.id,
             tags: taggable.tags.concat([tag]),
         });
-        await this.tagRepo.save(tag);
+        const ability = this.caslAbilityFactory.createForUser(user);
+        if (ability.can(EntityAction.UPDATE, tag)) {
+            await this.tagRepo.save(tag);
+        }
         return tag;
     }
 
     public async removeTag(
-        tagId: string,
-        taggableId: string
+        tagId: number,
+        taggableId: number
     ): Promise<Tag | null> {
         try {
             const tag = await this.tagRepo.findOneOrFail(tagId);
@@ -86,7 +98,7 @@ export class TagService {
         }
     }
 
-    public async deleteTag(id: string): Promise<void> {
+    public async deleteTag(id: number): Promise<void> {
         const tag = await this.tagRepo.findOneOrFail(id);
         await this.tagRepo.remove(tag);
     }

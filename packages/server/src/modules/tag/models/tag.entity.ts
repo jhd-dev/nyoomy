@@ -7,29 +7,31 @@ import {
     Entity,
     PrimaryGeneratedColumn,
 } from 'typeorm';
-import { User } from '../modules/user/models/user.entity';
-import CategoryIcon, { categoryIcons } from '../types/enums/category-icon';
+import CategoryIcon, {
+    categoryIcons,
+} from '../../../types/enums/category-icon';
+import { User } from '../../user/models/user.entity';
 import { Taggable } from './taggable.entity';
 
 @Entity('tags')
 @ObjectType()
 export class Tag {
-    @PrimaryGeneratedColumn('uuid')
+    @PrimaryGeneratedColumn()
     @Field(() => ID)
-    public readonly id: string;
+    public readonly id: number;
 
     @ManyToOne(() => User)
     @Field(() => User)
     public user: User;
 
-    @ManyToMany(() => Taggable)
+    @ManyToMany(() => Taggable, (taggable) => taggable.tags)
     @JoinTable()
     @Field(() => [Taggable])
     public taggedItems: Taggable[];
 
     @Column('varchar', { length: 63 })
     @Field()
-    public title: string;
+    public label: string;
 
     @Column('enum', {
         enum: categoryIcons,
