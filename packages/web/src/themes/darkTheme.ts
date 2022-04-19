@@ -1,8 +1,13 @@
 import { blueGrey, cyan, red, teal } from '@mui/material/colors';
 import { createTheme } from '@mui/material/styles';
 
-export const defaultTheme = createTheme({
+export const darkTheme = createTheme({
     palette: {
+        mode: 'dark',
+        background: {
+            default: blueGrey[900],
+            paper: blueGrey[700],
+        },
         primary: {
             light: teal.A100,
             main: teal[200],

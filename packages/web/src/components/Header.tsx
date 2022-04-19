@@ -3,6 +3,7 @@ import React from 'react';
 import { AppBar, Box, Stack, Toolbar, Typography } from '@mui/material';
 import { APP_NAME } from '@nyoomy/global';
 import { Link } from 'react-router-dom';
+import { DarkModeToggle } from './DarkModeToggle';
 import { LoginStatus } from './LoginStatus';
 
 export const Header: FC = () => (
@@ -30,6 +31,7 @@ export const Header: FC = () => (
                     sx={{ flexGrow: 1 }}
                     justifyContent="end"
                 >
+                    <DarkModeToggle />
                     <LoginStatus />
                 </Stack>
             </Toolbar>
