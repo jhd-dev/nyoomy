@@ -1,6 +1,6 @@
 import React from 'react';
 import type { FC } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import ChatPage from './routes/ChatPage';
 import LoginPage from './routes/LoginPage';
 import MainPage from './routes/MainPage';
@@ -23,7 +23,12 @@ const Router: FC = () => (
                 <Route
                     path="settings"
                     element={<SettingsPage drawerWidth={236} />}
-                />
+                >
+                    <Route path="general" />
+                    <Route path="appearance" />
+                    <Route path="privacy" />
+                    <Route index element={<Navigate to="general" replace />} />
+                </Route>
                 <Route path="*" element={<PageNotFoundAlert />} />
             </Route>
         </Routes>
