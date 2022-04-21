@@ -3,10 +3,10 @@ import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import EntityAction from '../../types/enums/entity-action.enum';
-import { RegistrationProblem } from '../../types/enums/registration-problem';
 import sendEmail from '../../utils/sendEmail';
 import { CaslAbilityFactory } from '../casl/casl-ability.factory';
 import { Profile } from './models/profile.entity';
+import { UserSettings } from './models/user-settings.entity';
 import { User } from './models/user.entity';
 import { UserRepo } from './user.repository';
 import type { RegisterUserInput } from '../auth/dto/register.input';
@@ -17,6 +17,8 @@ export class UserService {
     public constructor(
         @InjectRepository(User)
         private readonly userRepo: UserRepo,
+        @InjectRepository(UserSettings)
+        private readonly userSettingsRepo: Repository<UserSettings>,
         @InjectRepository(Profile)
         private readonly profileRepo: Repository<Profile>,
         private readonly configService: ConfigService,
@@ -68,7 +70,12 @@ export class UserService {
     }: RegisterUserInput): Promise<User> {
         const user = this.userRepo.create({ username, email, password });
         const profile = this.profileRepo.create({ user, displayName });
-        await this.profileRepo.save(profile);
+        const savedProfile = await this.profileRepo.save(profile);
+        const settings = this.userSettingsRepo.create({
+            user: savedProfile.user,
+        });
+        await this.userSettingsRepo.save(settings);
+
         return this.userRepo.findOneOrFail(user.id);
     }
 
@@ -79,7 +86,7 @@ export class UserService {
     ): Promise<User> {
         const username = displayName
             .toLocaleLowerCase()
-            .padEnd(16, String(Math.random()).substring(2));
+            .padEnd(10, String(Math.random()).substring(2));
         const password = '';
         const user: User = this.userRepo.create({
             username,
@@ -88,7 +95,12 @@ export class UserService {
             googleId,
         });
         const profile = this.profileRepo.create({ user, displayName });
-        await this.profileRepo.save(profile);
+        const savedProfile = await this.profileRepo.save(profile);
+        const settings = this.userSettingsRepo.create({
+            user: savedProfile.user,
+        });
+        await this.userSettingsRepo.save(settings);
+
         return this.userRepo.findOneOrFail(user.id);
     }
 
@@ -138,18 +150,18 @@ export class UserService {
         await this.userRepo.delete(user);
     }
 
-    private async validateRegistration({
-        email,
-        username,
-    }: RegisterUserInput): Promise<RegistrationProblem | null> {
-        const existingUsers = await this.userRepo.find({
-            where: [{ username }, { email }],
-        });
-        if (existingUsers.length > 0) {
-            return existingUsers[0].email === email
-                ? RegistrationProblem.EMAIL_TAKEN
-                : RegistrationProblem.USERNAME_TAKEN;
-        }
-        return null;
-    }
+    // private async validateRegistration({
+    //     email,
+    //     username,
+    // }: RegisterUserInput): Promise<RegistrationProblem | null> {
+    //     const existingUsers = await this.userRepo.find({
+    //         where: [{ username }, { email }],
+    //     });
+    //     if (existingUsers.length > 0) {
+    //         return existingUsers[0].email === email
+    //             ? RegistrationProblem.EMAIL_TAKEN
+    //             : RegistrationProblem.USERNAME_TAKEN;
+    //     }
+    //     return null;
+    // }
 }

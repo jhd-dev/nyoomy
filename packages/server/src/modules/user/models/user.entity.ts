@@ -13,10 +13,13 @@ import {
     CreateDateColumn,
     DeleteDateColumn,
     Entity,
+    JoinColumn,
+    OneToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
 import Role from '../../../types/enums/role.enum';
+import { UserSettings } from './user-settings.entity';
 import type { IUser } from '../interfaces/user.interface';
 
 @Entity('users')

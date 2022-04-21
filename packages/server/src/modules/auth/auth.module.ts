@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CaslAbilityFactory } from '../casl/casl-ability.factory';
 import { CaslModule } from '../casl/casl.module';
 import { Profile } from '../user/models/profile.entity';
+import { UserSettings } from '../user/models/user-settings.entity';
 import { User } from '../user/models/user.entity';
 import { UserModule } from '../user/user.module';
 import { UserRepo } from '../user/user.repository';
@@ -23,7 +24,7 @@ import { LocalStrategy } from './providers/strategies/local.strategy';
             defaultStrategy: 'local',
         }),
         UserModule,
-        TypeOrmModule.forFeature([User, Profile]),
+        TypeOrmModule.forFeature([User, Profile, UserSettings]),
         CaslModule,
     ],
     providers: [
