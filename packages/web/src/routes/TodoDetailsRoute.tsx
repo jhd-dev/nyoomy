@@ -18,15 +18,18 @@ import { useUpdateTodoMutation } from '@nyoomy/graphql';
 import { useNavigate, useParams } from 'react-router-dom';
 import type { UpdateTodoMutation } from '../../../graphql/src/generated/graphql';
 import type { ApolloError } from '@apollo/client';
+import { TagChip } from '../components/TagChip';
+import Checkbox from '@mui/material/Checkbox';
 
-interface ITag {
+export interface ITag {
     id: number;
     label: string;
+    colorName: string;
 }
 
 const tags: ITag[] = [
-    { id: 28987142, label: 'productivity' },
-    { id: 2173892, label: 'daily' },
+    { id: 28987142, label: 'productivity', colorName: 'Default' },
+    { id: 2173892, label: 'daily', colorName: 'Green' },
 ];
 
 const TodoDetailsRoute: FC = () => {
@@ -39,6 +42,8 @@ const TodoDetailsRoute: FC = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [selectedTags, setSelectedTags] = useState<ITag[]>([]);
+
+    const [allTags, setAllTags] = useState<ITag[]>(tags);
 
     const handleClose = () => {
         setOpen(true);
@@ -106,9 +111,9 @@ const TodoDetailsRoute: FC = () => {
                 <Autocomplete
                     multiple
                     freeSolo
+                    disableCloseOnSelect
                     value={selectedTags}
-                    options={tags}
-                    getOptionLabel={(option) => option.label}
+                    options={allTags}
                     onChange={(_e, newVal): void => {
                         const newValTags: ITag[] = newVal.filter(
                             (tag): tag is ITag => typeof tag !== 'string'
@@ -120,11 +125,24 @@ const TodoDetailsRoute: FC = () => {
                             const newTag: ITag = {
                                 id: Math.random(),
                                 label: tagString ?? 'New Tag',
+                                colorName: 'Default',
                             };
                             newValTags.push(newTag);
                         }
                         setSelectedTags(newValTags);
                     }}
+                    renderOption={(props, option, { selected }) => (
+                        <li {...props}>
+                            <Checkbox
+                                checked={selected}
+                                style={{
+                                    marginRight: 8,
+                                    color: option.colorName,
+                                }}
+                            ></Checkbox>
+                            {option.label}
+                        </li>
+                    )}
                     renderInput={(inputParams) => (
                         <TextField
                             label="Tags"
@@ -134,10 +152,7 @@ const TodoDetailsRoute: FC = () => {
                     )}
                     renderTags={(value: readonly ITag[], getTagProps) =>
                         value.map((option: ITag, index: number) => (
-                            <Chip
-                                label={option.label}
-                                {...getTagProps({ index })}
-                            />
+                            <TagChip tag={option} {...getTagProps({ index })} />
                         ))
                     }
                     limitTags={10}
