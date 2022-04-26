@@ -18,12 +18,29 @@ export type Scalars = {
   DateTime: any;
 };
 
+export type AddTagInput = {
+  color?: InputMaybe<CategoryColor>;
+  description?: InputMaybe<Scalars['String']>;
+  icon?: InputMaybe<CategoryIcon>;
+  label: Scalars['String'];
+  taggedItem?: InputMaybe<TaggableInput>;
+};
+
 export type AddTodoInput = {
   description?: InputMaybe<Scalars['String']>;
   isArchived?: InputMaybe<Scalars['Boolean']>;
   repeatWeekdays?: InputMaybe<Array<Weekday>>;
   title?: InputMaybe<Scalars['String']>;
 };
+
+/** Colors a user may associate with a category/tag */
+export enum CategoryColor {
+  Blue = 'BLUE',
+  Default = 'DEFAULT',
+  Green = 'GREEN',
+  Red = 'RED',
+  Yellow = 'YELLOW'
+}
 
 /** The icons available to accompany category/tag titles */
 export enum CategoryIcon {
@@ -119,7 +136,10 @@ export enum MetricType {
 export type Mutation = {
   __typename?: 'Mutation';
   addTodo?: Maybe<Todo>;
+  applyTag?: Maybe<Tag>;
+  createTag?: Maybe<Tag>;
   deleteMessage?: Maybe<Scalars['Boolean']>;
+  deleteTag: Scalars['Boolean'];
   deleteTodo: Scalars['Boolean'];
   deleteUser: Scalars['Boolean'];
   deleteUserById: Scalars['Boolean'];
@@ -129,6 +149,7 @@ export type Mutation = {
   registerUser: RegistrationResponse;
   sendMessageToChat?: Maybe<Message>;
   sendMessageToUser?: Maybe<Message>;
+  updateTag?: Maybe<Tag>;
   updateTodo?: Maybe<Todo>;
   updateUserPassword: Scalars['Boolean'];
 };
@@ -139,8 +160,24 @@ export type MutationAddTodoArgs = {
 };
 
 
+export type MutationApplyTagArgs = {
+  tagId: Scalars['ID'];
+  taggableId: Scalars['ID'];
+};
+
+
+export type MutationCreateTagArgs = {
+  tagInput: AddTagInput;
+};
+
+
 export type MutationDeleteMessageArgs = {
   messageId: Scalars['ID'];
+};
+
+
+export type MutationDeleteTagArgs = {
+  tagId: Scalars['ID'];
 };
 
 
@@ -179,6 +216,11 @@ export type MutationSendMessageToUserArgs = {
 };
 
 
+export type MutationUpdateTagArgs = {
+  updateInput: UpdateTagInput;
+};
+
+
 export type MutationUpdateTodoArgs = {
   updateInput: UpdateTodoInput;
 };
@@ -193,6 +235,7 @@ export type Query = {
   getMyTodos: Array<Todo>;
   me?: Maybe<User>;
   myChats: Array<Chat>;
+  myTags: Array<Tag>;
   users?: Maybe<Array<User>>;
 };
 
@@ -288,10 +331,11 @@ export type SendMessageToUserInput = {
 
 export type Tag = {
   __typename?: 'Tag';
+  color: CategoryColor;
+  description: Scalars['String'];
   icon?: Maybe<CategoryIcon>;
   id: Scalars['ID'];
-  taggedItems: Array<Taggable>;
-  title: Scalars['String'];
+  label: Scalars['String'];
   user: User;
 };
 
@@ -299,6 +343,10 @@ export type Taggable = {
   __typename?: 'Taggable';
   id: Scalars['ID'];
   tags: Array<Tag>;
+};
+
+export type TaggableInput = {
+  id: Scalars['ID'];
 };
 
 export type TimerMetric = {
@@ -328,6 +376,17 @@ export type UpdatePasswordInput = {
   newPassword: Scalars['String'];
   oldPassword: Scalars['String'];
   username: Scalars['String'];
+};
+
+export type UpdateTagInput = {
+  applyTaggables?: InputMaybe<Array<TaggableInput>>;
+  color?: InputMaybe<CategoryColor>;
+  description?: InputMaybe<Scalars['String']>;
+  icon?: InputMaybe<CategoryIcon>;
+  id: Scalars['ID'];
+  label?: InputMaybe<Scalars['String']>;
+  removeTaggables?: InputMaybe<Array<TaggableInput>>;
+  taggables?: InputMaybe<Array<TaggableInput>>;
 };
 
 export type UpdateTodoInput = {
@@ -402,6 +461,32 @@ export type DeleteMessageMutationVariables = Exact<{
 
 
 export type DeleteMessageMutation = { __typename?: 'Mutation', deleteMessage?: boolean | null };
+
+export type MyTagsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MyTagsQuery = { __typename?: 'Query', myTags: Array<{ __typename?: 'Tag', label: string, description: string, color: CategoryColor, icon?: CategoryIcon | null }> };
+
+export type CreateTagMutationVariables = Exact<{
+  input: AddTagInput;
+}>;
+
+
+export type CreateTagMutation = { __typename?: 'Mutation', createTag?: { __typename?: 'Tag', label: string, description: string, color: CategoryColor, icon?: CategoryIcon | null } | null };
+
+export type UpdateTagMutationVariables = Exact<{
+  input: UpdateTagInput;
+}>;
+
+
+export type UpdateTagMutation = { __typename?: 'Mutation', updateTag?: { __typename?: 'Tag', label: string, description: string, color: CategoryColor, icon?: CategoryIcon | null } | null };
+
+export type DeleteTagMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeleteTagMutation = { __typename?: 'Mutation', deleteTag: boolean };
 
 export type MyTodosQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -635,6 +720,149 @@ export function useDeleteMessageMutation(baseOptions?: Apollo.MutationHookOption
 export type DeleteMessageMutationHookResult = ReturnType<typeof useDeleteMessageMutation>;
 export type DeleteMessageMutationResult = Apollo.MutationResult<DeleteMessageMutation>;
 export type DeleteMessageMutationOptions = Apollo.BaseMutationOptions<DeleteMessageMutation, DeleteMessageMutationVariables>;
+export const MyTagsDocument = gql`
+    query MyTags {
+  myTags {
+    label
+    description
+    color
+    icon
+  }
+}
+    `;
+
+/**
+ * __useMyTagsQuery__
+ *
+ * To run a query within a React component, call `useMyTagsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMyTagsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMyTagsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMyTagsQuery(baseOptions?: Apollo.QueryHookOptions<MyTagsQuery, MyTagsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MyTagsQuery, MyTagsQueryVariables>(MyTagsDocument, options);
+      }
+export function useMyTagsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MyTagsQuery, MyTagsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MyTagsQuery, MyTagsQueryVariables>(MyTagsDocument, options);
+        }
+export type MyTagsQueryHookResult = ReturnType<typeof useMyTagsQuery>;
+export type MyTagsLazyQueryHookResult = ReturnType<typeof useMyTagsLazyQuery>;
+export type MyTagsQueryResult = Apollo.QueryResult<MyTagsQuery, MyTagsQueryVariables>;
+export function refetchMyTagsQuery(variables?: MyTagsQueryVariables) {
+      return { query: MyTagsDocument, variables: variables }
+    }
+export const CreateTagDocument = gql`
+    mutation CreateTag($input: AddTagInput!) {
+  createTag(tagInput: $input) {
+    label
+    description
+    color
+    icon
+  }
+}
+    `;
+export type CreateTagMutationFn = Apollo.MutationFunction<CreateTagMutation, CreateTagMutationVariables>;
+
+/**
+ * __useCreateTagMutation__
+ *
+ * To run a mutation, you first call `useCreateTagMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTagMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTagMutation, { data, loading, error }] = useCreateTagMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateTagMutation(baseOptions?: Apollo.MutationHookOptions<CreateTagMutation, CreateTagMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateTagMutation, CreateTagMutationVariables>(CreateTagDocument, options);
+      }
+export type CreateTagMutationHookResult = ReturnType<typeof useCreateTagMutation>;
+export type CreateTagMutationResult = Apollo.MutationResult<CreateTagMutation>;
+export type CreateTagMutationOptions = Apollo.BaseMutationOptions<CreateTagMutation, CreateTagMutationVariables>;
+export const UpdateTagDocument = gql`
+    mutation UpdateTag($input: UpdateTagInput!) {
+  updateTag(updateInput: $input) {
+    label
+    description
+    color
+    icon
+  }
+}
+    `;
+export type UpdateTagMutationFn = Apollo.MutationFunction<UpdateTagMutation, UpdateTagMutationVariables>;
+
+/**
+ * __useUpdateTagMutation__
+ *
+ * To run a mutation, you first call `useUpdateTagMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTagMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateTagMutation, { data, loading, error }] = useUpdateTagMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateTagMutation(baseOptions?: Apollo.MutationHookOptions<UpdateTagMutation, UpdateTagMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateTagMutation, UpdateTagMutationVariables>(UpdateTagDocument, options);
+      }
+export type UpdateTagMutationHookResult = ReturnType<typeof useUpdateTagMutation>;
+export type UpdateTagMutationResult = Apollo.MutationResult<UpdateTagMutation>;
+export type UpdateTagMutationOptions = Apollo.BaseMutationOptions<UpdateTagMutation, UpdateTagMutationVariables>;
+export const DeleteTagDocument = gql`
+    mutation DeleteTag($id: ID!) {
+  deleteTag(tagId: $id)
+}
+    `;
+export type DeleteTagMutationFn = Apollo.MutationFunction<DeleteTagMutation, DeleteTagMutationVariables>;
+
+/**
+ * __useDeleteTagMutation__
+ *
+ * To run a mutation, you first call `useDeleteTagMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteTagMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteTagMutation, { data, loading, error }] = useDeleteTagMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteTagMutation(baseOptions?: Apollo.MutationHookOptions<DeleteTagMutation, DeleteTagMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteTagMutation, DeleteTagMutationVariables>(DeleteTagDocument, options);
+      }
+export type DeleteTagMutationHookResult = ReturnType<typeof useDeleteTagMutation>;
+export type DeleteTagMutationResult = Apollo.MutationResult<DeleteTagMutation>;
+export type DeleteTagMutationOptions = Apollo.BaseMutationOptions<DeleteTagMutation, DeleteTagMutationVariables>;
 export const MyTodosDocument = gql`
     query MyTodos {
   getMyTodos(excludeArchived: true) {

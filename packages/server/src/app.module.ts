@@ -24,6 +24,7 @@ import { ChatModule } from './modules/chat/chat.module';
 import { JournalModule } from './modules/journal/journal.module';
 import { REDIS } from './modules/redis/redis.constants';
 import { RedisModule } from './modules/redis/redis.module';
+import { TagModule } from './modules/tag/tag.module';
 import { TodoModule } from './modules/todo/todo.module';
 import { UserModule } from './modules/user/user.module';
 import type { IContext } from './types/interfaces/context.interface';
@@ -39,6 +40,7 @@ const GRAPHQL_SCHEMA_PATH = join(__dirname, '../schema.graphql');
         AuthModule,
         RedisModule,
         TodoModule,
+        TagModule,
         JournalModule,
         ChatModule,
         UserModule,

@@ -1,0 +1,30 @@
+query MyTags {
+    myTags {
+        label
+        description
+        color
+        icon
+    }
+}
+
+mutation CreateTag($input: AddTagInput!) {
+    createTag(tagInput: $input) {
+        label
+        description
+        color
+        icon
+    }
+}
+
+mutation UpdateTag($input: UpdateTagInput!) {
+    updateTag(updateInput: $input) {
+        label
+        description
+        color
+        icon
+    }
+}
+
+mutation DeleteTag($id: ID!) {
+    deleteTag(tagId: $id)
+}

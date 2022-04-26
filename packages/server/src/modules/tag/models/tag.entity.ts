@@ -1,12 +1,15 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, HideField, ID, ObjectType } from '@nestjs/graphql';
 import {
     Column,
-    JoinTable,
     ManyToMany,
     ManyToOne,
     Entity,
     PrimaryGeneratedColumn,
 } from 'typeorm';
+import {
+    CategoryColor,
+    categoryColors,
+} from '../../../types/enums/category-color.enum';
 import CategoryIcon, {
     categoryIcons,
 } from '../../../types/enums/category-icon';
@@ -24,14 +27,24 @@ export class Tag {
     @Field(() => User)
     public user: User;
 
-    @ManyToMany(() => Taggable, (taggable) => taggable.tags)
-    @JoinTable()
-    @Field(() => [Taggable])
+    @ManyToMany(() => Taggable, (taggable) => taggable.tags, { cascade: true })
+    @HideField()
     public taggedItems: Taggable[];
 
     @Column('varchar', { length: 63 })
     @Field()
     public label: string;
+
+    @Column('text', { default: '' })
+    @Field()
+    public description: string;
+
+    @Column('enum', {
+        enum: categoryColors,
+        nullable: true,
+    })
+    @Field(() => CategoryColor, { defaultValue: CategoryColor.DEFAULT })
+    public color: CategoryColor;
 
     @Column('enum', {
         enum: categoryIcons,

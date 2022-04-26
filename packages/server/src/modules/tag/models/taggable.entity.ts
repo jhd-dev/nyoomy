@@ -9,7 +9,8 @@ export class Taggable {
     @Field(() => ID)
     public readonly id: number;
 
-    @ManyToMany(() => Tag, (tag: Tag) => tag.taggedItems)
+    @ManyToMany(() => Tag)
+    @JoinTable()
     @Field(() => [Tag])
     public tags: Tag[];
 }

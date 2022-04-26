@@ -2,11 +2,28 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input AddTagInput {
+  color: CategoryColor
+  description: String
+  icon: CategoryIcon
+  label: String!
+  taggedItem: TaggableInput
+}
+
 input AddTodoInput {
   description: String
   isArchived: Boolean
   repeatWeekdays: [Weekday!]
   title: String
+}
+
+"""Colors a user may associate with a category/tag"""
+enum CategoryColor {
+  BLUE
+  DEFAULT
+  GREEN
+  RED
+  YELLOW
 }
 
 """The icons available to accompany category/tag titles"""
@@ -99,7 +116,10 @@ enum MetricType {
 
 type Mutation {
   addTodo(input: AddTodoInput!): Todo
+  applyTag(tagId: ID!, taggableId: ID!): Tag
+  createTag(tagInput: AddTagInput!): Tag
   deleteMessage(messageId: ID!): Boolean
+  deleteTag(tagId: ID!): Boolean!
   deleteTodo(id: ID!): Boolean!
   deleteUser: Boolean!
   deleteUserById(id: ID!): Boolean!
@@ -109,6 +129,7 @@ type Mutation {
   registerUser(input: RegisterUserInput!): RegistrationResponse!
   sendMessageToChat(input: SendMessageToChatInput!): Message
   sendMessageToUser(input: SendMessageToUserInput!): Message
+  updateTag(updateInput: UpdateTagInput!): Tag
   updateTodo(updateInput: UpdateTodoInput!): Todo
   updateUserPassword(input: UpdatePasswordInput!): Boolean!
 }
@@ -117,6 +138,7 @@ type Query {
   getMyTodos(excludeArchived: Boolean!): [Todo!]!
   me: User
   myChats(excludeArchived: Boolean!): [Chat!]!
+  myTags: [Tag!]!
   users: [User!]
 }
 
@@ -194,16 +216,21 @@ input SendMessageToUserInput {
 }
 
 type Tag {
+  color: CategoryColor!
+  description: String!
   icon: CategoryIcon
   id: ID!
   label: String!
-  taggedItems: [Taggable!]!
   user: User!
 }
 
 type Taggable {
   id: ID!
   tags: [Tag!]!
+}
+
+input TaggableInput {
+  id: ID!
 }
 
 type TimerMetric {
@@ -231,6 +258,17 @@ input UpdatePasswordInput {
   newPassword: String!
   oldPassword: String!
   username: String!
+}
+
+input UpdateTagInput {
+  applyTaggables: [TaggableInput!] = []
+  color: CategoryColor
+  description: String
+  icon: CategoryIcon
+  id: ID!
+  label: String
+  removeTaggables: [TaggableInput!] = []
+  taggables: [TaggableInput!]
 }
 
 input UpdateTodoInput {

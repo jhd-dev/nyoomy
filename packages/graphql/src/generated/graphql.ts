@@ -7,11 +7,25 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /**
+ * @typedef {Object} AddTagInput
+ * @property {CategoryColor} [color]
+ * @property {string} [description]
+ * @property {CategoryIcon} [icon]
+ * @property {string} label
+ * @property {TaggableInput} [taggedItem]
+ */
+
+/**
  * @typedef {Object} AddTodoInput
  * @property {string} [description]
  * @property {boolean} [isArchived]
  * @property {Array<Weekday>} [repeatWeekdays]
  * @property {string} [title]
+ */
+
+/**
+ * Colors a user may associate with a category/tag
+ * @typedef {("BLUE"|"DEFAULT"|"GREEN"|"RED"|"YELLOW")} CategoryColor
  */
 
 /**
@@ -105,7 +119,10 @@ export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: Non
 /**
  * @typedef {Object} Mutation
  * @property {Todo} [addTodo]
+ * @property {Tag} [applyTag]
+ * @property {Tag} [createTag]
  * @property {boolean} [deleteMessage]
+ * @property {boolean} deleteTag
  * @property {boolean} deleteTodo
  * @property {boolean} deleteUser
  * @property {boolean} deleteUserById
@@ -115,6 +132,7 @@ export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: Non
  * @property {RegistrationResponse} registerUser
  * @property {Message} [sendMessageToChat]
  * @property {Message} [sendMessageToUser]
+ * @property {Tag} [updateTag]
  * @property {Todo} [updateTodo]
  * @property {boolean} updateUserPassword
  */
@@ -124,6 +142,7 @@ export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: Non
  * @property {Array<Todo>} getMyTodos
  * @property {User} [me]
  * @property {Array<Chat>} myChats
+ * @property {Array<Tag>} myTags
  * @property {Array<User>} [users]
  */
 
@@ -212,10 +231,11 @@ export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: Non
 
 /**
  * @typedef {Object} Tag
+ * @property {CategoryColor} color
+ * @property {string} description
  * @property {CategoryIcon} [icon]
  * @property {string} id
- * @property {Array<Taggable>} taggedItems
- * @property {string} title
+ * @property {string} label
  * @property {User} user
  */
 
@@ -223,6 +243,11 @@ export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: Non
  * @typedef {Object} Taggable
  * @property {string} id
  * @property {Array<Tag>} tags
+ */
+
+/**
+ * @typedef {Object} TaggableInput
+ * @property {string} id
  */
 
 /**
@@ -253,6 +278,18 @@ export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: Non
  * @property {string} newPassword
  * @property {string} oldPassword
  * @property {string} username
+ */
+
+/**
+ * @typedef {Object} UpdateTagInput
+ * @property {Array<TaggableInput>} [applyTaggables]
+ * @property {CategoryColor} [color]
+ * @property {string} [description]
+ * @property {CategoryIcon} [icon]
+ * @property {string} id
+ * @property {string} [label]
+ * @property {Array<TaggableInput>} [removeTaggables]
+ * @property {Array<TaggableInput>} [taggables]
  */
 
 /**
@@ -299,12 +336,29 @@ export type Scalars = {
   DateTime: any;
 };
 
+export type AddTagInput = {
+  color?: InputMaybe<CategoryColor>;
+  description?: InputMaybe<Scalars['String']>;
+  icon?: InputMaybe<CategoryIcon>;
+  label: Scalars['String'];
+  taggedItem?: InputMaybe<TaggableInput>;
+};
+
 export type AddTodoInput = {
   description?: InputMaybe<Scalars['String']>;
   isArchived?: InputMaybe<Scalars['Boolean']>;
   repeatWeekdays?: InputMaybe<Array<Weekday>>;
   title?: InputMaybe<Scalars['String']>;
 };
+
+/** Colors a user may associate with a category/tag */
+export enum CategoryColor {
+  Blue = 'BLUE',
+  Default = 'DEFAULT',
+  Green = 'GREEN',
+  Red = 'RED',
+  Yellow = 'YELLOW'
+}
 
 /** The icons available to accompany category/tag titles */
 export enum CategoryIcon {
@@ -400,7 +454,10 @@ export enum MetricType {
 export type Mutation = {
   __typename?: 'Mutation';
   addTodo?: Maybe<Todo>;
+  applyTag?: Maybe<Tag>;
+  createTag?: Maybe<Tag>;
   deleteMessage?: Maybe<Scalars['Boolean']>;
+  deleteTag: Scalars['Boolean'];
   deleteTodo: Scalars['Boolean'];
   deleteUser: Scalars['Boolean'];
   deleteUserById: Scalars['Boolean'];
@@ -410,6 +467,7 @@ export type Mutation = {
   registerUser: RegistrationResponse;
   sendMessageToChat?: Maybe<Message>;
   sendMessageToUser?: Maybe<Message>;
+  updateTag?: Maybe<Tag>;
   updateTodo?: Maybe<Todo>;
   updateUserPassword: Scalars['Boolean'];
 };
@@ -420,8 +478,24 @@ export type MutationAddTodoArgs = {
 };
 
 
+export type MutationApplyTagArgs = {
+  tagId: Scalars['ID'];
+  taggableId: Scalars['ID'];
+};
+
+
+export type MutationCreateTagArgs = {
+  tagInput: AddTagInput;
+};
+
+
 export type MutationDeleteMessageArgs = {
   messageId: Scalars['ID'];
+};
+
+
+export type MutationDeleteTagArgs = {
+  tagId: Scalars['ID'];
 };
 
 
@@ -460,6 +534,11 @@ export type MutationSendMessageToUserArgs = {
 };
 
 
+export type MutationUpdateTagArgs = {
+  updateInput: UpdateTagInput;
+};
+
+
 export type MutationUpdateTodoArgs = {
   updateInput: UpdateTodoInput;
 };
@@ -474,6 +553,7 @@ export type Query = {
   getMyTodos: Array<Todo>;
   me?: Maybe<User>;
   myChats: Array<Chat>;
+  myTags: Array<Tag>;
   users?: Maybe<Array<User>>;
 };
 
@@ -569,10 +649,11 @@ export type SendMessageToUserInput = {
 
 export type Tag = {
   __typename?: 'Tag';
+  color: CategoryColor;
+  description: Scalars['String'];
   icon?: Maybe<CategoryIcon>;
   id: Scalars['ID'];
-  taggedItems: Array<Taggable>;
-  title: Scalars['String'];
+  label: Scalars['String'];
   user: User;
 };
 
@@ -580,6 +661,10 @@ export type Taggable = {
   __typename?: 'Taggable';
   id: Scalars['ID'];
   tags: Array<Tag>;
+};
+
+export type TaggableInput = {
+  id: Scalars['ID'];
 };
 
 export type TimerMetric = {
@@ -609,6 +694,17 @@ export type UpdatePasswordInput = {
   newPassword: Scalars['String'];
   oldPassword: Scalars['String'];
   username: Scalars['String'];
+};
+
+export type UpdateTagInput = {
+  applyTaggables?: InputMaybe<Array<TaggableInput>>;
+  color?: InputMaybe<CategoryColor>;
+  description?: InputMaybe<Scalars['String']>;
+  icon?: InputMaybe<CategoryIcon>;
+  id: Scalars['ID'];
+  label?: InputMaybe<Scalars['String']>;
+  removeTaggables?: InputMaybe<Array<TaggableInput>>;
+  taggables?: InputMaybe<Array<TaggableInput>>;
 };
 
 export type UpdateTodoInput = {
@@ -683,6 +779,32 @@ export type DeleteMessageMutationVariables = Exact<{
 
 
 export type DeleteMessageMutation = { __typename?: 'Mutation', deleteMessage?: boolean | null };
+
+export type MyTagsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MyTagsQuery = { __typename?: 'Query', myTags: Array<{ __typename?: 'Tag', label: string, description: string, color: CategoryColor, icon?: CategoryIcon | null }> };
+
+export type CreateTagMutationVariables = Exact<{
+  input: AddTagInput;
+}>;
+
+
+export type CreateTagMutation = { __typename?: 'Mutation', createTag?: { __typename?: 'Tag', label: string, description: string, color: CategoryColor, icon?: CategoryIcon | null } | null };
+
+export type UpdateTagMutationVariables = Exact<{
+  input: UpdateTagInput;
+}>;
+
+
+export type UpdateTagMutation = { __typename?: 'Mutation', updateTag?: { __typename?: 'Tag', label: string, description: string, color: CategoryColor, icon?: CategoryIcon | null } | null };
+
+export type DeleteTagMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeleteTagMutation = { __typename?: 'Mutation', deleteTag: boolean };
 
 export type MyTodosQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -801,8 +923,10 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  AddTagInput: AddTagInput;
   AddTodoInput: AddTodoInput;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  CategoryColor: CategoryColor;
   CategoryIcon: CategoryIcon;
   Chat: ResolverTypeWrapper<Chat>;
   CounterMetric: ResolverTypeWrapper<CounterMetric>;
@@ -833,9 +957,11 @@ export type ResolversTypes = {
   String: ResolverTypeWrapper<Scalars['String']>;
   Tag: ResolverTypeWrapper<Tag>;
   Taggable: ResolverTypeWrapper<Taggable>;
+  TaggableInput: TaggableInput;
   TimerMetric: ResolverTypeWrapper<TimerMetric>;
   Todo: ResolverTypeWrapper<Todo>;
   UpdatePasswordInput: UpdatePasswordInput;
+  UpdateTagInput: UpdateTagInput;
   UpdateTodoInput: UpdateTodoInput;
   User: ResolverTypeWrapper<User>;
   UserLoginInput: UserLoginInput;
@@ -844,6 +970,7 @@ export type ResolversTypes = {
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
+  AddTagInput: AddTagInput;
   AddTodoInput: AddTodoInput;
   Boolean: Scalars['Boolean'];
   Chat: Chat;
@@ -874,9 +1001,11 @@ export type ResolversParentTypes = {
   String: Scalars['String'];
   Tag: Tag;
   Taggable: Taggable;
+  TaggableInput: TaggableInput;
   TimerMetric: TimerMetric;
   Todo: Todo;
   UpdatePasswordInput: UpdatePasswordInput;
+  UpdateTagInput: UpdateTagInput;
   UpdateTodoInput: UpdateTodoInput;
   User: User;
   UserLoginInput: UserLoginInput;
@@ -955,7 +1084,10 @@ export type MetricResolvers<ContextType = any, ParentType extends ResolversParen
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   addTodo?: Resolver<Maybe<ResolversTypes['Todo']>, ParentType, ContextType, RequireFields<MutationAddTodoArgs, 'input'>>;
+  applyTag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<MutationApplyTagArgs, 'tagId' | 'taggableId'>>;
+  createTag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<MutationCreateTagArgs, 'tagInput'>>;
   deleteMessage?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteMessageArgs, 'messageId'>>;
+  deleteTag?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteTagArgs, 'tagId'>>;
   deleteTodo?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteTodoArgs, 'id'>>;
   deleteUser?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   deleteUserById?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteUserByIdArgs, 'id'>>;
@@ -965,6 +1097,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   registerUser?: Resolver<ResolversTypes['RegistrationResponse'], ParentType, ContextType, RequireFields<MutationRegisterUserArgs, 'input'>>;
   sendMessageToChat?: Resolver<Maybe<ResolversTypes['Message']>, ParentType, ContextType, RequireFields<MutationSendMessageToChatArgs, 'input'>>;
   sendMessageToUser?: Resolver<Maybe<ResolversTypes['Message']>, ParentType, ContextType, RequireFields<MutationSendMessageToUserArgs, 'input'>>;
+  updateTag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<MutationUpdateTagArgs, 'updateInput'>>;
   updateTodo?: Resolver<Maybe<ResolversTypes['Todo']>, ParentType, ContextType, RequireFields<MutationUpdateTodoArgs, 'updateInput'>>;
   updateUserPassword?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationUpdateUserPasswordArgs, 'input'>>;
 };
@@ -973,6 +1106,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getMyTodos?: Resolver<Array<ResolversTypes['Todo']>, ParentType, ContextType, RequireFields<QueryGetMyTodosArgs, 'excludeArchived'>>;
   me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   myChats?: Resolver<Array<ResolversTypes['Chat']>, ParentType, ContextType, RequireFields<QueryMyChatsArgs, 'excludeArchived'>>;
+  myTags?: Resolver<Array<ResolversTypes['Tag']>, ParentType, ContextType>;
   users?: Resolver<Maybe<Array<ResolversTypes['User']>>, ParentType, ContextType>;
 };
 
@@ -1036,10 +1170,11 @@ export type SelectionOptionResolvers<ContextType = any, ParentType extends Resol
 };
 
 export type TagResolvers<ContextType = any, ParentType extends ResolversParentTypes['Tag'] = ResolversParentTypes['Tag']> = {
+  color?: Resolver<ResolversTypes['CategoryColor'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   icon?: Resolver<Maybe<ResolversTypes['CategoryIcon']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  taggedItems?: Resolver<Array<ResolversTypes['Taggable']>, ParentType, ContextType>;
-  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  label?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
