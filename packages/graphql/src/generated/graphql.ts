@@ -235,6 +235,7 @@ export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: Non
  * @property {string} description
  * @property {CategoryIcon} [icon]
  * @property {string} id
+ * @property {boolean} isArchived
  * @property {string} label
  * @property {User} user
  */
@@ -653,6 +654,7 @@ export type Tag = {
   description: Scalars['String'];
   icon?: Maybe<CategoryIcon>;
   id: Scalars['ID'];
+  isArchived: Scalars['Boolean'];
   label: Scalars['String'];
   user: User;
 };
@@ -783,21 +785,21 @@ export type DeleteMessageMutation = { __typename?: 'Mutation', deleteMessage?: b
 export type MyTagsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MyTagsQuery = { __typename?: 'Query', myTags: Array<{ __typename?: 'Tag', label: string, description: string, color: CategoryColor, icon?: CategoryIcon | null }> };
+export type MyTagsQuery = { __typename?: 'Query', myTags: Array<{ __typename?: 'Tag', id: string, label: string, description: string, color: CategoryColor, icon?: CategoryIcon | null }> };
 
 export type CreateTagMutationVariables = Exact<{
   input: AddTagInput;
 }>;
 
 
-export type CreateTagMutation = { __typename?: 'Mutation', createTag?: { __typename?: 'Tag', label: string, description: string, color: CategoryColor, icon?: CategoryIcon | null } | null };
+export type CreateTagMutation = { __typename?: 'Mutation', createTag?: { __typename?: 'Tag', id: string, label: string, description: string, color: CategoryColor, icon?: CategoryIcon | null } | null };
 
 export type UpdateTagMutationVariables = Exact<{
   input: UpdateTagInput;
 }>;
 
 
-export type UpdateTagMutation = { __typename?: 'Mutation', updateTag?: { __typename?: 'Tag', label: string, description: string, color: CategoryColor, icon?: CategoryIcon | null } | null };
+export type UpdateTagMutation = { __typename?: 'Mutation', updateTag?: { __typename?: 'Tag', id: string, label: string, description: string, color: CategoryColor, icon?: CategoryIcon | null } | null };
 
 export type DeleteTagMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -1174,6 +1176,7 @@ export type TagResolvers<ContextType = any, ParentType extends ResolversParentTy
   description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   icon?: Resolver<Maybe<ResolversTypes['CategoryIcon']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  isArchived?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   label?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;

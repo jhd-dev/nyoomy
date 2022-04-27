@@ -27,9 +27,9 @@ export class TagService {
         return this.tagRepo.find({
             where: {
                 user: { id: userId },
-                isArchived: excludingArchived ? false : undefined,
+                ...(excludingArchived ? { isArchived: false } : {}),
             },
-            relations: ['user', 'user.id'],
+            relations: ['user'],
         });
     }
 

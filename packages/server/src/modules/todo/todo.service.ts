@@ -125,7 +125,7 @@ export class TodoService {
         const updateProps = {
             todo: { id: todo.id },
             date: updateInput.date,
-            isCompleted: updateInput?.isCompleted,
+            isCompleted: updateInput?.isCompleted ?? false,
         };
         if (entry == null) {
             const newEntry = this.todoEntryRepo.create(updateProps);

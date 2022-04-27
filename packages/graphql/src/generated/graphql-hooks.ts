@@ -335,6 +335,7 @@ export type Tag = {
   description: Scalars['String'];
   icon?: Maybe<CategoryIcon>;
   id: Scalars['ID'];
+  isArchived: Scalars['Boolean'];
   label: Scalars['String'];
   user: User;
 };
@@ -465,21 +466,21 @@ export type DeleteMessageMutation = { __typename?: 'Mutation', deleteMessage?: b
 export type MyTagsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MyTagsQuery = { __typename?: 'Query', myTags: Array<{ __typename?: 'Tag', label: string, description: string, color: CategoryColor, icon?: CategoryIcon | null }> };
+export type MyTagsQuery = { __typename?: 'Query', myTags: Array<{ __typename?: 'Tag', id: string, label: string, description: string, color: CategoryColor, icon?: CategoryIcon | null }> };
 
 export type CreateTagMutationVariables = Exact<{
   input: AddTagInput;
 }>;
 
 
-export type CreateTagMutation = { __typename?: 'Mutation', createTag?: { __typename?: 'Tag', label: string, description: string, color: CategoryColor, icon?: CategoryIcon | null } | null };
+export type CreateTagMutation = { __typename?: 'Mutation', createTag?: { __typename?: 'Tag', id: string, label: string, description: string, color: CategoryColor, icon?: CategoryIcon | null } | null };
 
 export type UpdateTagMutationVariables = Exact<{
   input: UpdateTagInput;
 }>;
 
 
-export type UpdateTagMutation = { __typename?: 'Mutation', updateTag?: { __typename?: 'Tag', label: string, description: string, color: CategoryColor, icon?: CategoryIcon | null } | null };
+export type UpdateTagMutation = { __typename?: 'Mutation', updateTag?: { __typename?: 'Tag', id: string, label: string, description: string, color: CategoryColor, icon?: CategoryIcon | null } | null };
 
 export type DeleteTagMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -723,6 +724,7 @@ export type DeleteMessageMutationOptions = Apollo.BaseMutationOptions<DeleteMess
 export const MyTagsDocument = gql`
     query MyTags {
   myTags {
+    id
     label
     description
     color
@@ -763,6 +765,7 @@ export function refetchMyTagsQuery(variables?: MyTagsQueryVariables) {
 export const CreateTagDocument = gql`
     mutation CreateTag($input: AddTagInput!) {
   createTag(tagInput: $input) {
+    id
     label
     description
     color
@@ -799,6 +802,7 @@ export type CreateTagMutationOptions = Apollo.BaseMutationOptions<CreateTagMutat
 export const UpdateTagDocument = gql`
     mutation UpdateTag($input: UpdateTagInput!) {
   updateTag(updateInput: $input) {
+    id
     label
     description
     color

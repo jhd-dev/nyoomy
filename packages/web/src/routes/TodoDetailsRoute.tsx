@@ -14,36 +14,47 @@ import {
     TextField,
 } from '@mui/material';
 import Button from '@mui/material/Button';
-import { useUpdateTodoMutation } from '@nyoomy/graphql';
+import {
+    CategoryIcon,
+    useCreateTagMutation,
+    useMyTagsQuery,
+    useUpdateTodoMutation,
+} from '@nyoomy/graphql';
 import { useNavigate, useParams } from 'react-router-dom';
 import type { UpdateTodoMutation } from '../../../graphql/src/generated/graphql';
 import type { ApolloError } from '@apollo/client';
-import { TagChip } from '../components/TagChip';
+import { colorOptions, TagChip } from '../components/TagChip';
 import Checkbox from '@mui/material/Checkbox';
+import { CategoryColor } from '@nyoomy/graphql';
 
-export interface ITag {
-    id: number;
+// const tags: ITag[] = [
+//     { id: 28987142, label: 'productivity', colorName: 'Default' },
+//     { id: 2173892, label: 'daily', colorName: 'Green' },
+// ];
+
+type Tag = {
+    __typename?: 'Tag' | undefined;
+    id: string;
     label: string;
-    colorName: string;
-}
-
-const tags: ITag[] = [
-    { id: 28987142, label: 'productivity', colorName: 'Default' },
-    { id: 2173892, label: 'daily', colorName: 'Green' },
-];
+    description: string;
+    color: CategoryColor;
+    icon?: CategoryIcon | null | undefined;
+};
 
 const TodoDetailsRoute: FC = () => {
     const params = useParams();
     const navigate = useNavigate();
     const [updateTodo] = useUpdateTodoMutation();
+    const { data: myTagsData } = useMyTagsQuery();
+    const [createTag] = useCreateTagMutation();
 
-    const [open, setOpen] = useState(true);
-    const [errorMsg, setErrorMsg] = useState('');
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
-    const [selectedTags, setSelectedTags] = useState<ITag[]>([]);
+    const [open, setOpen] = useState<boolean>(true);
+    const [errorMsg, setErrorMsg] = useState<string>('');
+    const [title, setTitle] = useState<string>('');
+    const [description, setDescription] = useState<string>('');
+    const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
 
-    const [allTags, setAllTags] = useState<ITag[]>(tags);
+    const [allTags, setAllTags] = useState(myTagsData?.myTags ?? []);
 
     const handleClose = () => {
         setOpen(true);
@@ -114,20 +125,30 @@ const TodoDetailsRoute: FC = () => {
                     disableCloseOnSelect
                     value={selectedTags}
                     options={allTags}
-                    onChange={(_e, newVal): void => {
-                        const newValTags: ITag[] = newVal.filter(
-                            (tag): tag is ITag => typeof tag !== 'string'
+                    onChange={async (_e, newVal) => {
+                        const newValTags: typeof allTags = newVal.filter(
+                            (tag): tag is Tag => typeof tag !== 'string'
                         );
                         const newValStrings: string[] = newVal.filter(
                             (tag): tag is string => typeof tag === 'string'
                         );
                         for (const tagString of newValStrings) {
-                            const newTag: ITag = {
-                                id: Math.random(),
-                                label: tagString ?? 'New Tag',
-                                colorName: 'Default',
-                            };
-                            newValTags.push(newTag);
+                            const { data } = await createTag({
+                                variables: {
+                                    input: {
+                                        label: tagString ?? 'New Tag',
+                                        color: CategoryColor.Default,
+                                    },
+                                },
+                                refetchQueries: ['MyTags', 'MyTodos'],
+                            });
+                            // const newTag = {
+                            //     id: Math.random(),
+                            //     label: tagString ?? 'New Tag',
+                            //     colorName: 'Default',
+                            // };
+                            if (data?.createTag)
+                                newValTags.push(data.createTag);
                         }
                         setSelectedTags(newValTags);
                     }}
@@ -137,7 +158,7 @@ const TodoDetailsRoute: FC = () => {
                                 checked={selected}
                                 style={{
                                     marginRight: 8,
-                                    color: option.colorName,
+                                    color: colorOptions[option.color].color,
                                 }}
                             ></Checkbox>
                             {option.label}
@@ -150,9 +171,14 @@ const TodoDetailsRoute: FC = () => {
                             {...inputParams}
                         />
                     )}
-                    renderTags={(value: readonly ITag[], getTagProps) =>
-                        value.map((option: ITag, index: number) => (
-                            <TagChip tag={option} {...getTagProps({ index })} />
+                    renderTags={(value, getTagProps) =>
+                        value.map((option, index: number) => (
+                            <TagChip
+                                tagId={option.id}
+                                label={option.label}
+                                color={option.color}
+                                {...getTagProps({ index })}
+                            />
                         ))
                     }
                     limitTags={10}

@@ -1,5 +1,6 @@
 query MyTags {
     myTags {
+        id
         label
         description
         color
@@ -9,6 +10,7 @@ query MyTags {
 
 mutation CreateTag($input: AddTagInput!) {
     createTag(tagInput: $input) {
+        id
         label
         description
         color
@@ -18,6 +20,7 @@ mutation CreateTag($input: AddTagInput!) {
 
 mutation UpdateTag($input: UpdateTagInput!) {
     updateTag(updateInput: $input) {
+        id
         label
         description
         color

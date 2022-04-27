@@ -8,7 +8,7 @@ import type { ValueNode } from 'graphql';
 
 export type DateTime = Dayjs;
 
-export const DateTimeScalar = new GraphQLScalarType({
+export const DateTimeScalar: GraphQLScalarType = new GraphQLScalarType({
     name: 'DateTime',
     description: 'A day.js object representing a point in time',
     serialize(value: unknown): string {

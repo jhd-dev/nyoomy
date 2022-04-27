@@ -52,4 +52,8 @@ export class Tag {
     })
     @Field(() => CategoryIcon, { nullable: true })
     public icon: CategoryIcon | null;
+
+    @Column('boolean', { default: false })
+    @Field()
+    public isArchived: boolean;
 }
