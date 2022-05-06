@@ -233,6 +233,7 @@ export type MutationUpdateUserPasswordArgs = {
 export type Query = {
   __typename?: 'Query';
   getMyTodos: Array<Todo>;
+  getTodo: Array<Todo>;
   me?: Maybe<User>;
   myChats: Array<Chat>;
   myTags: Array<Tag>;
@@ -242,6 +243,11 @@ export type Query = {
 
 export type QueryGetMyTodosArgs = {
   excludeArchived: Scalars['Boolean'];
+};
+
+
+export type QueryGetTodoArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -369,6 +375,7 @@ export type Todo = {
   repeatWeekdays: Array<Weekday>;
   subtasks: Array<Todo>;
   supertask?: Maybe<Todo>;
+  tags: Array<Tag>;
   title: Scalars['String'];
   user: User;
 };
@@ -492,12 +499,12 @@ export type DeleteTagMutation = { __typename?: 'Mutation', deleteTag: boolean };
 export type MyTodosQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MyTodosQuery = { __typename?: 'Query', getMyTodos: Array<{ __typename?: 'Todo', id: string, title: string, description: string, isCompleted: boolean, isArchived: boolean, repeatWeekdays: Array<Weekday> }> };
+export type MyTodosQuery = { __typename?: 'Query', getMyTodos: Array<{ __typename?: 'Todo', id: string, title: string, description: string, isCompleted: boolean, isArchived: boolean, repeatWeekdays: Array<Weekday>, tags: Array<{ __typename?: 'Tag', id: string, label: string, description: string, color: CategoryColor, icon?: CategoryIcon | null }> }> };
 
 export type AddTodoMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AddTodoMutation = { __typename?: 'Mutation', addTodo?: { __typename?: 'Todo', id: string, title: string, description: string, isCompleted: boolean, isArchived: boolean, repeatWeekdays: Array<Weekday> } | null };
+export type AddTodoMutation = { __typename?: 'Mutation', addTodo?: { __typename?: 'Todo', id: string, title: string, description: string, isCompleted: boolean, isArchived: boolean, repeatWeekdays: Array<Weekday>, tags: Array<{ __typename?: 'Tag', id: string, label: string, description: string, color: CategoryColor, icon?: CategoryIcon | null }> } | null };
 
 export type UpdateTodoMutationVariables = Exact<{
   updateInput: UpdateTodoInput;
@@ -876,6 +883,13 @@ export const MyTodosDocument = gql`
     isCompleted
     isArchived
     repeatWeekdays
+    tags {
+      id
+      label
+      description
+      color
+      icon
+    }
   }
 }
     `;
@@ -918,6 +932,13 @@ export const AddTodoDocument = gql`
     isCompleted
     isArchived
     repeatWeekdays
+    tags {
+      id
+      label
+      description
+      color
+      icon
+    }
   }
 }
     `;

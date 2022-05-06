@@ -18,7 +18,6 @@ export class LocalAuthSerializer extends PassportSerializer {
         user: User,
         done: (err: Error | null, user: User) => void
     ): void {
-        console.log('serializeUser');
         done(null, user);
     }
 
@@ -26,7 +25,6 @@ export class LocalAuthSerializer extends PassportSerializer {
         { id }: User,
         done: (err: Error | null, user: SafeUser) => void
     ): Promise<void> {
-        console.log('deserializeuser');
         const user = await this.userService.findById(id, false);
         if (user == null) {
             throw new HttpException(

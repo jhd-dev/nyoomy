@@ -36,6 +36,7 @@ export class TagResolver {
         @CurrentUser() user: User
     ): Promise<Tag | null> {
         try {
+            console.log('updateTag resolver');
             return await this.tagService.updateTag(user, updateInput);
         } catch (err: unknown) {
             console.error(err);

@@ -10,7 +10,7 @@ export class AuthenticatedGuard implements CanActivate {
         try {
             const ctx = GqlExecutionContext.create(context);
             const { req } = ctx.getContext<IContext>();
-            console.log(req);
+            req;
         } catch (err: unknown) {
             Logger.log(err);
         }

@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { Field, HideField, ID, ObjectType } from '@nestjs/graphql';
 import {
     Column,
@@ -9,8 +8,12 @@ import {
     TreeChildren,
     TreeParent,
     TreeLevelColumn,
+    OneToOne,
+    JoinColumn,
 } from 'typeorm';
 import Weekday, { weekdays } from '../../../types/enums/weekday.enum';
+import { Tag } from '../../tag/models/tag.entity';
+import { Taggable } from '../../tag/models/taggable.entity';
 import { User } from '../../user/models/user.entity';
 
 @Entity('todos')
@@ -60,6 +63,14 @@ export class Todo {
     })
     @Field(() => [Weekday])
     public repeatWeekdays!: Weekday[];
+
+    @Field(() => [Tag])
+    public tags: Tag[];
+
+    @OneToOne(() => Taggable, { cascade: true, eager: true })
+    @JoinColumn()
+    @HideField()
+    public taggable: Taggable;
 
     @Field()
     public get doesRepeat(): boolean {

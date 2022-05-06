@@ -1,10 +1,8 @@
-import type { FC, SyntheticEvent } from 'react';
+import type { FC } from 'react';
 import React, { useState } from 'react';
-import { Close as CloseIcon } from '@mui/icons-material';
+import { Close as CloseIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import {
     Alert,
-    Autocomplete,
-    Chip,
     Dialog,
     DialogActions,
     DialogContent,
@@ -13,48 +11,67 @@ import {
     IconButton,
     TextField,
 } from '@mui/material';
+import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import Tooltip from '@mui/material/Tooltip';
 import {
-    CategoryIcon,
+    CategoryColor,
+    Tag as TagDto,
     useCreateTagMutation,
+    useDeleteTagMutation,
     useMyTagsQuery,
+    useMyTodosQuery,
     useUpdateTodoMutation,
 } from '@nyoomy/graphql';
 import { useNavigate, useParams } from 'react-router-dom';
 import type { UpdateTodoMutation } from '../../../graphql/src/generated/graphql';
 import type { ApolloError } from '@apollo/client';
 import { colorOptions, TagChip } from '../components/TagChip';
-import Checkbox from '@mui/material/Checkbox';
-import { CategoryColor } from '@nyoomy/graphql';
+import Typography from '@mui/material/Typography';
 
-// const tags: ITag[] = [
-//     { id: 28987142, label: 'productivity', colorName: 'Default' },
-//     { id: 2173892, label: 'daily', colorName: 'Green' },
-// ];
+// type Tag = {
+//     __typename?: 'Tag' | undefined;
+//     id: string;
+//     label: string;
+//     description: string;
+//     color: CategoryColor;
+//     icon?: CategoryIcon | null | undefined;
+// };
 
-type Tag = {
-    __typename?: 'Tag' | undefined;
-    id: string;
-    label: string;
-    description: string;
-    color: CategoryColor;
-    icon?: CategoryIcon | null | undefined;
-};
+type Tag = Omit<TagDto, 'user' | 'isArchived'>;
 
 const TodoDetailsRoute: FC = () => {
     const params = useParams();
     const navigate = useNavigate();
+    const filterOptions = createFilterOptions<Tag>({
+        ignoreCase: true,
+        trim: true,
+        stringify: ({ label }) => label,
+    });
     const [updateTodo] = useUpdateTodoMutation();
+    const { data: myTodosData } = useMyTodosQuery();
     const { data: myTagsData } = useMyTagsQuery();
-    const [createTag] = useCreateTagMutation();
+    const [createTag] = useCreateTagMutation({
+        refetchQueries: ['MyTags', 'MyTodos'],
+    });
+    const [deleteTag] = useDeleteTagMutation({
+        refetchQueries: ['MyTags', 'MyTodos'],
+    });
+
+    const currentTodo = myTodosData?.getMyTodos.find(
+        (todo) => todo.id === params.todoId
+    );
 
     const [open, setOpen] = useState<boolean>(true);
     const [errorMsg, setErrorMsg] = useState<string>('');
-    const [title, setTitle] = useState<string>('');
-    const [description, setDescription] = useState<string>('');
-    const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+    const [title, setTitle] = useState<string>(currentTodo?.title ?? '');
+    const [description, setDescription] = useState<string>(
+        currentTodo?.description ?? ''
+    );
+    const [selectedTags, setSelectedTags] = useState(currentTodo?.tags ?? []);
 
-    const [allTags, setAllTags] = useState(myTagsData?.myTags ?? []);
+    const allTags: Tag[] = myTagsData?.myTags ?? [];
 
     const handleClose = () => {
         setOpen(true);
@@ -82,6 +99,16 @@ const TodoDetailsRoute: FC = () => {
             },
         });
     };
+
+    const sortTags = (tags: Tag[]): Tag[] =>
+        tags
+            .slice()
+            .sort(
+                (tag1, tag2) =>
+                    -tag2.label[0]
+                        .toLocaleUpperCase()
+                        .localeCompare(tag1.label[0].toLocaleUpperCase())
+            );
 
     return (
         <Dialog open={open} onClose={handleClose}>
@@ -124,7 +151,13 @@ const TodoDetailsRoute: FC = () => {
                     freeSolo
                     disableCloseOnSelect
                     value={selectedTags}
-                    options={allTags}
+                    options={sortTags(allTags)}
+                    groupBy={(tag) =>
+                        /[0-9]/.test(tag.label[0])
+                            ? '#'
+                            : tag.label[0].toLocaleUpperCase()
+                    }
+                    filterOptions={filterOptions}
                     onChange={async (_e, newVal) => {
                         const newValTags: typeof allTags = newVal.filter(
                             (tag): tag is Tag => typeof tag !== 'string'
@@ -133,6 +166,13 @@ const TodoDetailsRoute: FC = () => {
                             (tag): tag is string => typeof tag === 'string'
                         );
                         for (const tagString of newValStrings) {
+                            if (
+                                newValTags.some(
+                                    (tag) => tag.label === tagString
+                                )
+                            ) {
+                                continue;
+                            }
                             const { data } = await createTag({
                                 variables: {
                                     input: {
@@ -140,13 +180,7 @@ const TodoDetailsRoute: FC = () => {
                                         color: CategoryColor.Default,
                                     },
                                 },
-                                refetchQueries: ['MyTags', 'MyTodos'],
                             });
-                            // const newTag = {
-                            //     id: Math.random(),
-                            //     label: tagString ?? 'New Tag',
-                            //     colorName: 'Default',
-                            // };
                             if (data?.createTag)
                                 newValTags.push(data.createTag);
                         }
@@ -161,7 +195,22 @@ const TodoDetailsRoute: FC = () => {
                                     color: colorOptions[option.color].color,
                                 }}
                             ></Checkbox>
-                            {option.label}
+                            <Typography>{option.label}</Typography>
+                            <Tooltip title={`Delete tag "${option.label}"`}>
+                                <IconButton
+                                    color="warning"
+                                    size="small"
+                                    onClick={async (e) => {
+                                        e.stopPropagation();
+                                        e.preventDefault();
+                                        await deleteTag({
+                                            variables: { id: option.id },
+                                        });
+                                    }}
+                                >
+                                    <DeleteIcon />
+                                </IconButton>
+                            </Tooltip>
                         </li>
                     )}
                     renderInput={(inputParams) => (
@@ -171,12 +220,19 @@ const TodoDetailsRoute: FC = () => {
                             {...inputParams}
                         />
                     )}
-                    renderTags={(value, getTagProps) =>
-                        value.map((option, index: number) => (
+                    renderTags={(value: Tag[], getTagProps) =>
+                        value.map((option: Tag, index: number) => (
                             <TagChip
                                 tagId={option.id}
                                 label={option.label}
                                 color={option.color}
+                                handleDelete={(_e) => {
+                                    setSelectedTags((prev) =>
+                                        prev.filter(
+                                            (tag) => tag.id !== option.id
+                                        )
+                                    );
+                                }}
                                 {...getTagProps({ index })}
                             />
                         ))
@@ -186,7 +242,9 @@ const TodoDetailsRoute: FC = () => {
                 {errorMsg && <Alert severity="error">{errorMsg}</Alert>}
             </DialogContent>
             <DialogActions>
-                <Button color="secondary">Cancel</Button>
+                <Button color="secondary" onClick={handleClose}>
+                    Cancel
+                </Button>
                 <Button color="primary" onClick={handleSave}>
                     Save
                 </Button>

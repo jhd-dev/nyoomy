@@ -6,6 +6,13 @@ query MyTodos {
         isCompleted
         isArchived
         repeatWeekdays
+        tags {
+            id
+            label
+            description
+            color
+            icon
+        }
     }
 }
 
@@ -17,6 +24,13 @@ mutation AddTodo {
         isCompleted
         isArchived
         repeatWeekdays
+        tags {
+            id
+            label
+            description
+            color
+            icon
+        }
     }
 }
 

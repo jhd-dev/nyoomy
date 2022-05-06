@@ -9,6 +9,7 @@ import { Taggable } from './models/taggable.entity';
 import type { User } from '../user/models/user.entity';
 import type { AddTagInput } from './dto/add-tag.input';
 import type { UpdateTagInput } from './dto/update-tag.input';
+import { ArrayContains } from 'class-validator';
 
 @Injectable()
 export class TagService {
@@ -31,6 +32,24 @@ export class TagService {
             },
             relations: ['user'],
         });
+    }
+
+    public async getTagsByTaggable(taggableId: number): Promise<Tag[]> {
+        return (
+            await this.taggableRepo.findOneOrFail(taggableId, {
+                relations: ['tags'],
+            })
+        ).tags;
+        // return this.tagRepo.find({
+        //     where: {
+        //         taggedItems: ArrayContains([{id: taggableId}]),
+        //     },
+        //     relations: ['taggedItems'],
+        // });
+    }
+
+    public getById(tagId: number): Promise<Tag> {
+        return this.tagRepo.findOneOrFail(tagId);
     }
 
     public async createTag(
@@ -65,7 +84,10 @@ export class TagService {
         user: User,
         updateInput: UpdateTagInput
     ): Promise<Tag> {
-        const tag = await this.tagRepo.findOneOrFail(updateInput.id);
+        console.log('updateTag');
+        const tag = await this.tagRepo.findOneOrFail(updateInput.id, {
+            relations: ['user'],
+        });
         tag.label = updateInput.label ?? tag.label;
         tag.description = updateInput.description ?? tag.description;
         tag.color = updateInput.color ?? tag.color;

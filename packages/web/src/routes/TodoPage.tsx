@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import React from 'react';
+import React, { useState } from 'react';
 import { Add as AddIcon } from '@mui/icons-material';
 import {
     Alert,
@@ -19,6 +19,12 @@ import TodoItem from '../components/TodoItem';
 const TodoPage: FC = () => {
     const { data, loading, error } = useMyTodosQuery();
     const [addTodo] = useAddTodoMutation();
+
+    const [newTodoText, setNewTodoText] = useState<string>('');
+
+    const handleInputChange = (value: string): void => {
+        setNewTodoText(value);
+    };
 
     return (
         <Box>
@@ -43,7 +49,13 @@ const TodoPage: FC = () => {
                             )
                         )}
                         <ListItem>
-                            <TextField variant="outlined" />
+                            <TextField
+                                variant="outlined"
+                                value={newTodoText}
+                                onChange={(e) =>
+                                    handleInputChange(e.target.value)
+                                }
+                            />
                             <Tooltip title="Add To-Do">
                                 <IconButton
                                     onClick={async () => {

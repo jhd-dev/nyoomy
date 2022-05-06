@@ -1,20 +1,15 @@
 import type { FC } from 'react';
 import React, { useState } from 'react';
-import { Typography } from '@mui/material';
-import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
-import Divider from '@mui/material/Divider';
-import Modal from '@mui/material/Modal';
-import RadioGroup from '@mui/material/RadioGroup';
-import TextField from '@mui/material/TextField';
 import { blue, green, grey, red, yellow } from '@mui/material/colors';
 import { CategoryColor, useUpdateTagMutation } from '@nyoomy/graphql';
-import { ColorRadio } from './ColorRadio';
+import { EditTagDialog } from './EditTagDialog';
 
 export interface ITagChipProps {
     tagId: string;
     label: string;
     color: CategoryColor;
+    handleDelete?: (event: React.ChangeEvent<HTMLInputElement>) => void;
     handleChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -44,7 +39,11 @@ export const TagChip: FC<ITagChipProps> = ({ tagId, ...props }) => {
     const [label, setLabel] = useState<string>(props.label);
     const [color, setColor] = useState<CategoryColor>(props.color);
 
-    const [updateTag] = useUpdateTagMutation();
+    console.log(props.color);
+
+    const [updateTag] = useUpdateTagMutation({
+        refetchQueries: ['MyTags', 'MyTodos'],
+    });
 
     const colorOption = colorOptions[color];
 
@@ -56,52 +55,36 @@ export const TagChip: FC<ITagChipProps> = ({ tagId, ...props }) => {
         setMenuOpen(false);
     };
 
-    const updateLabel = (newLabel: string) => {
+    const updateLabel = async (newLabel: string) => {
         const parsedLabel = newLabel.trim();
         if (parsedLabel.length > 0) {
+            await updateTag({
+                variables: {
+                    input: { id: tagId, label: parsedLabel },
+                },
+            });
             setLabel(parsedLabel);
         }
     };
 
     return (
         <>
-            <Modal open={menuOpen} onClose={handleClose}>
-                <Box>
-                    <TextField
-                        autoFocus
-                        label="Tag Name"
-                        margin="dense"
-                        placeholder={label}
-                        name="label"
-                        value={label}
-                        onChange={(e) => setLabel(e.target.value)}
-                        onBlur={(e) => updateLabel(e.target.value)}
-                    />
-                    <Divider />
-                    <Typography>Color: {colorOption.name}</Typography>
-                    <RadioGroup row>
-                        {categoryColors.map((cc: CategoryColor) => (
-                            <ColorRadio
-                                key={cc}
-                                color={colorOptions[cc].color}
-                                colorName={colorOptions[cc].name}
-                                size={32}
-                                checked={cc === color}
-                                onChange={async (e) => {
-                                    if (e.target.checked) {
-                                        await updateTag({
-                                            variables: {
-                                                input: { id: tagId, color: cc },
-                                            },
-                                        });
-                                        setColor(cc);
-                                    }
-                                }}
-                            />
-                        ))}
-                    </RadioGroup>
-                </Box>
-            </Modal>
+            <EditTagDialog
+                open={menuOpen}
+                handleClose={handleClose}
+                color={color}
+                colorOption={colorOption}
+                label={label}
+                updateLabel={updateLabel}
+                onSelect={async (cc: CategoryColor) => {
+                    await updateTag({
+                        variables: {
+                            input: { id: tagId, color: cc },
+                        },
+                    });
+                    setColor(cc);
+                }}
+            />
             <Chip
                 label={label}
                 onClick={handleOpen}
@@ -110,6 +93,7 @@ export const TagChip: FC<ITagChipProps> = ({ tagId, ...props }) => {
                         ? undefined
                         : { backgroundColor: colorOption.color }
                 }
+                onDelete={props.handleDelete}
             />
         </>
     );

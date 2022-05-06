@@ -3,11 +3,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import EntityAction from '../../types/enums/entity-action.enum';
 import { CaslAbilityFactory } from '../casl/casl-ability.factory';
+import { TagService } from '../tag/tag.service';
 import { TodoEntry } from './models/todo-entry.entity';
 import { Todo } from './models/todo.entity';
 import type { User } from '../user/models/user.entity';
 import type { AddTodoInput } from './dto/add-todo.input';
 import type { UpdateTodoInput } from './dto/update-todo.input';
+import { TodoDto } from './dto/todo.dto';
+import { Taggable } from '../tag/models/taggable.entity';
 
 @Injectable()
 export class TodoService {
@@ -16,7 +19,10 @@ export class TodoService {
         private readonly todoRepo: Repository<Todo>,
         @InjectRepository(TodoEntry)
         private readonly todoEntryRepo: Repository<TodoEntry>,
-        private readonly caslAbilityFactory: CaslAbilityFactory
+        @InjectRepository(Taggable)
+        private readonly taggableRepo: Repository<Taggable>,
+        private readonly caslAbilityFactory: CaslAbilityFactory,
+        private readonly tagService: TagService
     ) {}
 
     public getAllTodos(
@@ -41,15 +47,40 @@ export class TodoService {
                 user: { id: user.id },
                 isArchived: excludingArchived ? false : undefined,
             },
-            relations: ['user'],
+            relations: ['user', 'taggable'],
         });
         const ability = this.caslAbilityFactory.createForUser(user);
-        return todos.filter((todo) => ability.can(EntityAction.READ, todo));
+        const accessableTodos = todos.filter((todo) =>
+            ability.can(EntityAction.READ, todo)
+        );
+        for (const i in accessableTodos) {
+            console.log(accessableTodos[i]);
+            accessableTodos[i].tags = await this.tagService.getTagsByTaggable(
+                accessableTodos[i].taggable.id
+            );
+        }
+        return accessableTodos;
+    }
+
+    public async getUserTodo(user: User, todoId: string): Promise<Todo> {
+        if (!user?.id || !todoId) {
+            throw new Error('Invalid user or todoId');
+        }
+        const todo = await this.todoRepo.findOneOrFail(todoId, {
+            relations: ['user', 'taggable'],
+        });
+        todo.tags = await this.tagService.getTagsByTaggable(todo.taggable.id);
+        const ability = this.caslAbilityFactory.createForUser(user);
+        if (todo == null || !ability.can(EntityAction.READ, todo)) {
+            throw new Error('Unauthorized request');
+        }
+        return todo;
     }
 
     public async addTodo(user: User, input: AddTodoInput): Promise<Todo> {
         const todo = this.todoRepo.create({
             user: { id: user.id },
+            taggable: this.taggableRepo.create({ tags: [] }),
             level: 0,
             ...input,
         });

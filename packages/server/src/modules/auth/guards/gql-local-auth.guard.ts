@@ -55,7 +55,6 @@ export class GqlLocalAuthGuard extends AuthGuard(['local', 'google']) {
         context: any,
         status?: any
     ): TUser {
-        console.log({ err, user, info, context, status });
         return super.handleRequest(err, user, info, context, status);
     }
 }

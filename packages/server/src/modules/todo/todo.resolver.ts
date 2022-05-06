@@ -27,6 +27,15 @@ export class TodoResolver {
         return await this.todoService.getUserTodos(user, excludingArchived);
     }
 
+    @Query(() => [Todo], { name: 'getTodo' })
+    @UseGuards(AuthenticatedGuard)
+    public getUserTodo(
+        @CurrentUser() user: User,
+        @Args('id') todoId: string
+    ): Promise<Todo> {
+        return this.todoService.getUserTodo(user, todoId);
+    }
+
     @Mutation(() => Todo, { nullable: true })
     @UseGuards(AuthenticatedGuard)
     public async addTodo(

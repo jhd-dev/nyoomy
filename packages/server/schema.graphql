@@ -136,6 +136,7 @@ type Mutation {
 
 type Query {
   getMyTodos(excludeArchived: Boolean!): [Todo!]!
+  getTodo(id: String!): [Todo!]!
   me: User
   myChats(excludeArchived: Boolean!): [Chat!]!
   myTags: [Tag!]!
@@ -251,6 +252,7 @@ type Todo {
   repeatWeekdays: [Weekday!]!
   subtasks: [Todo!]!
   supertask: Todo
+  tags: [Tag!]!
   title: String!
   user: User!
 }

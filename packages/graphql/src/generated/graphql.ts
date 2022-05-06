@@ -140,6 +140,7 @@ export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: Non
 /**
  * @typedef {Object} Query
  * @property {Array<Todo>} getMyTodos
+ * @property {Array<Todo>} getTodo
  * @property {User} [me]
  * @property {Array<Chat>} myChats
  * @property {Array<Tag>} myTags
@@ -270,6 +271,7 @@ export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: Non
  * @property {Array<Weekday>} repeatWeekdays
  * @property {Array<Todo>} subtasks
  * @property {Todo} [supertask]
+ * @property {Array<Tag>} tags
  * @property {string} title
  * @property {User} user
  */
@@ -552,6 +554,7 @@ export type MutationUpdateUserPasswordArgs = {
 export type Query = {
   __typename?: 'Query';
   getMyTodos: Array<Todo>;
+  getTodo: Array<Todo>;
   me?: Maybe<User>;
   myChats: Array<Chat>;
   myTags: Array<Tag>;
@@ -561,6 +564,11 @@ export type Query = {
 
 export type QueryGetMyTodosArgs = {
   excludeArchived: Scalars['Boolean'];
+};
+
+
+export type QueryGetTodoArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -688,6 +696,7 @@ export type Todo = {
   repeatWeekdays: Array<Weekday>;
   subtasks: Array<Todo>;
   supertask?: Maybe<Todo>;
+  tags: Array<Tag>;
   title: Scalars['String'];
   user: User;
 };
@@ -811,12 +820,12 @@ export type DeleteTagMutation = { __typename?: 'Mutation', deleteTag: boolean };
 export type MyTodosQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MyTodosQuery = { __typename?: 'Query', getMyTodos: Array<{ __typename?: 'Todo', id: string, title: string, description: string, isCompleted: boolean, isArchived: boolean, repeatWeekdays: Array<Weekday> }> };
+export type MyTodosQuery = { __typename?: 'Query', getMyTodos: Array<{ __typename?: 'Todo', id: string, title: string, description: string, isCompleted: boolean, isArchived: boolean, repeatWeekdays: Array<Weekday>, tags: Array<{ __typename?: 'Tag', id: string, label: string, description: string, color: CategoryColor, icon?: CategoryIcon | null }> }> };
 
 export type AddTodoMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AddTodoMutation = { __typename?: 'Mutation', addTodo?: { __typename?: 'Todo', id: string, title: string, description: string, isCompleted: boolean, isArchived: boolean, repeatWeekdays: Array<Weekday> } | null };
+export type AddTodoMutation = { __typename?: 'Mutation', addTodo?: { __typename?: 'Todo', id: string, title: string, description: string, isCompleted: boolean, isArchived: boolean, repeatWeekdays: Array<Weekday>, tags: Array<{ __typename?: 'Tag', id: string, label: string, description: string, color: CategoryColor, icon?: CategoryIcon | null }> } | null };
 
 export type UpdateTodoMutationVariables = Exact<{
   updateInput: UpdateTodoInput;
@@ -1106,6 +1115,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   getMyTodos?: Resolver<Array<ResolversTypes['Todo']>, ParentType, ContextType, RequireFields<QueryGetMyTodosArgs, 'excludeArchived'>>;
+  getTodo?: Resolver<Array<ResolversTypes['Todo']>, ParentType, ContextType, RequireFields<QueryGetTodoArgs, 'id'>>;
   me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   myChats?: Resolver<Array<ResolversTypes['Chat']>, ParentType, ContextType, RequireFields<QueryMyChatsArgs, 'excludeArchived'>>;
   myTags?: Resolver<Array<ResolversTypes['Tag']>, ParentType, ContextType>;
@@ -1206,6 +1216,7 @@ export type TodoResolvers<ContextType = any, ParentType extends ResolversParentT
   repeatWeekdays?: Resolver<Array<ResolversTypes['Weekday']>, ParentType, ContextType>;
   subtasks?: Resolver<Array<ResolversTypes['Todo']>, ParentType, ContextType>;
   supertask?: Resolver<Maybe<ResolversTypes['Todo']>, ParentType, ContextType>;
+  tags?: Resolver<Array<ResolversTypes['Tag']>, ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
