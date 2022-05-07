@@ -22,10 +22,10 @@ export const ColorRadio: FC<IColorRadioProps> = ({
         <Radio
             sx={{
                 color,
-                '& .Mui-checked': { color },
-                '& .MuiSvgIcon-root': {
+                '&.Mui-checked': { color },
+                '&.MuiSvgIcon-root': {
                     'fontSize': typeof size === 'number' ? size : undefined,
-                    '& .Mui-checked': { color },
+                    '&.Mui-checked': { color },
                 },
             }}
             size={typeof size === 'string' ? size : undefined}

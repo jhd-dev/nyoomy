@@ -39,8 +39,6 @@ export const TagChip: FC<ITagChipProps> = ({ tagId, ...props }) => {
     const [label, setLabel] = useState<string>(props.label);
     const [color, setColor] = useState<CategoryColor>(props.color);
 
-    console.log(props.color);
-
     const [updateTag] = useUpdateTagMutation({
         refetchQueries: ['MyTags', 'MyTodos'],
     });
