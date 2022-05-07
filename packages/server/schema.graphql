@@ -50,6 +50,14 @@ type CounterMetric {
   minimum: Int!
 }
 
+input CreateFeedbackInput {
+  details: String!
+  id: ID!
+  maxRating: Int
+  purpose: String!
+  rating: Int
+}
+
 type DailyFloatMetric {
   id: ID!
   max: Float!
@@ -127,6 +135,7 @@ type Mutation {
   login(input: UserLoginInput!): LoginResponse
   logout: Boolean!
   registerUser(input: RegisterUserInput!): RegistrationResponse!
+  sendFeedback(input: CreateFeedbackInput!): Boolean!
   sendMessageToChat(input: SendMessageToChatInput!): Message
   sendMessageToUser(input: SendMessageToUserInput!): Message
   updateTag(updateInput: UpdateTagInput!): Tag
