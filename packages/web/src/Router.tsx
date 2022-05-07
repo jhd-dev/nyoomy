@@ -2,6 +2,7 @@ import React from 'react';
 import type { FC } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import ChatPage from './routes/ChatPage';
+import { FeedbackPage } from './routes/FeedbackPage';
 import LoginPage from './routes/LoginPage';
 import MainPage from './routes/MainPage';
 import PageNotFoundAlert from './routes/PageNotFoundAlert';
@@ -29,6 +30,7 @@ const Router: FC = () => (
                     <Route path="privacy" />
                     <Route index element={<Navigate to="general" replace />} />
                 </Route>
+                <Route path="feedback" element={<FeedbackPage />} />
                 <Route path="*" element={<PageNotFoundAlert />} />
             </Route>
         </Routes>

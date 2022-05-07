@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import React from 'react';
-import { Logout, Settings } from '@mui/icons-material';
+import { Feedback, Logout, Settings } from '@mui/icons-material';
 import {
     Divider,
     IconButton,
@@ -56,6 +56,13 @@ export const AvatarButton: FC = () => {
                     <MenuItem>
                         <ListItemIcon>
                             <Settings fontSize="small" /> Settings
+                        </ListItemIcon>
+                    </MenuItem>
+                </Link>
+                <Link to="/feedback">
+                    <MenuItem>
+                        <ListItemIcon>
+                            <Feedback fontSize="small" /> Feedback
                         </ListItemIcon>
                     </MenuItem>
                 </Link>
