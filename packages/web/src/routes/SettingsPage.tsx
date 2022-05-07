@@ -1,8 +1,9 @@
 import type { FC, SyntheticEvent } from 'react';
 import React, { useState } from 'react';
 import {
+    MusicNote as MusicNoteIcon,
     Person as PersonIcon,
-    Style,
+    Style as StyleIcon,
     Visibility as VisibilityIcon,
 } from '@mui/icons-material';
 import { Box, Drawer, LinearProgress, Tab, Tabs, Toolbar } from '@mui/material';
@@ -10,6 +11,7 @@ import Typography from '@mui/material/Typography';
 import { useMeQuery } from '@nyoomy/graphql';
 import { AppearanceSettings } from './AppearanceSettings';
 import { GeneralSettings } from './GeneralSettings';
+import { SoundsSettings } from './SoundsSettings';
 
 interface ISettingsPageProps {
     drawerWidth: number;
@@ -54,7 +56,12 @@ const SettingsPage: FC<ISettingsPageProps> = ({
                         />
                         <Tab
                             label="Appearance"
-                            icon={<Style />}
+                            icon={<StyleIcon />}
+                            iconPosition="start"
+                        />
+                        <Tab
+                            label="Sounds"
+                            icon={<MusicNoteIcon />}
                             iconPosition="start"
                         />
                         <Tab
@@ -65,7 +72,7 @@ const SettingsPage: FC<ISettingsPageProps> = ({
                     </Tabs>
                 </Box>
             </Drawer>
-            <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+            <Box component="main" sx={{ flexGrow: 1, ml: 50, p: 3 }}>
                 <Toolbar />
                 {loading ? (
                     <LinearProgress />
@@ -73,6 +80,7 @@ const SettingsPage: FC<ISettingsPageProps> = ({
                     <>
                         {currentTab === 0 && <GeneralSettings />}
                         {currentTab === 1 && <AppearanceSettings />}
+                        {currentTab === 2 && <SoundsSettings />}
                     </>
                 )}
             </Box>

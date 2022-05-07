@@ -51,7 +51,7 @@ const config: Configuration = {
                 ],
             },
             {
-                test: /\.(png|jpg|gif|svg|ico|json)$/i,
+                test: /\.(png|jpg|gif|svg|ico|json|mp3)$/i,
                 type: 'asset/resource',
             },
         ],
@@ -69,11 +69,6 @@ const config: Configuration = {
     },
     plugins: [
         new ForkTsCheckerWebpackPlugin({ async: false }),
-        // new DotenvPlugin({
-        //     path: relativeEnvFile,
-        //     safe: relativeEnvExampleFile,
-        //     ignoreStub: true,
-        // }),
         new DefinePlugin({
             ...new DotenvPlugin({
                 path: relativeEnvFile,
