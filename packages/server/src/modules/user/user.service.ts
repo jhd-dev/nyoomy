@@ -3,8 +3,8 @@ import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import EntityAction from '../../types/enums/entity-action.enum';
-import sendEmail from '../../utils/sendEmail';
 import { CaslAbilityFactory } from '../casl/casl-ability.factory';
+import { EmailService } from '../email/email.service';
 import { Profile } from './models/profile.entity';
 import { UserSettings } from './models/user-settings.entity';
 import { User } from './models/user.entity';
@@ -22,7 +22,8 @@ export class UserService {
         @InjectRepository(Profile)
         private readonly profileRepo: Repository<Profile>,
         private readonly configService: ConfigService,
-        private readonly caslAbilityFactory: CaslAbilityFactory
+        private readonly caslAbilityFactory: CaslAbilityFactory,
+        private readonly emailService: EmailService
     ) {}
 
     // eslint-disable-next-line require-await
@@ -128,7 +129,7 @@ export class UserService {
         }
 
         const token: string = '';
-        await sendEmail(
+        await this.emailService.sendEmail(
             email,
             'Forgot password',
             `<a href="${

@@ -4,6 +4,8 @@ import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CaslAbilityFactory } from '../casl/casl-ability.factory';
 import { CaslModule } from '../casl/casl.module';
+import { EmailModule } from '../email/email.module';
+import { EmailService } from '../email/email.service';
 import { Profile } from '../user/models/profile.entity';
 import { UserSettings } from '../user/models/user-settings.entity';
 import { User } from '../user/models/user.entity';
@@ -26,6 +28,7 @@ import { LocalStrategy } from './providers/strategies/local.strategy';
         UserModule,
         TypeOrmModule.forFeature([User, Profile, UserSettings]),
         CaslModule,
+        EmailModule,
     ],
     providers: [
         AuthResolver,
@@ -37,6 +40,7 @@ import { LocalStrategy } from './providers/strategies/local.strategy';
         UserService,
         UserRepo,
         CaslAbilityFactory,
+        EmailService,
     ],
     controllers: [AuthController],
     exports: [AuthService],

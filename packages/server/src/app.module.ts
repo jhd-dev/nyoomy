@@ -21,6 +21,7 @@ import { COOKIE_NAME, REDIS_SESSION_PREFIX } from './constants';
 import { AuthModule } from './modules/auth/auth.module';
 import { CaslModule } from './modules/casl/casl.module';
 import { ChatModule } from './modules/chat/chat.module';
+import { EmailModule } from './modules/email/email.module';
 import { FeedbackModule } from './modules/feedback/feedback.module';
 import { JournalModule } from './modules/journal/journal.module';
 import { REDIS } from './modules/redis/redis.constants';
@@ -40,6 +41,7 @@ const GRAPHQL_SCHEMA_PATH = join(__dirname, '../schema.graphql');
     imports: [
         AuthModule,
         RedisModule,
+        EmailModule,
         TodoModule,
         TagModule,
         JournalModule,
