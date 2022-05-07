@@ -52,9 +52,14 @@ type CounterMetric {
 
 input CreateFeedbackInput {
   details: String!
-  id: ID!
+
+  """The maximum rating a user had the option to give, i.e. 5 stars"""
   maxRating: Int
   purpose: String!
+
+  """
+  The user's rating out of 10, e.g. 2.5 of 5 stars would yield a value of 5
+  """
   rating: Int
 }
 
@@ -70,6 +75,10 @@ type DailyFloatMetric {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+type EditFeedbackDto {
+  success: Boolean!
+}
 
 input EditMessageInput {
   content: String!
@@ -135,7 +144,7 @@ type Mutation {
   login(input: UserLoginInput!): LoginResponse
   logout: Boolean!
   registerUser(input: RegisterUserInput!): RegistrationResponse!
-  sendFeedback(input: CreateFeedbackInput!): Boolean!
+  sendFeedback(input: CreateFeedbackInput!): EditFeedbackDto!
   sendMessageToChat(input: SendMessageToChatInput!): Message
   sendMessageToUser(input: SendMessageToUserInput!): Message
   updateTag(updateInput: UpdateTagInput!): Tag

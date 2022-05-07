@@ -52,6 +52,14 @@ export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: Non
  */
 
 /**
+ * @typedef {Object} CreateFeedbackInput
+ * @property {string} details
+ * @property {number} [maxRating] - The maximum rating a user had the option to give, i.e. 5 stars
+ * @property {string} purpose
+ * @property {number} [rating] - The user's rating out of 10, e.g. 2.5 of 5 stars would yield a value of 5
+ */
+
+/**
  * @typedef {Object} DailyFloatMetric
  * @property {string} id
  * @property {number} max
@@ -63,6 +71,11 @@ export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: Non
 /**
  * A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
  * @typedef {*} DateTime
+ */
+
+/**
+ * @typedef {Object} EditFeedbackDto
+ * @property {boolean} success
  */
 
 /**
@@ -130,6 +143,7 @@ export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: Non
  * @property {LoginResponse} [login]
  * @property {boolean} logout
  * @property {RegistrationResponse} registerUser
+ * @property {EditFeedbackDto} sendFeedback
  * @property {Message} [sendMessageToChat]
  * @property {Message} [sendMessageToUser]
  * @property {Tag} [updateTag]
@@ -389,6 +403,15 @@ export type CounterMetric = {
   minimum: Scalars['Int'];
 };
 
+export type CreateFeedbackInput = {
+  details: Scalars['String'];
+  /** The maximum rating a user had the option to give, i.e. 5 stars */
+  maxRating?: InputMaybe<Scalars['Int']>;
+  purpose: Scalars['String'];
+  /** The user's rating out of 10, e.g. 2.5 of 5 stars would yield a value of 5 */
+  rating?: InputMaybe<Scalars['Int']>;
+};
+
 export type DailyFloatMetric = {
   __typename?: 'DailyFloatMetric';
   id: Scalars['ID'];
@@ -396,6 +419,11 @@ export type DailyFloatMetric = {
   metric: Metric;
   metricType: MetricType;
   min: Scalars['Float'];
+};
+
+export type EditFeedbackDto = {
+  __typename?: 'EditFeedbackDto';
+  success: Scalars['Boolean'];
 };
 
 export type EditMessageInput = {
@@ -468,6 +496,7 @@ export type Mutation = {
   login?: Maybe<LoginResponse>;
   logout: Scalars['Boolean'];
   registerUser: RegistrationResponse;
+  sendFeedback: EditFeedbackDto;
   sendMessageToChat?: Maybe<Message>;
   sendMessageToUser?: Maybe<Message>;
   updateTag?: Maybe<Tag>;
@@ -524,6 +553,11 @@ export type MutationLoginArgs = {
 
 export type MutationRegisterUserArgs = {
   input: RegisterUserInput;
+};
+
+
+export type MutationSendFeedbackArgs = {
+  input: CreateFeedbackInput;
 };
 
 
@@ -791,6 +825,13 @@ export type DeleteMessageMutationVariables = Exact<{
 
 export type DeleteMessageMutation = { __typename?: 'Mutation', deleteMessage?: boolean | null };
 
+export type SendFeedbackMutationVariables = Exact<{
+  input: CreateFeedbackInput;
+}>;
+
+
+export type SendFeedbackMutation = { __typename?: 'Mutation', sendFeedback: { __typename?: 'EditFeedbackDto', success: boolean } };
+
 export type MyTagsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -941,8 +982,10 @@ export type ResolversTypes = {
   CategoryIcon: CategoryIcon;
   Chat: ResolverTypeWrapper<Chat>;
   CounterMetric: ResolverTypeWrapper<CounterMetric>;
+  CreateFeedbackInput: CreateFeedbackInput;
   DailyFloatMetric: ResolverTypeWrapper<DailyFloatMetric>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
+  EditFeedbackDto: ResolverTypeWrapper<EditFeedbackDto>;
   EditMessageInput: EditMessageInput;
   FieldError: ResolverTypeWrapper<FieldError>;
   Float: ResolverTypeWrapper<Scalars['Float']>;
@@ -986,8 +1029,10 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
   Chat: Chat;
   CounterMetric: CounterMetric;
+  CreateFeedbackInput: CreateFeedbackInput;
   DailyFloatMetric: DailyFloatMetric;
   DateTime: Scalars['DateTime'];
+  EditFeedbackDto: EditFeedbackDto;
   EditMessageInput: EditMessageInput;
   FieldError: FieldError;
   Float: Scalars['Float'];
@@ -1053,6 +1098,11 @@ export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversT
   name: 'DateTime';
 }
 
+export type EditFeedbackDtoResolvers<ContextType = any, ParentType extends ResolversParentTypes['EditFeedbackDto'] = ResolversParentTypes['EditFeedbackDto']> = {
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type FieldErrorResolvers<ContextType = any, ParentType extends ResolversParentTypes['FieldError'] = ResolversParentTypes['FieldError']> = {
   field?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -1106,6 +1156,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   login?: Resolver<Maybe<ResolversTypes['LoginResponse']>, ParentType, ContextType, RequireFields<MutationLoginArgs, 'input'>>;
   logout?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   registerUser?: Resolver<ResolversTypes['RegistrationResponse'], ParentType, ContextType, RequireFields<MutationRegisterUserArgs, 'input'>>;
+  sendFeedback?: Resolver<ResolversTypes['EditFeedbackDto'], ParentType, ContextType, RequireFields<MutationSendFeedbackArgs, 'input'>>;
   sendMessageToChat?: Resolver<Maybe<ResolversTypes['Message']>, ParentType, ContextType, RequireFields<MutationSendMessageToChatArgs, 'input'>>;
   sendMessageToUser?: Resolver<Maybe<ResolversTypes['Message']>, ParentType, ContextType, RequireFields<MutationSendMessageToUserArgs, 'input'>>;
   updateTag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<MutationUpdateTagArgs, 'updateInput'>>;
@@ -1238,6 +1289,7 @@ export type Resolvers<ContextType = any> = {
   CounterMetric?: CounterMetricResolvers<ContextType>;
   DailyFloatMetric?: DailyFloatMetricResolvers<ContextType>;
   DateTime?: GraphQLScalarType;
+  EditFeedbackDto?: EditFeedbackDtoResolvers<ContextType>;
   FieldError?: FieldErrorResolvers<ContextType>;
   Journal?: JournalResolvers<ContextType>;
   LoginResponse?: LoginResponseResolvers<ContextType>;

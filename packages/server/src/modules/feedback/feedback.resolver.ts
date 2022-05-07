@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { CreateFeedbackInput } from './dto/create-feedback.input';
+import { EditFeedbackDto } from './dto/edit-feedback.dto';
 import { FeedbackService } from './feedback.service';
 
 @Injectable()
@@ -8,10 +9,10 @@ import { FeedbackService } from './feedback.service';
 export class FeedbackResolver {
     public constructor(private readonly feedbackService: FeedbackService) {}
 
-    @Mutation(() => Boolean, { name: 'sendFeedback' })
+    @Mutation(() => EditFeedbackDto, { name: 'sendFeedback' })
     public createFeedback(
         @Args('input') input: CreateFeedbackInput
-    ): Promise<boolean> {
+    ): Promise<EditFeedbackDto> {
         return this.feedbackService.createFeedback(input);
     }
 }

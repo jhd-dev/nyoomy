@@ -68,6 +68,15 @@ export type CounterMetric = {
   minimum: Scalars['Int'];
 };
 
+export type CreateFeedbackInput = {
+  details: Scalars['String'];
+  /** The maximum rating a user had the option to give, i.e. 5 stars */
+  maxRating?: InputMaybe<Scalars['Int']>;
+  purpose: Scalars['String'];
+  /** The user's rating out of 10, e.g. 2.5 of 5 stars would yield a value of 5 */
+  rating?: InputMaybe<Scalars['Int']>;
+};
+
 export type DailyFloatMetric = {
   __typename?: 'DailyFloatMetric';
   id: Scalars['ID'];
@@ -75,6 +84,11 @@ export type DailyFloatMetric = {
   metric: Metric;
   metricType: MetricType;
   min: Scalars['Float'];
+};
+
+export type EditFeedbackDto = {
+  __typename?: 'EditFeedbackDto';
+  success: Scalars['Boolean'];
 };
 
 export type EditMessageInput = {
@@ -147,6 +161,7 @@ export type Mutation = {
   login?: Maybe<LoginResponse>;
   logout: Scalars['Boolean'];
   registerUser: RegistrationResponse;
+  sendFeedback: EditFeedbackDto;
   sendMessageToChat?: Maybe<Message>;
   sendMessageToUser?: Maybe<Message>;
   updateTag?: Maybe<Tag>;
@@ -203,6 +218,11 @@ export type MutationLoginArgs = {
 
 export type MutationRegisterUserArgs = {
   input: RegisterUserInput;
+};
+
+
+export type MutationSendFeedbackArgs = {
+  input: CreateFeedbackInput;
 };
 
 
@@ -470,6 +490,13 @@ export type DeleteMessageMutationVariables = Exact<{
 
 export type DeleteMessageMutation = { __typename?: 'Mutation', deleteMessage?: boolean | null };
 
+export type SendFeedbackMutationVariables = Exact<{
+  input: CreateFeedbackInput;
+}>;
+
+
+export type SendFeedbackMutation = { __typename?: 'Mutation', sendFeedback: { __typename?: 'EditFeedbackDto', success: boolean } };
+
 export type MyTagsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -728,6 +755,39 @@ export function useDeleteMessageMutation(baseOptions?: Apollo.MutationHookOption
 export type DeleteMessageMutationHookResult = ReturnType<typeof useDeleteMessageMutation>;
 export type DeleteMessageMutationResult = Apollo.MutationResult<DeleteMessageMutation>;
 export type DeleteMessageMutationOptions = Apollo.BaseMutationOptions<DeleteMessageMutation, DeleteMessageMutationVariables>;
+export const SendFeedbackDocument = gql`
+    mutation SendFeedback($input: CreateFeedbackInput!) {
+  sendFeedback(input: $input) {
+    success
+  }
+}
+    `;
+export type SendFeedbackMutationFn = Apollo.MutationFunction<SendFeedbackMutation, SendFeedbackMutationVariables>;
+
+/**
+ * __useSendFeedbackMutation__
+ *
+ * To run a mutation, you first call `useSendFeedbackMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendFeedbackMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendFeedbackMutation, { data, loading, error }] = useSendFeedbackMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSendFeedbackMutation(baseOptions?: Apollo.MutationHookOptions<SendFeedbackMutation, SendFeedbackMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SendFeedbackMutation, SendFeedbackMutationVariables>(SendFeedbackDocument, options);
+      }
+export type SendFeedbackMutationHookResult = ReturnType<typeof useSendFeedbackMutation>;
+export type SendFeedbackMutationResult = Apollo.MutationResult<SendFeedbackMutation>;
+export type SendFeedbackMutationOptions = Apollo.BaseMutationOptions<SendFeedbackMutation, SendFeedbackMutationVariables>;
 export const MyTagsDocument = gql`
     query MyTags {
   myTags {
