@@ -37,6 +37,13 @@ import type { Client as ConnectRedisClient } from 'connect-redis';
 const STATIC_PATH = join(__dirname, '../../web/dist');
 const GRAPHQL_SCHEMA_PATH = join(__dirname, '../schema.graphql');
 
+const devContentSecurityPolicy = {
+    directives: {
+        scriptSrc: ["'self'", "'unsafe-inline'", 'https://cdn.jsdelivr.net'],
+        imgSrc: ["'self'", 'data:', 'https://cdn.jsdelivr.net'],
+    },
+};
+
 @Module({
     imports: [
         AuthModule,
@@ -91,7 +98,13 @@ export class AppModule implements NestModule {
         const Store = RedisStore(expressSession);
         consumer
             .apply(
-                helmet(),
+                helmet({
+                    contentSecurityPolicy: this.configService.get<boolean>(
+                        '__dev__'
+                    )
+                        ? devContentSecurityPolicy
+                        : undefined,
+                }),
                 expressSession({
                     name: COOKIE_NAME,
                     store: new Store({
