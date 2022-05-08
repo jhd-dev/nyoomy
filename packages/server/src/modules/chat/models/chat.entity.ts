@@ -12,9 +12,9 @@ import { User } from '../../user/models/user.entity';
 @Entity('chats')
 @ObjectType()
 export class Chat {
-    @PrimaryGeneratedColumn('increment')
+    @PrimaryGeneratedColumn()
     @Field(() => ID)
-    public readonly id!: number;
+    public readonly id!: string;
 
     @ManyToMany(() => User)
     @Field(() => User)

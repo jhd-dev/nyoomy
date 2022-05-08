@@ -21,7 +21,7 @@ import { Taggable } from './taggable.entity';
 export class Tag {
     @PrimaryGeneratedColumn()
     @Field(() => ID)
-    public readonly id: number;
+    public readonly id: string;
 
     @ManyToOne(() => User)
     @Field(() => User)

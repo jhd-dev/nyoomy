@@ -1,5 +1,6 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
 import Weekday from '../../../types/enums/weekday.enum';
+import { UpdateTagInput } from '../../tag/dto/update-tag.input';
 import type { Todo } from '../models/todo.entity';
 
 @InputType()
@@ -27,4 +28,7 @@ export class UpdateTodoInput implements Partial<Todo> {
 
     @Field(() => [Weekday], { nullable: true })
     public repeatWeekdays?: Weekday[];
+
+    @Field(() => [UpdateTagInput], { nullable: true })
+    public tagUpdates?: UpdateTagInput[];
 }

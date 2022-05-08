@@ -7,7 +7,7 @@ import type { Tag } from '../models/tag.entity';
 @InputType()
 export class UpdateTagInput implements Partial<Tag> {
     @Field(() => ID)
-    public readonly id: number;
+    public readonly id: string;
 
     @Field({ nullable: true })
     public label?: string;

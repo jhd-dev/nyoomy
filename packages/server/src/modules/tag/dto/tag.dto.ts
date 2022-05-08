@@ -6,7 +6,7 @@ import type { Tag } from '../models/tag.entity';
 @ObjectType()
 export class TagDto implements Omit<Tag, 'user' | 'taggedItems'> {
     @Field(() => ID)
-    public id: number;
+    public id: string;
 
     // @Field(() => User)
     // public user: User;

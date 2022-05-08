@@ -17,7 +17,7 @@ import type { IUserSettings } from '../interfaces/user-settings.interface';
 export class UserSettings implements IUserSettings {
     @PrimaryGeneratedColumn('increment')
     @Field(() => ID)
-    public readonly id: number;
+    public readonly id: string;
 
     @OneToOne(() => User, { eager: true, cascade: true, onDelete: 'CASCADE' })
     @JoinColumn()

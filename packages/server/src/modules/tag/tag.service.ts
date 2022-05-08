@@ -34,7 +34,7 @@ export class TagService {
         });
     }
 
-    public async getTagsByTaggable(taggableId: number): Promise<Tag[]> {
+    public async getTagsByTaggable(taggableId: string): Promise<Tag[]> {
         return (
             await this.taggableRepo.findOneOrFail(taggableId, {
                 relations: ['tags'],
@@ -48,7 +48,7 @@ export class TagService {
         // });
     }
 
-    public getById(tagId: number): Promise<Tag> {
+    public getById(tagId: string): Promise<Tag> {
         return this.tagRepo.findOneOrFail(tagId);
     }
 
@@ -129,8 +129,8 @@ export class TagService {
 
     public async applyTag(
         user: User,
-        tagId: number,
-        taggableId: number
+        tagId: string,
+        taggableId: string
     ): Promise<Tag | null> {
         const tag = await this.tagRepo.findOneOrFail(tagId);
         const taggable = await this.taggableRepo.findOneOrFail(taggableId);
@@ -147,8 +147,8 @@ export class TagService {
 
     public async removeTag(
         user: User,
-        tagId: number,
-        taggableId: number
+        tagId: string,
+        taggableId: string
     ): Promise<Tag | null> {
         try {
             const tag = await this.tagRepo.findOneOrFail(tagId);
@@ -168,7 +168,7 @@ export class TagService {
         }
     }
 
-    public async deleteTag(user: User, id: number): Promise<void> {
+    public async deleteTag(user: User, id: string): Promise<void> {
         const tag = await this.tagRepo.findOneOrFail(id);
 
         const ability = this.caslAbilityFactory.createForUser(user);

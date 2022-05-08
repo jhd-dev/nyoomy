@@ -7,7 +7,7 @@ import { Tag } from './tag.entity';
 export class Taggable {
     @PrimaryGeneratedColumn()
     @Field(() => ID)
-    public readonly id: number;
+    public readonly id: string;
 
     @ManyToMany(() => Tag)
     @JoinTable()

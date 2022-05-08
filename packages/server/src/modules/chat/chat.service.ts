@@ -52,7 +52,7 @@ export class ChatService {
 
     public async sendMessageToChat(
         userId: string,
-        chatId: number,
+        chatId: string,
         content: string
     ): Promise<Message | null> {
         const chat = await this.chatRepo.findOne(chatId);
@@ -68,7 +68,7 @@ export class ChatService {
 
     public async editMessage(
         userId: string,
-        messageId: number,
+        messageId: string,
         newContent: string
     ): Promise<Message> {
         const message = await this.messageRepo.findOneOrFail({
@@ -80,7 +80,7 @@ export class ChatService {
 
     public async deleteMessage(
         userId: string,
-        messageId: number
+        messageId: string
     ): Promise<boolean> {
         const message = await this.findMessageFromUser(userId, messageId);
         if (message == null) return false;
@@ -94,7 +94,7 @@ export class ChatService {
 
     private findMessageFromUser(
         userId: string,
-        messageId: number
+        messageId: string
     ): Promise<Message | undefined> {
         return this.messageRepo.findOne({
             where: { id: messageId, sender: { id: userId } },
@@ -103,7 +103,7 @@ export class ChatService {
 
     private findMessageFromUserOrFail(
         userId: string,
-        messageId: number
+        messageId: string
     ): Promise<Message> {
         return this.messageRepo.findOneOrFail({
             where: { id: messageId, sender: { id: userId } },

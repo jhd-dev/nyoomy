@@ -30,15 +30,6 @@ import type { ApolloError } from '@apollo/client';
 import { colorOptions, TagChip } from '../components/TagChip';
 import Typography from '@mui/material/Typography';
 
-// type Tag = {
-//     __typename?: 'Tag' | undefined;
-//     id: string;
-//     label: string;
-//     description: string;
-//     color: CategoryColor;
-//     icon?: CategoryIcon | null | undefined;
-// };
-
 type Tag = Omit<TagDto, 'user' | 'isArchived'>;
 
 const TodoDetailsRoute: FC = () => {
@@ -53,10 +44,10 @@ const TodoDetailsRoute: FC = () => {
     const { data: myTodosData } = useMyTodosQuery();
     const { data: myTagsData } = useMyTagsQuery();
     const [createTag] = useCreateTagMutation({
-        refetchQueries: ['MyTags', 'MyTodos'],
+        refetchQueries: ['Me', 'MyTags', 'MyTodos'],
     });
     const [deleteTag] = useDeleteTagMutation({
-        refetchQueries: ['MyTags', 'MyTodos'],
+        refetchQueries: ['Me', 'MyTags', 'MyTodos'],
     });
 
     const currentTodo = myTodosData?.getMyTodos.find(
@@ -70,6 +61,8 @@ const TodoDetailsRoute: FC = () => {
         currentTodo?.description ?? ''
     );
     const [selectedTags, setSelectedTags] = useState(currentTodo?.tags ?? []);
+
+    console.log(selectedTags);
 
     const allTags: Tag[] = myTagsData?.myTags ?? [];
 
@@ -86,6 +79,9 @@ const TodoDetailsRoute: FC = () => {
                     date: new Date().toDateString(),
                     title,
                     description,
+                    tagUpdates: selectedTags.map((tag) => ({
+                        id: tag.id,
+                    })),
                 },
             },
             onCompleted(data: UpdateTodoMutation): void {
@@ -184,7 +180,18 @@ const TodoDetailsRoute: FC = () => {
                             if (data?.createTag)
                                 newValTags.push(data.createTag);
                         }
-                        setSelectedTags(newValTags);
+                        setSelectedTags(
+                            newValTags
+                                .slice()
+                                .reverse()
+                                .filter(
+                                    (tag, i, arr) =>
+                                        arr.findIndex(
+                                            (tag2) => tag2.id === tag.id
+                                        ) === i
+                                )
+                                .reverse()
+                        );
                     }}
                     renderOption={(props, option, { selected }) => (
                         <li {...props}>
@@ -203,6 +210,11 @@ const TodoDetailsRoute: FC = () => {
                                     onClick={async (e) => {
                                         e.stopPropagation();
                                         e.preventDefault();
+                                        setSelectedTags((prev) =>
+                                            prev.filter(
+                                                (tag) => tag.id !== option.id
+                                            )
+                                        );
                                         await deleteTag({
                                             variables: { id: option.id },
                                         });

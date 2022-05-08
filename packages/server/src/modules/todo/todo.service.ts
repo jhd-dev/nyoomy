@@ -25,7 +25,7 @@ export class TodoService {
         private readonly tagService: TagService
     ) {}
 
-    public getAllTodos(
+    public async getAllTodos(
         user: User,
         excludingArchived: boolean
     ): Promise<Todo[]> {
@@ -33,9 +33,21 @@ export class TodoService {
         if (!ability.can(EntityAction.READ, Todo)) {
             throw new UnauthorizedException();
         }
-        return this.todoRepo.find({
+        const todoEntities = await this.todoRepo.find({
             where: { isArchived: excludingArchived ? false : undefined },
+            relations: ['user', 'taggable', 'taggable.tags'],
         });
+
+        const todoDtos = [];
+        for (const todoEntity of todoEntities) {
+            const dto = new Todo();
+            dto.tags = await this.tagService.getTagsByTaggable(
+                todoEntity.taggable.id
+            );
+            todoDtos.push(dto);
+        }
+
+        return todoDtos;
     }
 
     public async getUserTodos(
@@ -91,28 +103,56 @@ export class TodoService {
         }
 
         await this.todoRepo.save(todo);
-        return todo;
+        return this.todoRepo.findOneOrFail(todo.id, {
+            relations: ['user', 'taggable', 'taggable.tags'],
+        });
     }
 
     public async updateTodo(
         updateInput: UpdateTodoInput,
         user: User
     ): Promise<Todo> {
+        console.log('updateTodo');
         const todo = await this.todoRepo.findOneOrFail(updateInput.id, {
             relations: ['user'],
         });
+
+        console.log('1');
 
         const ability = this.caslAbilityFactory.createForUser(user);
         if (!ability.can(EntityAction.UPDATE, todo)) {
             throw new UnauthorizedException('incorrect user');
         }
 
+        console.log('2');
+
         await this.updateTodoEntry(todo, updateInput);
 
-        await this.todoRepo.update(todo, {
-            title: updateInput?.title ?? todo.title,
-            description: updateInput?.description ?? todo.description,
-        });
+        // for (const tagUpdate of updateInput.tagUpdates ?? []) {
+        //     await this.tagService.updateTag(user, tagUpdate);
+        // }
+
+        console.log('3');
+
+        if (updateInput?.tagUpdates) {
+            await this.taggableRepo.save({
+                ...todo.taggable,
+                tags: updateInput.tagUpdates.map((tag) => ({ id: tag.id })),
+            });
+        }
+
+        console.log('4');
+
+        const updatedTodo = await this.todoRepo.findOneOrFail(updateInput.id);
+
+        updatedTodo.title = updateInput?.title ?? updatedTodo.title;
+        updatedTodo.description =
+            updateInput?.description ?? updatedTodo.description;
+
+        console.log('5');
+
+        await this.todoRepo.save(updatedTodo);
+        console.log('6');
         return this.todoRepo.findOneOrFail(updateInput.id);
     }
 

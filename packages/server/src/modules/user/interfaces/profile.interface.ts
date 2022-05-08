@@ -1,5 +1,5 @@
 export interface IProfile {
-    readonly id: number;
+    readonly id: string;
     displayName: string;
     isPublic: boolean;
     bio: string;

@@ -14,6 +14,7 @@ input AddTodoInput {
   description: String
   isArchived: Boolean
   repeatWeekdays: [Weekday!]
+  tagUpdates: [UpdateTagInput!]
   title: String
 }
 
@@ -82,7 +83,7 @@ type EditFeedbackDto {
 
 input EditMessageInput {
   content: String!
-  messageId: Float!
+  messageId: String!
 }
 
 type FieldError {
@@ -225,7 +226,7 @@ type SelectionOption {
 }
 
 input SendMessageToChatInput {
-  chatId: Float!
+  chatId: String!
   content: String!
 }
 
@@ -299,6 +300,7 @@ input UpdateTodoInput {
   isArchived: Boolean
   isCompleted: Boolean
   repeatWeekdays: [Weekday!]
+  tagUpdates: [UpdateTagInput!]
   title: String
 }
 

@@ -47,7 +47,7 @@ export class TagResolver {
     @Mutation(() => Boolean)
     @UseGuards(AuthenticatedGuard)
     public async deleteTag(
-        @Args('tagId', { type: () => ID }) id: number,
+        @Args('tagId', { type: () => ID }) id: string,
         @CurrentUser() user: User
     ): Promise<boolean> {
         try {
@@ -62,8 +62,8 @@ export class TagResolver {
     @Mutation(() => Tag, { nullable: true })
     @UseGuards(AuthenticatedGuard)
     public async applyTag(
-        @Args('tagId', { type: () => ID }) tagId: number,
-        @Args('taggableId', { type: () => ID }) taggableId: number,
+        @Args('tagId', { type: () => ID }) tagId: string,
+        @Args('taggableId', { type: () => ID }) taggableId: string,
         @CurrentUser() user: User
     ): Promise<Tag | null> {
         try {

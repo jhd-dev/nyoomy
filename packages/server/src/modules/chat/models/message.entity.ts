@@ -14,9 +14,9 @@ import { Chat } from './chat.entity';
 @Entity('messages')
 @ObjectType()
 export class Message {
-    @PrimaryGeneratedColumn('increment')
+    @PrimaryGeneratedColumn()
     @Field(() => ID)
-    public readonly id!: number;
+    public readonly id!: string;
 
     @ManyToOne(() => User)
     @Field(() => User)

@@ -59,7 +59,7 @@ export class ChatResolver {
     @UseGuards(AuthenticatedGuard)
     public deleteMessage(
         @CurrentUser() sender: User,
-        @Args('messageId', { type: () => ID }) messageId: number
+        @Args('messageId', { type: () => ID }) messageId: string
     ): Promise<boolean> {
         return this.chatService.deleteMessage(sender.id, messageId);
     }

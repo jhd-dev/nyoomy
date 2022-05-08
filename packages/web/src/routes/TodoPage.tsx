@@ -18,7 +18,7 @@ import TodoItem from '../components/TodoItem';
 
 const TodoPage: FC = () => {
     const { data, loading, error } = useMyTodosQuery();
-    const [addTodo] = useAddTodoMutation();
+    const [addTodo] = useAddTodoMutation({ refetchQueries: ['MyTodos'] });
 
     const [newTodoText, setNewTodoText] = useState<string>('');
 

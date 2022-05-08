@@ -14,7 +14,7 @@ import type { IProfile } from '../interfaces/profile.interface';
 export class Profile implements IProfile {
     @PrimaryGeneratedColumn('increment')
     @Field(() => ID)
-    public readonly id: number;
+    public readonly id: string;
 
     @OneToOne(() => User, { eager: true, cascade: true, onDelete: 'CASCADE' })
     @JoinColumn()
