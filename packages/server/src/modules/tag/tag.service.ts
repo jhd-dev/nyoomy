@@ -1,7 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import CategoryIcon, { categoryIcons } from '../../types/enums/category-icon';
 import EntityAction from '../../types/enums/entity-action.enum';
 import { CaslAbilityFactory } from '../casl/casl-ability.factory';
 import { Tag } from './models/tag.entity';
@@ -9,7 +8,7 @@ import { Taggable } from './models/taggable.entity';
 import type { User } from '../user/models/user.entity';
 import type { AddTagInput } from './dto/add-tag.input';
 import type { UpdateTagInput } from './dto/update-tag.input';
-import { ArrayContains } from 'class-validator';
+import { CategoryColor } from '../../types/enums/category-color.enum';
 
 @Injectable()
 export class TagService {
@@ -40,12 +39,6 @@ export class TagService {
                 relations: ['tags'],
             })
         ).tags;
-        // return this.tagRepo.find({
-        //     where: {
-        //         taggedItems: ArrayContains([{id: taggableId}]),
-        //     },
-        //     relations: ['taggedItems'],
-        // });
     }
 
     public getById(tagId: string): Promise<Tag> {
@@ -55,29 +48,33 @@ export class TagService {
     public async createTag(
         user: User,
         { label, icon, description, color, taggedItem }: AddTagInput
-    ): Promise<Tag | null> {
+    ): Promise<Tag> {
         const tag = this.tagRepo.create({
             user: { id: user.id },
             label,
             description,
-            color,
+            color: color ?? CategoryColor.DEFAULT,
             icon: icon ?? null,
         });
+        await this.tagRepo.save(tag);
 
         const ability = this.caslAbilityFactory.createForUser(user);
-        if (ability.can(EntityAction.CREATE, tag)) {
-            const foundTaggedItem = taggedItem
-                ? await this.taggableRepo.findOne(taggedItem?.id)
-                : undefined;
-            if (foundTaggedItem) {
-                await this.taggableRepo.save({
-                    ...foundTaggedItem,
-                    tags: foundTaggedItem.tags.concat(tag),
-                });
-            }
-            return this.tagRepo.save(tag);
+        if (!ability.can(EntityAction.CREATE, tag)) {
+            throw new UnauthorizedException(
+                'Unauthorized tag creation attempt'
+            );
         }
-        return null;
+
+        const foundTaggedItem = taggedItem
+            ? await this.taggableRepo.findOne(taggedItem?.id)
+            : undefined;
+        if (foundTaggedItem) {
+            await this.taggableRepo.save({
+                ...foundTaggedItem,
+                tags: foundTaggedItem.tags.concat(tag),
+            });
+        }
+        return this.tagRepo.findOneOrFail(tag.id);
     }
 
     public async updateTag(
@@ -97,14 +94,6 @@ export class TagService {
             const taggables = await this.taggableRepo.findByIds(
                 updateInput.taggables.map(({ id }) => id)
             );
-
-            // for (const taggable of taggables) {
-            //     this.taggableRepo.save({
-            //         ...taggable,
-            //         tags: taggable.tags.concat({id: tag.id})
-            //     })
-            // }
-
             tag.taggedItems = taggables;
         }
 
@@ -139,10 +128,12 @@ export class TagService {
             tags: taggable.tags.concat([tag]),
         });
         const ability = this.caslAbilityFactory.createForUser(user);
-        if (ability.can(EntityAction.UPDATE, tag)) {
-            await this.tagRepo.save(tag);
+        if (!ability.can(EntityAction.UPDATE, tag)) {
+            throw new UnauthorizedException(
+                'User not authorized to delete tag'
+            );
         }
-        return tag;
+        return await this.tagRepo.save(tag);
     }
 
     public async removeTag(
@@ -151,7 +142,9 @@ export class TagService {
         taggableId: string
     ): Promise<Tag | null> {
         try {
-            const tag = await this.tagRepo.findOneOrFail(tagId);
+            const tag = await this.tagRepo.findOneOrFail(tagId, {
+                relations: ['user'],
+            });
 
             tag.taggedItems = tag.taggedItems.filter(
                 (taggable) => taggable.id !== taggableId
@@ -169,11 +162,16 @@ export class TagService {
     }
 
     public async deleteTag(user: User, id: string): Promise<void> {
-        const tag = await this.tagRepo.findOneOrFail(id);
-
+        console.log('delete-Tag');
+        const tag = await this.tagRepo.findOneOrFail(id, {
+            relations: ['user'],
+        });
         const ability = this.caslAbilityFactory.createForUser(user);
-        if (ability.can(EntityAction.DELETE, tag)) {
-            await this.tagRepo.remove(tag);
+        if (!ability.can(EntityAction.DELETE, tag)) {
+            throw new UnauthorizedException(
+                `User ${user.id} not authorized to delete tag ${id}.`
+            );
         }
+        await this.tagRepo.remove(tag);
     }
 }

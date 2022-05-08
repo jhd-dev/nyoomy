@@ -16,8 +16,8 @@ query MyTodos {
     }
 }
 
-mutation AddTodo {
-    addTodo(input: {}) {
+mutation AddTodo($input: AddTodoInput!) {
+    addTodo(input: $input) {
         id
         title
         description

@@ -9,7 +9,6 @@ import { Todo } from './models/todo.entity';
 import type { User } from '../user/models/user.entity';
 import type { AddTodoInput } from './dto/add-todo.input';
 import type { UpdateTodoInput } from './dto/update-todo.input';
-import { TodoDto } from './dto/todo.dto';
 import { Taggable } from '../tag/models/taggable.entity';
 
 @Injectable()
@@ -57,7 +56,7 @@ export class TodoService {
         const todos = await this.todoRepo.find({
             where: {
                 user: { id: user.id },
-                isArchived: excludingArchived ? false : undefined,
+                ...(excludingArchived ? { isArchived: false } : {}),
             },
             relations: ['user', 'taggable'],
         });
@@ -66,10 +65,7 @@ export class TodoService {
             ability.can(EntityAction.READ, todo)
         );
         for (const i in accessableTodos) {
-            console.log(accessableTodos[i]);
-            accessableTodos[i].tags = await this.tagService.getTagsByTaggable(
-                accessableTodos[i].taggable.id
-            );
+            accessableTodos[i] = await this.provideTagData(accessableTodos[i]);
         }
         return accessableTodos;
     }
@@ -81,12 +77,15 @@ export class TodoService {
         const todo = await this.todoRepo.findOneOrFail(todoId, {
             relations: ['user', 'taggable'],
         });
-        todo.tags = await this.tagService.getTagsByTaggable(todo.taggable.id);
+        const todoWithTags = await this.provideTagData(todo);
         const ability = this.caslAbilityFactory.createForUser(user);
-        if (todo == null || !ability.can(EntityAction.READ, todo)) {
+        if (
+            todoWithTags == null ||
+            !ability.can(EntityAction.READ, todoWithTags)
+        ) {
             throw new Error('Unauthorized request');
         }
-        return todo;
+        return todoWithTags;
     }
 
     public async addTodo(user: User, input: AddTodoInput): Promise<Todo> {
@@ -103,45 +102,30 @@ export class TodoService {
         }
 
         await this.todoRepo.save(todo);
-        return this.todoRepo.findOneOrFail(todo.id, {
-            relations: ['user', 'taggable', 'taggable.tags'],
-        });
+        return this.provideTagData(todo);
     }
 
     public async updateTodo(
         updateInput: UpdateTodoInput,
         user: User
     ): Promise<Todo> {
-        console.log('updateTodo');
         const todo = await this.todoRepo.findOneOrFail(updateInput.id, {
             relations: ['user'],
         });
-
-        console.log('1');
 
         const ability = this.caslAbilityFactory.createForUser(user);
         if (!ability.can(EntityAction.UPDATE, todo)) {
             throw new UnauthorizedException('incorrect user');
         }
 
-        console.log('2');
-
         await this.updateTodoEntry(todo, updateInput);
 
-        // for (const tagUpdate of updateInput.tagUpdates ?? []) {
-        //     await this.tagService.updateTag(user, tagUpdate);
-        // }
-
-        console.log('3');
-
-        if (updateInput?.tagUpdates) {
-            await this.taggableRepo.save({
-                ...todo.taggable,
-                tags: updateInput.tagUpdates.map((tag) => ({ id: tag.id })),
-            });
+        todo.taggable.tags = [];
+        for (const tagUpdate of updateInput.tagUpdates ?? []) {
+            const tag = await this.tagService.getById(tagUpdate.id);
+            todo.taggable.tags.push(tag);
         }
-
-        console.log('4');
+        await this.todoRepo.save(todo);
 
         const updatedTodo = await this.todoRepo.findOneOrFail(updateInput.id);
 
@@ -149,11 +133,9 @@ export class TodoService {
         updatedTodo.description =
             updateInput?.description ?? updatedTodo.description;
 
-        console.log('5');
-
         await this.todoRepo.save(updatedTodo);
-        console.log('6');
-        return this.todoRepo.findOneOrFail(updateInput.id);
+        const finalTodo = await this.todoRepo.findOneOrFail(updateInput.id);
+        return await this.provideTagData(finalTodo);
     }
 
     public async deleteTodo(user: User, id: string): Promise<void> {
@@ -204,5 +186,12 @@ export class TodoService {
         }
         await this.todoEntryRepo.update(entry, updateProps);
         return this.todoEntryRepo.findOneOrFail(entry.id);
+    }
+
+    private async provideTagData(todo: Todo): Promise<Todo> {
+        const tags = await this.tagService.getTagsByTaggable(todo.taggable.id);
+        todo.tags = tags;
+        todo.taggable.tags = tags;
+        return todo;
     }
 }

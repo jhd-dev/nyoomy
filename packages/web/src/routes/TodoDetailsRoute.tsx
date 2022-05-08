@@ -40,7 +40,9 @@ const TodoDetailsRoute: FC = () => {
         trim: true,
         stringify: ({ label }) => label,
     });
-    const [updateTodo] = useUpdateTodoMutation();
+    const [updateTodo] = useUpdateTodoMutation({
+        refetchQueries: ['MyTags', 'MyTodos'],
+    });
     const { data: myTodosData } = useMyTodosQuery();
     const { data: myTagsData } = useMyTagsQuery();
     const [createTag] = useCreateTagMutation({
@@ -61,8 +63,6 @@ const TodoDetailsRoute: FC = () => {
         currentTodo?.description ?? ''
     );
     const [selectedTags, setSelectedTags] = useState(currentTodo?.tags ?? []);
-
-    console.log(selectedTags);
 
     const allTags: Tag[] = myTagsData?.myTags ?? [];
 

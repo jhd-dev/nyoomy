@@ -18,13 +18,16 @@ import TodoItem from '../components/TodoItem';
 
 const TodoPage: FC = () => {
     const { data, loading, error } = useMyTodosQuery();
-    const [addTodo] = useAddTodoMutation({ refetchQueries: ['MyTodos'] });
 
     const [newTodoText, setNewTodoText] = useState<string>('');
-
     const handleInputChange = (value: string): void => {
         setNewTodoText(value);
     };
+
+    const [addTodo] = useAddTodoMutation({
+        variables: { input: { title: newTodoText } },
+        refetchQueries: ['MyTodos'],
+    });
 
     return (
         <Box>
@@ -57,22 +60,13 @@ const TodoPage: FC = () => {
                                 }
                             />
                             <Tooltip title="Add To-Do">
-                                <IconButton
-                                    onClick={async () => {
-                                        await addTodo();
-                                    }}
-                                >
+                                <IconButton onClick={() => addTodo()}>
                                     <AddIcon />
                                 </IconButton>
                             </Tooltip>
                         </ListItem>
                     </List>
-                    <Fab
-                        color="primary"
-                        onClick={async () => {
-                            await addTodo();
-                        }}
-                    >
+                    <Fab color="primary" onClick={() => addTodo()}>
                         <AddIcon />
                     </Fab>
                     <Outlet />

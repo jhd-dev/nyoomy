@@ -530,7 +530,9 @@ export type MyTodosQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type MyTodosQuery = { __typename?: 'Query', getMyTodos: Array<{ __typename?: 'Todo', id: string, title: string, description: string, isCompleted: boolean, isArchived: boolean, repeatWeekdays: Array<Weekday>, tags: Array<{ __typename?: 'Tag', id: string, label: string, description: string, color: CategoryColor, icon?: CategoryIcon | null }> }> };
 
-export type AddTodoMutationVariables = Exact<{ [key: string]: never; }>;
+export type AddTodoMutationVariables = Exact<{
+  input: AddTodoInput;
+}>;
 
 
 export type AddTodoMutation = { __typename?: 'Mutation', addTodo?: { __typename?: 'Todo', id: string, title: string, description: string, isCompleted: boolean, isArchived: boolean, repeatWeekdays: Array<Weekday>, tags: Array<{ __typename?: 'Tag', id: string, label: string, description: string, color: CategoryColor, icon?: CategoryIcon | null }> } | null };
@@ -986,8 +988,8 @@ export function refetchMyTodosQuery(variables?: MyTodosQueryVariables) {
       return { query: MyTodosDocument, variables: variables }
     }
 export const AddTodoDocument = gql`
-    mutation AddTodo {
-  addTodo(input: {}) {
+    mutation AddTodo($input: AddTodoInput!) {
+  addTodo(input: $input) {
     id
     title
     description
@@ -1019,6 +1021,7 @@ export type AddTodoMutationFn = Apollo.MutationFunction<AddTodoMutation, AddTodo
  * @example
  * const [addTodoMutation, { data, loading, error }] = useAddTodoMutation({
  *   variables: {
+ *      input: // value for 'input'
  *   },
  * });
  */
