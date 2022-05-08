@@ -30,6 +30,7 @@ export type AddTodoInput = {
   description?: InputMaybe<Scalars['String']>;
   isArchived?: InputMaybe<Scalars['Boolean']>;
   repeatWeekdays?: InputMaybe<Array<Weekday>>;
+  tagUpdates?: InputMaybe<Array<UpdateTagInput>>;
   title?: InputMaybe<Scalars['String']>;
 };
 
@@ -93,7 +94,7 @@ export type EditFeedbackDto = {
 
 export type EditMessageInput = {
   content: Scalars['String'];
-  messageId: Scalars['Float'];
+  messageId: Scalars['String'];
 };
 
 export type FieldError = {
@@ -346,7 +347,7 @@ export type SelectionOption = {
 };
 
 export type SendMessageToChatInput = {
-  chatId: Scalars['Float'];
+  chatId: Scalars['String'];
   content: Scalars['String'];
 };
 
@@ -424,6 +425,7 @@ export type UpdateTodoInput = {
   isArchived?: InputMaybe<Scalars['Boolean']>;
   isCompleted?: InputMaybe<Scalars['Boolean']>;
   repeatWeekdays?: InputMaybe<Array<Weekday>>;
+  tagUpdates?: InputMaybe<Array<UpdateTagInput>>;
   title?: InputMaybe<Scalars['String']>;
 };
 

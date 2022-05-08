@@ -20,6 +20,7 @@ export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: Non
  * @property {string} [description]
  * @property {boolean} [isArchived]
  * @property {Array<Weekday>} [repeatWeekdays]
+ * @property {Array<UpdateTagInput>} [tagUpdates]
  * @property {string} [title]
  */
 
@@ -81,7 +82,7 @@ export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: Non
 /**
  * @typedef {Object} EditMessageInput
  * @property {string} content
- * @property {number} messageId
+ * @property {string} messageId
  */
 
 /**
@@ -234,7 +235,7 @@ export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: Non
 
 /**
  * @typedef {Object} SendMessageToChatInput
- * @property {number} chatId
+ * @property {string} chatId
  * @property {string} content
  */
 
@@ -317,6 +318,7 @@ export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: Non
  * @property {boolean} [isArchived]
  * @property {boolean} [isCompleted]
  * @property {Array<Weekday>} [repeatWeekdays]
+ * @property {Array<UpdateTagInput>} [tagUpdates]
  * @property {string} [title]
  */
 
@@ -365,6 +367,7 @@ export type AddTodoInput = {
   description?: InputMaybe<Scalars['String']>;
   isArchived?: InputMaybe<Scalars['Boolean']>;
   repeatWeekdays?: InputMaybe<Array<Weekday>>;
+  tagUpdates?: InputMaybe<Array<UpdateTagInput>>;
   title?: InputMaybe<Scalars['String']>;
 };
 
@@ -428,7 +431,7 @@ export type EditFeedbackDto = {
 
 export type EditMessageInput = {
   content: Scalars['String'];
-  messageId: Scalars['Float'];
+  messageId: Scalars['String'];
 };
 
 export type FieldError = {
@@ -681,7 +684,7 @@ export type SelectionOption = {
 };
 
 export type SendMessageToChatInput = {
-  chatId: Scalars['Float'];
+  chatId: Scalars['String'];
   content: Scalars['String'];
 };
 
@@ -759,6 +762,7 @@ export type UpdateTodoInput = {
   isArchived?: InputMaybe<Scalars['Boolean']>;
   isCompleted?: InputMaybe<Scalars['Boolean']>;
   repeatWeekdays?: InputMaybe<Array<Weekday>>;
+  tagUpdates?: InputMaybe<Array<UpdateTagInput>>;
   title?: InputMaybe<Scalars['String']>;
 };
 
