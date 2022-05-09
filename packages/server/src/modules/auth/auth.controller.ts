@@ -1,18 +1,24 @@
 import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
+import { LoggerService } from '../logger/logger.service';
 import { AuthService } from './auth.service';
 import { GqlLocalAuthGuard } from './guards/gql-local-auth.guard';
 
 @Controller('auth')
 export class AuthController {
-    public constructor(private readonly authService: AuthService) {}
+    public constructor(
+        private readonly authService: AuthService,
+        private readonly logger: LoggerService
+    ) {
+        this.logger.setContext(AuthController.name);
+    }
 
     @Get()
     @Post()
     @UseGuards(AuthGuard('google'))
     public login(): void {
-        console.log('login');
+        this.logger.log('login');
     }
 
     @Get('google')
@@ -30,8 +36,7 @@ export class AuthController {
         if (req.user == null) {
             throw new Error('no google user found in request');
         }
-        console.log(req.isAuthenticated());
-        // console.log(req.session.user?.id);
+        this.logger.log(req.isAuthenticated());
         res.redirect('/');
     }
 }

@@ -24,6 +24,8 @@ import { ChatModule } from './modules/chat/chat.module';
 import { EmailModule } from './modules/email/email.module';
 import { FeedbackModule } from './modules/feedback/feedback.module';
 import { JournalModule } from './modules/journal/journal.module';
+import { LoggerModule } from './modules/logger/logger.module';
+import { LoggerService } from './modules/logger/logger.service';
 import { REDIS } from './modules/redis/redis.constants';
 import { RedisModule } from './modules/redis/redis.module';
 import { TagModule } from './modules/tag/tag.module';
@@ -55,21 +57,35 @@ const devContentSecurityPolicy = {
         ChatModule,
         FeedbackModule,
         UserModule,
+        CaslModule,
+        LoggerModule,
         TypeOrmModule.forRoot(),
-        GraphQLModule.forRoot<ApolloDriverConfig>({
-            driver: ApolloDriver,
-            autoSchemaFile: GRAPHQL_SCHEMA_PATH,
-            sortSchema: true,
-            installSubscriptionHandlers: true,
-            path: '/graphql',
-            playground: {
-                settings: {
-                    'request.credentials': 'include',
-                    'editor.reuseHeaders': false,
+        GraphQLModule.forRootAsync<ApolloDriverConfig>({
+            imports: [LoggerModule],
+            useFactory: (
+                configService: ConfigService,
+                logger: LoggerService
+            ) => ({
+                driver: ApolloDriver,
+                autoSchemaFile: GRAPHQL_SCHEMA_PATH,
+                sortSchema: true,
+                installSubscriptionHandlers: true,
+                path: '/graphql',
+                playground: {
+                    settings: {
+                        'request.credentials': 'include',
+                        'editor.reuseHeaders': false,
+                    },
                 },
-            },
-            context: ({ req, res, user }: IContext) => ({ req, res, user }),
-            cors: { origin: 'http://localhost:4001', credentials: true },
+                context: ({ req, res, user }: IContext) => ({ req, res, user }),
+                cors: {
+                    origin: configService.get<string>('publicUri'),
+                    credentials: true,
+                },
+                logger: logger.withContext('GraphQLModule'),
+            }),
+            inject: [ConfigService, LoggerService],
+            driver: ApolloDriver,
         }),
         ServeStaticModule.forRoot({
             rootPath: STATIC_PATH,
@@ -82,19 +98,27 @@ const devContentSecurityPolicy = {
             isGlobal: true,
             cache: false,
         }),
-        CaslModule,
     ],
     controllers: [AppController],
-    providers: [AppService, Logger, ComplexityPlugin, ConfigService],
+    providers: [
+        AppService,
+        LoggerService,
+        Logger,
+        ComplexityPlugin,
+        ConfigService,
+    ],
 })
 export class AppModule implements NestModule {
     public constructor(
         @Inject(REDIS) private readonly redis: RedisClient,
-        private readonly configService: ConfigService
-    ) {}
+        private readonly configService: ConfigService,
+        private readonly logger: LoggerService
+    ) {
+        this.logger.setContext(AppModule.name);
+    }
 
     public configure(consumer: MiddlewareConsumer): void {
-        Logger.log('Configuring AppModule');
+        this.logger.log('Configuring AppModule');
         const Store = RedisStore(expressSession);
         consumer
             .apply(

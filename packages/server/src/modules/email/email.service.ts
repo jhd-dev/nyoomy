@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import nodemailer from 'nodemailer';
+import { LoggerService } from '../logger/logger.service';
 import type { Transporter } from 'nodemailer';
 import type MimeNode from 'nodemailer/lib/mime-node';
 
@@ -11,7 +12,12 @@ interface TransporterInfo {
 
 @Injectable()
 export class EmailService {
-    public constructor(private readonly configService: ConfigService) {}
+    public constructor(
+        private readonly configService: ConfigService,
+        private readonly logger: LoggerService
+    ) {
+        this.logger.setContext(EmailService.name);
+    }
 
     public async sendEmail(
         to: string,
@@ -55,10 +61,6 @@ export class EmailService {
             throw new Error('Invalid mail info object.');
         }
 
-        console.log('Message sent: %s', info.messageId);
-
-        // Preview only available when sending through an Ethereal account
-        // console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-        // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+        this.logger.log('Message sent: %s', info.messageId);
     }
 }

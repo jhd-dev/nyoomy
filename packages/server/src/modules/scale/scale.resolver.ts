@@ -6,12 +6,18 @@ import { Scale } from '../../entities/scale.entity';
 import { UpdateScaleInput } from '../../types/inputs/update-scale.input';
 import { IContext } from '../../types/interfaces/context.interface';
 import { ScaleResponse } from '../../types/responses/scale.model';
+import { LoggerService } from '../logger/logger.service';
 import { ScaleService } from './scale.service';
 
 @Injectable()
 @Resolver(() => Scale)
 export class ScaleResolver {
-    public constructor(private readonly scaleService: ScaleService) {}
+    public constructor(
+        private readonly scaleService: ScaleService,
+        private readonly logger: LoggerService
+    ) {
+        this.logger.setContext(ScaleResolver.name);
+    }
 
     @Query(() => [ScaleResponse])
     public getAllScales(
@@ -50,7 +56,7 @@ export class ScaleResolver {
         try {
             return await this.scaleService.updateScale(updateInput);
         } catch (err: unknown) {
-            console.error(err);
+            this.logger.error(err);
             return null;
         }
     }
@@ -63,7 +69,7 @@ export class ScaleResolver {
             await this.scaleService.deleteScale(id);
             return true;
         } catch (err: unknown) {
-            console.error(err);
+            this.logger.error(err);
             return false;
         }
     }

@@ -6,6 +6,8 @@ import { CaslAbilityFactory } from '../casl/casl-ability.factory';
 import { CaslModule } from '../casl/casl.module';
 import { EmailModule } from '../email/email.module';
 import { EmailService } from '../email/email.service';
+import { LoggerModule } from '../logger/logger.module';
+import { LoggerService } from '../logger/logger.service';
 import { Profile } from '../user/models/profile.entity';
 import { UserSettings } from '../user/models/user-settings.entity';
 import { User } from '../user/models/user.entity';
@@ -29,6 +31,7 @@ import { LocalStrategy } from './providers/strategies/local.strategy';
         TypeOrmModule.forFeature([User, Profile, UserSettings]),
         CaslModule,
         EmailModule,
+        LoggerModule,
     ],
     providers: [
         AuthResolver,
@@ -41,6 +44,7 @@ import { LocalStrategy } from './providers/strategies/local.strategy';
         UserRepo,
         CaslAbilityFactory,
         EmailService,
+        LoggerService,
     ],
     controllers: [AuthController],
     exports: [AuthService],

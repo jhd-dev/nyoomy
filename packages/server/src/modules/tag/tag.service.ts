@@ -9,6 +9,7 @@ import type { User } from '../user/models/user.entity';
 import type { AddTagInput } from './dto/add-tag.input';
 import type { UpdateTagInput } from './dto/update-tag.input';
 import { CategoryColor } from '../../types/enums/category-color.enum';
+import { LoggerService } from '../logger/logger.service';
 
 @Injectable()
 export class TagService {
@@ -17,8 +18,11 @@ export class TagService {
         private readonly tagRepo: Repository<Tag>,
         @InjectRepository(Taggable)
         private readonly taggableRepo: Repository<Taggable>,
-        private readonly caslAbilityFactory: CaslAbilityFactory
-    ) {}
+        private readonly caslAbilityFactory: CaslAbilityFactory,
+        private readonly logger: LoggerService
+    ) {
+        this.logger.setContext(TagService.name);
+    }
 
     public getUserTags(
         userId: string,
@@ -81,7 +85,6 @@ export class TagService {
         user: User,
         updateInput: UpdateTagInput
     ): Promise<Tag> {
-        console.log('updateTag');
         const tag = await this.tagRepo.findOneOrFail(updateInput.id, {
             relations: ['user'],
         });
@@ -156,13 +159,12 @@ export class TagService {
             }
             return null;
         } catch (err: unknown) {
-            console.error(err);
+            this.logger.error(err);
             return null;
         }
     }
 
     public async deleteTag(user: User, id: string): Promise<void> {
-        console.log('delete-Tag');
         const tag = await this.tagRepo.findOneOrFail(id, {
             relations: ['user'],
         });

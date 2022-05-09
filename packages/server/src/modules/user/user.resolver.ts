@@ -6,6 +6,7 @@ import { COOKIE_NAME } from '@nyoomy/global';
 import { CurrentUser } from '../../common/decorators/user.decorator';
 import { IContext } from '../../types/interfaces/context.interface';
 import { AuthenticatedGuard } from '../auth/guards/authenticated.guard';
+import { LoggerService } from '../logger/logger.service';
 import { UpdatePasswordInput } from './dto/update-password.input';
 import { User } from './models/user.entity';
 import { UserService } from './user.service';
@@ -16,7 +17,12 @@ import { UserService } from './user.service';
 @Injectable()
 @Resolver(() => User)
 export class UserResolver {
-    public constructor(private readonly userService: UserService) {}
+    public constructor(
+        private readonly userService: UserService,
+        private readonly logger: LoggerService
+    ) {
+        this.logger.setContext(UserResolver.name);
+    }
 
     @Query(() => [User], { nullable: true, name: 'users' })
     @UseGuards(AuthenticatedGuard)
@@ -30,16 +36,6 @@ export class UserResolver {
         Logger.log(user);
         return user;
     }
-
-    // @Mutation(() => RegistrationResponse)
-    // public addDummyUser(): Promise<RegistrationResponse> {
-    //     return this.registerUser({
-    //         displayName: 'q',
-    //         email: 'q@q.com',
-    //         username: 'q',
-    //         password: 'qqqqqqqq',
-    //     });
-    // }
 
     @Mutation(() => Boolean)
     public async deleteUserById(
@@ -63,7 +59,7 @@ export class UserResolver {
             res.clearCookie(COOKIE_NAME);
             return true;
         } catch (err: unknown) {
-            console.error(err);
+            this.logger.error(err);
             return false;
         }
     }
@@ -81,9 +77,8 @@ export class UserResolver {
             );
             return true;
         } catch (err: unknown) {
-            console.error(err);
+            this.logger.error(err);
             return false;
         }
     }
 }
-/* eslint-enable @typescript-eslint/no-unsafe-return */

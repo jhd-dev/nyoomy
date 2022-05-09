@@ -4,6 +4,7 @@ import { Resolver, Mutation, Args, Query, ID } from '@nestjs/graphql';
 import { CurrentUser } from '../../common/decorators/user.decorator';
 import { Tag } from '../../entities';
 import { AuthenticatedGuard } from '../auth/guards/authenticated.guard';
+import { LoggerService } from '../logger/logger.service';
 import { User } from '../user/models/user.entity';
 import { AddTagInput } from './dto/add-tag.input';
 import { UpdateTagInput } from './dto/update-tag.input';
@@ -12,7 +13,12 @@ import { TagService } from './tag.service';
 @Injectable()
 @Resolver(() => Tag)
 export class TagResolver {
-    public constructor(private readonly tagService: TagService) {}
+    public constructor(
+        private readonly tagService: TagService,
+        private readonly logger: LoggerService
+    ) {
+        this.logger.setContext(TagResolver.name);
+    }
 
     @Query(() => [Tag], { name: 'myTags' })
     @UseGuards(AuthenticatedGuard)
@@ -38,7 +44,7 @@ export class TagResolver {
         try {
             return await this.tagService.updateTag(user, updateInput);
         } catch (err: unknown) {
-            console.error(err);
+            this.logger.error(err);
             return null;
         }
     }
@@ -53,7 +59,7 @@ export class TagResolver {
             await this.tagService.deleteTag(user, id);
             return true;
         } catch (err: unknown) {
-            console.error(err);
+            this.logger.error(err);
             return false;
         }
     }
@@ -68,7 +74,7 @@ export class TagResolver {
         try {
             return await this.tagService.applyTag(user, tagId, taggableId);
         } catch (err: unknown) {
-            console.error(err);
+            this.logger.error(err);
             return null;
         }
     }

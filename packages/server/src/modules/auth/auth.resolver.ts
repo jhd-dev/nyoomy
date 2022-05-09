@@ -4,6 +4,7 @@ import { UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
 import { COOKIE_NAME } from '../../constants';
 import { IContext } from '../../types/interfaces/context.interface';
+import { LoggerService } from '../logger/logger.service';
 import { AuthService } from './auth.service';
 import { UserLoginInput } from './dto/login.input';
 import { RegisterUserInput } from './dto/register.input';
@@ -13,7 +14,12 @@ import { RegistrationResponse } from './models/registration-response.model';
 
 @Resolver()
 export class AuthResolver {
-    public constructor(private readonly authService: AuthService) {}
+    public constructor(
+        private readonly authService: AuthService,
+        private readonly logger: LoggerService
+    ) {
+        this.logger.setContext(AuthResolver.name);
+    }
 
     @Mutation(() => LoginResponse, { nullable: true })
     @UseGuards(GqlLocalAuthGuard)
@@ -31,7 +37,7 @@ export class AuthResolver {
             req.session.destroy((err: unknown): void => {
                 res.clearCookie(COOKIE_NAME);
                 if (err != null) {
-                    console.error(err);
+                    this.logger.error(err);
                     reject(new Error(String(err)));
                 }
                 resolve(true);

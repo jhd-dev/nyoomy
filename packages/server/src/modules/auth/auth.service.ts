@@ -57,7 +57,6 @@ export class AuthService implements IAuthService {
         usernameOrEmail: string,
         passwordInput: string
     ): Promise<User | null> {
-        console.log('authservice.validatecredentials');
         const user = await this.userService.findByCredentials(usernameOrEmail);
         if (user === undefined) {
             return null;

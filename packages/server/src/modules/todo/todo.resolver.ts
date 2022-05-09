@@ -3,6 +3,7 @@ import { Injectable, UseGuards } from '@nestjs/common';
 import { Resolver, Mutation, Args, Query, ID } from '@nestjs/graphql';
 import { CurrentUser } from '../../common/decorators/user.decorator';
 import { AuthenticatedGuard } from '../auth/guards/authenticated.guard';
+import { LoggerService } from '../logger/logger.service';
 import { User } from '../user/models/user.entity';
 import { AddTodoInput } from './dto/add-todo.input';
 import { UpdateTodoInput } from './dto/update-todo.input';
@@ -12,7 +13,12 @@ import { TodoService } from './todo.service';
 @Injectable()
 @Resolver(() => Todo)
 export class TodoResolver {
-    public constructor(private readonly todoService: TodoService) {}
+    public constructor(
+        private readonly todoService: TodoService,
+        private readonly logger: LoggerService
+    ) {
+        this.logger.setContext(TodoResolver.name);
+    }
 
     @Query(() => [Todo], { name: 'getMyTodos' })
     @UseGuards(AuthenticatedGuard)
@@ -57,7 +63,7 @@ export class TodoResolver {
         try {
             return await this.todoService.updateTodo(updateInput, user);
         } catch (err: unknown) {
-            console.error(err);
+            this.logger.error(err);
             return null;
         }
     }
@@ -72,7 +78,7 @@ export class TodoResolver {
             await this.todoService.deleteTodo(user, id);
             return true;
         } catch (err: unknown) {
-            console.error(err);
+            this.logger.error(err);
             return false;
         }
     }

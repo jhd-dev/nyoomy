@@ -3,12 +3,15 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { LoggerService } from './modules/logger/logger.service';
 import type { HttpServer } from '@nestjs/common';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(AppModule, {
         cors: true,
+        bufferLogs: true,
+        logger: new LoggerService(bootstrap.name),
     });
     const logger = app.get(Logger);
     const port = app.get(ConfigService).get<number>('port', 4000);
@@ -19,7 +22,7 @@ async function bootstrap() {
     logger.log(`Server listening on port ${port} at ${await app.getUrl()}.`);
 
     process.on('SIGTERM', () => {
-        logger.log('SIGTERM signal recieved; closing HTTP server.');
+        logger.log('SIGTERM signal received; closing HTTP server.');
         server.close();
     });
 }
