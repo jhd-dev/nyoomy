@@ -1,10 +1,12 @@
 import type { FC } from 'react';
 import React from 'react';
-import { Edit as EditIcon } from '@mui/icons-material';
+import { Edit as EditIcon, Tag as TagIcon } from '@mui/icons-material';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
+import Tooltip from '@mui/material/Tooltip';
+import type { Tag } from '@nyoomy/graphql';
 import { Link } from 'react-router-dom';
 
 interface ITodoItemProps {
@@ -12,6 +14,7 @@ interface ITodoItemProps {
     title: string;
     description: string;
     isCompleted: boolean;
+    tags: Array<Omit<Tag, 'user' | 'isArchived'>>;
 }
 
 const TodoItem: FC<ITodoItemProps> = ({
@@ -19,15 +22,25 @@ const TodoItem: FC<ITodoItemProps> = ({
     title,
     description,
     isCompleted,
+    tags,
 }) => (
     <ListItem key={todoId}>
         <Checkbox checked={isCompleted} />
         <ListItemText primary={title} secondary={description} />
-        <Link to={`/todo/${String(todoId)}`}>
-            <IconButton color="info">
-                <EditIcon />
-            </IconButton>
-        </Link>
+        {tags.length > 0 && (
+            <Tooltip title={tags.map((tag) => tag.label).join(', ')}>
+                <IconButton color="info">
+                    <TagIcon />
+                </IconButton>
+            </Tooltip>
+        )}
+        <Tooltip title="Edit To-do">
+            <Link to={`/todo/${String(todoId)}`}>
+                <IconButton color="secondary">
+                    <EditIcon />
+                </IconButton>
+            </Link>
+        </Tooltip>
     </ListItem>
 );
 
