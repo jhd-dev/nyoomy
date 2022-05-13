@@ -148,6 +148,7 @@ type Mutation {
   sendFeedback(input: CreateFeedbackInput!): EditFeedbackDto!
   sendMessageToChat(input: SendMessageToChatInput!): Message
   sendMessageToUser(input: SendMessageToUserInput!): Message
+  updateSettings(input: UpdateUserSettingsInput!): UserSettingsDto
   updateTag(updateInput: UpdateTagInput!): Tag
   updateTodo(updateInput: UpdateTodoInput!): Todo
   updateUserPassword(input: UpdatePasswordInput!): Boolean!
@@ -158,6 +159,7 @@ type Query {
   getTodo(id: String!): [Todo!]!
   me: User
   myChats(excludeArchived: Boolean!): [Chat!]!
+  mySettings: UserSettingsDto
   myTags: [Tag!]!
   users: [User!]
 }
@@ -254,6 +256,15 @@ input TaggableInput {
   id: ID!
 }
 
+"""The visual themes that can be used to style the app"""
+enum ThemePreference {
+  DARK
+  DEVICE
+  HIGH_CONTRAST
+  LIGHT
+  OLED
+}
+
 type TimerMetric {
   goalLength: Int!
   goalPerDay: Int!
@@ -304,6 +315,10 @@ input UpdateTodoInput {
   title: String
 }
 
+input UpdateUserSettingsInput {
+  _placeholderField: String
+}
+
 """Centralized user reference"""
 type User {
   createdAt: DateTime!
@@ -318,6 +333,19 @@ type User {
 input UserLoginInput {
   passwordInput: String!
   usernameOrEmail: String!
+}
+
+"""Users' settings and preferences"""
+type UserSettingsDto {
+  audioEnabled: Boolean!
+  globalVolume: Int!
+  id: ID!
+  isPublic: Boolean!
+  language: String!
+  pin: String
+  pinTimeout: Int
+  themePreference: ThemePreference!
+  user: SafeUser!
 }
 
 """The days of the week"""

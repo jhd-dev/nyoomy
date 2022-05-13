@@ -10,6 +10,8 @@ import { UserSettings } from './models/user-settings.entity';
 import { User } from './models/user.entity';
 import { UserRepo } from './user.repository';
 import type { RegisterUserInput } from '../auth/dto/register.input';
+import type { UpdateUserSettingsInput } from './dto/update-user-settings.input';
+import type { UserSettingsDto } from './dto/user-settings.dto';
 import type { IUser } from './interfaces/user.interface';
 
 @Injectable()
@@ -149,6 +151,31 @@ export class UserService {
     public async deleteById(userId: string): Promise<void> {
         const user = await this.userRepo.findOneOrFail(userId);
         await this.userRepo.delete(user);
+    }
+
+    public async getUserSettings(user: User): Promise<UserSettingsDto> {
+        const settings = await this.userSettingsRepo.findOneOrFail(
+            { user: { id: user.id } },
+            { relations: ['user'] }
+        );
+        return { ...settings, user: { ...settings.user, password: undefined } };
+    }
+
+    public async updateUserSettings(
+        user: User,
+        updateInput: UpdateUserSettingsInput
+    ): Promise<UserSettingsDto> {
+        const settings = await this.userSettingsRepo.findOneOrFail(
+            { user: { id: user.id } },
+            { relations: ['user'] }
+        );
+        settings.language = updateInput.language ?? settings.language;
+        settings.themePreference =
+            updateInput.themePreference ?? settings.themePreference;
+        settings.pin = updateInput.pin ?? settings.pin;
+        settings.pinTimeout = updateInput.pinTimeout ?? settings.pinTimeout;
+        await this.userSettingsRepo.save(settings);
+        return this.getUserSettings(user);
     }
 
     // private async validateRegistration({

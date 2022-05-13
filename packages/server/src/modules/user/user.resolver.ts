@@ -8,6 +8,8 @@ import { IContext } from '../../types/interfaces/context.interface';
 import { AuthenticatedGuard } from '../auth/guards/authenticated.guard';
 import { LoggerService } from '../logger/logger.service';
 import { UpdatePasswordInput } from './dto/update-password.input';
+import { UpdateUserSettingsInput } from './dto/update-user-settings.input';
+import { UserSettingsDto } from './dto/user-settings.dto';
 import { User } from './models/user.entity';
 import { UserService } from './user.service';
 
@@ -80,5 +82,22 @@ export class UserResolver {
             this.logger.error(err);
             return false;
         }
+    }
+
+    @Query(() => UserSettingsDto, { nullable: true, name: 'mySettings' })
+    @UseGuards(AuthenticatedGuard)
+    public getCurrentUserSettings(
+        @CurrentUser() user: User
+    ): Promise<UserSettingsDto> {
+        return this.userService.getUserSettings(user);
+    }
+
+    @Mutation(() => UserSettingsDto, { nullable: true, name: 'updateSettings' })
+    @UseGuards(AuthenticatedGuard)
+    public updateUserSettings(
+        @Args('input') input: UpdateUserSettingsInput,
+        @CurrentUser() user: User
+    ): Promise<UserSettingsDto> {
+        return this.userService.updateUserSettings(user, input);
     }
 }

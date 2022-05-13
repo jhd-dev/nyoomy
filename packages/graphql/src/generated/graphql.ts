@@ -147,6 +147,7 @@ export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: Non
  * @property {EditFeedbackDto} sendFeedback
  * @property {Message} [sendMessageToChat]
  * @property {Message} [sendMessageToUser]
+ * @property {UserSettingsDto} [updateSettings]
  * @property {Tag} [updateTag]
  * @property {Todo} [updateTodo]
  * @property {boolean} updateUserPassword
@@ -158,6 +159,7 @@ export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: Non
  * @property {Array<Todo>} getTodo
  * @property {User} [me]
  * @property {Array<Chat>} myChats
+ * @property {UserSettingsDto} [mySettings]
  * @property {Array<Tag>} myTags
  * @property {Array<User>} [users]
  */
@@ -268,6 +270,11 @@ export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: Non
  */
 
 /**
+ * The visual themes that can be used to style the app
+ * @typedef {("DARK"|"DEVICE"|"HIGH_CONTRAST"|"LIGHT"|"OLED")} ThemePreference
+ */
+
+/**
  * @typedef {Object} TimerMetric
  * @property {number} goalLength
  * @property {number} goalPerDay
@@ -323,6 +330,11 @@ export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: Non
  */
 
 /**
+ * @typedef {Object} UpdateUserSettingsInput
+ * @property {string} [_placeholderField]
+ */
+
+/**
  * Centralized user reference
  * @typedef {Object} User
  * @property {DateTime} createdAt
@@ -338,6 +350,20 @@ export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: Non
  * @typedef {Object} UserLoginInput
  * @property {string} passwordInput
  * @property {string} usernameOrEmail
+ */
+
+/**
+ * Users' settings and preferences
+ * @typedef {Object} UserSettingsDto
+ * @property {boolean} audioEnabled
+ * @property {number} globalVolume
+ * @property {string} id
+ * @property {boolean} isPublic
+ * @property {string} language
+ * @property {string} [pin]
+ * @property {number} [pinTimeout]
+ * @property {ThemePreference} themePreference
+ * @property {SafeUser} user
  */
 
 /**
@@ -502,6 +528,7 @@ export type Mutation = {
   sendFeedback: EditFeedbackDto;
   sendMessageToChat?: Maybe<Message>;
   sendMessageToUser?: Maybe<Message>;
+  updateSettings?: Maybe<UserSettingsDto>;
   updateTag?: Maybe<Tag>;
   updateTodo?: Maybe<Todo>;
   updateUserPassword: Scalars['Boolean'];
@@ -574,6 +601,11 @@ export type MutationSendMessageToUserArgs = {
 };
 
 
+export type MutationUpdateSettingsArgs = {
+  input: UpdateUserSettingsInput;
+};
+
+
 export type MutationUpdateTagArgs = {
   updateInput: UpdateTagInput;
 };
@@ -594,6 +626,7 @@ export type Query = {
   getTodo: Array<Todo>;
   me?: Maybe<User>;
   myChats: Array<Chat>;
+  mySettings?: Maybe<UserSettingsDto>;
   myTags: Array<Tag>;
   users?: Maybe<Array<User>>;
 };
@@ -714,6 +747,15 @@ export type TaggableInput = {
   id: Scalars['ID'];
 };
 
+/** The visual themes that can be used to style the app */
+export enum ThemePreference {
+  Dark = 'DARK',
+  Device = 'DEVICE',
+  HighContrast = 'HIGH_CONTRAST',
+  Light = 'LIGHT',
+  Oled = 'OLED'
+}
+
 export type TimerMetric = {
   __typename?: 'TimerMetric';
   goalLength: Scalars['Int'];
@@ -766,6 +808,10 @@ export type UpdateTodoInput = {
   title?: InputMaybe<Scalars['String']>;
 };
 
+export type UpdateUserSettingsInput = {
+  _placeholderField?: InputMaybe<Scalars['String']>;
+};
+
 /** Centralized user reference */
 export type User = {
   __typename?: 'User';
@@ -781,6 +827,20 @@ export type User = {
 export type UserLoginInput = {
   passwordInput: Scalars['String'];
   usernameOrEmail: Scalars['String'];
+};
+
+/** Users' settings and preferences */
+export type UserSettingsDto = {
+  __typename?: 'UserSettingsDto';
+  audioEnabled: Scalars['Boolean'];
+  globalVolume: Scalars['Int'];
+  id: Scalars['ID'];
+  isPublic: Scalars['Boolean'];
+  language: Scalars['String'];
+  pin?: Maybe<Scalars['String']>;
+  pinTimeout?: Maybe<Scalars['Int']>;
+  themePreference: ThemePreference;
+  user: SafeUser;
 };
 
 /** The days of the week */
@@ -912,6 +972,18 @@ export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
 export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
 
+export type MySettingsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MySettingsQuery = { __typename?: 'Query', mySettings?: { __typename?: 'UserSettingsDto', language: string, themePreference: ThemePreference, audioEnabled: boolean, globalVolume: number, pin?: string | null, pinTimeout?: number | null, isPublic: boolean } | null };
+
+export type UpdateSettingsMutationVariables = Exact<{
+  input: UpdateUserSettingsInput;
+}>;
+
+
+export type UpdateSettingsMutation = { __typename?: 'Mutation', updateSettings?: { __typename?: 'UserSettingsDto', language: string, themePreference: ThemePreference, audioEnabled: boolean, globalVolume: number, pin?: string | null, pinTimeout?: number | null, isPublic: boolean } | null };
+
 
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -1018,13 +1090,16 @@ export type ResolversTypes = {
   Tag: ResolverTypeWrapper<Tag>;
   Taggable: ResolverTypeWrapper<Taggable>;
   TaggableInput: TaggableInput;
+  ThemePreference: ThemePreference;
   TimerMetric: ResolverTypeWrapper<TimerMetric>;
   Todo: ResolverTypeWrapper<Todo>;
   UpdatePasswordInput: UpdatePasswordInput;
   UpdateTagInput: UpdateTagInput;
   UpdateTodoInput: UpdateTodoInput;
+  UpdateUserSettingsInput: UpdateUserSettingsInput;
   User: ResolverTypeWrapper<User>;
   UserLoginInput: UserLoginInput;
+  UserSettingsDto: ResolverTypeWrapper<UserSettingsDto>;
   Weekday: Weekday;
 };
 
@@ -1069,8 +1144,10 @@ export type ResolversParentTypes = {
   UpdatePasswordInput: UpdatePasswordInput;
   UpdateTagInput: UpdateTagInput;
   UpdateTodoInput: UpdateTodoInput;
+  UpdateUserSettingsInput: UpdateUserSettingsInput;
   User: User;
   UserLoginInput: UserLoginInput;
+  UserSettingsDto: UserSettingsDto;
 };
 
 export type ChatResolvers<ContextType = any, ParentType extends ResolversParentTypes['Chat'] = ResolversParentTypes['Chat']> = {
@@ -1165,6 +1242,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   sendFeedback?: Resolver<ResolversTypes['EditFeedbackDto'], ParentType, ContextType, RequireFields<MutationSendFeedbackArgs, 'input'>>;
   sendMessageToChat?: Resolver<Maybe<ResolversTypes['Message']>, ParentType, ContextType, RequireFields<MutationSendMessageToChatArgs, 'input'>>;
   sendMessageToUser?: Resolver<Maybe<ResolversTypes['Message']>, ParentType, ContextType, RequireFields<MutationSendMessageToUserArgs, 'input'>>;
+  updateSettings?: Resolver<Maybe<ResolversTypes['UserSettingsDto']>, ParentType, ContextType, RequireFields<MutationUpdateSettingsArgs, 'input'>>;
   updateTag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<MutationUpdateTagArgs, 'updateInput'>>;
   updateTodo?: Resolver<Maybe<ResolversTypes['Todo']>, ParentType, ContextType, RequireFields<MutationUpdateTodoArgs, 'updateInput'>>;
   updateUserPassword?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationUpdateUserPasswordArgs, 'input'>>;
@@ -1175,6 +1253,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getTodo?: Resolver<Array<ResolversTypes['Todo']>, ParentType, ContextType, RequireFields<QueryGetTodoArgs, 'id'>>;
   me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   myChats?: Resolver<Array<ResolversTypes['Chat']>, ParentType, ContextType, RequireFields<QueryMyChatsArgs, 'excludeArchived'>>;
+  mySettings?: Resolver<Maybe<ResolversTypes['UserSettingsDto']>, ParentType, ContextType>;
   myTags?: Resolver<Array<ResolversTypes['Tag']>, ParentType, ContextType>;
   users?: Resolver<Maybe<Array<ResolversTypes['User']>>, ParentType, ContextType>;
 };
@@ -1290,6 +1369,19 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UserSettingsDtoResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserSettingsDto'] = ResolversParentTypes['UserSettingsDto']> = {
+  audioEnabled?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  globalVolume?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  isPublic?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  language?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  pin?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  pinTimeout?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  themePreference?: Resolver<ResolversTypes['ThemePreference'], ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['SafeUser'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type Resolvers<ContextType = any> = {
   Chat?: ChatResolvers<ContextType>;
   CounterMetric?: CounterMetricResolvers<ContextType>;
@@ -1315,5 +1407,6 @@ export type Resolvers<ContextType = any> = {
   TimerMetric?: TimerMetricResolvers<ContextType>;
   Todo?: TodoResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
+  UserSettingsDto?: UserSettingsDtoResolvers<ContextType>;
 };
 

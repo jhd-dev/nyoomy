@@ -1,4 +1,3 @@
-import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 import {
     Column,
     Entity,
@@ -13,34 +12,32 @@ import { User } from './user.entity';
 import type { IUserSettings } from '../interfaces/user-settings.interface';
 
 @Entity('user_settings')
-@ObjectType("Users' settings and preferences")
 export class UserSettings implements IUserSettings {
-    @PrimaryGeneratedColumn('increment')
-    @Field(() => ID)
+    @PrimaryGeneratedColumn()
     public readonly id: string;
 
     @OneToOne(() => User, { eager: true, cascade: true, onDelete: 'CASCADE' })
     @JoinColumn()
-    @Field(() => User)
     public readonly user!: User;
 
     @Column('varchar', { default: 'en_US', length: 35 })
-    @Field()
     public language!: string;
 
     @Column('enum', { enum: themePreferences, default: ThemePreference.DEVICE })
-    @Field(() => ThemePreference)
     public themePreference!: ThemePreference;
 
+    @Column('bool', { default: true })
+    public audioEnabled: boolean;
+
+    @Column('smallint', { default: 100 })
+    public globalVolume: number;
+
     @Column('varchar', { length: 4, nullable: true })
-    @Field({ nullable: true })
     public pin?: string;
 
     @Column('smallint', { nullable: true })
-    @Field(() => Int, { nullable: true })
     public pinTimeout?: number;
 
-    @Column('boolean', { default: true })
-    @Field()
+    @Column('bool', { default: true })
     public isPublic!: boolean;
 }

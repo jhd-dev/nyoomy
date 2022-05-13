@@ -165,6 +165,7 @@ export type Mutation = {
   sendFeedback: EditFeedbackDto;
   sendMessageToChat?: Maybe<Message>;
   sendMessageToUser?: Maybe<Message>;
+  updateSettings?: Maybe<UserSettingsDto>;
   updateTag?: Maybe<Tag>;
   updateTodo?: Maybe<Todo>;
   updateUserPassword: Scalars['Boolean'];
@@ -237,6 +238,11 @@ export type MutationSendMessageToUserArgs = {
 };
 
 
+export type MutationUpdateSettingsArgs = {
+  input: UpdateUserSettingsInput;
+};
+
+
 export type MutationUpdateTagArgs = {
   updateInput: UpdateTagInput;
 };
@@ -257,6 +263,7 @@ export type Query = {
   getTodo: Array<Todo>;
   me?: Maybe<User>;
   myChats: Array<Chat>;
+  mySettings?: Maybe<UserSettingsDto>;
   myTags: Array<Tag>;
   users?: Maybe<Array<User>>;
 };
@@ -377,6 +384,15 @@ export type TaggableInput = {
   id: Scalars['ID'];
 };
 
+/** The visual themes that can be used to style the app */
+export enum ThemePreference {
+  Dark = 'DARK',
+  Device = 'DEVICE',
+  HighContrast = 'HIGH_CONTRAST',
+  Light = 'LIGHT',
+  Oled = 'OLED'
+}
+
 export type TimerMetric = {
   __typename?: 'TimerMetric';
   goalLength: Scalars['Int'];
@@ -429,6 +445,10 @@ export type UpdateTodoInput = {
   title?: InputMaybe<Scalars['String']>;
 };
 
+export type UpdateUserSettingsInput = {
+  _placeholderField?: InputMaybe<Scalars['String']>;
+};
+
 /** Centralized user reference */
 export type User = {
   __typename?: 'User';
@@ -444,6 +464,20 @@ export type User = {
 export type UserLoginInput = {
   passwordInput: Scalars['String'];
   usernameOrEmail: Scalars['String'];
+};
+
+/** Users' settings and preferences */
+export type UserSettingsDto = {
+  __typename?: 'UserSettingsDto';
+  audioEnabled: Scalars['Boolean'];
+  globalVolume: Scalars['Int'];
+  id: Scalars['ID'];
+  isPublic: Scalars['Boolean'];
+  language: Scalars['String'];
+  pin?: Maybe<Scalars['String']>;
+  pinTimeout?: Maybe<Scalars['Int']>;
+  themePreference: ThemePreference;
+  user: SafeUser;
 };
 
 /** The days of the week */
@@ -574,6 +608,18 @@ export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
 
 export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
+
+export type MySettingsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MySettingsQuery = { __typename?: 'Query', mySettings?: { __typename?: 'UserSettingsDto', language: string, themePreference: ThemePreference, audioEnabled: boolean, globalVolume: number, pin?: string | null, pinTimeout?: number | null, isPublic: boolean } | null };
+
+export type UpdateSettingsMutationVariables = Exact<{
+  input: UpdateUserSettingsInput;
+}>;
+
+
+export type UpdateSettingsMutation = { __typename?: 'Mutation', updateSettings?: { __typename?: 'UserSettingsDto', language: string, themePreference: ThemePreference, audioEnabled: boolean, globalVolume: number, pin?: string | null, pinTimeout?: number | null, isPublic: boolean } | null };
 
 
 export const MyChatsDocument = gql`
@@ -1241,3 +1287,85 @@ export function useLogoutMutation(baseOptions?: Apollo.MutationHookOptions<Logou
 export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
 export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
 export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
+export const MySettingsDocument = gql`
+    query MySettings {
+  mySettings {
+    language
+    themePreference
+    audioEnabled
+    globalVolume
+    pin
+    pinTimeout
+    isPublic
+  }
+}
+    `;
+
+/**
+ * __useMySettingsQuery__
+ *
+ * To run a query within a React component, call `useMySettingsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMySettingsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMySettingsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMySettingsQuery(baseOptions?: Apollo.QueryHookOptions<MySettingsQuery, MySettingsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MySettingsQuery, MySettingsQueryVariables>(MySettingsDocument, options);
+      }
+export function useMySettingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MySettingsQuery, MySettingsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MySettingsQuery, MySettingsQueryVariables>(MySettingsDocument, options);
+        }
+export type MySettingsQueryHookResult = ReturnType<typeof useMySettingsQuery>;
+export type MySettingsLazyQueryHookResult = ReturnType<typeof useMySettingsLazyQuery>;
+export type MySettingsQueryResult = Apollo.QueryResult<MySettingsQuery, MySettingsQueryVariables>;
+export function refetchMySettingsQuery(variables?: MySettingsQueryVariables) {
+      return { query: MySettingsDocument, variables: variables }
+    }
+export const UpdateSettingsDocument = gql`
+    mutation UpdateSettings($input: UpdateUserSettingsInput!) {
+  updateSettings(input: $input) {
+    language
+    themePreference
+    audioEnabled
+    globalVolume
+    pin
+    pinTimeout
+    isPublic
+  }
+}
+    `;
+export type UpdateSettingsMutationFn = Apollo.MutationFunction<UpdateSettingsMutation, UpdateSettingsMutationVariables>;
+
+/**
+ * __useUpdateSettingsMutation__
+ *
+ * To run a mutation, you first call `useUpdateSettingsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSettingsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSettingsMutation, { data, loading, error }] = useUpdateSettingsMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateSettingsMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSettingsMutation, UpdateSettingsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateSettingsMutation, UpdateSettingsMutationVariables>(UpdateSettingsDocument, options);
+      }
+export type UpdateSettingsMutationHookResult = ReturnType<typeof useUpdateSettingsMutation>;
+export type UpdateSettingsMutationResult = Apollo.MutationResult<UpdateSettingsMutation>;
+export type UpdateSettingsMutationOptions = Apollo.BaseMutationOptions<UpdateSettingsMutation, UpdateSettingsMutationVariables>;

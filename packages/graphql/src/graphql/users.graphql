@@ -27,3 +27,27 @@ mutation Login($input: UserLoginInput!) {
 mutation Logout {
     logout
 }
+
+query MySettings {
+    mySettings {
+        language
+        themePreference
+        audioEnabled
+        globalVolume
+        pin
+        pinTimeout
+        isPublic
+    }
+}
+
+mutation UpdateSettings($input: UpdateUserSettingsInput!) {
+    updateSettings(input: $input) {
+        language
+        themePreference
+        audioEnabled
+        globalVolume
+        pin
+        pinTimeout
+        isPublic
+    }
+}
