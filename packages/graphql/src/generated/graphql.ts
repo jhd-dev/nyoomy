@@ -331,7 +331,14 @@ export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: Non
 
 /**
  * @typedef {Object} UpdateUserSettingsInput
- * @property {string} [_placeholderField]
+ * @property {boolean} [audioEnabled]
+ * @property {number} [globalVolume]
+ * @property {string} [id]
+ * @property {boolean} [isPublic]
+ * @property {string} [language]
+ * @property {string} [pin]
+ * @property {number} [pinTimeout]
+ * @property {ThemePreference} [themePreference]
  */
 
 /**
@@ -809,7 +816,14 @@ export type UpdateTodoInput = {
 };
 
 export type UpdateUserSettingsInput = {
-  _placeholderField?: InputMaybe<Scalars['String']>;
+  audioEnabled?: InputMaybe<Scalars['Boolean']>;
+  globalVolume?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['ID']>;
+  isPublic?: InputMaybe<Scalars['Boolean']>;
+  language?: InputMaybe<Scalars['String']>;
+  pin?: InputMaybe<Scalars['String']>;
+  pinTimeout?: InputMaybe<Scalars['Int']>;
+  themePreference?: InputMaybe<ThemePreference>;
 };
 
 /** Centralized user reference */

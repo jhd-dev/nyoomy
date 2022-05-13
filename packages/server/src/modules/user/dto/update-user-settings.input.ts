@@ -1,8 +1,8 @@
-import { Field, InputType, PartialType } from '@nestjs/graphql';
+import { InputType, OmitType, PartialType } from '@nestjs/graphql';
 import { UserSettingsDto } from './user-settings.dto';
 
 @InputType()
-export class UpdateUserSettingsInput extends PartialType(UserSettingsDto) {
-    @Field({ nullable: true })
-    public _placeholderField?: string;
-}
+export class UpdateUserSettingsInput extends PartialType(
+    OmitType(UserSettingsDto, ['user'] as const),
+    InputType
+) {}

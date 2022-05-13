@@ -169,11 +169,19 @@ export class UserService {
             { user: { id: user.id } },
             { relations: ['user'] }
         );
+        console.log('settings');
+        console.log(settings);
+        console.log('updateInputLog');
+        console.log(updateInput);
         settings.language = updateInput.language ?? settings.language;
         settings.themePreference =
             updateInput.themePreference ?? settings.themePreference;
         settings.pin = updateInput.pin ?? settings.pin;
         settings.pinTimeout = updateInput.pinTimeout ?? settings.pinTimeout;
+        settings.audioEnabled =
+            updateInput.audioEnabled ?? settings.audioEnabled;
+        settings.globalVolume =
+            updateInput.globalVolume ?? settings.globalVolume;
         await this.userSettingsRepo.save(settings);
         return this.getUserSettings(user);
     }

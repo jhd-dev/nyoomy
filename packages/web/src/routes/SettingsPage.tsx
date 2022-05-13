@@ -20,7 +20,7 @@ interface ISettingsPageProps {
 const SettingsPage: FC<ISettingsPageProps> = ({
     drawerWidth,
 }: ISettingsPageProps) => {
-    const { data, loading } = useMeQuery();
+    const { data: userData, loading: userLoading } = useMeQuery();
     const [currentTab, setCurrentTab] = useState(0);
 
     const handleChange = (_event: SyntheticEvent, newValue: number): void => {
@@ -74,7 +74,7 @@ const SettingsPage: FC<ISettingsPageProps> = ({
             </Drawer>
             <Box component="main" sx={{ flexGrow: 1, ml: 50, p: 3 }}>
                 <Toolbar />
-                {loading ? (
+                {userLoading ? (
                     <LinearProgress />
                 ) : (
                     <>

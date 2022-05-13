@@ -316,7 +316,14 @@ input UpdateTodoInput {
 }
 
 input UpdateUserSettingsInput {
-  _placeholderField: String
+  audioEnabled: Boolean
+  globalVolume: Int
+  id: ID
+  isPublic: Boolean
+  language: String
+  pin: String
+  pinTimeout: Int
+  themePreference: ThemePreference
 }
 
 """Centralized user reference"""

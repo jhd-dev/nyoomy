@@ -446,7 +446,14 @@ export type UpdateTodoInput = {
 };
 
 export type UpdateUserSettingsInput = {
-  _placeholderField?: InputMaybe<Scalars['String']>;
+  audioEnabled?: InputMaybe<Scalars['Boolean']>;
+  globalVolume?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['ID']>;
+  isPublic?: InputMaybe<Scalars['Boolean']>;
+  language?: InputMaybe<Scalars['String']>;
+  pin?: InputMaybe<Scalars['String']>;
+  pinTimeout?: InputMaybe<Scalars['Int']>;
+  themePreference?: InputMaybe<ThemePreference>;
 };
 
 /** Centralized user reference */
