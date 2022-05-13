@@ -26,6 +26,8 @@
         "setup": "yarn install && yarn link -Apr . && yarn workspace @nyoomy/eslint-config build",
         "start": "concurrently --names \"CLIENT,SERVER\" \"yarn workspace @nyoomy/web start\" \"yarn workspace @nyoomy/server start\"",
         "watch": "concurrently --names \"CLIENT,SERVER\" \"yarn workspace @nyoomy/web watch\" \"yarn workspace @nyoomy/server watch\"",
+        "watch:server": "yarn workspace @nyoomy/server watch",
+        "watch:web": "yarn workspace @nyoomy/web start",
         "build:ts": "tsc -b tsconfig-composite.json",
         "lint": "yarn lint:eslint && yarn lint:style && yarn lint:markdown && yarn lint:format",
         "lint:eslint": "eslint \"**/*.{js,jsx,ts,tsx,html,json,yml}\" --cache --fix --color",
