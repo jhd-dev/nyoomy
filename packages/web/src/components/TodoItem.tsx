@@ -7,7 +7,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Tooltip from '@mui/material/Tooltip';
 import type { Tag } from '@nyoomy/graphql';
-import { Link } from 'react-router-dom';
+import { RouteLink } from './RouteLink';
 
 interface ITodoItemProps {
     todoId: string;
@@ -35,11 +35,11 @@ const TodoItem: FC<ITodoItemProps> = ({
             </Tooltip>
         )}
         <Tooltip title="Edit To-do">
-            <Link to={`/todo/${String(todoId)}`}>
+            <RouteLink to={`/todo/${String(todoId)}`}>
                 <IconButton color="secondary">
                     <EditIcon />
                 </IconButton>
-            </Link>
+            </RouteLink>
         </Tooltip>
     </ListItem>
 );

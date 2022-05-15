@@ -1,18 +1,16 @@
 import type { FC } from 'react';
 import React from 'react';
 import { Feedback, Logout, Settings } from '@mui/icons-material';
-import {
-    Divider,
-    IconButton,
-    ListItemIcon,
-    MenuItem,
-    Tooltip,
-    Typography,
-} from '@mui/material';
 import Avatar from '@mui/material/Avatar';
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
 import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 import { useLogoutMutation, useMeQuery } from '@nyoomy/graphql';
-import { Link } from 'react-router-dom';
+import { RouteLink } from './RouteLink';
 
 export const AvatarButton: FC = () => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -52,20 +50,20 @@ export const AvatarButton: FC = () => {
                 <MenuItem>
                     <Avatar /> Profile
                 </MenuItem>
-                <Link to="/settings">
+                <RouteLink to="/settings">
                     <MenuItem>
                         <ListItemIcon>
                             <Settings fontSize="small" /> Settings
                         </ListItemIcon>
                     </MenuItem>
-                </Link>
-                <Link to="/feedback">
+                </RouteLink>
+                <RouteLink to="/feedback">
                     <MenuItem>
                         <ListItemIcon>
                             <Feedback fontSize="small" /> Feedback
                         </ListItemIcon>
                     </MenuItem>
-                </Link>
+                </RouteLink>
                 <MenuItem
                     onClick={async () => {
                         await logout();

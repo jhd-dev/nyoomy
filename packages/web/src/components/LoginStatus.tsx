@@ -8,8 +8,8 @@ import {
 import { Button, IconButton } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { useMeQuery } from '@nyoomy/graphql';
-import { Link } from 'react-router-dom';
 import { AvatarButton } from './AvatarButton';
+import { RouteLink } from './RouteLink';
 
 export const LoginStatus: FC = () => {
     const { data, loading, error } = useMeQuery();
@@ -24,18 +24,18 @@ export const LoginStatus: FC = () => {
     if (data?.me != null) {
         return (
             <>
-                <Link to="/messages">
+                <RouteLink to="/messages">
                     <IconButton color="secondary">
                         <MessageIcon />
                     </IconButton>
-                </Link>
+                </RouteLink>
                 <AvatarButton />
             </>
         );
     }
     return (
         <>
-            <Link to="/login">
+            <RouteLink to="/login">
                 <Button
                     variant="contained"
                     type="button"
@@ -44,8 +44,8 @@ export const LoginStatus: FC = () => {
                 >
                     Login
                 </Button>
-            </Link>
-            <Link to="/register">
+            </RouteLink>
+            <RouteLink to="/register">
                 <Button
                     variant="contained"
                     type="button"
@@ -54,7 +54,7 @@ export const LoginStatus: FC = () => {
                 >
                     Register
                 </Button>
-            </Link>
+            </RouteLink>
         </>
     );
 };
