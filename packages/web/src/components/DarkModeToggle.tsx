@@ -7,7 +7,8 @@ import {
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import { useTheme } from '@mui/material/styles';
-import { ThemeContext, ThemeId } from '../context/ThemeContext';
+import { ThemePreference } from '@nyoomy/graphql';
+import { ThemeContext } from '../context/ThemeContext';
 import type { IThemeContext } from '../context/ThemeContext';
 
 export const DarkModeToggle: FC = () => {
@@ -29,7 +30,9 @@ export const DarkModeToggle: FC = () => {
                             toggleDarkMode();
                             if (setThemeId)
                                 setThemeId(
-                                    isDark ? ThemeId.DARK : ThemeId.LIGHT
+                                    isDark
+                                        ? ThemePreference.Dark
+                                        : ThemePreference.Light
                                 );
                         }}
                     >
