@@ -1,46 +1,29 @@
 import type { FC } from 'react';
 import React, { useState } from 'react';
-import { Close as CloseIcon, Delete as DeleteIcon } from '@mui/icons-material';
-import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
-import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
-import Tooltip from '@mui/material/Tooltip';
-import Typography from '@mui/material/Typography';
-import Dialog from '@mui/material/Dialog';
-import IconButton from '@mui/material/IconButton';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import TextField from '@mui/material/TextField';
-import DialogContentText from '@mui/material/DialogContentText';
+import { Close as CloseIcon } from '@mui/icons-material';
 import Alert from '@mui/material/Alert';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
-import {
-    CategoryColor,
-    Tag as TagDto,
-    useCreateTagMutation,
-    useDeleteTagMutation,
-    useMyTagsQuery,
-    useMyTodosQuery,
-    useUpdateTodoMutation,
-    Weekday,
-} from '@nyoomy/graphql';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import IconButton from '@mui/material/IconButton';
+import TextField from '@mui/material/TextField';
+import type { Tag as TagDto, Weekday } from '@nyoomy/graphql';
+import { useMyTodosQuery, useUpdateTodoMutation } from '@nyoomy/graphql';
 import { useNavigate, useParams } from 'react-router-dom';
-import type { UpdateTodoMutation } from '../../../graphql/src/generated/graphql';
-import type { ApolloError } from '@apollo/client';
-import { colorOptions, TagChip } from '../components/TagChip';
 import { RepeatInput } from '../components/RepeatInput';
-import { MyTodosQuery } from '../../../graphql/src/generated/graphql-hooks';
+import { TagSelector } from '../components/TagSelector';
+import type { UpdateTodoMutation } from '../../../graphql/src/generated/graphql';
+import type { MyTodosQuery } from '../../../graphql/src/generated/graphql-hooks';
+import type { ApolloError } from '@apollo/client';
 
 type Tag = Omit<TagDto, 'user' | 'isArchived'>;
 
 const TodoDetailsRoute: FC = () => {
     const params = useParams();
     const navigate = useNavigate();
-    const filterOptions = createFilterOptions<Tag>({
-        ignoreCase: true,
-        trim: true,
-        stringify: ({ label }) => label,
-    });
 
     const [open, setOpen] = useState<boolean>(true);
     const [errorMsg, setErrorMsg] = useState<string>('');
@@ -69,7 +52,7 @@ const TodoDetailsRoute: FC = () => {
             setSelectedTags((prev) => currentTodo.tags ?? prev);
         },
     });
-    const { data: myTagsData } = useMyTagsQuery();
+
     const [updateTodo] = useUpdateTodoMutation({
         variables: {
             updateInput: {
@@ -94,14 +77,6 @@ const TodoDetailsRoute: FC = () => {
         },
         refetchQueries: ['MyTags', 'MyTodos'],
     });
-    const [createTag] = useCreateTagMutation({
-        refetchQueries: ['Me', 'MyTags', 'MyTodos'],
-    });
-    const [deleteTag] = useDeleteTagMutation({
-        refetchQueries: ['Me', 'MyTags', 'MyTodos'],
-    });
-
-    const allTags: Tag[] = myTagsData?.myTags ?? [];
 
     const handleClose = () => {
         setOpen(true);
@@ -111,16 +86,6 @@ const TodoDetailsRoute: FC = () => {
     const handleSave = async () => {
         await updateTodo();
     };
-
-    const sortTags = (tags: Tag[]): Tag[] =>
-        tags
-            .slice()
-            .sort(
-                (tag1, tag2) =>
-                    -tag2.label[0]
-                        .toLocaleUpperCase()
-                        .localeCompare(tag1.label[0].toLocaleUpperCase())
-            );
 
     return (
         <Dialog open={open} onClose={handleClose}>
@@ -158,114 +123,9 @@ const TodoDetailsRoute: FC = () => {
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                 />
-                <Autocomplete
-                    multiple
-                    freeSolo
-                    disableCloseOnSelect
-                    value={selectedTags}
-                    options={sortTags(allTags)}
-                    groupBy={(tag) =>
-                        /[0-9]/.test(tag.label[0])
-                            ? '#'
-                            : tag.label[0].toLocaleUpperCase()
-                    }
-                    filterOptions={filterOptions}
-                    onChange={async (_e, newVal) => {
-                        const newValTags: typeof allTags = newVal.filter(
-                            (tag): tag is Tag => typeof tag !== 'string'
-                        );
-                        const newValStrings: string[] = newVal.filter(
-                            (tag): tag is string => typeof tag === 'string'
-                        );
-                        for (const tagString of newValStrings) {
-                            if (
-                                newValTags.some(
-                                    (tag) => tag.label === tagString
-                                )
-                            ) {
-                                continue;
-                            }
-                            const { data } = await createTag({
-                                variables: {
-                                    input: {
-                                        label: tagString ?? 'New Tag',
-                                        color: CategoryColor.Default,
-                                    },
-                                },
-                            });
-                            if (data?.createTag)
-                                newValTags.push(data.createTag);
-                        }
-                        setSelectedTags(
-                            newValTags
-                                .slice()
-                                .reverse()
-                                .filter(
-                                    (tag, i, arr) =>
-                                        arr.findIndex(
-                                            (tag2) => tag2.id === tag.id
-                                        ) === i
-                                )
-                                .reverse()
-                        );
-                    }}
-                    renderOption={(props, option, { selected }) => (
-                        <li {...props}>
-                            <Checkbox
-                                checked={selected}
-                                style={{
-                                    marginRight: 8,
-                                    color: colorOptions[option.color].color,
-                                }}
-                            ></Checkbox>
-                            <Typography>{option.label}</Typography>
-                            <Tooltip title={`Delete tag "${option.label}"`}>
-                                <IconButton
-                                    color="warning"
-                                    size="small"
-                                    onClick={async (e) => {
-                                        e.stopPropagation();
-                                        e.preventDefault();
-                                        setSelectedTags((prev) =>
-                                            prev.filter(
-                                                (tag) => tag.id !== option.id
-                                            )
-                                        );
-                                        await deleteTag({
-                                            variables: { id: option.id },
-                                        });
-                                    }}
-                                >
-                                    <DeleteIcon />
-                                </IconButton>
-                            </Tooltip>
-                        </li>
-                    )}
-                    renderInput={(inputParams) => (
-                        <TextField
-                            label="Tags"
-                            placeholder="Tags"
-                            {...inputParams}
-                        />
-                    )}
-                    renderTags={(value: Tag[], getTagProps) =>
-                        value.map((option: Tag, index: number) => (
-                            <TagChip
-                                tagId={option.id}
-                                label={option.label}
-                                color={option.color}
-                                handleDelete={(_e) => {
-                                    setSelectedTags((prev) =>
-                                        prev.filter(
-                                            (tag) => tag.id !== option.id
-                                        )
-                                    );
-                                }}
-                                {...getTagProps({ index })}
-                            />
-                        ))
-                    }
-                    limitTags={10}
+                <TagSelector
+                    selectedTags={selectedTags}
+                    setSelectedTags={setSelectedTags}
                 />
                 {errorMsg && <Alert severity="error">{errorMsg}</Alert>}
                 <RepeatInput
@@ -275,7 +135,7 @@ const TodoDetailsRoute: FC = () => {
                     onRepeatingWeekdaysChange={(val: Weekday[]) =>
                         setRepeatedWeekdays(val)
                     }
-                ></RepeatInput>
+                />
             </DialogContent>
             <DialogActions>
                 <Button color="secondary" onClick={handleClose}>
