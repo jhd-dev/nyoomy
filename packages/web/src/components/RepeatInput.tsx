@@ -8,14 +8,14 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
 import { Weekday } from '@nyoomy/graphql';
 
-interface IRepeatInputProps {
+export interface IRepeatInputProps {
     doesRepeat: boolean;
     onRepeatToggle: (switched: boolean) => void;
     repeatingWeekdays: Weekday[];
     onRepeatingWeekdaysChange: (newDays: Weekday[]) => void;
 }
 
-const weekdays = [
+export const weekdays = [
     Weekday.Sunday,
     Weekday.Monday,
     Weekday.Tuesday,
@@ -25,7 +25,7 @@ const weekdays = [
     Weekday.Saturday,
 ];
 
-const weekdaysMap = {
+export const weekdaysMap = {
     [Weekday.Sunday]: { icon: 'S', label: 'Sunday' },
     [Weekday.Monday]: { icon: 'M', label: 'Monday' },
     [Weekday.Tuesday]: { icon: 'T', label: 'Tuesday' },

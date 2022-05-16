@@ -113,6 +113,7 @@ const TodoPage: FC = () => {
                                     description,
                                     isCompleted,
                                     tags,
+                                    repeatWeekdays,
                                 }) => (
                                     <TodoItem
                                         key={id}
@@ -121,6 +122,8 @@ const TodoPage: FC = () => {
                                         description={description}
                                         isCompleted={isCompleted}
                                         tags={tags}
+                                        doesRepeat={repeatWeekdays.length > 0}
+                                        repeatWeekdays={repeatWeekdays}
                                     />
                                 )
                             )
