@@ -1,15 +1,11 @@
 import type { FC } from 'react';
-import React, { useState } from 'react';
-import { Add as AddIcon, ClearAll } from '@mui/icons-material';
+import React, { useMemo, useState } from 'react';
+import { Add as AddIcon } from '@mui/icons-material';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
-import CircularProgress from '@mui/material/CircularProgress';
 import Fab from '@mui/material/Fab';
 import IconButton from '@mui/material/IconButton';
-import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import {
@@ -17,117 +13,73 @@ import {
     useMyTagsQuery,
     useMyTodosQuery,
 } from '@nyoomy/graphql';
+import type { MyTagsQuery, Tag as TagDto, MyTodosQuery } from '@nyoomy/graphql';
 import { Outlet } from 'react-router-dom';
-import { colorOptions } from '../components/TagChip';
-import TodoItem from '../components/TodoItem';
+import { TagFilterSelector } from '../components/TagFilterSelector';
+import { TodoItemList } from '../components/TodoItemList';
+
+type Tag = Omit<TagDto, 'user' | 'isArchived'>;
+type Todo = MyTodosQuery['getMyTodos'][number];
 
 const TodoPage: FC = () => {
-    const { data, loading, error } = useMyTodosQuery();
-    const {
-        data: tagsData,
-        loading: tagsLoading,
-        error: tagsError,
-    } = useMyTagsQuery();
-
+    const [allTags, setAllTags] = useState<Tag[]>([]);
+    const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+    const [allTodos, setAllTodos] = useState<Todo[]>([] as Todo[]);
     const [newTodoText, setNewTodoText] = useState<string>('');
-    const handleInputChange = (value: string): void => {
-        setNewTodoText(value);
-    };
 
     const [addTodo] = useAddTodoMutation({
         variables: { input: { title: newTodoText } },
         refetchQueries: ['MyTodos'],
+        onCompleted() {
+            setNewTodoText('');
+        },
     });
 
-    const allTags = tagsData?.myTags;
-    const [selectedTags, setSelectedTags] = useState(allTags?.slice() ?? []);
+    const { error: todosError } = useMyTodosQuery({
+        onCompleted(data: MyTodosQuery) {
+            if (data.getMyTodos == null) {
+                return;
+            }
+            setAllTodos(data.getMyTodos);
+        },
+    });
 
-    const isTagSelected = (tag: typeof selectedTags[number]): boolean =>
-        selectedTags.some((selectedTag) => selectedTag.id === tag.id);
+    const { loading: tagsLoading, error: tagsError } = useMyTagsQuery({
+        onCompleted(data: MyTagsQuery) {
+            setAllTags((prev) => data.myTags ?? prev);
+            setSelectedTags((prev) =>
+                prev.filter((oldTag) =>
+                    data.myTags.some((newTag) => newTag.id === oldTag.id)
+                )
+            );
+        },
+    });
 
-    const toggleTag = (tag: typeof selectedTags[number]): void =>
-        setSelectedTags((prev) =>
-            prev.some((selectedTag) => selectedTag.id === tag.id)
-                ? prev.filter((selectedTag) => selectedTag.id !== tag.id)
-                : prev.concat(tag)
-        );
-
-    const clearTags = () => setSelectedTags([]);
-
-    const allTodos = data?.getMyTodos ?? [];
-    const filteredTodos =
-        selectedTags.length > 0
+    const filteredTodos = useMemo((): Todo[] => {
+        const isTagSelected = (tag: typeof selectedTags[number]): boolean =>
+            selectedTags.some((selectedTag) => selectedTag.id === tag.id);
+        return selectedTags.length > 0
             ? allTodos.filter((todo) => todo.tags.some(isTagSelected))
             : allTodos;
+    }, [selectedTags, allTodos]);
+
+    const handleInputChange = (value: string): void => {
+        setNewTodoText(value);
+    };
 
     return (
         <Box sx={{ mt: 4 }}>
-            {error || tagsError ? (
+            {todosError || tagsError ? (
                 <Alert severity="error">An error occurred.</Alert>
             ) : (
                 <>
-                    <Stack direction="row" spacing={0.5}>
-                        {allTags?.map((tag) => (
-                            <Chip
-                                key={tag.id}
-                                label={tag.label}
-                                size="small"
-                                variant={
-                                    isTagSelected(tag) ? 'filled' : 'outlined'
-                                }
-                                onClick={() => toggleTag(tag)}
-                                sx={
-                                    tag.color === 'DEFAULT'
-                                        ? {
-                                              opacity: isTagSelected(tag)
-                                                  ? 1
-                                                  : 0.5,
-                                          }
-                                        : {
-                                              backgroundColor:
-                                                  colorOptions[tag.color].color,
-                                              opacity: isTagSelected(tag)
-                                                  ? 1
-                                                  : 0.5,
-                                          }
-                                }
-                            />
-                        ))}
-                        {selectedTags.length > 0 && (
-                            <Tooltip title="Clear Filters">
-                                <IconButton onClick={clearTags} size="small">
-                                    <ClearAll />
-                                </IconButton>
-                            </Tooltip>
-                        )}
-                        {tagsLoading && <CircularProgress />}
-                    </Stack>
-                    <List sx={{ width: '24em' }}>
-                        {loading ? (
-                            <CircularProgress />
-                        ) : (
-                            filteredTodos.map(
-                                ({
-                                    id,
-                                    title,
-                                    description,
-                                    isCompleted,
-                                    tags,
-                                    repeatWeekdays,
-                                }) => (
-                                    <TodoItem
-                                        key={id}
-                                        todoId={id}
-                                        title={title}
-                                        description={description}
-                                        isCompleted={isCompleted}
-                                        tags={tags}
-                                        doesRepeat={repeatWeekdays.length > 0}
-                                        repeatWeekdays={repeatWeekdays}
-                                    />
-                                )
-                            )
-                        )}
+                    <TagFilterSelector
+                        allTags={allTags}
+                        selectedTags={selectedTags}
+                        setSelectedTags={setSelectedTags}
+                        loading={tagsLoading}
+                    />
+                    <TodoItemList filteredTodos={filteredTodos}>
                         <ListItem>
                             <TextField
                                 variant="outlined"
@@ -144,7 +96,7 @@ const TodoPage: FC = () => {
                                 </IconButton>
                             </Tooltip>
                         </ListItem>
-                    </List>
+                    </TodoItemList>
                     <Fab color="primary" onClick={() => addTodo()}>
                         <AddIcon />
                     </Fab>
