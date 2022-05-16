@@ -132,6 +132,8 @@ export class TodoService {
         updatedTodo.title = updateInput?.title ?? updatedTodo.title;
         updatedTodo.description =
             updateInput?.description ?? updatedTodo.description;
+        updatedTodo.repeatWeekdays =
+            updateInput?.repeatWeekdays ?? updatedTodo.repeatWeekdays;
 
         await this.todoRepo.save(updatedTodo);
         const finalTodo = await this.todoRepo.findOneOrFail(updateInput.id);

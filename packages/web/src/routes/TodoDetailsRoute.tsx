@@ -1,20 +1,19 @@
 import type { FC } from 'react';
 import React, { useState } from 'react';
 import { Close as CloseIcon, Delete as DeleteIcon } from '@mui/icons-material';
-import {
-    Alert,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    IconButton,
-    TextField,
-} from '@mui/material';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
+import Dialog from '@mui/material/Dialog';
+import IconButton from '@mui/material/IconButton';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import TextField from '@mui/material/TextField';
+import DialogContentText from '@mui/material/DialogContentText';
+import Alert from '@mui/material/Alert';
+import DialogActions from '@mui/material/DialogActions';
 import {
     CategoryColor,
     Tag as TagDto,
@@ -23,12 +22,14 @@ import {
     useMyTagsQuery,
     useMyTodosQuery,
     useUpdateTodoMutation,
+    Weekday,
 } from '@nyoomy/graphql';
 import { useNavigate, useParams } from 'react-router-dom';
 import type { UpdateTodoMutation } from '../../../graphql/src/generated/graphql';
 import type { ApolloError } from '@apollo/client';
 import { colorOptions, TagChip } from '../components/TagChip';
-import Typography from '@mui/material/Typography';
+import { RepeatInput } from '../components/RepeatInput';
+import { MyTodosQuery } from '../../../graphql/src/generated/graphql-hooks';
 
 type Tag = Omit<TagDto, 'user' | 'isArchived'>;
 
@@ -40,29 +41,65 @@ const TodoDetailsRoute: FC = () => {
         trim: true,
         stringify: ({ label }) => label,
     });
+
+    const [open, setOpen] = useState<boolean>(true);
+    const [errorMsg, setErrorMsg] = useState<string>('');
+    const [title, setTitle] = useState<string>('');
+    const [description, setDescription] = useState<string>('');
+    const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+    const [doesRepeat, setDoesRepeat] = useState<boolean>(false);
+    const [repeatedWeekdays, setRepeatedWeekdays] = useState<Weekday[]>([]);
+
+    useMyTodosQuery({
+        onCompleted(data: MyTodosQuery) {
+            const currentTodo = data?.getMyTodos.find(
+                (todo) => todo.id === params.todoId
+            );
+            if (currentTodo == null) {
+                return;
+            }
+            setTitle((prev) => currentTodo.title ?? prev);
+            setDescription((prev) => currentTodo.description ?? prev);
+            setDoesRepeat((prev) =>
+                currentTodo?.repeatWeekdays == null
+                    ? prev
+                    : currentTodo.repeatWeekdays.length > 0
+            );
+            setRepeatedWeekdays((prev) => currentTodo.repeatWeekdays ?? prev);
+            setSelectedTags((prev) => currentTodo.tags ?? prev);
+        },
+    });
+    const { data: myTagsData } = useMyTagsQuery();
     const [updateTodo] = useUpdateTodoMutation({
+        variables: {
+            updateInput: {
+                id: String(params.todoId),
+                date: new Date().toDateString(),
+                title,
+                description,
+                tagUpdates: selectedTags.map((tag) => ({
+                    id: tag.id,
+                })),
+                repeatWeekdays: repeatedWeekdays,
+            },
+        },
+        onCompleted(data: UpdateTodoMutation): void {
+            if (data?.updateTodo) {
+                setErrorMsg('');
+                handleClose();
+            }
+        },
+        onError(error: ApolloError): void {
+            setErrorMsg(error.message);
+        },
         refetchQueries: ['MyTags', 'MyTodos'],
     });
-    const { data: myTodosData } = useMyTodosQuery();
-    const { data: myTagsData } = useMyTagsQuery();
     const [createTag] = useCreateTagMutation({
         refetchQueries: ['Me', 'MyTags', 'MyTodos'],
     });
     const [deleteTag] = useDeleteTagMutation({
         refetchQueries: ['Me', 'MyTags', 'MyTodos'],
     });
-
-    const currentTodo = myTodosData?.getMyTodos.find(
-        (todo) => todo.id === params.todoId
-    );
-
-    const [open, setOpen] = useState<boolean>(true);
-    const [errorMsg, setErrorMsg] = useState<string>('');
-    const [title, setTitle] = useState<string>(currentTodo?.title ?? '');
-    const [description, setDescription] = useState<string>(
-        currentTodo?.description ?? ''
-    );
-    const [selectedTags, setSelectedTags] = useState(currentTodo?.tags ?? []);
 
     const allTags: Tag[] = myTagsData?.myTags ?? [];
 
@@ -72,28 +109,7 @@ const TodoDetailsRoute: FC = () => {
     };
 
     const handleSave = async () => {
-        await updateTodo({
-            variables: {
-                updateInput: {
-                    id: String(params.todoId),
-                    date: new Date().toDateString(),
-                    title,
-                    description,
-                    tagUpdates: selectedTags.map((tag) => ({
-                        id: tag.id,
-                    })),
-                },
-            },
-            onCompleted(data: UpdateTodoMutation): void {
-                if (data?.updateTodo) {
-                    setErrorMsg('');
-                    handleClose();
-                }
-            },
-            onError(error: ApolloError): void {
-                setErrorMsg(error.message);
-            },
-        });
+        await updateTodo();
     };
 
     const sortTags = (tags: Tag[]): Tag[] =>
@@ -252,6 +268,14 @@ const TodoDetailsRoute: FC = () => {
                     limitTags={10}
                 />
                 {errorMsg && <Alert severity="error">{errorMsg}</Alert>}
+                <RepeatInput
+                    doesRepeat={doesRepeat}
+                    onRepeatToggle={(val: boolean) => setDoesRepeat(val)}
+                    repeatingWeekdays={repeatedWeekdays}
+                    onRepeatingWeekdaysChange={(val: Weekday[]) =>
+                        setRepeatedWeekdays(val)
+                    }
+                ></RepeatInput>
             </DialogContent>
             <DialogActions>
                 <Button color="secondary" onClick={handleClose}>
