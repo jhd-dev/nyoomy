@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import React, { useState } from 'react';
-import { Close as CloseIcon } from '@mui/icons-material';
+import { Clear as ClearIcon, Close as CloseIcon } from '@mui/icons-material';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -10,6 +10,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
+import Tooltip from '@mui/material/Tooltip';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import type { Tag as TagDto, Weekday } from '@nyoomy/graphql';
 import { useMyTodosQuery, useUpdateTodoMutation } from '@nyoomy/graphql';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -32,6 +34,7 @@ const TodoDetailsRoute: FC = () => {
     const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
     const [doesRepeat, setDoesRepeat] = useState<boolean>(false);
     const [repeatedWeekdays, setRepeatedWeekdays] = useState<Weekday[]>([]);
+    const [dueDate, setDueDate] = useState<Date | null>(null);
 
     useMyTodosQuery({
         onCompleted(data: MyTodosQuery) {
@@ -123,11 +126,26 @@ const TodoDetailsRoute: FC = () => {
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                 />
-                <TagSelector
-                    selectedTags={selectedTags}
-                    setSelectedTags={setSelectedTags}
+                <DatePicker
+                    value={dueDate}
+                    onChange={(val) => setDueDate(val)}
+                    label="Due Date"
+                    renderInput={(props) => <TextField {...props} />}
+                    toolbarTitle="Select Due Date"
+                    openTo="day"
+                    InputProps={{
+                        endAdornment: dueDate && (
+                            <Tooltip title="Clear Date">
+                                <IconButton
+                                    onClick={() => setDueDate(null)}
+                                    disabled={dueDate == null}
+                                >
+                                    <ClearIcon />
+                                </IconButton>
+                            </Tooltip>
+                        ),
+                    }}
                 />
-                {errorMsg && <Alert severity="error">{errorMsg}</Alert>}
                 <RepeatInput
                     doesRepeat={doesRepeat}
                     onRepeatToggle={(val: boolean) => setDoesRepeat(val)}
@@ -136,6 +154,11 @@ const TodoDetailsRoute: FC = () => {
                         setRepeatedWeekdays(val)
                     }
                 />
+                <TagSelector
+                    selectedTags={selectedTags}
+                    setSelectedTags={setSelectedTags}
+                />
+                {errorMsg && <Alert severity="error">{errorMsg}</Alert>}
             </DialogContent>
             <DialogActions>
                 <Button color="secondary" onClick={handleClose}>
