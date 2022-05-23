@@ -1,17 +1,20 @@
 import type { FormEvent, FC } from 'react';
 import React, { useState } from 'react';
 import { CircleOutlined, Google as GoogleIcon } from '@mui/icons-material';
-import { Divider, Link, Stack, Tooltip } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
+import Link from '@mui/material/Link';
+import Stack from '@mui/material/Stack';
+import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import type { IInputEvent } from '@nyoomy/common';
 import { useLoginMutation } from '@nyoomy/graphql';
+import type { LoginMutation } from '@nyoomy/graphql';
 import { useNavigate } from 'react-router-dom';
 import InputTextField from '../components/InputTextField';
-import type { LoginMutation } from '../../../graphql/src/generated/graphql-hooks';
 
 const LoginPage: FC = () => {
     const [usernameOrEmail, setUsernameOrEmail] = useState('');

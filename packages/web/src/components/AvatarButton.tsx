@@ -1,6 +1,10 @@
 import type { FC } from 'react';
 import React from 'react';
-import { Feedback, Logout, Settings } from '@mui/icons-material';
+import {
+    Feedback as FeedbackIcon,
+    Logout as LogoutIcon,
+    Settings as SettingsIcon,
+} from '@mui/icons-material';
 import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
@@ -53,14 +57,14 @@ export const AvatarButton: FC = () => {
                 <RouteLink to="/settings">
                     <MenuItem>
                         <ListItemIcon>
-                            <Settings fontSize="small" /> Settings
+                            <SettingsIcon fontSize="small" /> Settings
                         </ListItemIcon>
                     </MenuItem>
                 </RouteLink>
                 <RouteLink to="/feedback">
                     <MenuItem>
                         <ListItemIcon>
-                            <Feedback fontSize="small" /> Feedback
+                            <FeedbackIcon fontSize="small" /> Feedback
                         </ListItemIcon>
                     </MenuItem>
                 </RouteLink>
@@ -71,7 +75,7 @@ export const AvatarButton: FC = () => {
                     }}
                 >
                     <ListItemIcon>
-                        <Logout fontSize="small" /> Logout
+                        <LogoutIcon fontSize="small" /> Logout
                     </ListItemIcon>
                 </MenuItem>
             </Menu>

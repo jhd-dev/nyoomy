@@ -14,9 +14,9 @@ import Switch from '@mui/material/Switch';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { useMySettingsQuery, useUpdateSettingsMutation } from '@nyoomy/graphql';
+import type { MySettingsQuery } from '@nyoomy/graphql';
 import bellSfx from 'Assets/audio/bell.mp3';
 import useSound from 'use-sound';
-import type { MySettingsQuery } from '../../../graphql/src/generated/graphql';
 
 const volumeSliderMarks = [
     { value: 0, label: '0%' },

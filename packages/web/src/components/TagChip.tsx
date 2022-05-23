@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FC, ReactNode } from 'react';
 import React, { useState } from 'react';
 import Chip from '@mui/material/Chip';
 import { blue, green, grey, red, yellow } from '@mui/material/colors';
@@ -6,6 +6,7 @@ import { CategoryColor, useUpdateTagMutation } from '@nyoomy/graphql';
 import { EditTagDialog } from './EditTagDialog';
 
 export interface ITagChipProps {
+    children?: ReactNode;
     tagId: string;
     label: string;
     color: CategoryColor;

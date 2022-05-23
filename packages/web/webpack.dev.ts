@@ -1,7 +1,5 @@
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import { resolve } from 'path';
-// import { DefinePlugin } from 'webpack';
-// import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import { merge } from 'webpack-merge';
 import common from './webpack.common';
 import type { Configuration } from 'webpack';
@@ -19,15 +17,11 @@ export default merge<Configuration>(common, {
             manifest: resolve(staticPath, 'manifest.json'),
             filename: 'index.html',
             title: 'Nyoomy',
-            cache: true,
             inject: 'body',
+            scriptLoading: 'defer',
+            cache: true,
             minify: false,
         }),
-        // new HotModuleReplacementPlugin(),
-        // new DefinePlugin({
-        //     'process.env.NODE_ENV': JSON.stringify('development'),
-        // }),
-        // new BundleAnalyzerPlugin({ analyzerPort: 'auto', openAnalyzer: false }),
     ],
     stats: { errorDetails: true },
 });

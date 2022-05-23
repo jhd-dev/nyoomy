@@ -12,13 +12,16 @@ import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import type { Tag as TagDto, Weekday } from '@nyoomy/graphql';
 import { useMyTodosQuery, useUpdateTodoMutation } from '@nyoomy/graphql';
+import type {
+    Tag as TagDto,
+    Weekday,
+    UpdateTodoMutation,
+    MyTodosQuery,
+} from '@nyoomy/graphql';
 import { useNavigate, useParams } from 'react-router-dom';
 import { RepeatInput } from '../components/RepeatInput';
 import { TagSelector } from '../components/TagSelector';
-import type { UpdateTodoMutation } from '../../../graphql/src/generated/graphql';
-import type { MyTodosQuery } from '../../../graphql/src/generated/graphql-hooks';
 import type { ApolloError } from '@apollo/client';
 
 type Tag = Omit<TagDto, 'user' | 'isArchived'>;

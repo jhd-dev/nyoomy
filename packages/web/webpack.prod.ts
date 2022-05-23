@@ -16,7 +16,6 @@ export default merge<Configuration>(common, {
         rules: [
             {
                 test: /\.s?[ac]ss$/i,
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                 use: [MiniCssExtractPlugin.loader],
             },
         ],
@@ -28,8 +27,9 @@ export default merge<Configuration>(common, {
             manifest: resolve(staticPath, 'manifest.json'),
             filename: 'index.html',
             title: 'Nyoomy',
-            cache: false,
             inject: 'body',
+            scriptLoading: 'defer',
+            cache: false,
             minify: true,
         }),
         new DefinePlugin({

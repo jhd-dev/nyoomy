@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FC, ReactNode } from 'react';
 import React from 'react';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 
@@ -26,6 +26,10 @@ const client = new ApolloClient({
     name: 'web',
 });
 
-export const ApolloWrapper: FC = ({ children }) => (
+interface IApolloWrapperProps {
+    children?: ReactNode;
+}
+
+export const ApolloWrapper: FC<IApolloWrapperProps> = ({ children }) => (
     <ApolloProvider client={client}>{children}</ApolloProvider>
 );

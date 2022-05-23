@@ -28,13 +28,12 @@ export class UserService {
         private readonly emailService: EmailService
     ) {}
 
-    // eslint-disable-next-line require-await
-    public async getAll(user: User): Promise<User[]> {
+    public getAll(user: User): Promise<User[]> {
         const ability = this.caslAbilityFactory.createForUser(user);
         if (ability.can(EntityAction.READ, User)) {
-            return await this.userRepo.find();
+            return this.userRepo.find();
         }
-        return [user];
+        return this.userRepo.find({ id: user.id });
     }
 
     public async getCurrentUser(id: unknown): Promise<IUser | null> {
@@ -169,10 +168,6 @@ export class UserService {
             { user: { id: user.id } },
             { relations: ['user'] }
         );
-        console.log('settings');
-        console.log(settings);
-        console.log('updateInputLog');
-        console.log(updateInput);
         settings.language = updateInput.language ?? settings.language;
         settings.themePreference =
             updateInput.themePreference ?? settings.themePreference;

@@ -1,7 +1,7 @@
-import type { FC } from 'react';
+import type { FC, ReactNode } from 'react';
 import React from 'react';
-import { TextField } from '@mui/material';
 import Grid from '@mui/material/Grid';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import type { IInputEvent } from '@nyoomy/common';
 import type { FieldError } from '@nyoomy/graphql';
@@ -9,13 +9,13 @@ import type { FieldError } from '@nyoomy/graphql';
 interface InputTextFieldProps {
     field: string;
     inputType: 'text' | 'email' | 'password';
-    label: string | Element;
+    label: ReactNode;
     handleChange: (e: IInputEvent) => void | Promise<void>;
     errors?: FieldError[];
     placeholder?: string;
     required?: boolean;
     autoFocus?: boolean;
-    children?: Partial<Element>;
+    children?: ReactNode;
 }
 
 const InputTextField: FC<InputTextFieldProps> = ({

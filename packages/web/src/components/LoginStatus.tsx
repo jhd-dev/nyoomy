@@ -1,11 +1,12 @@
 import type { FC } from 'react';
 import React from 'react';
 import {
-    AppRegistration,
+    AppRegistration as AppRegistrationIcon,
     Message as MessageIcon,
-    Person,
+    Person as PersonIcon,
 } from '@mui/icons-material';
-import { Button, IconButton } from '@mui/material';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { useMeQuery } from '@nyoomy/graphql';
 import { AvatarButton } from './AvatarButton';
@@ -39,7 +40,7 @@ export const LoginStatus: FC = () => {
                 <Button
                     variant="contained"
                     type="button"
-                    endIcon={<Person />}
+                    endIcon={<PersonIcon />}
                     color="primary"
                 >
                     Login
@@ -49,7 +50,7 @@ export const LoginStatus: FC = () => {
                 <Button
                     variant="contained"
                     type="button"
-                    endIcon={<AppRegistration />}
+                    endIcon={<AppRegistrationIcon />}
                     color="secondary"
                 >
                     Register

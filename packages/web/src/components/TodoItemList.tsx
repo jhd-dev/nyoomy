@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FC, ReactNode } from 'react';
 import React from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 import List from '@mui/material/List';
@@ -8,6 +8,7 @@ import TodoItem from './TodoItem';
 type Todo = MyTodosQuery['getMyTodos'][number];
 
 interface ITodoItemListProps {
+    children?: ReactNode;
     filteredTodos: Todo[];
     loading?: boolean;
 }

@@ -1,7 +1,6 @@
 import DotenvPlugin from 'dotenv-webpack';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import { join, resolve } from 'path';
-// import { ProgressPlugin } from 'webpack';
 import { DefinePlugin } from 'webpack';
 import type { Configuration } from 'webpack';
 
@@ -12,6 +11,7 @@ const relativeEnvExampleFile: string = resolve(
     join(ROOT, './.env.example')
 );
 const assetsDir = resolve(__dirname, '../../assets');
+const assetsDirAlias = 'Assets';
 
 console.info(`Using env file: ${relativeEnvFile}`);
 
@@ -58,7 +58,7 @@ const config: Configuration = {
     },
     resolve: {
         extensions: ['.tsx', '.ts', '.jsx', '.js', '.json', '.scss', '...'],
-        alias: { Assets: assetsDir },
+        alias: { [assetsDirAlias]: assetsDir },
         fallback: {
             fs: false,
             os: false,
@@ -76,9 +76,6 @@ const config: Configuration = {
                 ignoreStub: true,
             }),
         }),
-        // new ProgressPlugin((percentage, message, ...args) => {
-        //     console.info(percentage, message, ...args);
-        // }),
     ],
 };
 

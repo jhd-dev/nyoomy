@@ -6,7 +6,12 @@ import {
     Style as StyleIcon,
     Visibility as VisibilityIcon,
 } from '@mui/icons-material';
-import { Box, Drawer, LinearProgress, Tab, Tabs, Toolbar } from '@mui/material';
+import Box from '@mui/material/Box';
+import Drawer from '@mui/material/Drawer';
+import LinearProgress from '@mui/material/LinearProgress';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { useMeQuery } from '@nyoomy/graphql';
 import { AppearanceSettings } from './AppearanceSettings';

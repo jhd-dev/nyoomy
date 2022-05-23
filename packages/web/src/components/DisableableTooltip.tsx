@@ -1,9 +1,10 @@
-import type { FC, ReactElement } from 'react';
+import type { ReactNode, FC, ReactElement } from 'react';
 import React from 'react';
 import Tooltip from '@mui/material/Tooltip';
 import type { TooltipProps } from '@mui/material/Tooltip';
 
 interface IDisableableTooltipProps {
+    children?: ReactNode;
     title: string;
     disabled: boolean;
     tooltipProps?: Omit<TooltipProps, 'children'>;

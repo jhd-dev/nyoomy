@@ -8,17 +8,25 @@ import './style/index.scss';
 import './style/App.scss';
 import React, { StrictMode } from 'react';
 import fetch from 'cross-fetch';
-import { render } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { App } from './App';
 
 global.fetch = fetch;
 
-const rootElement = document.getElementById('root');
-if (rootElement == null) throw new Error('Could not find #root element.');
+const renderApp = () => {
+    const rootElement = document.getElementById('root');
+    if (rootElement == null) throw new Error('Could not find #root element.');
 
-render(
-    <StrictMode>
-        <App />
-    </StrictMode>,
-    rootElement
-);
+    createRoot(rootElement, {
+        identifierPrefix: 'nyoomy-',
+        onRecoverableError(error: unknown) {
+            console.error(error);
+        },
+    }).render(
+        <StrictMode>
+            <App />
+        </StrictMode>
+    );
+};
+
+document.addEventListener('DOMContentLoaded', renderApp, { once: true });

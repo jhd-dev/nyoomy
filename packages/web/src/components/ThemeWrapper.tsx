@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FC, ReactNode } from 'react';
 import React, { useMemo, useState } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -7,7 +7,11 @@ import { ThemePreference, useMySettingsQuery } from '@nyoomy/graphql';
 import { ThemeContext } from '../context/ThemeContext';
 import { themes } from '../themes';
 
-export const ThemeWrapper: FC = ({ children }) => {
+interface IThemeWrapperProps {
+    children?: ReactNode;
+}
+
+export const ThemeWrapper: FC<IThemeWrapperProps> = ({ children }) => {
     const devicePrefersDark = useMediaQuery('(prefers-color-scheme: dark)');
 
     const [themeId, setThemeId] = useState<ThemePreference>(

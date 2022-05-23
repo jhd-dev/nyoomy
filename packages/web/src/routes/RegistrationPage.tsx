@@ -1,6 +1,9 @@
 import type { FormEvent, FC } from 'react';
 import React, { useState } from 'react';
-import { Box, Button, Grid, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 import type { IInputEvent } from '@nyoomy/common';
 import type { FieldError } from '@nyoomy/graphql';
 import { useRegisterMutation } from '@nyoomy/graphql';
