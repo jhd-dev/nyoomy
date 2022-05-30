@@ -2012,6 +2012,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/runtime@npm:^7.15.4":
+  version: 7.18.3
+  resolution: "@babel/runtime@npm:7.18.3"
+  dependencies:
+    regenerator-runtime: ^0.13.4
+  checksum: 70aa471de7452e9ad6d1f7ef880b76558b102a97d81aaf3251a6d70b90de7388ac0e7f5a9f5b5266ee046df92451cd7e1b310c043a5f131704949138d4790643
+  languageName: node
+  linkType: hard
+
 "@babel/runtime@npm:^7.18.0":
   version: 7.18.0
   resolution: "@babel/runtime@npm:7.18.0"
@@ -4992,6 +5001,7 @@ __metadata:
     "@types/styled-components": ^5.1.25
     "@types/testing-library__jest-dom": ^5.14.3
     "@types/webpack-bundle-analyzer": ^4.4.1
+    "@types/yup": ^0
     autoprefixer: ^10.4.7
     babel-loader: ^8.2.5
     babel-plugin-dev-expression: ^0.2.3
@@ -5007,6 +5017,7 @@ __metadata:
     dotenv-webpack: ^7.1.0
     eslint-webpack-plugin: ^3.1.1
     fork-ts-checker-webpack-plugin: ^7.2.11
+    formik: ^2.2.9
     graphql: ^15.8.0
     html-webpack-plugin: ^5.5.0
     i18next: ^21.8.4
@@ -5035,6 +5046,7 @@ __metadata:
     webpack-bundle-analyzer: ^4.5.0
     webpack-cli: ^4.9.2
     webpack-merge: ^5.8.0
+    yup: ^0.32.11
   peerDependencies:
     eslint: ^7.25.0
     prettier: ^2.2.1
@@ -5751,6 +5763,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/lodash@npm:^4.14.175":
+  version: 4.14.182
+  resolution: "@types/lodash@npm:4.14.182"
+  checksum: e84c3e6bb03a241f648c8c8c8e0b3c26e00b932104d8d52599ff068adcc88d818a41aef9c3243b02d2e97273a9a605656d8ab3b64fb3c1afcbaa54a3ecf62f81
+  languageName: node
+  linkType: hard
+
 "@types/long@npm:^4.0.0":
   version: 4.0.1
   resolution: "@types/long@npm:4.0.1"
@@ -6151,6 +6170,13 @@ __metadata:
   dependencies:
     "@types/yargs-parser": "*"
   checksum: 0d90049c4e95e8a7e07c6ca5858b7979c93da54145a938c9912aeffbef0d39a307ce84937ee26445c608016af41bb0df77b0f732dd6f782c3bb24062b3868bd7
+  languageName: node
+  linkType: hard
+
+"@types/yup@npm:^0":
+  version: 0.29.14
+  resolution: "@types/yup@npm:0.29.14"
+  checksum: 67e8bd02e762c0a80589b98a3b8dbcfa0a6d3a65936912425496f5d0ef2671e93cc01c617152a5a9b220b6fed9cdaf1cce43e5ad04976a6932d00437c62ac78b
   languageName: node
   linkType: hard
 
@@ -9613,6 +9639,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"deepmerge@npm:^2.1.1":
+  version: 2.2.1
+  resolution: "deepmerge@npm:2.2.1"
+  checksum: 8394eb5ab19010e4e856e96ffb570528cad00e4af35e1e774898b52fd986fa6840dbce3e9217a7a1e38683c170cf0cbfe19c67323b89d329afad0ffa72db382e
+  languageName: node
+  linkType: hard
+
 "deepmerge@npm:^4.2.2":
   version: 4.2.2
   resolution: "deepmerge@npm:4.2.2"
@@ -11466,6 +11499,23 @@ __metadata:
     once: 1.4.0
     qs: 6.9.3
   checksum: 92fa54a7b08ec5c9ae03afee221bb41a16f274d3ed8e85e465e0a76d6554e951dd8a1cfa2a199d3520606af393d03d3934a43baa71147cf90d78667e14c14cd5
+  languageName: node
+  linkType: hard
+
+"formik@npm:^2.2.9":
+  version: 2.2.9
+  resolution: "formik@npm:2.2.9"
+  dependencies:
+    deepmerge: ^2.1.1
+    hoist-non-react-statics: ^3.3.0
+    lodash: ^4.17.21
+    lodash-es: ^4.17.21
+    react-fast-compare: ^2.0.1
+    tiny-warning: ^1.0.2
+    tslib: ^1.10.0
+  peerDependencies:
+    react: ">=16.8.0"
+  checksum: ff8db894ccbb23660ffb0455341ce679b1069233742f2a0e7b8c790a12231b60057c6e48ea21d4b3ee3db371c8785365c13ddfeaf1d45d111a4f7312891b5e75
   languageName: node
   linkType: hard
 
@@ -14774,6 +14824,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lodash-es@npm:^4.17.21":
+  version: 4.17.21
+  resolution: "lodash-es@npm:4.17.21"
+  checksum: ff0e7bb9595594d8b9c32fbe15912eaeefd83266f6e6872fbc498533cf8c2f039d12d37034b33965f1c04ef66ec1d6da83377c77e84e14c51a137901bb50865e
+  languageName: node
+  linkType: hard
+
 "lodash.clonedeep@npm:^4.5.0":
   version: 4.5.0
   resolution: "lodash.clonedeep@npm:4.5.0"
@@ -15632,6 +15689,13 @@ __metadata:
   dependencies:
     node-gyp: latest
   checksum: 36349b2e5df4182aa0d0cc43fcd6cc782ca560a83c2764743d80c14ba5028d0c54041a2f464b8d4cb18a884e04415034a0a764c745e1d5502ea34a5cb6470a39
+  languageName: node
+  linkType: hard
+
+"nanoclone@npm:^0.2.1":
+  version: 0.2.1
+  resolution: "nanoclone@npm:0.2.1"
+  checksum: f624fe519818ac2ab9fc2322d0bd8b54def4c0080123e7e4fa4a8d5fa331862e057a5c8fa1923cce6445d011a66718454750058a16c3a68b1912058288cd71a2
   languageName: node
   linkType: hard
 
@@ -17524,6 +17588,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"property-expr@npm:^2.0.4":
+  version: 2.0.5
+  resolution: "property-expr@npm:2.0.5"
+  checksum: 6d46a345eb75d6bcba3adb8ce932d4b273267e2dd4acfed2516cc520f6791be50f61d3610e7f2a70f8b209e56f8cf94c9e1e506b8f8f273e0213888ab234a188
+  languageName: node
+  linkType: hard
+
 "proxy-addr@npm:~2.0.7":
   version: 2.0.7
   resolution: "proxy-addr@npm:2.0.7"
@@ -17722,6 +17793,13 @@ __metadata:
   version: 6.0.11
   resolution: "react-error-overlay@npm:6.0.11"
   checksum: 97972b8cc93ca672fc29b59df58c92de1e06f503b4959a934f77c5f70506f9d597dbe05c6d44f6ec6caf16d37defd0d4aa2fccdb6fa1b01868cb670867759d88
+  languageName: node
+  linkType: hard
+
+"react-fast-compare@npm:^2.0.1":
+  version: 2.0.4
+  resolution: "react-fast-compare@npm:2.0.4"
+  checksum: 4e4bfc3597414a36ee35977259012fff30c4f13a0e5dcabf958e91991bef8e9a3faee9dd666cfbdb0c2a0f0ddaf242ac2912054caa956a793c4cdff274dc5aec
   languageName: node
   linkType: hard
 
@@ -20064,6 +20142,13 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
+"tiny-warning@npm:^1.0.2":
+  version: 1.0.3
+  resolution: "tiny-warning@npm:1.0.3"
+  checksum: 6cf9f66cb765b893976b8cd1c1310338861f30fb04d02ef2c8e0a748cbc2ed5acd8bb1954b78c15f640ad4116def67134d7d705f2a0c9bf27e6e2eb3e92bff29
+  languageName: node
+  linkType: hard
+
 "title-case@npm:^3.0.3":
   version: 3.0.3
   resolution: "title-case@npm:3.0.3"
@@ -20123,6 +20208,13 @@ resolve@^2.0.0-next.3:
   version: 1.0.1
   resolution: "toidentifier@npm:1.0.1"
   checksum: 2b5c573af97e7c12f91aeade737a40a539da3c123f43099bbddcd40c3365941b9877b482b994a89a3173c4e3f4f70fea887ae44242ade009efb4841f1dad9822
+  languageName: node
+  linkType: hard
+
+"toposort@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "toposort@npm:2.0.2"
+  checksum: 9e70bf92de5e65e77e89065f34b642a9ae75be5cf4896152b5a131ca66c77c4d9edf056942e988e29b534a83643f38860e148aa939cd3c489d00abbf5639f54f
   languageName: node
   linkType: hard
 
@@ -21723,6 +21815,21 @@ typescript@~4.2.4:
   version: 0.1.0
   resolution: "yocto-queue@npm:0.1.0"
   checksum: 096c3b40beb2804659539be1605a35c58eb0c85285f94b77b3e924f42ee265c1a40bf9f4153770039517146b469a964d51742395f35ca8135fc9f7e4982b785d
+  languageName: node
+  linkType: hard
+
+"yup@npm:^0.32.11":
+  version: 0.32.11
+  resolution: "yup@npm:0.32.11"
+  dependencies:
+    "@babel/runtime": ^7.15.4
+    "@types/lodash": ^4.14.175
+    lodash: ^4.17.21
+    lodash-es: ^4.17.21
+    nanoclone: ^0.2.1
+    property-expr: ^2.0.4
+    toposort: ^2.0.2
+  checksum: 1750cefef00e30132412bd5479c680474af65935a10ec78ab9144d6ade9663962a3e2124ce2de403e7418dee62380ae8ee0863a473063d5ef58a8524ad1ce261
   languageName: node
   linkType: hard
 

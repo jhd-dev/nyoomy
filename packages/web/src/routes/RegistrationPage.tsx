@@ -1,58 +1,54 @@
-import type { FormEvent, FC } from 'react';
-import React, { useState } from 'react';
+import type { FC } from 'react';
+import React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import type { IInputEvent } from '@nyoomy/common';
-import type { FieldError } from '@nyoomy/graphql';
+import TextField from '@mui/material/TextField';
 import { useRegisterMutation } from '@nyoomy/graphql';
+import { useFormik } from 'formik';
 import { useNavigate } from 'react-router-dom';
-import InputTextField from '../components/InputTextField';
-import { ValidateTextField } from '../components/ValidateTextField';
-import { ValidateUsernameField } from '../components/ValidateUsernameField';
+import { PageTitle } from '../components/PageTitle';
+import { registrationSchema } from '../validation/registrationSchema';
+
+interface IFormValues {
+    displayName: string;
+    username: string;
+    email: string;
+    password: string;
+}
 
 const RegistrationPage: FC = () => {
     const navigate = useNavigate();
 
-    const [displayName, setName] = useState('');
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [fieldErrors, setFieldErrors] = useState([] as FieldError[]);
+    const formik = useFormik<IFormValues>({
+        initialValues: {
+            displayName: '',
+            username: '',
+            email: '',
+            password: '',
+        },
+        validationSchema: registrationSchema,
+        async onSubmit(values: IFormValues) {
+            const { displayName, email, username, password } = values;
+            const response = await register({
+                variables: {
+                    input: { displayName, email, username, password },
+                },
+            });
+            if (response?.data?.registerUser?.user) {
+                // user now exists
+                navigate('/');
+            }
+        },
+        validateOnBlur: true,
+    });
 
     const [register, { error }] = useRegisterMutation();
     if (error !== undefined) console.error(error);
 
-    const handleSubmit = async (e: FormEvent): Promise<void> => {
-        e.preventDefault();
-        const response = await register({
-            variables: {
-                input: { displayName, email, username, password },
-            },
-        });
-        if (response?.data?.registerUser?.user) {
-            navigate('/');
-            // return;
-        }
-        // setFieldErrors(response.data.registerUser.errors);
-    };
-
-    const handleChangeBuilder =
-        (
-            field: string,
-            setter: (value: React.SetStateAction<string>) => void
-        ) =>
-        (e: IInputEvent): void => {
-            setter(e.target.value);
-            setFieldErrors(fieldErrors.filter((err) => err.field !== field));
-        };
-
     return (
         <>
-            <Typography component="h1" variant="h5">
-                Register
-            </Typography>
+            <PageTitle>Register</PageTitle>
             <Box
                 sx={{
                     marginTop: 8,
@@ -62,56 +58,83 @@ const RegistrationPage: FC = () => {
                 }}
                 className="credentialsForm registrationForm"
             >
-                <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
+                <Box
+                    component="form"
+                    onSubmit={formik.handleSubmit}
+                    sx={{ mt: 3 }}
+                >
                     <Grid container spacing={2}>
-                        <InputTextField
-                            field="name"
-                            label="Display Name"
-                            inputType="text"
-                            errors={fieldErrors.filter(
-                                (err) => err.field === 'name'
-                            )}
-                            handleChange={handleChangeBuilder('name', setName)}
+                        <TextField
+                            name="displayName"
+                            value={formik.values.displayName}
+                            onChange={formik.handleChange}
+                            error={
+                                formik.touched.displayName &&
+                                Boolean(formik.errors.displayName)
+                            }
+                            helperText={
+                                formik.touched.displayName &&
+                                formik.errors.displayName
+                            }
+                            label="Name"
                             placeholder="Johnny Appleseed"
                             required
                             autoFocus
                         />
-                        <InputTextField
-                            field="email"
+                        <TextField
+                            name="email"
+                            value={formik.values.email}
+                            onChange={formik.handleChange}
+                            error={
+                                formik.touched.email &&
+                                Boolean(formik.errors.email)
+                            }
+                            helperText={
+                                formik.touched.email && formik.errors.email
+                            }
+                            type="email"
                             label="Email Address"
-                            inputType="email"
-                            errors={fieldErrors.filter(
-                                (err) => err.field === 'email'
-                            )}
-                            handleChange={handleChangeBuilder(
-                                'email',
-                                setEmail
-                            )}
                             /* eslint-disable pii/no-email */
                             placeholder="address@example.com"
                             /* eslint-enable pii/no-email */
                             required
                         />
-                        <ValidateUsernameField
-                            value={username}
-                            handleChange={setUsername}
+                        <TextField
+                            name="username"
+                            value={formik.values.username}
+                            onChange={formik.handleChange}
+                            error={
+                                formik.touched.username &&
+                                Boolean(formik.errors.username)
+                            }
+                            helperText={
+                                formik.touched.username &&
+                                formik.errors.username
+                            }
+                            label="Username"
+                            placeholder="johnny_123"
+                            required
                         />
-                        <InputTextField
-                            field="password"
+                        <TextField
+                            name="password"
+                            value={formik.values.password}
+                            onChange={formik.handleChange}
+                            error={
+                                formik.touched.password &&
+                                Boolean(formik.errors.password)
+                            }
+                            helperText={
+                                formik.touched.password &&
+                                formik.errors.password
+                            }
+                            type="password"
                             label="Password"
-                            inputType="password"
-                            errors={fieldErrors.filter(
-                                (err) => err.field === 'password'
-                            )}
-                            handleChange={handleChangeBuilder(
-                                'password',
-                                setPassword
-                            )}
                             placeholder="********"
                             required
                         />
                         <Button
                             type="submit"
+                            disabled={formik.isSubmitting}
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}

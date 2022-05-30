@@ -1,5 +1,5 @@
-import type { FormEvent, FC } from 'react';
-import React, { useState } from 'react';
+import type { FC } from 'react';
+import React from 'react';
 import { CircleOutlined, Google as GoogleIcon } from '@mui/icons-material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -8,48 +8,56 @@ import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import type { IInputEvent } from '@nyoomy/common';
 import { useLoginMutation } from '@nyoomy/graphql';
 import type { LoginMutation } from '@nyoomy/graphql';
+import { useFormik } from 'formik';
 import { useNavigate } from 'react-router-dom';
-import InputTextField from '../components/InputTextField';
+import { PageTitle } from '../components/PageTitle';
+import { loginSchema } from '../validation/loginSchema';
+
+interface IFormValues {
+    usernameOrEmail: string;
+    password: string;
+}
 
 const LoginPage: FC = () => {
-    const [usernameOrEmail, setUsernameOrEmail] = useState('');
-    const [password, setPassword] = useState('');
-
     const navigate = useNavigate();
 
-    const [login, { error }] = useLoginMutation();
+    const [login, { error }] = useLoginMutation({
+        onCompleted(data: LoginMutation) {
+            if (data?.login?.user != null) {
+                navigate('/', { replace: true });
+            }
+        },
+    });
     if (error !== undefined) console.error(error);
 
-    const handleSubmit = async (e: FormEvent): Promise<void> => {
-        e.preventDefault();
-        await login({
-            variables: {
-                input: {
-                    usernameOrEmail,
-                    passwordInput: password,
+    const formik = useFormik<IFormValues>({
+        initialValues: {
+            usernameOrEmail: '',
+            password: '',
+        },
+        validationSchema: loginSchema,
+        async onSubmit(values: IFormValues) {
+            const { usernameOrEmail, password } = values;
+            await login({
+                variables: {
+                    input: { usernameOrEmail, passwordInput: password },
                 },
-            },
-            onCompleted(data: LoginMutation) {
-                if (data?.login?.user != null) {
-                    navigate('/', { replace: true });
-                }
-            },
-        });
-    };
+            });
+        },
+        validateOnBlur: true,
+    });
 
     return (
         <>
-            <Typography component="h1" variant="h5">
-                Log In
-            </Typography>
+            <PageTitle>Log In</PageTitle>
             <Box
                 component="form"
-                onSubmit={handleSubmit}
+                onSubmit={formik.handleSubmit}
                 sx={{
                     marginTop: 8,
                     display: 'flex',
@@ -59,30 +67,44 @@ const LoginPage: FC = () => {
                 className="credentialsForm loginForm"
             >
                 <Grid container spacing={2}>
-                    <InputTextField
-                        field="usernameOrEmail"
-                        label="Username/Email"
-                        inputType="text"
-                        handleChange={(e: IInputEvent) =>
-                            setUsernameOrEmail(e.target.value)
+                    <TextField
+                        name="usernameOrEmail"
+                        value={formik.values.usernameOrEmail}
+                        onChange={formik.handleChange}
+                        error={
+                            formik.touched.usernameOrEmail &&
+                            Boolean(formik.errors.usernameOrEmail)
                         }
+                        helperText={
+                            formik.touched.usernameOrEmail &&
+                            formik.errors.usernameOrEmail
+                        }
+                        type="text"
+                        label="Username/Email"
                         placeholder="Username or Email Address"
                         required
                         autoFocus
                     />
-                    <InputTextField
-                        field="password"
-                        label="Password"
-                        inputType="password"
-                        handleChange={(e: IInputEvent) =>
-                            setPassword(e.target.value)
+                    <TextField
+                        name="password"
+                        value={formik.values.password}
+                        onChange={formik.handleChange}
+                        error={
+                            formik.touched.password &&
+                            Boolean(formik.errors.password)
                         }
+                        helperText={
+                            formik.touched.password && formik.errors.password
+                        }
+                        type="password"
+                        label="Password"
                         placeholder="********"
                         required
                     />
                 </Grid>
                 <Button
                     type="submit"
+                    disabled={formik.isSubmitting}
                     fullWidth
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
