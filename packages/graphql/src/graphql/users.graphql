@@ -28,6 +28,20 @@ mutation Logout {
     logout
 }
 
+query UsernameAvailability($input: UsernameAvailabilityArgs!) {
+    usernameAvailability(input: $input) {
+        attemptedInput
+        fieldName
+        isAvailable
+        alternatives
+        timeChecked
+    }
+}
+
+query RandomUsername {
+    randomAvailableUsername
+}
+
 query MySettings {
     mySettings {
         language

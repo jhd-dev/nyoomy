@@ -3369,7 +3369,7 @@ __metadata:
     "@types/websocket": ^1.0.4
     "@types/ws": ^8.0.0
     cross-undici-fetch: ^0.1.19
-    dset: ^3.1.0
+    dset: ^3.1.2
     extract-files: ^11.0.0
     graphql-sse: ^1.0.1
     graphql-ws: ^5.4.1
@@ -4907,6 +4907,7 @@ __metadata:
     supertest: ^6.2.2
     ts-node: ^10.4.0
     typeorm: 0.2.x
+    unique-names-generator: ^4.7.1
     validator: ^13.7.0
   peerDependencies:
     graphql: ^15.8.0
@@ -10000,10 +10001,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dset@npm:^3.1.0":
-  version: 3.1.1
-  resolution: "dset@npm:3.1.1"
-  checksum: e19389a8fd9827f685434e6e9702a48945f99626d45f01f94b25aae41bd9da27fd86fee060cbdd245270eb3d8931fe6e63096ce4a91909309171af5c97b3bd8f
+"dset@npm:^3.1.2":
+  version: 3.1.2
+  resolution: "dset@npm:3.1.2"
+  checksum: 17373f86115e2915896bb73ce67d030221651f422d5675640ffb5d749d4069fb53e7fb0bb82e8f54e2b8f3b36e5e631096ba21c17bcabbd013a10e209738172a
   languageName: node
   linkType: hard
 
@@ -20745,6 +20746,13 @@ typescript@~4.2.4:
   dependencies:
     unique-slug: ^2.0.0
   checksum: 0e674206bdda0c949b4ef86b073ba614f11de6141310834a236860888e592826da988837a7277f91a943752a691c5ab7ab939a19e7c0a5d7fcf1b7265720bf86
+  languageName: node
+  linkType: hard
+
+"unique-names-generator@npm:^4.7.1":
+  version: 4.7.1
+  resolution: "unique-names-generator@npm:4.7.1"
+  checksum: 2f98688fc8dd457d82bec5aca88ee29b52bb2aec17ed82add9369ff0e4fd3dd07fe69467d714c925392a0c5695285eeb211eac353b9145c0c5bd658b3850641e
   languageName: node
   linkType: hard
 

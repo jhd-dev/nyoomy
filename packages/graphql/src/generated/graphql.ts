@@ -25,6 +25,16 @@ export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: Non
  */
 
 /**
+ * Info on the availability of a unique input (i.e. username)
+ * @typedef {Object} AvailabilityDto
+ * @property {Array<string>} [alternatives]
+ * @property {string} [attemptedInput]
+ * @property {string} fieldName
+ * @property {boolean} isAvailable
+ * @property {DateTime} timeChecked
+ */
+
+/**
  * Colors a user may associate with a category/tag
  * @typedef {("BLUE"|"DEFAULT"|"GREEN"|"RED"|"YELLOW")} CategoryColor
  */
@@ -161,6 +171,8 @@ export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: Non
  * @property {Array<Chat>} myChats
  * @property {UserSettingsDto} [mySettings]
  * @property {Array<Tag>} myTags
+ * @property {string} [randomAvailableUsername]
+ * @property {AvailabilityDto} usernameAvailability
  * @property {Array<User>} [users]
  */
 
@@ -374,6 +386,12 @@ export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: Non
  */
 
 /**
+ * @typedef {Object} UsernameAvailabilityArgs
+ * @property {number} [recommendationsWanted]
+ * @property {string} [username]
+ */
+
+/**
  * The days of the week
  * @typedef {("FRIDAY"|"MONDAY"|"SATURDAY"|"SUNDAY"|"THURSDAY"|"TUESDAY"|"WEDNESDAY")} Weekday
  */
@@ -402,6 +420,16 @@ export type AddTodoInput = {
   repeatWeekdays?: InputMaybe<Array<Weekday>>;
   tagUpdates?: InputMaybe<Array<UpdateTagInput>>;
   title?: InputMaybe<Scalars['String']>;
+};
+
+/** Info on the availability of a unique input (i.e. username) */
+export type AvailabilityDto = {
+  __typename?: 'AvailabilityDto';
+  alternatives?: Maybe<Array<Scalars['String']>>;
+  attemptedInput?: Maybe<Scalars['String']>;
+  fieldName: Scalars['String'];
+  isAvailable: Scalars['Boolean'];
+  timeChecked: Scalars['DateTime'];
 };
 
 /** Colors a user may associate with a category/tag */
@@ -635,6 +663,8 @@ export type Query = {
   myChats: Array<Chat>;
   mySettings?: Maybe<UserSettingsDto>;
   myTags: Array<Tag>;
+  randomAvailableUsername?: Maybe<Scalars['String']>;
+  usernameAvailability: AvailabilityDto;
   users?: Maybe<Array<User>>;
 };
 
@@ -651,6 +681,11 @@ export type QueryGetTodoArgs = {
 
 export type QueryMyChatsArgs = {
   excludeArchived: Scalars['Boolean'];
+};
+
+
+export type QueryUsernameAvailabilityArgs = {
+  input: UsernameAvailabilityArgs;
 };
 
 /** User registration data */
@@ -857,6 +892,11 @@ export type UserSettingsDto = {
   user: SafeUser;
 };
 
+export type UsernameAvailabilityArgs = {
+  recommendationsWanted?: InputMaybe<Scalars['Int']>;
+  username?: InputMaybe<Scalars['String']>;
+};
+
 /** The days of the week */
 export enum Weekday {
   Friday = 'FRIDAY',
@@ -986,6 +1026,18 @@ export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
 export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
 
+export type UsernameAvailabilityQueryVariables = Exact<{
+  input: UsernameAvailabilityArgs;
+}>;
+
+
+export type UsernameAvailabilityQuery = { __typename?: 'Query', usernameAvailability: { __typename?: 'AvailabilityDto', attemptedInput?: string | null, fieldName: string, isAvailable: boolean, alternatives?: Array<string> | null, timeChecked: any } };
+
+export type RandomUsernameQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type RandomUsernameQuery = { __typename?: 'Query', randomAvailableUsername?: string | null };
+
 export type MySettingsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1069,6 +1121,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   AddTagInput: AddTagInput;
   AddTodoInput: AddTodoInput;
+  AvailabilityDto: ResolverTypeWrapper<AvailabilityDto>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   CategoryColor: CategoryColor;
   CategoryIcon: CategoryIcon;
@@ -1114,6 +1167,7 @@ export type ResolversTypes = {
   User: ResolverTypeWrapper<User>;
   UserLoginInput: UserLoginInput;
   UserSettingsDto: ResolverTypeWrapper<UserSettingsDto>;
+  UsernameAvailabilityArgs: UsernameAvailabilityArgs;
   Weekday: Weekday;
 };
 
@@ -1121,6 +1175,7 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   AddTagInput: AddTagInput;
   AddTodoInput: AddTodoInput;
+  AvailabilityDto: AvailabilityDto;
   Boolean: Scalars['Boolean'];
   Chat: Chat;
   CounterMetric: CounterMetric;
@@ -1162,6 +1217,16 @@ export type ResolversParentTypes = {
   User: User;
   UserLoginInput: UserLoginInput;
   UserSettingsDto: UserSettingsDto;
+  UsernameAvailabilityArgs: UsernameAvailabilityArgs;
+};
+
+export type AvailabilityDtoResolvers<ContextType = any, ParentType extends ResolversParentTypes['AvailabilityDto'] = ResolversParentTypes['AvailabilityDto']> = {
+  alternatives?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
+  attemptedInput?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  fieldName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  isAvailable?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  timeChecked?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type ChatResolvers<ContextType = any, ParentType extends ResolversParentTypes['Chat'] = ResolversParentTypes['Chat']> = {
@@ -1269,6 +1334,8 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   myChats?: Resolver<Array<ResolversTypes['Chat']>, ParentType, ContextType, RequireFields<QueryMyChatsArgs, 'excludeArchived'>>;
   mySettings?: Resolver<Maybe<ResolversTypes['UserSettingsDto']>, ParentType, ContextType>;
   myTags?: Resolver<Array<ResolversTypes['Tag']>, ParentType, ContextType>;
+  randomAvailableUsername?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  usernameAvailability?: Resolver<ResolversTypes['AvailabilityDto'], ParentType, ContextType, RequireFields<QueryUsernameAvailabilityArgs, 'input'>>;
   users?: Resolver<Maybe<Array<ResolversTypes['User']>>, ParentType, ContextType>;
 };
 
@@ -1397,6 +1464,7 @@ export type UserSettingsDtoResolvers<ContextType = any, ParentType extends Resol
 };
 
 export type Resolvers<ContextType = any> = {
+  AvailabilityDto?: AvailabilityDtoResolvers<ContextType>;
   Chat?: ChatResolvers<ContextType>;
   CounterMetric?: CounterMetricResolvers<ContextType>;
   DailyFloatMetric?: DailyFloatMetricResolvers<ContextType>;

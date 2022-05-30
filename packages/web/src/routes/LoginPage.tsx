@@ -111,16 +111,12 @@ const LoginPage: FC = () => {
                             </IconButton>
                         </Link>
                     </Tooltip>
-                    <Tooltip title="Coming soon...">
-                        <IconButton disabled>
-                            <CircleOutlined />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Coming soon...">
-                        <IconButton disabled>
-                            <CircleOutlined />
-                        </IconButton>
-                    </Tooltip>
+                    <IconButton disabled>
+                        <CircleOutlined />
+                    </IconButton>
+                    <IconButton disabled>
+                        <CircleOutlined />
+                    </IconButton>
                 </Stack>
             </Box>
         </>

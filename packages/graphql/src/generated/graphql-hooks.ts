@@ -34,6 +34,16 @@ export type AddTodoInput = {
   title?: InputMaybe<Scalars['String']>;
 };
 
+/** Info on the availability of a unique input (i.e. username) */
+export type AvailabilityDto = {
+  __typename?: 'AvailabilityDto';
+  alternatives?: Maybe<Array<Scalars['String']>>;
+  attemptedInput?: Maybe<Scalars['String']>;
+  fieldName: Scalars['String'];
+  isAvailable: Scalars['Boolean'];
+  timeChecked: Scalars['DateTime'];
+};
+
 /** Colors a user may associate with a category/tag */
 export enum CategoryColor {
   Blue = 'BLUE',
@@ -265,6 +275,8 @@ export type Query = {
   myChats: Array<Chat>;
   mySettings?: Maybe<UserSettingsDto>;
   myTags: Array<Tag>;
+  randomAvailableUsername?: Maybe<Scalars['String']>;
+  usernameAvailability: AvailabilityDto;
   users?: Maybe<Array<User>>;
 };
 
@@ -281,6 +293,11 @@ export type QueryGetTodoArgs = {
 
 export type QueryMyChatsArgs = {
   excludeArchived: Scalars['Boolean'];
+};
+
+
+export type QueryUsernameAvailabilityArgs = {
+  input: UsernameAvailabilityArgs;
 };
 
 /** User registration data */
@@ -487,6 +504,11 @@ export type UserSettingsDto = {
   user: SafeUser;
 };
 
+export type UsernameAvailabilityArgs = {
+  recommendationsWanted?: InputMaybe<Scalars['Int']>;
+  username?: InputMaybe<Scalars['String']>;
+};
+
 /** The days of the week */
 export enum Weekday {
   Friday = 'FRIDAY',
@@ -615,6 +637,18 @@ export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
 
 export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
+
+export type UsernameAvailabilityQueryVariables = Exact<{
+  input: UsernameAvailabilityArgs;
+}>;
+
+
+export type UsernameAvailabilityQuery = { __typename?: 'Query', usernameAvailability: { __typename?: 'AvailabilityDto', attemptedInput?: string | null, fieldName: string, isAvailable: boolean, alternatives?: Array<string> | null, timeChecked: any } };
+
+export type RandomUsernameQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type RandomUsernameQuery = { __typename?: 'Query', randomAvailableUsername?: string | null };
 
 export type MySettingsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1294,6 +1328,83 @@ export function useLogoutMutation(baseOptions?: Apollo.MutationHookOptions<Logou
 export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
 export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
 export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
+export const UsernameAvailabilityDocument = gql`
+    query UsernameAvailability($input: UsernameAvailabilityArgs!) {
+  usernameAvailability(input: $input) {
+    attemptedInput
+    fieldName
+    isAvailable
+    alternatives
+    timeChecked
+  }
+}
+    `;
+
+/**
+ * __useUsernameAvailabilityQuery__
+ *
+ * To run a query within a React component, call `useUsernameAvailabilityQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUsernameAvailabilityQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUsernameAvailabilityQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUsernameAvailabilityQuery(baseOptions: Apollo.QueryHookOptions<UsernameAvailabilityQuery, UsernameAvailabilityQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UsernameAvailabilityQuery, UsernameAvailabilityQueryVariables>(UsernameAvailabilityDocument, options);
+      }
+export function useUsernameAvailabilityLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UsernameAvailabilityQuery, UsernameAvailabilityQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UsernameAvailabilityQuery, UsernameAvailabilityQueryVariables>(UsernameAvailabilityDocument, options);
+        }
+export type UsernameAvailabilityQueryHookResult = ReturnType<typeof useUsernameAvailabilityQuery>;
+export type UsernameAvailabilityLazyQueryHookResult = ReturnType<typeof useUsernameAvailabilityLazyQuery>;
+export type UsernameAvailabilityQueryResult = Apollo.QueryResult<UsernameAvailabilityQuery, UsernameAvailabilityQueryVariables>;
+export function refetchUsernameAvailabilityQuery(variables: UsernameAvailabilityQueryVariables) {
+      return { query: UsernameAvailabilityDocument, variables: variables }
+    }
+export const RandomUsernameDocument = gql`
+    query RandomUsername {
+  randomAvailableUsername
+}
+    `;
+
+/**
+ * __useRandomUsernameQuery__
+ *
+ * To run a query within a React component, call `useRandomUsernameQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRandomUsernameQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRandomUsernameQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useRandomUsernameQuery(baseOptions?: Apollo.QueryHookOptions<RandomUsernameQuery, RandomUsernameQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RandomUsernameQuery, RandomUsernameQueryVariables>(RandomUsernameDocument, options);
+      }
+export function useRandomUsernameLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RandomUsernameQuery, RandomUsernameQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RandomUsernameQuery, RandomUsernameQueryVariables>(RandomUsernameDocument, options);
+        }
+export type RandomUsernameQueryHookResult = ReturnType<typeof useRandomUsernameQuery>;
+export type RandomUsernameLazyQueryHookResult = ReturnType<typeof useRandomUsernameLazyQuery>;
+export type RandomUsernameQueryResult = Apollo.QueryResult<RandomUsernameQuery, RandomUsernameQueryVariables>;
+export function refetchRandomUsernameQuery(variables?: RandomUsernameQueryVariables) {
+      return { query: RandomUsernameDocument, variables: variables }
+    }
 export const MySettingsDocument = gql`
     query MySettings {
   mySettings {

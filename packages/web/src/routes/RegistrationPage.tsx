@@ -9,6 +9,8 @@ import type { FieldError } from '@nyoomy/graphql';
 import { useRegisterMutation } from '@nyoomy/graphql';
 import { useNavigate } from 'react-router-dom';
 import InputTextField from '../components/InputTextField';
+import { ValidateTextField } from '../components/ValidateTextField';
+import { ValidateUsernameField } from '../components/ValidateUsernameField';
 
 const RegistrationPage: FC = () => {
     const navigate = useNavigate();
@@ -90,19 +92,9 @@ const RegistrationPage: FC = () => {
                             /* eslint-enable pii/no-email */
                             required
                         />
-                        <InputTextField
-                            field="username"
-                            label="Username"
-                            inputType="text"
-                            errors={fieldErrors.filter(
-                                (err) => err.field === 'username'
-                            )}
-                            handleChange={handleChangeBuilder(
-                                'username',
-                                setUsername
-                            )}
-                            placeholder="johnny_123"
-                            required
+                        <ValidateUsernameField
+                            value={username}
+                            handleChange={setUsername}
                         />
                         <InputTextField
                             field="password"

@@ -52,6 +52,7 @@
         "reflect-metadata": "^0.1.13",
         "rxjs": "^7.5.1",
         "typeorm": "0.2.x",
+        "unique-names-generator": "^4.7.1",
         "validator": "^13.7.0"
     },
     "devDependencies": {

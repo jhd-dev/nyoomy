@@ -1,14 +1,24 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { compare, hash } from 'bcryptjs';
+import {
+    adjectives,
+    animals,
+    colors,
+    NumberDictionary,
+    uniqueNamesGenerator,
+} from 'unique-names-generator';
 import { UserService } from '../user/user.service';
 import type { User } from '../../entities';
 import type { SafeUser } from '../user/models/safe-user.model';
+import type { AvailabilityDto } from './dto/availability.dto';
 import type { UserLoginInput } from './dto/login.input';
 import type { RegisterUserInput } from './dto/register.input';
 import type { IAuthService } from './interfaces/auth.service.interface';
 import type { LoginResponse } from './models/login-response.model';
 import type { RegistrationResponse } from './models/registration-response.model';
 import type { Profile } from 'passport-google-oauth20';
+
+const numberDictionary = NumberDictionary.generate({ min: 100, max: 999 });
 
 @Injectable()
 export class AuthService implements IAuthService {
@@ -78,6 +88,94 @@ export class AuthService implements IAuthService {
             Array.isArray(emails) ? emails.map(({ value }) => value) : [],
             name?.givenName ?? 'New User'
         );
+    }
+
+    public async getUsernameAvailability(
+        username?: string,
+        recommendations: number = 0
+    ): Promise<AvailabilityDto> {
+        if (!username) {
+            return {
+                fieldName: 'username',
+                timeChecked: new Date(),
+                isAvailable: false,
+                alternatives:
+                    recommendations > 0
+                        ? ((
+                              await Promise.all(
+                                  new Array(recommendations).map(() =>
+                                      this.generateRandomUsername()
+                                  )
+                              )
+                          ).filter((name) => name != null) as string[])
+                        : undefined,
+            };
+        }
+        const user = await this.userService.findByCredentials(username);
+        if (user == null) {
+            return {
+                fieldName: 'username',
+                attemptedInput: username,
+                isAvailable: true,
+                timeChecked: new Date(),
+            };
+        }
+        const alternatives = await this.findAvailableUsernames(
+            username,
+            recommendations
+        );
+        return {
+            fieldName: 'username',
+            attemptedInput: username,
+            isAvailable: false,
+            timeChecked: new Date(),
+            alternatives,
+        };
+    }
+
+    public async findAvailableUsernames(
+        baseUsername: string,
+        recommendationsExpected: number = 1,
+        maxAttempts: number = 1
+    ): Promise<string[]> {
+        const availableNames: string[] = [];
+        for (let rec = 0; rec < recommendationsExpected; rec++) {
+            for (let attempt = 0; attempt < maxAttempts; attempt++) {
+                const username = uniqueNamesGenerator({
+                    dictionaries: [[baseUsername], numberDictionary],
+                    length: 2,
+                    separator: '',
+                });
+                // eslint-disable-next-line no-await-in-loop
+                const existingUser = await this.userService.findByCredentials(
+                    username
+                );
+                if (existingUser == null) {
+                    availableNames.push(username);
+                }
+            }
+        }
+        return availableNames;
+    }
+
+    public async generateRandomUsername(
+        maxAttempts: number = 1
+    ): Promise<string | null> {
+        for (let i = 0; i < maxAttempts; i++) {
+            const username = uniqueNamesGenerator({
+                dictionaries: [adjectives, colors, animals],
+                length: 3,
+                separator: '_',
+            });
+            // eslint-disable-next-line no-await-in-loop
+            const existingUser = await this.userService.findByCredentials(
+                username
+            );
+            if (existingUser == null) {
+                return username;
+            }
+        }
+        return null;
     }
 
     private async doesPasswordMatch(

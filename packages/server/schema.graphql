@@ -18,6 +18,15 @@ input AddTodoInput {
   title: String
 }
 
+"""Info on the availability of a unique input (i.e. username)"""
+type AvailabilityDto {
+  alternatives: [String!]
+  attemptedInput: String
+  fieldName: String!
+  isAvailable: Boolean!
+  timeChecked: DateTime!
+}
+
 """Colors a user may associate with a category/tag"""
 enum CategoryColor {
   BLUE
@@ -161,6 +170,8 @@ type Query {
   myChats(excludeArchived: Boolean!): [Chat!]!
   mySettings: UserSettingsDto
   myTags: [Tag!]!
+  randomAvailableUsername: String
+  usernameAvailability(input: UsernameAvailabilityArgs!): AvailabilityDto!
   users: [User!]
 }
 
@@ -353,6 +364,11 @@ type UserSettingsDto {
   pinTimeout: Int
   themePreference: ThemePreference!
   user: SafeUser!
+}
+
+input UsernameAvailabilityArgs {
+  recommendationsWanted: Int
+  username: String
 }
 
 """The days of the week"""
