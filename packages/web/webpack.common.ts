@@ -27,7 +27,7 @@ const config: Configuration = {
         rules: [
             {
                 test: /\.[tj]sx?$/i,
-                exclude: /node_modules/,
+                exclude: /((node_modules)|(\.spec.[tj]sx?$))/,
                 loader: 'babel-loader',
                 options: { babelrc: true },
             },

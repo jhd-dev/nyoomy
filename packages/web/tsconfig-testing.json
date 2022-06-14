@@ -10,8 +10,8 @@
 
         "removeComments": true,
         "jsx": "preserve",
-        "noImplicitAny": true,
-        "strictNullChecks": true,
+        "noImplicitAny": false,
+        "strictNullChecks": false,
         "strictFunctionTypes": true,
         "noImplicitThis": true,
         "noUnusedLocals": false,
@@ -26,6 +26,6 @@
 
         "typeRoots": ["../../node_modules/@types", "src/**/*.d.ts"]
     },
-    "exclude": ["node_modules", "./src/**/*.spec.tsx"],
-    "include": ["./src/**/*.tsx", "./src/**/*.ts"]
+    "exclude": ["node_modules"],
+    "include": ["./src/**/*.spec.tsx", "./src/**/*.spec.ts"]
 }

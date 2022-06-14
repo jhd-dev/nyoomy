@@ -4992,12 +4992,13 @@ __metadata:
     "@nyoomy/graphql": "workspace:*"
     "@testing-library/dom": ^8.13.0
     "@testing-library/jest-dom": ^5.16.4
-    "@testing-library/react": ^13.2.0
+    "@testing-library/react": ^13.3.0
     "@testing-library/user-event": ^14.2.0
     "@types/node": ^17.0.35
     "@types/postcss-import": ^14.0.0
     "@types/react": ^18.0.9
     "@types/react-dom": ^18.0.4
+    "@types/react-test-renderer": ^18
     "@types/styled-components": ^5.1.25
     "@types/testing-library__jest-dom": ^5.14.3
     "@types/webpack-bundle-analyzer": ^4.4.1
@@ -5036,6 +5037,7 @@ __metadata:
     react-i18next: ^11.16.9
     react-is: ^18.1.0
     react-router-dom: ^6.3.0
+    react-test-renderer: ^18.1.0
     reflect-metadata: ^0.1.13
     sass-loader: ^13.0.0
     style-loader: ^3.3.1
@@ -5310,9 +5312,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/react@npm:^13.2.0":
-  version: 13.2.0
-  resolution: "@testing-library/react@npm:13.2.0"
+"@testing-library/react@npm:^13.3.0":
+  version: 13.3.0
+  resolution: "@testing-library/react@npm:13.3.0"
   dependencies:
     "@babel/runtime": ^7.12.5
     "@testing-library/dom": ^8.5.0
@@ -5320,7 +5322,7 @@ __metadata:
   peerDependencies:
     react: ^18.0.0
     react-dom: ^18.0.0
-  checksum: 235b14d064899b1c60ad777faa08e411d4f5c5418062c0a8004d0117f9f3f8053f96597adb8c45f8fab2cecde8b95e820f87661d253f19f64b28c8c6a242e3af
+  checksum: 25103835209baf892745019c9b06393655199f51f0a894300618260daa8fb9aeaf517a1d2e81c16fee702624923687d26e731df28fb749b55aa69169f2761f18
   languageName: node
   linkType: hard
 
@@ -5971,6 +5973,15 @@ __metadata:
   dependencies:
     "@types/react": "*"
   checksum: 525c01f9eb6913db423e632c702fc5ab29c4d7673eaa1e6988afa4c97477744ac0192d59f36ddcba845821710eff6813275967ef430a3a08243db438468fe060
+  languageName: node
+  linkType: hard
+
+"@types/react-test-renderer@npm:^18":
+  version: 18.0.0
+  resolution: "@types/react-test-renderer@npm:18.0.0"
+  dependencies:
+    "@types/react": "*"
+  checksum: 5233bb6f4a872f79bc27a3c242fce8cb9f60e9b2f09356db4f75925b574bb11365f61fb59a65633f11a3c1c94a7f5f6aae96074c44bcb750f347d0e3c5c5fa89
   languageName: node
   linkType: hard
 
@@ -17822,6 +17833,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-is@npm:^16.12.0 || ^17.0.0 || ^18.0.0, react-is@npm:^18.0.0, react-is@npm:^18.1.0":
+  version: 18.1.0
+  resolution: "react-is@npm:18.1.0"
+  checksum: 456a0c4ab16cbb0ca6b977c8f8c23d8aa27af50c4a5a04cde6ae82edc4847c89f5373fe9229fb8fed232e2df04caae22b1e49ef60a0e43c9f73fa749c3818acd
+  languageName: node
+  linkType: hard
+
 "react-is@npm:^16.13.1, react-is@npm:^16.7.0":
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
@@ -17833,13 +17851,6 @@ __metadata:
   version: 17.0.2
   resolution: "react-is@npm:17.0.2"
   checksum: 3eff23f410d40ab9bc5177f147a92c7f42c356a21ecea340e0554566956d67e5e1ba56f26cc7fa22339ac3c7151744177bd6305eaa26d3cbf15f354358c9d9b6
-  languageName: node
-  linkType: hard
-
-"react-is@npm:^18.0.0, react-is@npm:^18.1.0":
-  version: 18.1.0
-  resolution: "react-is@npm:18.1.0"
-  checksum: 456a0c4ab16cbb0ca6b977c8f8c23d8aa27af50c4a5a04cde6ae82edc4847c89f5373fe9229fb8fed232e2df04caae22b1e49ef60a0e43c9f73fa749c3818acd
   languageName: node
   linkType: hard
 
@@ -17864,6 +17875,31 @@ __metadata:
   peerDependencies:
     react: ">=16.8"
   checksum: 9854c8adc97d8e1183d2e1f6bf108805077fb599fcaa19d18a0112dba1f159ff2f6c042c93d71477ab66370a493ddcfa6ccb6450de97d8b3b9bb93592ab4397f
+  languageName: node
+  linkType: hard
+
+"react-shallow-renderer@npm:^16.15.0":
+  version: 16.15.0
+  resolution: "react-shallow-renderer@npm:16.15.0"
+  dependencies:
+    object-assign: ^4.1.1
+    react-is: ^16.12.0 || ^17.0.0 || ^18.0.0
+  peerDependencies:
+    react: ^16.0.0 || ^17.0.0 || ^18.0.0
+  checksum: aee13814b623f9e535fc588a8f0925c192a08c5f6250a13dfc80f36358c4ef0507d3a3afd5ecdc3e857b68ec405a9eb3f3a0c0bcbb748f448ee77694dafef2ff
+  languageName: node
+  linkType: hard
+
+"react-test-renderer@npm:^18.1.0":
+  version: 18.1.0
+  resolution: "react-test-renderer@npm:18.1.0"
+  dependencies:
+    react-is: ^18.1.0
+    react-shallow-renderer: ^16.15.0
+    scheduler: ^0.22.0
+  peerDependencies:
+    react: ^18.1.0
+  checksum: ba8d0e94afc4d1f511dd02c72f617f9ba59b832316016b97ffda553e429f7758e52e4f0921a28ddf0316e31fa75c17033390710c39adff1026f1538a2c5251a2
   languageName: node
   linkType: hard
 
