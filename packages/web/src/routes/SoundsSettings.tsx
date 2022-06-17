@@ -1,22 +1,18 @@
 import type { FC } from 'react';
 import React, { useState } from 'react';
-import { Pause as PauseIcon, PlayArrow } from '@mui/icons-material';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import IconButton from '@mui/material/IconButton';
 import LinearProgress from '@mui/material/LinearProgress';
 import Slider from '@mui/material/Slider';
 import Snackbar from '@mui/material/Snackbar';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
-import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { useMySettingsQuery, useUpdateSettingsMutation } from '@nyoomy/graphql';
 import type { MySettingsQuery } from '@nyoomy/graphql';
-import bellSfx from 'Assets/audio/bell.mp3';
-import useSound from 'use-sound';
+import { SoundButton } from '../components/SoundButton';
 
 const volumeSliderMarks = [
     { value: 0, label: '0%' },
@@ -48,23 +44,7 @@ export const SoundsSettings: FC = () => {
         refetchQueries: ['MySettings'],
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    const [playSound, { stop: stopSound }] = useSound(bellSfx, {
-        volume: mainVolume / 100.0,
-        playbackRate: 3,
-        interrupt: true,
-        onplay() {
-            setSoundPlaying(true);
-        },
-        onend() {
-            setSoundPlaying(false);
-        },
-    });
-
     const handleAudioToggle = async (checked: boolean): Promise<void> => {
-        if (checked) {
-            stopSound();
-        }
         setAudioEnabled(checked);
         await sendUpdate(checked, mainVolume);
     };
@@ -104,6 +84,8 @@ export const SoundsSettings: FC = () => {
         setIsShowingError(false);
     };
 
+    const canTestSound = audioEnabled && mainVolume > 0;
+
     return (
         <Box>
             {loading && <LinearProgress />}
@@ -142,16 +124,13 @@ export const SoundsSettings: FC = () => {
                         handleMainVolumeChange(newVal)
                     }
                 />
-                <Tooltip title={soundPlaying ? 'Stop sound' : 'Test sound'}>
-                    <IconButton
-                        onClick={() =>
-                            soundPlaying ? stopSound() : playSound()
-                        }
-                        disabled={!audioEnabled}
-                    >
-                        {soundPlaying ? <PauseIcon /> : <PlayArrow />}
-                    </IconButton>
-                </Tooltip>
+                <SoundButton
+                    source="Assets/bell.mp3"
+                    playing={soundPlaying}
+                    setPlaying={setSoundPlaying}
+                    volume={mainVolume}
+                    disabled={!canTestSound}
+                />
             </Stack>
             <Snackbar
                 open={isShowingError}

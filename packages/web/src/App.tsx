@@ -8,7 +8,7 @@ import { ApolloWrapper } from './components/ApolloWrapper';
 import { ThemeWrapper } from './components/ThemeWrapper';
 
 export const App: FC = () => (
-    <ApolloWrapper>
+    <ApolloWrapper data-testid="app">
         <LocalizationProvider dateAdapter={AdapterDateFns}>
             <ThemeWrapper>
                 <CssBaseline />
