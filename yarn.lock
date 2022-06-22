@@ -4993,6 +4993,7 @@ __metadata:
     "@testing-library/dom": ^8.13.0
     "@testing-library/jest-dom": ^5.16.4
     "@testing-library/react": ^13.3.0
+    "@testing-library/react-hooks": ^8.0.1
     "@testing-library/user-event": ^14.2.0
     "@types/node": ^17.0.35
     "@types/postcss-import": ^14.0.0
@@ -5309,6 +5310,28 @@ __metadata:
     lodash: ^4.17.15
     redent: ^3.0.0
   checksum: 0ed481ff4a0c48d40689de3ef7d187035fb22d95f5b2a661eae3c5a50a93f5145445e7a3fe530a70e0c79a3d72b076ba13a05f3c9d29accc4ce7b46ad6fef1f0
+  languageName: node
+  linkType: hard
+
+"@testing-library/react-hooks@npm:^8.0.1":
+  version: 8.0.1
+  resolution: "@testing-library/react-hooks@npm:8.0.1"
+  dependencies:
+    "@babel/runtime": ^7.12.5
+    react-error-boundary: ^3.1.0
+  peerDependencies:
+    "@types/react": ^16.9.0 || ^17.0.0
+    react: ^16.9.0 || ^17.0.0
+    react-dom: ^16.9.0 || ^17.0.0
+    react-test-renderer: ^16.9.0 || ^17.0.0
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    react-dom:
+      optional: true
+    react-test-renderer:
+      optional: true
+  checksum: ccadfda9590cf8f52eedaaa24cd461edc78ada468c3b417c45f834a5dc593428cd453f9a5b989479e166788402b6c125e998ba0f48e0f1e6a482f8b0b441cd75
   languageName: node
   linkType: hard
 
@@ -17797,6 +17820,17 @@ __metadata:
   peerDependencies:
     react: ^18.1.0
   checksum: 40ab704328673a84ce71d6f462474ff0b731fb0852bbf264b337586b5147de7b0e7744107608d0d9c5c7259df66b3c8c8f8c7fb50abd08abca369a043dd64aad
+  languageName: node
+  linkType: hard
+
+"react-error-boundary@npm:^3.1.0":
+  version: 3.1.4
+  resolution: "react-error-boundary@npm:3.1.4"
+  dependencies:
+    "@babel/runtime": ^7.12.5
+  peerDependencies:
+    react: ">=16.13.1"
+  checksum: 46284fe6294810fe95a2157e20bf8b241d8761f4e5ae5be7f3b3b1085133cdb7af99d1fa8e3f16ffffc1230e7e858fb04e479c8dafbdb41abbf389d74b8538f0
   languageName: node
   linkType: hard
 
