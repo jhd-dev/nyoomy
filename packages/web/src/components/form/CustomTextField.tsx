@@ -10,14 +10,24 @@ const CustomTextField: FC<CustomTextFieldProps> = ({
     field,
     form: { touched, errors },
     ...props
-}) => (
-    <TextField
-        InputProps={{ role: 'textbox' }}
-        error={touched[field.name] && Boolean(errors[field.name])}
-        helperText={touched[field.name] && String(errors[field.name])}
-        {...field}
-        {...props}
-    />
-);
+}) => {
+    const isTouched = touched[field.name];
+    const hasErrors = isTouched && Boolean(errors[field.name]);
+    const errorMessage = String(errors[field.name]);
+    // Space required since helper text changes component height
+    const helperText = errorMessage ?? ' ';
+    return (
+        <TextField
+            inputProps={{
+                'role': 'textbox',
+                'aria-errormessage': errorMessage,
+            }}
+            error={hasErrors}
+            helperText={helperText}
+            {...field}
+            {...props}
+        />
+    );
+};
 
 export default CustomTextField;

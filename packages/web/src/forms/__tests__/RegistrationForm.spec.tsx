@@ -23,6 +23,7 @@ const mocks: MockedResponse[] = [];
 describe('RegistrationPage', () => {
     beforeEach(() => {
         mockedUseNavigate.mockClear();
+        onSubmitMock.mockClear();
         render(
             <MockedProvider mocks={mocks}>
                 <RegistrationForm onSubmit={onSubmitMock} />
@@ -36,6 +37,7 @@ describe('RegistrationPage', () => {
             expect(getTextbox('Username')).toHaveValue('');
             expect(getTextbox('Email Address')).toHaveValue('');
             expect(getPassword()).toHaveValue('');
+            expect(getTermsAndConditions()).not.toBeChecked();
         });
     });
 
@@ -64,6 +66,122 @@ describe('RegistrationPage', () => {
             expect(getPassword()).toHaveValue(passwordInput);
         });
     });
+
+    it('shows no error messages on untouched fields', () => {
+        expect(getTextbox('Name')).not.toHaveErrorMessage();
+        expect(getTextbox('Username')).not.toHaveErrorMessage();
+        expect(getTextbox('Email Address')).not.toHaveErrorMessage();
+        expect(getPassword()).not.toHaveErrorMessage();
+        expect(getTermsAndConditions()).not.toHaveErrorMessage();
+    });
+
+    it('shows no error messages on valid inputs', async () => {
+        const validName = 'John Doe';
+        await user.type(getTextbox('Name'), validName);
+        await waitFor(async () => {
+            expect(await findTextbox('Name')).not.toHaveErrorMessage();
+        });
+
+        const validUsername = 'johndoe_123';
+        await user.type(getTextbox('Username'), validUsername);
+        await waitFor(async () => {
+            expect(await findTextbox('Username')).not.toHaveErrorMessage();
+        });
+
+        const validEmail = 'johndoe123@email.com';
+        await user.type(getTextbox('Email Address'), validEmail);
+        await waitFor(async () => {
+            expect(await findTextbox('Email Address')).not.toHaveErrorMessage();
+        });
+
+        const validPassword = 'PasswordAbc123!';
+        await user.type(getPassword()!, validPassword);
+        await waitFor(() => {
+            expect(getPassword()).not.toHaveErrorMessage();
+        });
+    });
+
+    xit('shows error messages on skipped inputs', async () => {
+        await user.click(getTextbox('Username'));
+        await user.click(getTextbox('Email Address'));
+        await waitFor(() => {
+            expect(getTextbox('Username')).toHaveErrorMessage(
+                'Username is required'
+            );
+        });
+    });
+
+    xit('shows error messages on invalid inputs', async () => {
+        const invalidEmail = 'aaaaaaaaaa@';
+        await user.type(getTextbox('Email Address'), invalidEmail);
+        await user.click(getTextbox('Username'));
+        await waitFor(async () => {
+            expect(await findTextbox('Email Address')).toHaveErrorMessage(
+                'Enter a valid email address'
+            );
+        });
+    });
+
+    it('submits if all inputs are valid', async () => {
+        const validName = 'John Doe';
+        await user.type(getTextbox('Name'), validName);
+
+        const validUsername = 'johndoe_123';
+        await user.type(getTextbox('Username'), validUsername);
+
+        const validEmail = 'johndoe123@email.com';
+        await user.type(getTextbox('Email Address'), validEmail);
+
+        const validPassword = 'PasswordAbc123!';
+        await user.type(getPassword()!, validPassword);
+
+        await user.click(getTermsAndConditions());
+        await user.click(screen.getByRole('button'));
+        await waitFor(() => {
+            expect(onSubmitMock).toBeCalledTimes(1);
+        });
+    });
+
+    it("won't submit if any input is invalid", async () => {
+        const validName = 'John Doe';
+        await user.type(getTextbox('Name'), validName);
+
+        await user.click(screen.getByRole('button'));
+        await waitFor(() => {
+            expect(onSubmitMock).not.toBeCalled();
+        });
+
+        const validUsername = 'johndoe_123';
+        await user.type(getTextbox('Username'), validUsername);
+
+        await user.click(screen.getByRole('button'));
+        await waitFor(() => {
+            expect(onSubmitMock).not.toBeCalled();
+        });
+
+        const validEmail = 'johndoe123@email.com';
+        await user.type(getTextbox('Email Address'), validEmail);
+
+        await user.click(screen.getByRole('button'));
+        await waitFor(() => {
+            expect(onSubmitMock).not.toBeCalled();
+        });
+
+        const validPassword = 'PasswordAbc123!';
+        await user.type(getPassword()!, validPassword);
+
+        await user.click(screen.getByRole('button'));
+        await waitFor(() => {
+            expect(onSubmitMock).not.toBeCalled();
+        });
+
+        await user.click(getTermsAndConditions());
+
+        await user.click(screen.getByRole('button'));
+        await waitFor(() => {
+            expect(onSubmitMock).toBeCalledTimes(1);
+        });
+    });
 });
 
 function getTextbox(name: string) {
@@ -76,4 +194,8 @@ function findTextbox(name: string) {
 
 function getPassword() {
     return screen.queryByPlaceholderText('********');
+}
+
+function getTermsAndConditions() {
+    return screen.getByRole('checkbox');
 }

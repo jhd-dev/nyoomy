@@ -11,4 +11,7 @@ export const registrationSchema = yup.object({
         .string()
         .min(8, 'Password must be at least 8 characters long')
         .required('Password is required'),
+    termsAndConditions: yup
+        .boolean()
+        .isTrue('You must accept the terms and conditions to continue.'),
 });

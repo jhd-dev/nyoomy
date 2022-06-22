@@ -2,9 +2,9 @@ import type { FC } from 'react';
 import React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
 import { Field, Form, Formik } from 'formik';
+import CustomCheckbox from '../components/form/CustomCheckbox';
 import CustomTextField from '../components/form/CustomTextField';
 import { registrationSchema } from '../validation/registrationSchema';
 
@@ -13,6 +13,7 @@ export interface RegistrationFormValues {
     username: string;
     email: string;
     password: string;
+    termsAndConditions: boolean;
 }
 
 const initialValues: RegistrationFormValues = {
@@ -20,6 +21,7 @@ const initialValues: RegistrationFormValues = {
     username: '',
     email: '',
     password: '',
+    termsAndConditions: false,
 };
 
 interface IRegistrationFormProps {
@@ -32,6 +34,7 @@ export const RegistrationForm: FC<IRegistrationFormProps> = ({ onSubmit }) => (
         onSubmit={onSubmit}
         validationSchema={registrationSchema}
         validateOnBlur
+        validateOnChange
     >
         {({ isSubmitting }) => (
             <Box component={Form} sx={{ mt: 3 }}>
@@ -46,6 +49,7 @@ export const RegistrationForm: FC<IRegistrationFormProps> = ({ onSubmit }) => (
                         autoFocus
                     />
                     <Field
+                        id="email"
                         name="email"
                         component={CustomTextField}
                         type="email"
@@ -56,6 +60,7 @@ export const RegistrationForm: FC<IRegistrationFormProps> = ({ onSubmit }) => (
                         required
                     />
                     <Field
+                        id="username"
                         name="username"
                         component={CustomTextField}
                         label="Username"
@@ -63,14 +68,21 @@ export const RegistrationForm: FC<IRegistrationFormProps> = ({ onSubmit }) => (
                         required
                     />
                     <Field
+                        id="password"
                         name="password"
                         component={CustomTextField}
-                        InputProps={{ type: 'password' }}
+                        // InputProps={{ type: 'password' }}
                         label="Password"
                         placeholder="********"
                         required
                     />
-                    <Field name="termsAndConditions" component={Checkbox} />
+                    <Field
+                        id="termsAndConditions"
+                        name="termsAndConditions"
+                        component={CustomCheckbox}
+                        label="I agree to the terms and conditions."
+                        required
+                    />
                     <Button
                         type="submit"
                         disabled={isSubmitting}
