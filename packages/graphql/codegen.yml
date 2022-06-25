@@ -1,6 +1,6 @@
 overwrite: true
 schema: "http://localhost:4001/graphql"
-documents: "src/**/*.graphql"
+documents: "src/**/*.{graphql,gql}"
 # hooks:
 #   afterAllFileWrite:
 #     - prettier --write
@@ -12,7 +12,6 @@ generates:
       - jsdoc
       - typescript
       - typescript-operations
-      - typescript-resolvers
   src/generated/graphql-hooks.ts:
     plugins:
       - add:

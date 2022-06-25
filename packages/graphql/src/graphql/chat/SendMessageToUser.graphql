@@ -1,0 +1,5 @@
+mutation SendMessageToUser($input: SendMessageToUserInput!) {
+    sendMessageToUser(input: $input) {
+        id
+    }
+}

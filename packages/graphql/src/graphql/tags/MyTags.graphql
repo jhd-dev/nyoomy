@@ -1,0 +1,9 @@
+query MyTags {
+    myTags {
+        id
+        label
+        description
+        color
+        icon
+    }
+}

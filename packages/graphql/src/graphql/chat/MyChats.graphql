@@ -1,0 +1,9 @@
+query MyChats($excludeArchived: Boolean!) {
+    myChats(excludeArchived: $excludeArchived) {
+        id
+        members {
+            id
+            username
+        }
+    }
+}

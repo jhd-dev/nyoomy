@@ -1,0 +1,9 @@
+query UsernameAvailability($input: UsernameAvailabilityArgs!) {
+    usernameAvailability(input: $input) {
+        attemptedInput
+        fieldName
+        isAvailable
+        alternatives
+        timeChecked
+    }
+}

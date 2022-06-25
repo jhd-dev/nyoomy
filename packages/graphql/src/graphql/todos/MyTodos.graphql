@@ -1,0 +1,17 @@
+query MyTodos {
+    getMyTodos(excludeArchived: true) {
+        id
+        title
+        description
+        isCompleted
+        isArchived
+        repeatWeekdays
+        tags {
+            id
+            label
+            description
+            color
+            icon
+        }
+    }
+}

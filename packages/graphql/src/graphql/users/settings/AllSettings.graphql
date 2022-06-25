@@ -1,0 +1,9 @@
+fragment AllSettings on UserSettings {
+    language
+    themePreference
+    audioEnabled
+    globalVolume
+    pin
+    pinTimeout
+    isPublic
+}
