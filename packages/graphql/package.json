@@ -28,6 +28,7 @@
         "@graphql-codegen/jsdoc": "^2.2.11",
         "@graphql-codegen/typed-document-node": "^2.2.11",
         "@graphql-codegen/typescript": "^2.4.11",
+        "@graphql-codegen/typescript-apollo-client-helpers": "^2.1.20",
         "@graphql-codegen/typescript-operations": "^2.4.0",
         "@graphql-codegen/typescript-react-apollo": "^3.2.14",
         "@graphql-codegen/typescript-resolvers": "^2.6.4",

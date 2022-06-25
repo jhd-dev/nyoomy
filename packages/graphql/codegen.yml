@@ -24,3 +24,9 @@ generates:
       withComponent: false
       withHooks: true
       withRefetchFn: true
+  src/generated/apollo-helpers.ts:
+    plugins:
+      - typescript-apollo-client-helpers:
+          useTypeImports: true
+      - add:
+          content: "/* eslint-disable */"
