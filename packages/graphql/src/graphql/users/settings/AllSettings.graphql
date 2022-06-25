@@ -1,4 +1,4 @@
-fragment AllSettings on UserSettings {
+fragment AllSettings on UserSettingsDto {
     language
     themePreference
     audioEnabled

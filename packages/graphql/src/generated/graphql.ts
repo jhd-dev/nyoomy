@@ -1,11 +1,9 @@
 /* eslint-disable */
-import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /**
  * @typedef {Object} AddTagInput
  * @property {CategoryColor} [color]
@@ -908,26 +906,12 @@ export enum Weekday {
   Wednesday = 'WEDNESDAY'
 }
 
-export type MyChatsQueryVariables = Exact<{
-  excludeArchived: Scalars['Boolean'];
+export type DeleteMessageMutationVariables = Exact<{
+  messageId: Scalars['ID'];
 }>;
 
 
-export type MyChatsQuery = { __typename?: 'Query', myChats: Array<{ __typename?: 'Chat', id: string, members: { __typename?: 'User', id: string, username: string } }> };
-
-export type SendMessageToUserMutationVariables = Exact<{
-  input: SendMessageToUserInput;
-}>;
-
-
-export type SendMessageToUserMutation = { __typename?: 'Mutation', sendMessageToUser?: { __typename?: 'Message', id: string } | null };
-
-export type SendMessageToChatMutationVariables = Exact<{
-  input: SendMessageToChatInput;
-}>;
-
-
-export type SendMessageToChatMutation = { __typename?: 'Mutation', sendMessageToChat?: { __typename?: 'Message', id: string, content: string, sentAt: any, chat: { __typename?: 'Chat', id: string } } | null };
+export type DeleteMessageMutation = { __typename?: 'Mutation', deleteMessage?: boolean | null };
 
 export type EditMessageMutationVariables = Exact<{
   input: EditMessageInput;
@@ -936,12 +920,26 @@ export type EditMessageMutationVariables = Exact<{
 
 export type EditMessageMutation = { __typename?: 'Mutation', editMessage?: { __typename?: 'Message', id: string, content: string, sentAt: any, edittedAt: any, chat: { __typename?: 'Chat', id: string } } | null };
 
-export type DeleteMessageMutationVariables = Exact<{
-  messageId: Scalars['ID'];
+export type MyChatsQueryVariables = Exact<{
+  excludeArchived: Scalars['Boolean'];
 }>;
 
 
-export type DeleteMessageMutation = { __typename?: 'Mutation', deleteMessage?: boolean | null };
+export type MyChatsQuery = { __typename?: 'Query', myChats: Array<{ __typename?: 'Chat', id: string, members: { __typename?: 'User', id: string, username: string } }> };
+
+export type SendMessageToChatMutationVariables = Exact<{
+  input: SendMessageToChatInput;
+}>;
+
+
+export type SendMessageToChatMutation = { __typename?: 'Mutation', sendMessageToChat?: { __typename?: 'Message', id: string, content: string, sentAt: any, chat: { __typename?: 'Chat', id: string } } | null };
+
+export type SendMessageToUserMutationVariables = Exact<{
+  input: SendMessageToUserInput;
+}>;
+
+
+export type SendMessageToUserMutation = { __typename?: 'Mutation', sendMessageToUser?: { __typename?: 'Message', id: string } | null };
 
 export type SendFeedbackMutationVariables = Exact<{
   input: CreateFeedbackInput;
@@ -950,24 +948,12 @@ export type SendFeedbackMutationVariables = Exact<{
 
 export type SendFeedbackMutation = { __typename?: 'Mutation', sendFeedback: { __typename?: 'EditFeedbackDto', success: boolean } };
 
-export type MyTagsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type MyTagsQuery = { __typename?: 'Query', myTags: Array<{ __typename?: 'Tag', id: string, label: string, description: string, color: CategoryColor, icon?: CategoryIcon | null }> };
-
 export type CreateTagMutationVariables = Exact<{
   input: AddTagInput;
 }>;
 
 
 export type CreateTagMutation = { __typename?: 'Mutation', createTag?: { __typename?: 'Tag', id: string, label: string, description: string, color: CategoryColor, icon?: CategoryIcon | null } | null };
-
-export type UpdateTagMutationVariables = Exact<{
-  input: UpdateTagInput;
-}>;
-
-
-export type UpdateTagMutation = { __typename?: 'Mutation', updateTag?: { __typename?: 'Tag', id: string, label: string, description: string, color: CategoryColor, icon?: CategoryIcon | null } | null };
 
 export type DeleteTagMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -976,10 +962,17 @@ export type DeleteTagMutationVariables = Exact<{
 
 export type DeleteTagMutation = { __typename?: 'Mutation', deleteTag: boolean };
 
-export type MyTodosQueryVariables = Exact<{ [key: string]: never; }>;
+export type MyTagsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MyTodosQuery = { __typename?: 'Query', getMyTodos: Array<{ __typename?: 'Todo', id: string, title: string, description: string, isCompleted: boolean, isArchived: boolean, repeatWeekdays: Array<Weekday>, tags: Array<{ __typename?: 'Tag', id: string, label: string, description: string, color: CategoryColor, icon?: CategoryIcon | null }> }> };
+export type MyTagsQuery = { __typename?: 'Query', myTags: Array<{ __typename?: 'Tag', id: string, label: string, description: string, color: CategoryColor, icon?: CategoryIcon | null }> };
+
+export type UpdateTagMutationVariables = Exact<{
+  input: UpdateTagInput;
+}>;
+
+
+export type UpdateTagMutation = { __typename?: 'Mutation', updateTag?: { __typename?: 'Tag', id: string, label: string, description: string, color: CategoryColor, icon?: CategoryIcon | null } | null };
 
 export type AddTodoMutationVariables = Exact<{
   input: AddTodoInput;
@@ -988,13 +981,6 @@ export type AddTodoMutationVariables = Exact<{
 
 export type AddTodoMutation = { __typename?: 'Mutation', addTodo?: { __typename?: 'Todo', id: string, title: string, description: string, isCompleted: boolean, isArchived: boolean, repeatWeekdays: Array<Weekday>, tags: Array<{ __typename?: 'Tag', id: string, label: string, description: string, color: CategoryColor, icon?: CategoryIcon | null }> } | null };
 
-export type UpdateTodoMutationVariables = Exact<{
-  updateInput: UpdateTodoInput;
-}>;
-
-
-export type UpdateTodoMutation = { __typename?: 'Mutation', updateTodo?: { __typename?: 'Todo', id: string, title: string, description: string, isCompleted: boolean, isArchived: boolean } | null };
-
 export type DeleteTodoMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -1002,17 +988,17 @@ export type DeleteTodoMutationVariables = Exact<{
 
 export type DeleteTodoMutation = { __typename?: 'Mutation', deleteTodo: boolean };
 
-export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+export type MyTodosQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, username: string, email: string } | null };
+export type MyTodosQuery = { __typename?: 'Query', getMyTodos: Array<{ __typename?: 'Todo', id: string, title: string, description: string, isCompleted: boolean, isArchived: boolean, repeatWeekdays: Array<Weekday>, tags: Array<{ __typename?: 'Tag', id: string, label: string, description: string, color: CategoryColor, icon?: CategoryIcon | null }> }> };
 
-export type RegisterMutationVariables = Exact<{
-  input: RegisterUserInput;
+export type UpdateTodoMutationVariables = Exact<{
+  updateInput: UpdateTodoInput;
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', registerUser: { __typename?: 'RegistrationResponse', user?: { __typename?: 'SafeUser', id: string, username: string } | null } };
+export type UpdateTodoMutation = { __typename?: 'Mutation', updateTodo?: { __typename?: 'Todo', id: string, title: string, description: string, isCompleted: boolean, isArchived: boolean } | null };
 
 export type LoginMutationVariables = Exact<{
   input: UserLoginInput;
@@ -1026,6 +1012,23 @@ export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
 export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
 
+export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, username: string, email: string } | null };
+
+export type RandomUsernameQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type RandomUsernameQuery = { __typename?: 'Query', randomAvailableUsername?: string | null };
+
+export type RegisterMutationVariables = Exact<{
+  input: RegisterUserInput;
+}>;
+
+
+export type RegisterMutation = { __typename?: 'Mutation', registerUser: { __typename?: 'RegistrationResponse', user?: { __typename?: 'SafeUser', id: string, username: string } | null } };
+
 export type UsernameAvailabilityQueryVariables = Exact<{
   input: UsernameAvailabilityArgs;
 }>;
@@ -1033,10 +1036,7 @@ export type UsernameAvailabilityQueryVariables = Exact<{
 
 export type UsernameAvailabilityQuery = { __typename?: 'Query', usernameAvailability: { __typename?: 'AvailabilityDto', attemptedInput?: string | null, fieldName: string, isAvailable: boolean, alternatives?: Array<string> | null, timeChecked: any } };
 
-export type RandomUsernameQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type RandomUsernameQuery = { __typename?: 'Query', randomAvailableUsername?: string | null };
+export type AllSettingsFragment = { __typename?: 'UserSettingsDto', language: string, themePreference: ThemePreference, audioEnabled: boolean, globalVolume: number, pin?: string | null, pinTimeout?: number | null, isPublic: boolean };
 
 export type MySettingsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1049,446 +1049,3 @@ export type UpdateSettingsMutationVariables = Exact<{
 
 
 export type UpdateSettingsMutation = { __typename?: 'Mutation', updateSettings?: { __typename?: 'UserSettingsDto', language: string, themePreference: ThemePreference, audioEnabled: boolean, globalVolume: number, pin?: string | null, pinTimeout?: number | null, isPublic: boolean } | null };
-
-
-
-export type ResolverTypeWrapper<T> = Promise<T> | T;
-
-
-export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
-  resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
-};
-export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
-
-export type ResolverFn<TResult, TParent, TContext, TArgs> = (
-  parent: TParent,
-  args: TArgs,
-  context: TContext,
-  info: GraphQLResolveInfo
-) => Promise<TResult> | TResult;
-
-export type SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs> = (
-  parent: TParent,
-  args: TArgs,
-  context: TContext,
-  info: GraphQLResolveInfo
-) => AsyncIterable<TResult> | Promise<AsyncIterable<TResult>>;
-
-export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
-  parent: TParent,
-  args: TArgs,
-  context: TContext,
-  info: GraphQLResolveInfo
-) => TResult | Promise<TResult>;
-
-export interface SubscriptionSubscriberObject<TResult, TKey extends string, TParent, TContext, TArgs> {
-  subscribe: SubscriptionSubscribeFn<{ [key in TKey]: TResult }, TParent, TContext, TArgs>;
-  resolve?: SubscriptionResolveFn<TResult, { [key in TKey]: TResult }, TContext, TArgs>;
-}
-
-export interface SubscriptionResolverObject<TResult, TParent, TContext, TArgs> {
-  subscribe: SubscriptionSubscribeFn<any, TParent, TContext, TArgs>;
-  resolve: SubscriptionResolveFn<TResult, any, TContext, TArgs>;
-}
-
-export type SubscriptionObject<TResult, TKey extends string, TParent, TContext, TArgs> =
-  | SubscriptionSubscriberObject<TResult, TKey, TParent, TContext, TArgs>
-  | SubscriptionResolverObject<TResult, TParent, TContext, TArgs>;
-
-export type SubscriptionResolver<TResult, TKey extends string, TParent = {}, TContext = {}, TArgs = {}> =
-  | ((...args: any[]) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
-  | SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>;
-
-export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
-  parent: TParent,
-  context: TContext,
-  info: GraphQLResolveInfo
-) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
-
-export type IsTypeOfResolverFn<T = {}, TContext = {}> = (obj: T, context: TContext, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
-
-export type NextResolverFn<T> = () => Promise<T>;
-
-export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs = {}> = (
-  next: NextResolverFn<TResult>,
-  parent: TParent,
-  args: TArgs,
-  context: TContext,
-  info: GraphQLResolveInfo
-) => TResult | Promise<TResult>;
-
-/** Mapping between all available schema types and the resolvers types */
-export type ResolversTypes = {
-  AddTagInput: AddTagInput;
-  AddTodoInput: AddTodoInput;
-  AvailabilityDto: ResolverTypeWrapper<AvailabilityDto>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
-  CategoryColor: CategoryColor;
-  CategoryIcon: CategoryIcon;
-  Chat: ResolverTypeWrapper<Chat>;
-  CounterMetric: ResolverTypeWrapper<CounterMetric>;
-  CreateFeedbackInput: CreateFeedbackInput;
-  DailyFloatMetric: ResolverTypeWrapper<DailyFloatMetric>;
-  DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
-  EditFeedbackDto: ResolverTypeWrapper<EditFeedbackDto>;
-  EditMessageInput: EditMessageInput;
-  FieldError: ResolverTypeWrapper<FieldError>;
-  Float: ResolverTypeWrapper<Scalars['Float']>;
-  ID: ResolverTypeWrapper<Scalars['ID']>;
-  Int: ResolverTypeWrapper<Scalars['Int']>;
-  Journal: ResolverTypeWrapper<Journal>;
-  LoginResponse: ResolverTypeWrapper<LoginResponse>;
-  Message: ResolverTypeWrapper<Message>;
-  Metric: ResolverTypeWrapper<Metric>;
-  MetricType: MetricType;
-  Mutation: ResolverTypeWrapper<{}>;
-  Query: ResolverTypeWrapper<{}>;
-  RegisterUserInput: RegisterUserInput;
-  RegistrationResponse: ResolverTypeWrapper<RegistrationResponse>;
-  SafeUser: ResolverTypeWrapper<SafeUser>;
-  Scale: ResolverTypeWrapper<Scale>;
-  SelectionCategory: ResolverTypeWrapper<SelectionCategory>;
-  SelectionEntry: ResolverTypeWrapper<SelectionEntry>;
-  SelectionMetric: ResolverTypeWrapper<SelectionMetric>;
-  SelectionOption: ResolverTypeWrapper<SelectionOption>;
-  SendMessageToChatInput: SendMessageToChatInput;
-  SendMessageToUserInput: SendMessageToUserInput;
-  String: ResolverTypeWrapper<Scalars['String']>;
-  Tag: ResolverTypeWrapper<Tag>;
-  Taggable: ResolverTypeWrapper<Taggable>;
-  TaggableInput: TaggableInput;
-  ThemePreference: ThemePreference;
-  TimerMetric: ResolverTypeWrapper<TimerMetric>;
-  Todo: ResolverTypeWrapper<Todo>;
-  UpdatePasswordInput: UpdatePasswordInput;
-  UpdateTagInput: UpdateTagInput;
-  UpdateTodoInput: UpdateTodoInput;
-  UpdateUserSettingsInput: UpdateUserSettingsInput;
-  User: ResolverTypeWrapper<User>;
-  UserLoginInput: UserLoginInput;
-  UserSettingsDto: ResolverTypeWrapper<UserSettingsDto>;
-  UsernameAvailabilityArgs: UsernameAvailabilityArgs;
-  Weekday: Weekday;
-};
-
-/** Mapping between all available schema types and the resolvers parents */
-export type ResolversParentTypes = {
-  AddTagInput: AddTagInput;
-  AddTodoInput: AddTodoInput;
-  AvailabilityDto: AvailabilityDto;
-  Boolean: Scalars['Boolean'];
-  Chat: Chat;
-  CounterMetric: CounterMetric;
-  CreateFeedbackInput: CreateFeedbackInput;
-  DailyFloatMetric: DailyFloatMetric;
-  DateTime: Scalars['DateTime'];
-  EditFeedbackDto: EditFeedbackDto;
-  EditMessageInput: EditMessageInput;
-  FieldError: FieldError;
-  Float: Scalars['Float'];
-  ID: Scalars['ID'];
-  Int: Scalars['Int'];
-  Journal: Journal;
-  LoginResponse: LoginResponse;
-  Message: Message;
-  Metric: Metric;
-  Mutation: {};
-  Query: {};
-  RegisterUserInput: RegisterUserInput;
-  RegistrationResponse: RegistrationResponse;
-  SafeUser: SafeUser;
-  Scale: Scale;
-  SelectionCategory: SelectionCategory;
-  SelectionEntry: SelectionEntry;
-  SelectionMetric: SelectionMetric;
-  SelectionOption: SelectionOption;
-  SendMessageToChatInput: SendMessageToChatInput;
-  SendMessageToUserInput: SendMessageToUserInput;
-  String: Scalars['String'];
-  Tag: Tag;
-  Taggable: Taggable;
-  TaggableInput: TaggableInput;
-  TimerMetric: TimerMetric;
-  Todo: Todo;
-  UpdatePasswordInput: UpdatePasswordInput;
-  UpdateTagInput: UpdateTagInput;
-  UpdateTodoInput: UpdateTodoInput;
-  UpdateUserSettingsInput: UpdateUserSettingsInput;
-  User: User;
-  UserLoginInput: UserLoginInput;
-  UserSettingsDto: UserSettingsDto;
-  UsernameAvailabilityArgs: UsernameAvailabilityArgs;
-};
-
-export type AvailabilityDtoResolvers<ContextType = any, ParentType extends ResolversParentTypes['AvailabilityDto'] = ResolversParentTypes['AvailabilityDto']> = {
-  alternatives?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
-  attemptedInput?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  fieldName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  isAvailable?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  timeChecked?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ChatResolvers<ContextType = any, ParentType extends ResolversParentTypes['Chat'] = ResolversParentTypes['Chat']> = {
-  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  isArchived?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  members?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type CounterMetricResolvers<ContextType = any, ParentType extends ResolversParentTypes['CounterMetric'] = ResolversParentTypes['CounterMetric']> = {
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  interval?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  maximum?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  metric?: Resolver<ResolversTypes['Metric'], ParentType, ContextType>;
-  metricType?: Resolver<ResolversTypes['MetricType'], ParentType, ContextType>;
-  minimum?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type DailyFloatMetricResolvers<ContextType = any, ParentType extends ResolversParentTypes['DailyFloatMetric'] = ResolversParentTypes['DailyFloatMetric']> = {
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  max?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
-  metric?: Resolver<ResolversTypes['Metric'], ParentType, ContextType>;
-  metricType?: Resolver<ResolversTypes['MetricType'], ParentType, ContextType>;
-  min?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
-  name: 'DateTime';
-}
-
-export type EditFeedbackDtoResolvers<ContextType = any, ParentType extends ResolversParentTypes['EditFeedbackDto'] = ResolversParentTypes['EditFeedbackDto']> = {
-  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type FieldErrorResolvers<ContextType = any, ParentType extends ResolversParentTypes['FieldError'] = ResolversParentTypes['FieldError']> = {
-  field?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type JournalResolvers<ContextType = any, ParentType extends ResolversParentTypes['Journal'] = ResolversParentTypes['Journal']> = {
-  dailyWordGoal?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  isArchived?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type LoginResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['LoginResponse'] = ResolversParentTypes['LoginResponse']> = {
-  error?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  user?: Resolver<Maybe<ResolversTypes['SafeUser']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type MessageResolvers<ContextType = any, ParentType extends ResolversParentTypes['Message'] = ResolversParentTypes['Message']> = {
-  chat?: Resolver<ResolversTypes['Chat'], ParentType, ContextType>;
-  content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  edittedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  sender?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
-  sentAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type MetricResolvers<ContextType = any, ParentType extends ResolversParentTypes['Metric'] = ResolversParentTypes['Metric']> = {
-  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  isArchived?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  taggable?: Resolver<ResolversTypes['Taggable'], ParentType, ContextType>;
-  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  addTodo?: Resolver<Maybe<ResolversTypes['Todo']>, ParentType, ContextType, RequireFields<MutationAddTodoArgs, 'input'>>;
-  applyTag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<MutationApplyTagArgs, 'tagId' | 'taggableId'>>;
-  createTag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<MutationCreateTagArgs, 'tagInput'>>;
-  deleteMessage?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteMessageArgs, 'messageId'>>;
-  deleteTag?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteTagArgs, 'tagId'>>;
-  deleteTodo?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteTodoArgs, 'id'>>;
-  deleteUser?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  deleteUserById?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteUserByIdArgs, 'id'>>;
-  editMessage?: Resolver<Maybe<ResolversTypes['Message']>, ParentType, ContextType, RequireFields<MutationEditMessageArgs, 'input'>>;
-  login?: Resolver<Maybe<ResolversTypes['LoginResponse']>, ParentType, ContextType, RequireFields<MutationLoginArgs, 'input'>>;
-  logout?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  registerUser?: Resolver<ResolversTypes['RegistrationResponse'], ParentType, ContextType, RequireFields<MutationRegisterUserArgs, 'input'>>;
-  sendFeedback?: Resolver<ResolversTypes['EditFeedbackDto'], ParentType, ContextType, RequireFields<MutationSendFeedbackArgs, 'input'>>;
-  sendMessageToChat?: Resolver<Maybe<ResolversTypes['Message']>, ParentType, ContextType, RequireFields<MutationSendMessageToChatArgs, 'input'>>;
-  sendMessageToUser?: Resolver<Maybe<ResolversTypes['Message']>, ParentType, ContextType, RequireFields<MutationSendMessageToUserArgs, 'input'>>;
-  updateSettings?: Resolver<Maybe<ResolversTypes['UserSettingsDto']>, ParentType, ContextType, RequireFields<MutationUpdateSettingsArgs, 'input'>>;
-  updateTag?: Resolver<Maybe<ResolversTypes['Tag']>, ParentType, ContextType, RequireFields<MutationUpdateTagArgs, 'updateInput'>>;
-  updateTodo?: Resolver<Maybe<ResolversTypes['Todo']>, ParentType, ContextType, RequireFields<MutationUpdateTodoArgs, 'updateInput'>>;
-  updateUserPassword?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationUpdateUserPasswordArgs, 'input'>>;
-};
-
-export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  getMyTodos?: Resolver<Array<ResolversTypes['Todo']>, ParentType, ContextType, RequireFields<QueryGetMyTodosArgs, 'excludeArchived'>>;
-  getTodo?: Resolver<Array<ResolversTypes['Todo']>, ParentType, ContextType, RequireFields<QueryGetTodoArgs, 'id'>>;
-  me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  myChats?: Resolver<Array<ResolversTypes['Chat']>, ParentType, ContextType, RequireFields<QueryMyChatsArgs, 'excludeArchived'>>;
-  mySettings?: Resolver<Maybe<ResolversTypes['UserSettingsDto']>, ParentType, ContextType>;
-  myTags?: Resolver<Array<ResolversTypes['Tag']>, ParentType, ContextType>;
-  randomAvailableUsername?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  usernameAvailability?: Resolver<ResolversTypes['AvailabilityDto'], ParentType, ContextType, RequireFields<QueryUsernameAvailabilityArgs, 'input'>>;
-  users?: Resolver<Maybe<Array<ResolversTypes['User']>>, ParentType, ContextType>;
-};
-
-export type RegistrationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['RegistrationResponse'] = ResolversParentTypes['RegistrationResponse']> = {
-  errors?: Resolver<Maybe<Array<ResolversTypes['FieldError']>>, ParentType, ContextType>;
-  user?: Resolver<Maybe<ResolversTypes['SafeUser']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type SafeUserResolvers<ContextType = any, ParentType extends ResolversParentTypes['SafeUser'] = ResolversParentTypes['SafeUser']> = {
-  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  googleId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  isEmailVerified?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  stars?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ScaleResolvers<ContextType = any, ParentType extends ResolversParentTypes['Scale'] = ResolversParentTypes['Scale']> = {
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  max?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  metric?: Resolver<ResolversTypes['Metric'], ParentType, ContextType>;
-  metricType?: Resolver<ResolversTypes['MetricType'], ParentType, ContextType>;
-  min?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type SelectionCategoryResolvers<ContextType = any, ParentType extends ResolversParentTypes['SelectionCategory'] = ResolversParentTypes['SelectionCategory']> = {
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  metric?: Resolver<ResolversTypes['SelectionMetric'], ParentType, ContextType>;
-  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type SelectionEntryResolvers<ContextType = any, ParentType extends ResolversParentTypes['SelectionEntry'] = ResolversParentTypes['SelectionEntry']> = {
-  datetime?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  metric?: Resolver<ResolversTypes['SelectionMetric'], ParentType, ContextType>;
-  selectedOptions?: Resolver<Array<ResolversTypes['SelectionOption']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type SelectionMetricResolvers<ContextType = any, ParentType extends ResolversParentTypes['SelectionMetric'] = ResolversParentTypes['SelectionMetric']> = {
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  maxSelections?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  metric?: Resolver<ResolversTypes['Metric'], ParentType, ContextType>;
-  metricType?: Resolver<ResolversTypes['MetricType'], ParentType, ContextType>;
-  minSelections?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type SelectionOptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['SelectionOption'] = ResolversParentTypes['SelectionOption']> = {
-  category?: Resolver<ResolversTypes['SelectionCategory'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  metric?: Resolver<ResolversTypes['SelectionMetric'], ParentType, ContextType>;
-  selectingEntries?: Resolver<Array<ResolversTypes['SelectionEntry']>, ParentType, ContextType>;
-  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type TagResolvers<ContextType = any, ParentType extends ResolversParentTypes['Tag'] = ResolversParentTypes['Tag']> = {
-  color?: Resolver<ResolversTypes['CategoryColor'], ParentType, ContextType>;
-  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  icon?: Resolver<Maybe<ResolversTypes['CategoryIcon']>, ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  isArchived?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  label?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type TaggableResolvers<ContextType = any, ParentType extends ResolversParentTypes['Taggable'] = ResolversParentTypes['Taggable']> = {
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  tags?: Resolver<Array<ResolversTypes['Tag']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type TimerMetricResolvers<ContextType = any, ParentType extends ResolversParentTypes['TimerMetric'] = ResolversParentTypes['TimerMetric']> = {
-  goalLength?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  goalPerDay?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  metric?: Resolver<ResolversTypes['Metric'], ParentType, ContextType>;
-  metricType?: Resolver<ResolversTypes['MetricType'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type TodoResolvers<ContextType = any, ParentType extends ResolversParentTypes['Todo'] = ResolversParentTypes['Todo']> = {
-  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  doesRepeat?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  isArchived?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  isCompleted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  repeatWeekdays?: Resolver<Array<ResolversTypes['Weekday']>, ParentType, ContextType>;
-  subtasks?: Resolver<Array<ResolversTypes['Todo']>, ParentType, ContextType>;
-  supertask?: Resolver<Maybe<ResolversTypes['Todo']>, ParentType, ContextType>;
-  tags?: Resolver<Array<ResolversTypes['Tag']>, ParentType, ContextType>;
-  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
-  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  googleId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  isEmailVerified?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  stars?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type UserSettingsDtoResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserSettingsDto'] = ResolversParentTypes['UserSettingsDto']> = {
-  audioEnabled?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  globalVolume?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  isPublic?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  language?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  pin?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  pinTimeout?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  themePreference?: Resolver<ResolversTypes['ThemePreference'], ParentType, ContextType>;
-  user?: Resolver<ResolversTypes['SafeUser'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type Resolvers<ContextType = any> = {
-  AvailabilityDto?: AvailabilityDtoResolvers<ContextType>;
-  Chat?: ChatResolvers<ContextType>;
-  CounterMetric?: CounterMetricResolvers<ContextType>;
-  DailyFloatMetric?: DailyFloatMetricResolvers<ContextType>;
-  DateTime?: GraphQLScalarType;
-  EditFeedbackDto?: EditFeedbackDtoResolvers<ContextType>;
-  FieldError?: FieldErrorResolvers<ContextType>;
-  Journal?: JournalResolvers<ContextType>;
-  LoginResponse?: LoginResponseResolvers<ContextType>;
-  Message?: MessageResolvers<ContextType>;
-  Metric?: MetricResolvers<ContextType>;
-  Mutation?: MutationResolvers<ContextType>;
-  Query?: QueryResolvers<ContextType>;
-  RegistrationResponse?: RegistrationResponseResolvers<ContextType>;
-  SafeUser?: SafeUserResolvers<ContextType>;
-  Scale?: ScaleResolvers<ContextType>;
-  SelectionCategory?: SelectionCategoryResolvers<ContextType>;
-  SelectionEntry?: SelectionEntryResolvers<ContextType>;
-  SelectionMetric?: SelectionMetricResolvers<ContextType>;
-  SelectionOption?: SelectionOptionResolvers<ContextType>;
-  Tag?: TagResolvers<ContextType>;
-  Taggable?: TaggableResolvers<ContextType>;
-  TimerMetric?: TimerMetricResolvers<ContextType>;
-  Todo?: TodoResolvers<ContextType>;
-  User?: UserResolvers<ContextType>;
-  UserSettingsDto?: UserSettingsDtoResolvers<ContextType>;
-};
-
