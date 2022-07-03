@@ -1,0 +1,44 @@
+type TodoList {
+    id: ID!
+    todos: [Todo!]!
+    title: String!
+    description: String!
+}
+
+type Todo {
+    id: ID!
+    title: String!
+    description: String!
+    todoList: TodoList!
+    doesRepeat: Boolean!
+    repeatPattern: RepeatPattern!
+    instances: [TodoInstance!]!
+    childTasks: [Todo!]!
+    parentTask: Todo
+    tags: [Tag!]!
+}
+
+type TodoInstance {
+    id: ID!
+    todo: Todo!
+    dueDate: Date
+    originalDueDate: Date
+    childTaskInstances: [TodoInstance!]!
+    parentTaskInstance: TodoInstance
+}
+
+type RepeatPattern {
+    startDate: Date!
+    endDate: Date!
+    weekdays: [Weekday!]!
+}
+
+enum Weekday {
+    SUNDAY
+    MONDAY
+    TUESDAY
+    WEDNESDAY
+    THURSDAY
+    FRIDAY
+    SATURDAY
+}

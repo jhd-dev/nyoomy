@@ -1,27 +1,23 @@
 import type { FC, ReactNode } from 'react';
 import React from 'react';
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import {
+    ApolloClient,
+    InMemoryCache,
+    ApolloProvider,
+    // gql,
+} from '@apollo/client';
+import type { StrictTypedTypePolicies } from '@nyoomy/graphql';
 
-const apolloUri = `${window.location.origin}/graphql`;
+const uri = `${window.location.origin}/graphql`;
 
-console.info(`Creating Apollo Client for: ${apolloUri}`);
+console.info(`Creating Apollo Client for: ${uri}`);
 
-const cache = new InMemoryCache({
-    typePolicies: {
-        CounterMetricDailyEntry: {
-            keyFields: ['metricId', 'date'],
-        },
-        TimerMetricPayload: {
-            keyFields: ['metricId', 'date'],
-        },
-        TodoResponse: {
-            keyFields: ['todoId', 'date'],
-        },
-    },
-});
+const typePolicies: StrictTypedTypePolicies = {};
+
+const cache = new InMemoryCache({ typePolicies });
 
 const client = new ApolloClient({
-    uri: apolloUri,
+    uri,
     cache,
     name: 'web',
 });

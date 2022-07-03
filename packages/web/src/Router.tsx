@@ -5,6 +5,7 @@ import ChatPage from './routes/ChatPage';
 import { FeedbackPage } from './routes/FeedbackPage';
 import LoginPage from './routes/LoginPage';
 import MainPage from './routes/MainPage';
+import { MedicinePage } from './routes/MedicinePage';
 import PageNotFoundAlert from './routes/PageNotFoundAlert';
 import RegistrationPage from './routes/RegistrationPage';
 import SettingsPage from './routes/SettingsPage';
@@ -20,6 +21,14 @@ const Router: FC = () => (
                 <Route path="messages" element={<ChatPage />} />
                 <Route path="todo" element={<TodoPage />}>
                     <Route path=":todoId" element={<TodoDetailsRoute />} />
+                </Route>
+                <Route path="medication" element={<MedicinePage />}>
+                    <Route path="new" />
+                    <Route path=":medicationId">
+                        <Route path="edit" />
+                        <Route path="dose" />
+                        <Route index element={<Navigate to="edit" replace />} />
+                    </Route>
                 </Route>
                 <Route
                     path="settings"
