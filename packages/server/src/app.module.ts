@@ -13,8 +13,6 @@ import {
 } from 'passport';
 import { join } from 'path';
 import { RedisClient } from 'redis';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ComplexityPlugin } from './common/plugins/complexity.plugin';
 import { configuration } from './config/configuration';
 import { COOKIE_NAME, REDIS_SESSION_PREFIX } from './constants';
@@ -38,6 +36,7 @@ import type { Client as ConnectRedisClient } from 'connect-redis';
 
 const STATIC_PATH = join(__dirname, '../../web/dist');
 const GRAPHQL_SCHEMA_PATH = join(__dirname, '../schema.graphql');
+const ENTITY_PATH = join(__dirname, '**/*.entity.ts');
 
 const devContentSecurityPolicy = {
     directives: {
@@ -49,17 +48,33 @@ const devContentSecurityPolicy = {
 @Module({
     imports: [
         AuthModule,
-        RedisModule,
+        CaslModule,
+        ChatModule,
         EmailModule,
+        RedisModule,
+        FeedbackModule,
+        JournalModule,
+        LoggerModule,
         TodoModule,
         TagModule,
-        JournalModule,
-        ChatModule,
-        FeedbackModule,
         UserModule,
-        CaslModule,
-        LoggerModule,
-        TypeOrmModule.forRoot(),
+        TypeOrmModule.forRootAsync({
+            useFactory: (configService: ConfigService) => ({
+                type: 'postgres',
+                host: configService.get('database.host'),
+                port: configService.get('database.port'),
+                username: configService.get('database.username'),
+                password: configService.get('database.password'),
+                database: configService.get('database.name'),
+                synchronize: true,
+                logging: true,
+                logNotifications: true,
+                dropSchema: true,
+                autoLoadEntities: true,
+                entities: [ENTITY_PATH],
+            }),
+            inject: [ConfigService],
+        }),
         GraphQLModule.forRootAsync<ApolloDriverConfig>({
             imports: [LoggerModule],
             useFactory: (
@@ -99,14 +114,7 @@ const devContentSecurityPolicy = {
             cache: false,
         }),
     ],
-    controllers: [AppController],
-    providers: [
-        AppService,
-        LoggerService,
-        Logger,
-        ComplexityPlugin,
-        ConfigService,
-    ],
+    providers: [LoggerService, Logger, ComplexityPlugin, ConfigService],
 })
 export class AppModule implements NestModule {
     public constructor(

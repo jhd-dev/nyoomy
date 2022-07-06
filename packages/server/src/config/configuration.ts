@@ -32,8 +32,11 @@ export const configuration = (): IConfiguration => {
         publicUri: new URL(process.env.PUBLIC_URL!).host,
         database: {
             name: process.env.DB_NAME!,
+            host: process.env.DB_HOST!,
+            port: parseInt(process.env.DB_PORT!, 10),
             username: process.env.DB_USERNAME!,
             password: process.env.DB_PASSWORD ?? '',
+            connectionName: process.env.DB_CONNECTION_NAME!,
         },
         redis: {
             port: parseInt(process.env.REDIS_PORT!, 10),

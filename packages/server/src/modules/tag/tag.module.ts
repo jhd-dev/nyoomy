@@ -5,14 +5,14 @@ import { CaslModule } from '../casl/casl.module';
 import { LoggerModule } from '../logger/logger.module';
 import { LoggerService } from '../logger/logger.service';
 import { User } from '../user/models/user.entity';
-import { Tag } from './models/tag.entity';
-import { Taggable } from './models/taggable.entity';
+import { TagEntity } from './models/tag.entity';
+import { TaggableEntity } from './models/taggable.entity';
 import { TagResolver } from './tag.resolver';
 import { TagService } from './tag.service';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([Tag, Taggable, User]),
+        TypeOrmModule.forFeature([TagEntity, TaggableEntity, User]),
         CaslModule,
         LoggerModule,
     ],

@@ -4,8 +4,8 @@ import Action from '../../types/enums/entity-action.enum';
 import Role from '../../types/enums/role.enum';
 import { Chat } from '../chat/models/chat.entity';
 import { Message } from '../chat/models/message.entity';
-import { Tag } from '../tag/models/tag.entity';
-import { Todo } from '../todo/models/todo.entity';
+import { TagEntity } from '../tag/models/tag.entity';
+import { TodoEntity } from '../todo/models/todo.entity';
 import { Profile } from '../user/models/profile.entity';
 import { User } from '../user/models/user.entity';
 import type {
@@ -19,8 +19,8 @@ import type { AnyObject } from '@casl/ability/dist/types/types';
 type Subjects =
     | InferSubjects<
           | typeof User
-          | typeof Tag
-          | typeof Todo
+          | typeof TagEntity
+          | typeof TodoEntity
           | typeof Profile
           | typeof Chat
           | typeof Message
@@ -88,11 +88,11 @@ export class CaslAbilityFactory {
                     'Users may not gain undue authority.'
                 );
 
-                can<FlatMetric<Todo>>(Action.MANAGE, Todo, {
+                can<FlatMetric<TodoEntity>>(Action.MANAGE, TodoEntity, {
                     'user.id': user.id,
                 }).because('Users may manage their own metrics.');
 
-                can<FlatMetric<Tag>>(Action.MANAGE, Tag, {
+                can<FlatMetric<TagEntity>>(Action.MANAGE, TagEntity, {
                     'user.id': user.id,
                 }).because('Users may manage their own tags.');
                 break;

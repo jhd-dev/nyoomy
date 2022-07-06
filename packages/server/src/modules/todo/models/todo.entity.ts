@@ -1,4 +1,3 @@
-import { Field, HideField, ID, ObjectType } from '@nestjs/graphql';
 import {
     Column,
     Entity,
@@ -10,70 +9,60 @@ import {
     TreeLevelColumn,
     OneToOne,
     JoinColumn,
+    OneToMany,
+    RelationId,
 } from 'typeorm';
-import Weekday, { weekdays } from '../../../types/enums/weekday.enum';
-import { Tag } from '../../tag/models/tag.entity';
-import { Taggable } from '../../tag/models/taggable.entity';
+import { TaggableEntity } from '../../tag/models/taggable.entity';
 import { User } from '../../user/models/user.entity';
+import { TodoInstanceEntity } from './todo-instance.entity';
 
 @Entity('todos')
 @Tree('materialized-path')
-@ObjectType()
-export class Todo {
+export class TodoEntity {
     @PrimaryGeneratedColumn('uuid')
-    @Field(() => ID)
     public readonly id!: string;
 
     @TreeChildren()
-    @Field(() => [Todo])
-    public subtasks!: Todo[];
+    public children!: TodoEntity[];
 
     @TreeParent()
-    @Field(() => Todo, { nullable: true, defaultValue: null })
-    public supertask!: Todo | null;
+    public parent!: TodoEntity | null;
 
     @TreeLevelColumn()
-    @HideField()
     public level!: number;
 
     @ManyToOne(() => User)
-    @Field(() => User)
+    @JoinColumn({ name: 'user_id' })
     public user!: User;
 
+    @Column({ name: 'user_id' })
+    public userId: string;
+
     @Column('text', { default: 'New task' })
-    @Field()
     public title!: string;
 
     @Column('text', { default: '' })
-    @Field()
     public description!: string;
 
-    @Column('boolean', { default: false })
-    @Field()
-    public isCompleted: boolean;
-
-    @Column('boolean', { default: false })
-    @Field()
+    @Column('boolean', { default: false, name: 'is_archived' })
     public isArchived!: boolean;
 
-    @Column('enum', {
-        enum: weekdays,
-        array: true,
-        default: [],
-    })
-    @Field(() => [Weekday])
-    public repeatWeekdays!: Weekday[];
+    @Column('boolean', { default: false, name: 'does_repeat' })
+    public doesRepeat!: boolean;
 
-    @Field(() => [Tag])
-    public tags: Tag[];
+    @Column('varchar', { nullable: true, name: 'repeat_pattern' })
+    public repeatPattern?: string; // Cron expression
 
-    @OneToOne(() => Taggable, { cascade: true, eager: true })
+    @Column('timestamptz', { nullable: true, name: 'start_date' })
+    public startDate?: Date;
+
+    @Column('timestamptz', { nullable: true, name: 'end_date' })
+    public endDate?: Date;
+
+    @OneToMany(() => TodoInstanceEntity, (instance) => instance.todo)
+    public instances!: TodoInstanceEntity[];
+
+    @OneToOne(() => TaggableEntity, { cascade: true, eager: true })
     @JoinColumn()
-    @HideField()
-    public taggable: Taggable;
-
-    @Field()
-    public get doesRepeat(): boolean {
-        return this.repeatWeekdays.length !== 0;
-    }
+    public taggable: TaggableEntity;
 }

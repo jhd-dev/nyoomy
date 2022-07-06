@@ -1,4 +1,3 @@
-import { Field, HideField, ID, ObjectType } from '@nestjs/graphql';
 import {
     Column,
     ManyToMany,
@@ -10,50 +9,36 @@ import {
     CategoryColor,
     categoryColors,
 } from '../../../types/enums/category-color.enum';
-import CategoryIcon, {
-    categoryIcons,
-} from '../../../types/enums/category-icon';
+import { categoryIcons } from '../../../types/enums/category-icon';
 import { User } from '../../user/models/user.entity';
-import { Taggable } from './taggable.entity';
+import { TaggableEntity } from './taggable.entity';
+import type CategoryIcon from '../../../types/enums/category-icon';
 
 @Entity('tags')
-@ObjectType()
-export class Tag {
+export class TagEntity {
     @PrimaryGeneratedColumn()
-    @Field(() => ID)
-    public readonly id: string;
+    public readonly id!: string;
 
     @ManyToOne(() => User)
-    @Field(() => User)
     public user: User;
 
-    @ManyToMany(() => Taggable, (taggable) => taggable.tags, { cascade: true })
-    @HideField()
-    public taggedItems: Taggable[];
+    @ManyToMany(() => TaggableEntity, (taggable) => taggable.tags, {
+        cascade: true,
+    })
+    public taggedItems: TaggableEntity[];
 
     @Column('varchar', { length: 63 })
-    @Field()
     public label: string;
 
     @Column('text', { default: '' })
-    @Field()
     public description: string;
 
-    @Column('enum', {
-        enum: categoryColors,
-        nullable: true,
-    })
-    @Field(() => CategoryColor, { defaultValue: CategoryColor.DEFAULT })
+    @Column('enum', { default: CategoryColor.DEFAULT, enum: categoryColors })
     public color: CategoryColor;
 
-    @Column('enum', {
-        enum: categoryIcons,
-        nullable: true,
-    })
-    @Field(() => CategoryIcon, { nullable: true })
+    @Column('enum', { enum: categoryIcons, nullable: true })
     public icon: CategoryIcon | null;
 
-    @Column('boolean', { default: false })
-    @Field()
+    @Column('boolean', { default: false, name: 'is_archived' })
     public isArchived: boolean;
 }

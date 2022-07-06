@@ -13,8 +13,6 @@ import {
     CreateDateColumn,
     DeleteDateColumn,
     Entity,
-    JoinColumn,
-    OneToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
@@ -39,7 +37,6 @@ export class User implements IUser {
 
     @Column('varchar', { unique: true, length: 254 })
     @Field()
-    @Directive('@lowercase')
     public email: string;
 
     @Column('varchar', { length: 256 })

@@ -1,18 +1,11 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { CategoryColor } from '../../../types/enums/category-color.enum';
-import type CategoryIcon from '../../../types/enums/category-icon';
-import type { Tag } from '../models/tag.entity';
+import CategoryIcon from '../../../types/enums/category-icon';
 
 @ObjectType()
-export class TagDto implements Omit<Tag, 'user' | 'taggedItems'> {
+export class TagDto {
     @Field(() => ID)
-    public id: string;
-
-    // @Field(() => User)
-    // public user: User;
-
-    // @Field(() => [Taggable])
-    // public taggedItems: Taggable[];
+    public id!: string;
 
     @Field()
     public label: string;
@@ -20,10 +13,10 @@ export class TagDto implements Omit<Tag, 'user' | 'taggedItems'> {
     @Field()
     public description: string;
 
-    @Field()
-    public color: CategoryColor;
+    @Field(() => CategoryColor)
+    public color!: CategoryColor;
 
-    @Field()
+    @Field(() => CategoryIcon, { nullable: true })
     public icon: CategoryIcon | null;
 
     @Field()

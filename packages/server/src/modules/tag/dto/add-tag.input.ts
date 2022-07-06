@@ -2,10 +2,10 @@ import { Field, InputType } from '@nestjs/graphql';
 import { CategoryColor } from '../../../types/enums/category-color.enum';
 import CategoryIcon from '../../../types/enums/category-icon';
 import { TaggableInput } from './taggable.input';
-import type { Tag } from '../models/tag.entity';
+import type { TagEntity } from '../models/tag.entity';
 
 @InputType()
-export class AddTagInput implements Partial<Tag> {
+export class AddTagInput implements Partial<TagEntity> {
     @Field()
     public label: string;
 

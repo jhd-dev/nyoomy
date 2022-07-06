@@ -12,7 +12,6 @@ import { Profile } from '../user/models/profile.entity';
 import { UserSettings } from '../user/models/user-settings.entity';
 import { User } from '../user/models/user.entity';
 import { UserModule } from '../user/user.module';
-import { UserRepo } from '../user/user.repository';
 import { UserService } from '../user/user.service';
 import { AuthController } from './auth.controller';
 import { AuthResolver } from './auth.resolver';
@@ -41,7 +40,6 @@ import { LocalStrategy } from './providers/strategies/local.strategy';
         GoogleStrategy,
         ConfigService,
         UserService,
-        UserRepo,
         CaslAbilityFactory,
         EmailService,
         LoggerService,

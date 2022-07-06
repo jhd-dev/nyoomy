@@ -2,170 +2,86 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import EntityAction from '../../types/enums/entity-action.enum';
+import { conditionalSpread } from '../../utils/conditionalSpread';
 import { CaslAbilityFactory } from '../casl/casl-ability.factory';
-import { Tag } from './models/tag.entity';
-import { Taggable } from './models/taggable.entity';
+import { LoggerService } from '../logger/logger.service';
+import { TagDto } from './dto/tag.dto';
+import { TagEntity } from './models/tag.entity';
+import { TaggableEntity } from './models/taggable.entity';
 import type { User } from '../user/models/user.entity';
 import type { AddTagInput } from './dto/add-tag.input';
 import type { UpdateTagInput } from './dto/update-tag.input';
-import { CategoryColor } from '../../types/enums/category-color.enum';
-import { LoggerService } from '../logger/logger.service';
 
 @Injectable()
 export class TagService {
     public constructor(
-        @InjectRepository(Tag)
-        private readonly tagRepo: Repository<Tag>,
-        @InjectRepository(Taggable)
-        private readonly taggableRepo: Repository<Taggable>,
+        @InjectRepository(TagEntity)
+        private readonly tagRepo: Repository<TagEntity>,
+        @InjectRepository(TaggableEntity)
+        private readonly taggableRepo: Repository<TaggableEntity>,
         private readonly caslAbilityFactory: CaslAbilityFactory,
         private readonly logger: LoggerService
     ) {
         this.logger.setContext(TagService.name);
     }
 
-    public getUserTags(
+    public async getByUser(
         userId: string,
         excludingArchived: boolean
-    ): Promise<Tag[]> {
-        return this.tagRepo.find({
+    ): Promise<TagDto[]> {
+        const entities = await this.tagRepo.find({
             where: {
                 user: { id: userId },
                 ...(excludingArchived ? { isArchived: false } : {}),
             },
             relations: ['user'],
         });
+        return this.entitiesToDtos(entities);
     }
 
-    public async getTagsByTaggable(taggableId: string): Promise<Tag[]> {
-        return (
-            await this.taggableRepo.findOneOrFail(taggableId, {
-                relations: ['tags'],
-            })
-        ).tags;
+    public async getByTaggableId(taggableId: string): Promise<TagDto[]> {
+        const { tags } = await this.taggableRepo.findOneOrFail({
+            where: { id: taggableId },
+            relations: ['tags'],
+        });
+        return this.entitiesToDtos(tags);
     }
 
-    public getById(tagId: string): Promise<Tag> {
-        return this.tagRepo.findOneOrFail(tagId);
+    public getById(tagId: string): Promise<TagDto> {
+        return this.tagRepo.findOneByOrFail({ id: tagId });
     }
 
-    public async createTag(
-        user: User,
-        { label, icon, description, color, taggedItem }: AddTagInput
-    ): Promise<Tag> {
-        const tag = this.tagRepo.create({
+    public async createTag(user: User, input: AddTagInput): Promise<TagDto> {
+        const entity = this.tagRepo.create({
             user: { id: user.id },
-            label,
-            description,
-            color: color ?? CategoryColor.DEFAULT,
-            icon: icon ?? null,
+            ...this.transformAddInput(input),
         });
-        await this.tagRepo.save(tag);
-
-        const ability = this.caslAbilityFactory.createForUser(user);
-        if (!ability.can(EntityAction.CREATE, tag)) {
-            throw new UnauthorizedException(
-                'Unauthorized tag creation attempt'
-            );
-        }
-
-        const foundTaggedItem = taggedItem
-            ? await this.taggableRepo.findOne(taggedItem?.id)
-            : undefined;
-        if (foundTaggedItem) {
-            await this.taggableRepo.save({
-                ...foundTaggedItem,
-                tags: foundTaggedItem.tags.concat(tag),
-            });
-        }
-        return this.tagRepo.findOneOrFail(tag.id);
+        const saved = await this.tagRepo.save(entity);
+        return this.entityToDto(saved);
     }
 
-    public async updateTag(
-        user: User,
-        updateInput: UpdateTagInput
-    ): Promise<Tag> {
-        const tag = await this.tagRepo.findOneOrFail(updateInput.id, {
-            relations: ['user'],
+    public async updateTag(user: User, input: UpdateTagInput): Promise<TagDto> {
+        user;
+        const entity: TagEntity = await this.tagRepo.findOneByOrFail({
+            id: input.id,
         });
-        tag.label = updateInput.label ?? tag.label;
-        tag.description = updateInput.description ?? tag.description;
-        tag.color = updateInput.color ?? tag.color;
-        tag.icon = updateInput.icon !== undefined ? updateInput.icon : tag.icon;
 
-        if (updateInput.taggables != null) {
-            const taggables = await this.taggableRepo.findByIds(
-                updateInput.taggables.map(({ id }) => id)
-            );
-            tag.taggedItems = taggables;
-        }
+        entity.color = input.color ?? entity.color;
+        entity.description = input.description ?? entity.description;
+        entity.icon = input.icon ?? entity.icon;
+        entity.isArchived = input.isArchived ?? entity.isArchived;
+        entity.label = input.label ?? entity.label;
 
-        if (updateInput.applyTaggables?.length) {
-            for (const taggable of updateInput.applyTaggables) {
-                await this.applyTag(user, tag.id, taggable.id);
-            }
-        }
-
-        if (updateInput.removeTaggables?.length) {
-            for (const taggable of updateInput.removeTaggables) {
-                await this.removeTag(user, tag.id, taggable.id);
-            }
-        }
-
-        const ability = this.caslAbilityFactory.createForUser(user);
-        if (ability.can(EntityAction.UPDATE, tag)) {
-            await this.tagRepo.save(tag);
-        }
-        return tag;
-    }
-
-    public async applyTag(
-        user: User,
-        tagId: string,
-        taggableId: string
-    ): Promise<Tag | null> {
-        const tag = await this.tagRepo.findOneOrFail(tagId);
-        const taggable = await this.taggableRepo.findOneOrFail(taggableId);
-        tag.taggedItems.push({
-            id: taggable.id,
-            tags: taggable.tags.concat([tag]),
+        await this.tagRepo.save(entity);
+        const updated: TagEntity = await this.tagRepo.findOneByOrFail({
+            id: input.id,
         });
-        const ability = this.caslAbilityFactory.createForUser(user);
-        if (!ability.can(EntityAction.UPDATE, tag)) {
-            throw new UnauthorizedException(
-                'User not authorized to delete tag'
-            );
-        }
-        return await this.tagRepo.save(tag);
-    }
-
-    public async removeTag(
-        user: User,
-        tagId: string,
-        taggableId: string
-    ): Promise<Tag | null> {
-        try {
-            const tag = await this.tagRepo.findOneOrFail(tagId, {
-                relations: ['user'],
-            });
-
-            tag.taggedItems = tag.taggedItems.filter(
-                (taggable) => taggable.id !== taggableId
-            );
-
-            const ability = this.caslAbilityFactory.createForUser(user);
-            if (ability.can(EntityAction.UPDATE, tag)) {
-                return await this.tagRepo.save(tag);
-            }
-            return null;
-        } catch (err: unknown) {
-            this.logger.error(err);
-            return null;
-        }
+        return this.entityToDto(updated);
     }
 
     public async deleteTag(user: User, id: string): Promise<void> {
-        const tag = await this.tagRepo.findOneOrFail(id, {
+        const tag = await this.tagRepo.findOneOrFail({
+            where: { id },
             relations: ['user'],
         });
         const ability = this.caslAbilityFactory.createForUser(user);
@@ -175,5 +91,38 @@ export class TagService {
             );
         }
         await this.tagRepo.remove(tag);
+    }
+
+    private entityToDto(entity: TagEntity): TagDto {
+        const dto = new TagDto();
+        dto.id = entity.id;
+        dto.color = entity.color;
+        dto.description = entity.description;
+        dto.icon = entity.icon;
+        dto.isArchived = entity.isArchived;
+        dto.label = entity.label;
+        return dto;
+    }
+
+    private entitiesToDtos(entities: TagEntity[]): TagDto[] {
+        return entities.map((entity) => this.entityToDto(entity));
+    }
+
+    private transformAddInput(input: AddTagInput) {
+        return {
+            ...conditionalSpread(input, 'color'),
+            ...conditionalSpread(input, 'description'),
+            ...conditionalSpread(input, 'icon'),
+            ...conditionalSpread(input, 'label'),
+        };
+    }
+
+    private transformUpdateInput(input: UpdateTagInput) {
+        return {
+            ...conditionalSpread(input, 'color'),
+            ...conditionalSpread(input, 'description'),
+            ...conditionalSpread(input, 'icon'),
+            ...conditionalSpread(input, 'label'),
+        };
     }
 }

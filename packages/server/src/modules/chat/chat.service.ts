@@ -55,7 +55,7 @@ export class ChatService {
         chatId: string,
         content: string
     ): Promise<Message | null> {
-        const chat = await this.chatRepo.findOne(chatId);
+        const chat = await this.chatRepo.findOneBy({ id: chatId });
         if (this.doesChatHaveMember(userId, chat)) {
             const message = this.messageRepo.create({
                 sender: { id: userId },
@@ -88,14 +88,14 @@ export class ChatService {
         return true;
     }
 
-    public doesChatHaveMember(userId: string, chat: Chat | undefined): boolean {
+    public doesChatHaveMember(userId: string, chat: Chat | null): boolean {
         return chat?.members.some((member) => member.id === userId) ?? false;
     }
 
     private findMessageFromUser(
         userId: string,
         messageId: string
-    ): Promise<Message | undefined> {
+    ): Promise<Message | null> {
         return this.messageRepo.findOne({
             where: { id: messageId, sender: { id: userId } },
         });

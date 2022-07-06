@@ -8,8 +8,8 @@ import {
     uniqueNamesGenerator,
 } from 'unique-names-generator';
 import { UserService } from '../user/user.service';
-import type { User } from '../../entities';
 import type { SafeUser } from '../user/models/safe-user.model';
+import type { User } from '../user/models/user.entity';
 import type { AvailabilityDto } from './dto/availability.dto';
 import type { UserLoginInput } from './dto/login.input';
 import type { RegisterUserInput } from './dto/register.input';
@@ -68,7 +68,7 @@ export class AuthService implements IAuthService {
         passwordInput: string
     ): Promise<User | null> {
         const user = await this.userService.findByCredentials(usernameOrEmail);
-        if (user === undefined) {
+        if (user == null) {
             return null;
         }
         if (await this.doesPasswordMatch(passwordInput, user.password)) {

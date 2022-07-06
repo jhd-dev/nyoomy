@@ -9,7 +9,6 @@ import { LoggerService } from '../logger/logger.service';
 import { Profile } from './models/profile.entity';
 import { UserSettings } from './models/user-settings.entity';
 import { User } from './models/user.entity';
-import { UserRepo } from './user.repository';
 import { UserResolver } from './user.resolver';
 import { UserService } from './user.service';
 
@@ -23,11 +22,10 @@ import { UserService } from './user.service';
     providers: [
         UserResolver,
         UserService,
-        UserRepo,
         CaslAbilityFactory,
         EmailService,
         LoggerService,
     ],
-    exports: [UserService, UserRepo],
+    exports: [UserService],
 })
 export class UserModule {}

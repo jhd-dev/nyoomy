@@ -1,18 +1,24 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { ManyToMany, PrimaryGeneratedColumn, Entity, JoinTable } from 'typeorm';
-import { Tag } from './tag.entity';
+import {
+    ManyToMany,
+    PrimaryGeneratedColumn,
+    Entity,
+    JoinTable,
+    RelationId,
+    Column,
+} from 'typeorm';
+import { TagEntity } from './tag.entity';
 
 @Entity('taggables')
-@ObjectType()
-export class Taggable {
+export class TaggableEntity {
     @PrimaryGeneratedColumn()
-    @Field(() => ID)
     public readonly id: string;
 
-    @ManyToMany(() => Tag, (tag) => tag.taggedItems, {
+    @ManyToMany(() => TagEntity, (tag) => tag.taggedItems, {
         cascade: ['insert', 'update', 'recover'],
     })
     @JoinTable()
-    @Field(() => [Tag])
-    public tags: Tag[];
+    public tags: TagEntity[];
+
+    // @Column('varchar', { array: true })
+    // public tagIds: string[];
 }

@@ -1,19 +1,19 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
-import Weekday from '../../../types/enums/weekday.enum';
-import { Tag } from '../../tag/models/tag.entity';
-import { User } from '../../user/models/user.entity';
-import { Todo } from '../models/todo.entity';
+import { Field, HideField, ID, ObjectType } from '@nestjs/graphql';
+import { TagDto } from '../../tag/dto/tag.dto';
 
 @ObjectType()
-export class TodoDto implements Omit<Todo, 'supertask' | 'level' | 'taggable'> {
+export class TodoDto {
     @Field(() => ID)
-    public readonly id!: string;
+    public id!: string;
 
-    @Field(() => [Todo])
-    public subtasks!: Todo[];
+    @Field(() => TodoDto, { nullable: true })
+    public parent?: TodoDto;
 
-    @Field(() => User)
-    public user!: User;
+    @HideField()
+    public parentId?: string;
+
+    @Field(() => [TodoDto])
+    public subtasks!: TodoDto[];
 
     @Field()
     public title!: string;
@@ -22,19 +22,23 @@ export class TodoDto implements Omit<Todo, 'supertask' | 'level' | 'taggable'> {
     public description!: string;
 
     @Field()
-    public isCompleted: boolean;
-
-    @Field()
     public isArchived!: boolean;
 
-    @Field(() => [Weekday])
-    public repeatWeekdays!: Weekday[];
+    @Field(() => [TagDto])
+    public tags!: TagDto[];
 
-    @Field(() => [Tag])
-    public tags: Tag[];
+    @HideField()
+    public tagIds: string[];
+
+    @Field(() => Date, { nullable: true })
+    public startDate?: Date;
+
+    @Field(() => Date, { nullable: true })
+    public endDate?: Date;
 
     @Field()
-    public get doesRepeat(): boolean {
-        return this.repeatWeekdays.length !== 0;
-    }
+    public doesRepeat!: boolean;
+
+    @Field({ nullable: true })
+    public repeatPattern?: string;
 }

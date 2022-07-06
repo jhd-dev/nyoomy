@@ -1,8 +1,8 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
-import type { Taggable } from '../models/taggable.entity';
+import type { TaggableEntity } from '../models/taggable.entity';
 
 @InputType()
-export class TaggableInput implements Partial<Taggable> {
+export class TaggableInput implements Partial<TaggableEntity> {
     @Field(() => ID)
     public readonly id: string;
 }

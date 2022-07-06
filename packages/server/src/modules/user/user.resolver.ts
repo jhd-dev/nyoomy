@@ -26,12 +26,6 @@ export class UserResolver {
         this.logger.setContext(UserResolver.name);
     }
 
-    @Query(() => [User], { nullable: true, name: 'users' })
-    @UseGuards(AuthenticatedGuard)
-    public getAllUsers(@CurrentUser() user: User): Promise<User[]> {
-        return this.userService.getAll(user);
-    }
-
     @Query(() => User, { nullable: true, name: 'me' })
     @UseGuards(AuthenticatedGuard)
     public getCurrentUser(@CurrentUser() user: User): User {

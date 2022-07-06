@@ -12,9 +12,11 @@ input AddTagInput {
 
 input AddTodoInput {
   description: String
+  doesRepeat: Boolean
+  endDate: DateTime
   isArchived: Boolean
-  repeatWeekdays: [Weekday!]
-  tagUpdates: [UpdateTagInput!]
+  repeatPattern: String
+  startDate: DateTime
   title: String
 }
 
@@ -51,15 +53,6 @@ type Chat {
   members: User!
 }
 
-type CounterMetric {
-  id: ID!
-  interval: Int!
-  maximum: Int!
-  metric: Metric!
-  metricType: MetricType!
-  minimum: Int!
-}
-
 input CreateFeedbackInput {
   details: String!
 
@@ -71,14 +64,6 @@ input CreateFeedbackInput {
   The user's rating out of 10, e.g. 2.5 of 5 stars would yield a value of 5
   """
   rating: Int
-}
-
-type DailyFloatMetric {
-  id: ID!
-  max: Float!
-  metric: Metric!
-  metricType: MetricType!
-  min: Float!
 }
 
 """
@@ -121,32 +106,11 @@ type Message {
   sentAt: DateTime!
 }
 
-type Metric {
-  description: String!
-  id: ID!
-  isArchived: Boolean!
-  taggable: Taggable!
-  title: String!
-  user: User!
-}
-
-"""The types of metrics a user can create"""
-enum MetricType {
-  COUNTER
-  FLOAT
-  JOURNAL
-  SCALE
-  SELECTION
-  STRING
-  TIMER
-}
-
 type Mutation {
-  addTodo(input: AddTodoInput!): Todo
-  applyTag(tagId: ID!, taggableId: ID!): Tag
-  createTag(tagInput: AddTagInput!): Tag
+  addTodo(input: AddTodoInput!): TodoDto
+  createTag(input: AddTagInput!): TagDto
   deleteMessage(messageId: ID!): Boolean
-  deleteTag(tagId: ID!): Boolean!
+  deleteTag(id: ID!): Boolean!
   deleteTodo(id: ID!): Boolean!
   deleteUser: Boolean!
   deleteUserById(id: ID!): Boolean!
@@ -158,21 +122,20 @@ type Mutation {
   sendMessageToChat(input: SendMessageToChatInput!): Message
   sendMessageToUser(input: SendMessageToUserInput!): Message
   updateSettings(input: UpdateUserSettingsInput!): UserSettingsDto
-  updateTag(updateInput: UpdateTagInput!): Tag
-  updateTodo(updateInput: UpdateTodoInput!): Todo
+  updateTag(input: UpdateTagInput!): TagDto
+  updateTodo(input: UpdateTodoInput!): TodoDto
   updateUserPassword(input: UpdatePasswordInput!): Boolean!
 }
 
 type Query {
-  getMyTodos(excludeArchived: Boolean!): [Todo!]!
-  getTodo(id: String!): [Todo!]!
   me: User
   myChats(excludeArchived: Boolean!): [Chat!]!
   mySettings: UserSettingsDto
-  myTags: [Tag!]!
+  myTags: [TagDto!]!
+  myTodo(id: ID!): TodoDto!
+  myTodos(excludeArchived: Boolean): [TodoDto!]!
   randomAvailableUsername: String
   usernameAvailability(input: UsernameAvailabilityArgs!): AvailabilityDto!
-  users: [User!]
 }
 
 """User registration data"""
@@ -199,45 +162,6 @@ type SafeUser {
   username: String!
 }
 
-"""A Numeric Rating Scale"""
-type Scale {
-  id: ID!
-  max: Int!
-  metric: Metric!
-  metricType: MetricType!
-  min: Int!
-}
-
-type SelectionCategory {
-  id: ID!
-  metric: SelectionMetric!
-  title: String!
-}
-
-type SelectionEntry {
-  datetime: DateTime!
-  id: ID!
-  metric: SelectionMetric!
-  selectedOptions: [SelectionOption!]!
-}
-
-"""A Numeric Rating Selection"""
-type SelectionMetric {
-  id: ID!
-  maxSelections: Int!
-  metric: Metric!
-  metricType: MetricType!
-  minSelections: Int!
-}
-
-type SelectionOption {
-  category: SelectionCategory!
-  id: ID!
-  metric: SelectionMetric!
-  selectingEntries: [SelectionEntry!]!
-  title: String!
-}
-
 input SendMessageToChatInput {
   chatId: String!
   content: String!
@@ -248,19 +172,13 @@ input SendMessageToUserInput {
   recipientId: String!
 }
 
-type Tag {
+type TagDto {
   color: CategoryColor!
   description: String!
   icon: CategoryIcon
   id: ID!
   isArchived: Boolean!
   label: String!
-  user: User!
-}
-
-type Taggable {
-  id: ID!
-  tags: [Tag!]!
 }
 
 input TaggableInput {
@@ -276,26 +194,28 @@ enum ThemePreference {
   OLED
 }
 
-type TimerMetric {
-  goalLength: Int!
-  goalPerDay: Int!
-  id: ID!
-  metric: Metric!
-  metricType: MetricType!
-}
-
-type Todo {
+type TodoDto {
   description: String!
   doesRepeat: Boolean!
+  endDate: DateTime
   id: ID!
+  instances: [TodoInstance!]!
   isArchived: Boolean!
-  isCompleted: Boolean!
-  repeatWeekdays: [Weekday!]!
-  subtasks: [Todo!]!
-  supertask: Todo
-  tags: [Tag!]!
+  parent: TodoDto
+  repeatPattern: String
+  startDate: DateTime
+  subtasks: [TodoDto!]!
+  tags: [TagDto!]!
   title: String!
-  user: User!
+}
+
+"""Particular instance of a potentially repeating todo."""
+type TodoInstance {
+  dueDate: DateTime
+  id: ID!
+  isCompleted: Boolean!
+  offsetDueDate: DateTime
+  todo: TodoDto!
 }
 
 input UpdatePasswordInput {
@@ -310,18 +230,20 @@ input UpdateTagInput {
   description: String
   icon: CategoryIcon
   id: ID!
+  isArchived: Boolean
   label: String
   removeTaggables: [TaggableInput!] = []
   taggables: [TaggableInput!]
 }
 
 input UpdateTodoInput {
-  date: String!
   description: String
+  doesRepeat: Boolean
+  endDate: DateTime
   id: ID!
   isArchived: Boolean
-  isCompleted: Boolean
-  repeatWeekdays: [Weekday!]
+  repeatPattern: String
+  startDate: DateTime
   tagUpdates: [UpdateTagInput!]
   title: String
 }
@@ -369,15 +291,4 @@ type UserSettingsDto {
 input UsernameAvailabilityArgs {
   recommendationsWanted: Int
   username: String
-}
-
-"""The days of the week"""
-enum Weekday {
-  FRIDAY
-  MONDAY
-  SATURDAY
-  SUNDAY
-  THURSDAY
-  TUESDAY
-  WEDNESDAY
 }

@@ -1,34 +1,22 @@
-import { Field, ID, InputType } from '@nestjs/graphql';
-import Weekday from '../../../types/enums/weekday.enum';
+import {
+    Field,
+    InputType,
+    IntersectionType,
+    OmitType,
+    PartialType,
+    PickType,
+} from '@nestjs/graphql';
 import { UpdateTagInput } from '../../tag/dto/update-tag.input';
-import type { Todo } from '../models/todo.entity';
+import { TodoDto } from './todo.dto';
 
 @InputType()
-export class UpdateTodoInput implements Partial<Todo> {
-    @Field(() => ID)
-    public readonly id!: string;
-
-    @Field()
-    public readonly date!: string;
-
-    // @Field(() => Todo, { nullable: true })
-    // public supertask?: Todo | null;
-
-    @Field({ nullable: true })
-    public title?: string;
-
-    @Field({ nullable: true })
-    public description?: string;
-
-    @Field({ nullable: true })
-    public isCompleted?: boolean;
-
-    @Field({ nullable: true })
-    public isArchived?: boolean;
-
-    @Field(() => [Weekday], { nullable: true })
-    public repeatWeekdays?: Weekday[];
-
+export class UpdateTodoInput extends IntersectionType(
+    PartialType(
+        OmitType(TodoDto, ['id', 'parent', 'subtasks', 'tags'] as const)
+    ),
+    PickType(TodoDto, ['id'] as const),
+    InputType
+) {
     @Field(() => [UpdateTagInput], { nullable: true })
     public tagUpdates?: UpdateTagInput[];
 }

@@ -4,19 +4,26 @@ import { CaslAbilityFactory } from '../casl/casl-ability.factory';
 import { CaslModule } from '../casl/casl.module';
 import { LoggerModule } from '../logger/logger.module';
 import { LoggerService } from '../logger/logger.service';
-import { Tag } from '../tag/models/tag.entity';
-import { Taggable } from '../tag/models/taggable.entity';
+import { TagEntity } from '../tag/models/tag.entity';
+import { TaggableEntity } from '../tag/models/taggable.entity';
 import { TagModule } from '../tag/tag.module';
 import { TagService } from '../tag/tag.service';
 import { UserModule } from '../user/user.module';
-import { TodoEntry } from './models/todo-entry.entity';
-import { Todo } from './models/todo.entity';
-import { TodoResolver } from './todo.resolver';
-import { TodoService } from './todo.service';
+import { TodoInstanceEntity } from './models/todo-instance.entity';
+import { TodoEntity } from './models/todo.entity';
+import { TodoInstanceResolver } from './providers/resolvers/todo-instance.resolver';
+import { TodoResolver } from './providers/resolvers/todo.resolver';
+import { TodoInstanceService } from './providers/services/todo-instance.service';
+import { TodoService } from './providers/services/todo.service';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([Todo, TodoEntry, Tag, Taggable]),
+        TypeOrmModule.forFeature([
+            TodoEntity,
+            TodoInstanceEntity,
+            TagEntity,
+            TaggableEntity,
+        ]),
         UserModule,
         CaslModule,
         TagModule,
@@ -24,11 +31,13 @@ import { TodoService } from './todo.service';
     ],
     providers: [
         TodoResolver,
+        TodoInstanceResolver,
         TodoService,
+        TodoInstanceService,
         CaslAbilityFactory,
         TagService,
         LoggerService,
     ],
-    exports: [TodoService],
+    exports: [TodoService, TodoInstanceService],
 })
 export class TodoModule {}

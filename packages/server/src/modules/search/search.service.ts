@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { AuthService } from '../auth/auth.service';
 import { TagService } from '../tag/tag.service';
-import { TodoService } from '../todo/todo.service';
+import { TodoService } from '../todo/providers/services/todo.service';
 import { UserService } from '../user/user.service';
 import { SearchResultResourceType } from './models/enums/search-result-resource-type.enum';
-import type { Tag } from '../tag/models/tag.entity';
-import type { Todo } from '../todo/models/todo.entity';
+import type { TagEntity } from '../tag/models/tag.entity';
+import type { TodoEntity } from '../todo/models/todo.entity';
 import type { SafeUser } from '../user/models/safe-user.model';
 import type { User } from '../user/models/user.entity';
 import type { SearchArgs } from './dto/search.args';
@@ -45,7 +45,7 @@ export class SearchService {
         user: User,
         terms: string[],
         tagIds: string[]
-    ): Promise<Todo[]> {
+    ): Promise<TodoEntity[]> {
         const todos = await this.todoService.getUserTodos(user, true);
         const tagFilteredTodos = todos.filter((todo) =>
             tagIds.some((id) => todo.tags.some((tag) => tag.id === id))
@@ -59,8 +59,11 @@ export class SearchService {
             );
     }
 
-    private async searchTags(user: User, terms: string[]): Promise<Tag[]> {
-        const tags = await this.tagService.getUserTags(user.id, true);
+    private async searchTags(
+        user: User,
+        terms: string[]
+    ): Promise<TagEntity[]> {
+        const tags = await this.tagService.getByUser(user.id, true);
         return tags
             .filter((tag) => terms.some((term) => tag.label.includes(term)))
             .concat(

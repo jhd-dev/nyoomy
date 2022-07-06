@@ -14,8 +14,11 @@ export const configValidationSchema = Joi.object({
     port: Joi.number().port().default(defaultPort),
     database: Joi.object({
         name: Joi.string(),
+        host: Joi.string(),
+        port: Joi.number().port(),
         username: Joi.string(),
         password: Joi.string().default(''),
+        connectionName: Joi.string().default('default'),
     }),
     redis: Joi.object({
         port: Joi.number().port(),

@@ -2,10 +2,10 @@ import { Field, ID, InputType } from '@nestjs/graphql';
 import { CategoryColor } from '../../../types/enums/category-color.enum';
 import CategoryIcon from '../../../types/enums/category-icon';
 import { TaggableInput } from './taggable.input';
-import type { Tag } from '../models/tag.entity';
+import type { TagEntity } from '../models/tag.entity';
 
 @InputType()
-export class UpdateTagInput implements Partial<Tag> {
+export class UpdateTagInput implements Partial<TagEntity> {
     @Field(() => ID)
     public readonly id: string;
 
@@ -29,4 +29,7 @@ export class UpdateTagInput implements Partial<Tag> {
 
     @Field(() => [TaggableInput], { defaultValue: [] })
     public removeTaggables?: TaggableInput[];
+
+    @Field({ nullable: true })
+    public isArchived?: boolean;
 }
