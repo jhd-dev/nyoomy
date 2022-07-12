@@ -15,8 +15,10 @@ input AddTodoInput {
   doesRepeat: Boolean
   endDate: DateTime
   isArchived: Boolean
+  largestStreak: Int
   repeatPattern: String
   startDate: DateTime
+  streak: Int
   title: String
 }
 
@@ -201,9 +203,11 @@ type TodoDto {
   id: ID!
   instances: [TodoInstance!]!
   isArchived: Boolean!
+  largestStreak: Int!
   parent: TodoDto
   repeatPattern: String
   startDate: DateTime
+  streak: Int!
   subtasks: [TodoDto!]!
   tags: [TagDto!]!
   title: String!
@@ -242,8 +246,10 @@ input UpdateTodoInput {
   endDate: DateTime
   id: ID!
   isArchived: Boolean
+  largestStreak: Int
   repeatPattern: String
   startDate: DateTime
+  streak: Int
   tagUpdates: [UpdateTagInput!]
   title: String
 }

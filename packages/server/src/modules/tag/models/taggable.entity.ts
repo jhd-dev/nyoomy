@@ -1,11 +1,4 @@
-import {
-    ManyToMany,
-    PrimaryGeneratedColumn,
-    Entity,
-    JoinTable,
-    RelationId,
-    Column,
-} from 'typeorm';
+import { ManyToMany, PrimaryGeneratedColumn, Entity, JoinTable } from 'typeorm';
 import { TagEntity } from './tag.entity';
 
 @Entity('taggables')

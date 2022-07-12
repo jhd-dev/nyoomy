@@ -6,7 +6,7 @@ import type { Config } from '@jest/types';
 const getJestConfig = (): Config.InitialOptions => ({
     moduleFileExtensions: [...defaults.moduleFileExtensions, 'ts'],
     transform: {
-        '^.+\\.(t|j)s$': 'ts-jest',
+        '^.+\\.ts$': 'ts-jest',
     },
     coverageDirectory: './coverage',
     verbose: false,

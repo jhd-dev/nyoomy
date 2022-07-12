@@ -3,7 +3,6 @@ import { Module, Logger, Inject } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import RedisStore from 'connect-redis';
 import expressSession from 'express-session';
 import helmet from 'helmet';
@@ -19,6 +18,7 @@ import { COOKIE_NAME, REDIS_SESSION_PREFIX } from './constants';
 import { AuthModule } from './modules/auth/auth.module';
 import { CaslModule } from './modules/casl/casl.module';
 import { ChatModule } from './modules/chat/chat.module';
+import { DatabaseModule } from './modules/database/database.module';
 import { EmailModule } from './modules/email/email.module';
 import { FeedbackModule } from './modules/feedback/feedback.module';
 import { JournalModule } from './modules/journal/journal.module';
@@ -36,7 +36,6 @@ import type { Client as ConnectRedisClient } from 'connect-redis';
 
 const STATIC_PATH = join(__dirname, '../../web/dist');
 const GRAPHQL_SCHEMA_PATH = join(__dirname, '../schema.graphql');
-const ENTITY_PATH = join(__dirname, '**/*.entity.ts');
 
 const devContentSecurityPolicy = {
     directives: {
@@ -50,6 +49,7 @@ const devContentSecurityPolicy = {
         AuthModule,
         CaslModule,
         ChatModule,
+        DatabaseModule,
         EmailModule,
         RedisModule,
         FeedbackModule,
@@ -58,23 +58,6 @@ const devContentSecurityPolicy = {
         TodoModule,
         TagModule,
         UserModule,
-        TypeOrmModule.forRootAsync({
-            useFactory: (configService: ConfigService) => ({
-                type: 'postgres',
-                host: configService.get('database.host'),
-                port: configService.get('database.port'),
-                username: configService.get('database.username'),
-                password: configService.get('database.password'),
-                database: configService.get('database.name'),
-                synchronize: true,
-                logging: true,
-                logNotifications: true,
-                dropSchema: true,
-                autoLoadEntities: true,
-                entities: [ENTITY_PATH],
-            }),
-            inject: [ConfigService],
-        }),
         GraphQLModule.forRootAsync<ApolloDriverConfig>({
             imports: [LoggerModule],
             useFactory: (

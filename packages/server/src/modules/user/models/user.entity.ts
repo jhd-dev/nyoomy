@@ -1,13 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 
-import {
-    Field,
-    ObjectType,
-    Int,
-    ID,
-    HideField,
-    Directive,
-} from '@nestjs/graphql';
+import { Field, ObjectType, Int, ID, HideField } from '@nestjs/graphql';
 import {
     Column,
     CreateDateColumn,

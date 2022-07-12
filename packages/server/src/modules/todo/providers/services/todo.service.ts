@@ -48,40 +48,6 @@ export class TodoService {
         return this.entityToDto(saved);
     }
 
-    private entityToDto(entity: TodoEntity): TodoDto {
-        const dto = new TodoDto();
-        dto.id = entity.id;
-        dto.description = entity.description;
-        dto.doesRepeat = entity.doesRepeat;
-        dto.isArchived = entity.isArchived;
-        dto.title = entity.title;
-        return dto;
-    }
-
-    private entitiesToDtos(entities: TodoEntity[]): TodoDto[] {
-        return entities.map((entity) => this.entityToDto(entity));
-    }
-
-    private transformAddInput(
-        input: AddTodoInput
-    ): Parameters<TodoService['todoRepo']['create']>[0] {
-        const transformed: Parameters<TodoService['todoRepo']['create']>[0] = {
-            ...conditionalSpread(input, 'doesRepeat'),
-            ...conditionalSpread(input, 'startDate'),
-            ...conditionalSpread(input, 'endDate'),
-            ...conditionalSpread(input, 'description'),
-            ...conditionalSpread(input, 'isArchived'),
-            ...conditionalSpread(input, 'repeatPattern'),
-            ...conditionalSpread(input, 'title'),
-            taggable: this.taggableRepo.create({ tags: [] }),
-            children: [],
-        };
-        if (input.parentId != null) {
-            transformed.parent = { id: input.parentId };
-        }
-        return transformed;
-    }
-
     public async updateTodo(
         user: User,
         { id, ...updateInput }: UpdateTodoInput
@@ -115,5 +81,39 @@ export class TodoService {
         if (ability.can(EntityAction.DELETE, todo)) {
             await this.todoRepo.remove(todo);
         }
+    }
+
+    private entityToDto(entity: TodoEntity): TodoDto {
+        const dto = new TodoDto();
+        dto.id = entity.id;
+        dto.description = entity.description;
+        dto.doesRepeat = entity.doesRepeat;
+        dto.isArchived = entity.isArchived;
+        dto.title = entity.title;
+        return dto;
+    }
+
+    private entitiesToDtos(entities: TodoEntity[]): TodoDto[] {
+        return entities.map((entity) => this.entityToDto(entity));
+    }
+
+    private transformAddInput(
+        input: AddTodoInput
+    ): Parameters<TodoService['todoRepo']['create']>[0] {
+        const transformed: Parameters<TodoService['todoRepo']['create']>[0] = {
+            ...conditionalSpread(input, 'doesRepeat'),
+            ...conditionalSpread(input, 'startDate'),
+            ...conditionalSpread(input, 'endDate'),
+            ...conditionalSpread(input, 'description'),
+            ...conditionalSpread(input, 'isArchived'),
+            ...conditionalSpread(input, 'repeatPattern'),
+            ...conditionalSpread(input, 'title'),
+            taggable: this.taggableRepo.create({ tags: [] }),
+            children: [],
+        };
+        if (input.parentId != null) {
+            transformed.parent = { id: input.parentId };
+        }
+        return transformed;
     }
 }

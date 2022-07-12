@@ -1,4 +1,4 @@
-import { Field, HideField, ID, ObjectType } from '@nestjs/graphql';
+import { Field, HideField, ID, Int, ObjectType } from '@nestjs/graphql';
 import { TagDto } from '../../tag/dto/tag.dto';
 
 @ObjectType()
@@ -30,11 +30,17 @@ export class TodoDto {
     @HideField()
     public tagIds: string[];
 
-    @Field(() => Date, { nullable: true })
+    @Field({ nullable: true })
     public startDate?: Date;
 
-    @Field(() => Date, { nullable: true })
+    @Field({ nullable: true })
     public endDate?: Date;
+
+    @Field(() => Int)
+    public streak!: number;
+
+    @Field(() => Int)
+    public largestStreak!: number;
 
     @Field()
     public doesRepeat!: boolean;

@@ -59,6 +59,12 @@ export class TodoEntity {
     @Column('timestamptz', { nullable: true, name: 'end_date' })
     public endDate?: Date;
 
+    @Column('integer', { default: 0 })
+    public streak!: number;
+
+    @Column('integer', { default: 0 })
+    public largestStreak!: number;
+
     @OneToMany(() => TodoInstanceEntity, (instance) => instance.todo)
     public instances!: TodoInstanceEntity[];
 
