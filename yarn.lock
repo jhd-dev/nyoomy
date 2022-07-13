@@ -5094,6 +5094,7 @@ __metadata:
     "@nestjs/typeorm": ^8.1.4
     "@nyoomy/common": "workspace:*"
     "@nyoomy/global": "workspace:*"
+    "@prisma/client": ^4.0.0
     "@types/bcryptjs": ^2.4.2
     "@types/connect-redis": ^0.0.18
     "@types/cors": ^2.8.12
@@ -5136,6 +5137,7 @@ __metadata:
     passport-local: ^1.0.0
     passport-oauth2: ^1.6.1
     pg: ^8.7.3
+    prisma: ^4.0.0
     redis: ^3.1.2
     reflect-metadata: ^0.1.13
     rxjs: ^7.5.1
@@ -5302,6 +5304,34 @@ __metadata:
   version: 2.11.5
   resolution: "@popperjs/core@npm:2.11.5"
   checksum: 5b66e093535e394a29eaf6b47e90f54fd700205e538dcc9ec37e987d2ba3ccdc3998a60ed7e34b2d3842ed8afd40b0dec82d3b87eab7e507ba93dc6f72d81868
+  languageName: node
+  linkType: hard
+
+"@prisma/client@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "@prisma/client@npm:4.0.0"
+  dependencies:
+    "@prisma/engines-version": 3.16.0-49.da41d2bb3406da22087b849f0e911199ba4fbf11
+  peerDependencies:
+    prisma: "*"
+  peerDependenciesMeta:
+    prisma:
+      optional: true
+  checksum: e93e3bb5b7623ba030ed0402d8a048eb48c6e61dcf727c771e6be818aa908ba24ce9349d2769039fa6439b4a3197289e49806fc720930037f34b1ee1723c56e1
+  languageName: node
+  linkType: hard
+
+"@prisma/engines-version@npm:3.16.0-49.da41d2bb3406da22087b849f0e911199ba4fbf11":
+  version: 3.16.0-49.da41d2bb3406da22087b849f0e911199ba4fbf11
+  resolution: "@prisma/engines-version@npm:3.16.0-49.da41d2bb3406da22087b849f0e911199ba4fbf11"
+  checksum: ecd1a0263e76256db55a24e9188d6e83b8bfdd5e0c30049eb370f3a6ed362bc8c7be21c8caa9fda51acf971f781d2509fdc67bab1299fc48ff678c58edf5f565
+  languageName: node
+  linkType: hard
+
+"@prisma/engines@npm:3.16.0-49.da41d2bb3406da22087b849f0e911199ba4fbf11":
+  version: 3.16.0-49.da41d2bb3406da22087b849f0e911199ba4fbf11
+  resolution: "@prisma/engines@npm:3.16.0-49.da41d2bb3406da22087b849f0e911199ba4fbf11"
+  checksum: ec8148ceacca962327319d124dfdf77ada8a6512cccf65ad606c41e59840ed8058b20f84b87dfe10ad1c039d7f791d4ffab721f6d3002d974acbd3546ed03646
   languageName: node
   linkType: hard
 
@@ -18072,6 +18102,18 @@ __metadata:
     ansi-styles: ^5.0.0
     react-is: ^18.0.0
   checksum: a57a7281f9d9d8ee2dd8903e4d50c67ca0ba0d0aa2dc03d906775690a13557c945e0dbfc30b2007132c1b2180a5d43130b3578e9899771ad8bc409804d186b03
+  languageName: node
+  linkType: hard
+
+"prisma@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "prisma@npm:4.0.0"
+  dependencies:
+    "@prisma/engines": 3.16.0-49.da41d2bb3406da22087b849f0e911199ba4fbf11
+  bin:
+    prisma: build/index.js
+    prisma2: build/index.js
+  checksum: a796aa68251d3f49b5a1fa9c8c2c64aaa6b9a0db97877fc56398efb6ec5e03b734357b5272d1bfc59cef719455b90051e298183279917a7f41a4287565dbc43d
   languageName: node
   linkType: hard
 

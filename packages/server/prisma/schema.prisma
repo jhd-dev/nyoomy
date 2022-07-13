@@ -1,0 +1,222 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://postgres:postgres@localhost:5432/nyoomy_db_dev"
+}
+
+model Chat {
+  id         Int        @id @default(autoincrement())
+  isArchived Boolean    @default(false)
+  createdAt  DateTime   @default(now())
+  messages   Message[]
+
+  @@map("chats")
+}
+
+model Feedback {
+  id        Int      @id @default(autoincrement())
+  purpose   String
+  details   String
+  rating    Int?     @db.SmallInt
+  maxRating Int?     @db.SmallInt
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  userId    String?  @db.Uuid
+  users     User?    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_4a39e6ac0cecdf18307a365cf3c")
+
+  @@map("feeback")
+}
+
+model JournalEntry {
+  id          String    @id(map: "PK_a70368e64230434457c8d007ab3") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  date        String
+  content     String
+  isCompleted Boolean   @default(false)
+  journalId   String?   @db.Uuid
+  journals    Journal?  @relation(fields: [journalId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_4cc2c3fa6989b7bb0190fbca5c0")
+
+  @@map("journal_entries")
+}
+
+model Journal {
+  id              String            @id(map: "PK_157a30136385dd81cdd19111380") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  dailyWordGoal   Int               @default(0)
+  isArchived      Boolean           @default(false)
+  userId          String?           @db.Uuid
+  users           User?             @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_030fa853b4289e94a858d8cc232")
+  journalEntries JournalEntry[]
+
+  @@map("journals")
+}
+
+model Message {
+  id        Int      @id(map: "PK_18325f38ae6de43878487eff986") @default(autoincrement())
+  content   String
+  sentAt    DateTime @default(now()) @db.Timestamp(6)
+  edittedAt DateTime @default(now()) @db.Timestamp(6)
+  senderId  String?  @db.Uuid
+  chatId    Int?
+  chats     Chat?    @relation(fields: [chatId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_36bc604c820bb9adc4c75cd4115")
+  users     User?    @relation(fields: [senderId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_2db9cf2b3ca111742793f6c37ce")
+
+  @@map("messages")
+}
+
+model Profile {
+  id          Int       @id(map: "PK_8e520eb4da7dc01d0e190447c8e") @default(autoincrement())
+  displayName String    @db.VarChar(64)
+  isPublic    Boolean   @default(true)
+  bio         String    @default("")
+  birthday    DateTime? @db.Date
+  picture     String?   @db.VarChar
+  userId      String?   @unique(map: "REL_315ecd98bd1a42dcf2ec4e2e98") @db.Uuid
+  users       User?     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_315ecd98bd1a42dcf2ec4e2e985")
+
+  @@map("profiles")
+}
+
+model Taggable {
+  id                  Int                   @id(map: "PK_c5a93f59be62be00668b8dcaa50") @default(autoincrement())
+  taggables_tags_tags taggables_tags_tags[]
+  todos               Todo?
+
+  @@map("taggables")
+}
+
+model taggables_tags_tags {
+  taggablesId Int
+  tagsId      Int
+  taggables   Taggable @relation(fields: [taggablesId], references: [id], onDelete: Cascade, map: "FK_304fb7d3d5130594531e9ddd1dc")
+  tags        Tag      @relation(fields: [tagsId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_84b102cefc01121b92f5cad07bf")
+
+  @@id([taggablesId, tagsId], map: "PK_76d37f1f30afe6dcc2b46004fcc")
+  @@index([taggablesId], map: "IDX_304fb7d3d5130594531e9ddd1d")
+  @@index([tagsId], map: "IDX_84b102cefc01121b92f5cad07b")
+}
+
+model Tag {
+  id                  Int                   @id(map: "PK_e7dc17249a1148a1970748eda99") @default(autoincrement())
+  label               String                @db.VarChar(63)
+  description         String                @default("")
+  color               TagColor              @default(default)
+  icon                TagIcon?
+  isArchived          Boolean               @default(false) @map("is_archived")
+  userId              String?               @db.Uuid
+  users               User?                 @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_92e67dc508c705dd66c94615576")
+  taggables_tags_tags taggables_tags_tags[]
+
+  @@map("tags")
+}
+
+model TodoInstance {
+  id            Int      @id(map: "PK_b730bc3061dcacfc7cfbe3f04b0") @default(autoincrement())
+  todoId        String   @db.Uuid
+  dueDate       DateTime @db.Timestamptz(6)
+  offsetDueDate DateTime @db.Timestamptz(6)
+  isCompleted   Boolean  @default(false)
+  todos         Todo     @relation(fields: [todoId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_aee30bf52daf8e1401fa44a7ca4")
+
+  @@map("todo_instances")
+}
+
+model Todo {
+  id             String           @id(map: "PK_ca8cafd59ca6faaf67995344225") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  level          Int
+  userId         String           @db.Uuid @map("user_id")
+  title          String           @default("New task")
+  description    String           @default("")
+  isArchived     Boolean          @default(false) @map("is_archived")
+  doesRepeat    Boolean           @default(false) @map("does_repeat")
+  repeatPattern  String?          @db.VarChar @map("repeat_pattern")
+  startDate     DateTime?         @db.Timestamptz(6) @map("start_date")
+  endDate       DateTime?         @db.Timestamptz(6) @map("end_date")
+  streak         Int              @default(0)
+  largestStreak  Int              @default(0)
+  mpath          String?          @default("") @db.VarChar
+  parentId       String?          @db.Uuid
+  taggableId     Int?             @unique(map: "REL_9b74cf186751df5c6f985bdb9a")
+  todos          Todo?            @relation("todosTotodos_parentId", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_0b012bfe3307a8dfbd8d8adffa3")
+  taggables      Taggable?        @relation(fields: [taggableId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_9b74cf186751df5c6f985bdb9a9")
+  users          User             @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_53511787e1f412d746c4bf223ff")
+  todo_instances TodoInstance[]
+  other_todos    Todo[]           @relation("todosTotodos_parentId")
+
+  @@map("todos")
+}
+
+model UserSettings {
+  id              Int                                @id(map: "PK_00f004f5922a0744d174530d639") @default(autoincrement())
+  language        String                             @default("en_US") @db.VarChar(35)
+  themePreference ThemePreference @default(DEVICE)
+  audioEnabled    Boolean                            @default(true)
+  globalVolume    Int                                @default(100) @db.SmallInt
+  pin             String?                            @db.VarChar(4)
+  pinTimeout      Int?                               @db.SmallInt
+  isPublic        Boolean                            @default(true)
+  userId          String?                            @unique(map: "REL_986a2b6d3c05eb4091bb8066f7") @db.Uuid
+  users           User?                             @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_986a2b6d3c05eb4091bb8066f78")
+
+  @@map("user_settings")
+}
+
+model User {
+  id                 String          @id(map: "PK_a3ffb1c0c8416b9fc6f907b7433") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  role               UserRole        @default(USER)
+  username           String          @unique(map: "UQ_fe0bb3f6520ee0469504521e710") @db.VarChar(32)
+  email              String          @unique(map: "UQ_97672ac88f789774dd47f7c8be3") @db.VarChar(254)
+  password           String          @db.VarChar(256)
+  isEmailVerified    Boolean         @default(false)
+  googleId           String?
+  resetPasswordToken String?         @db.VarChar
+  createdAt          DateTime        @default(now()) @db.Timestamptz(6)
+  lastUpdated        DateTime        @default(now()) @db.Timestamptz(6)
+  deletedAt          DateTime?       @db.Timestamptz(6)
+  stars              Int             @default(0)
+  feedback           Feedback[]
+  journals           Journal[]
+  messages           Message[]
+  profiles           Profile?
+  tags               Tag[]
+  todos              Todo[]
+  user_settings      UserSettings?
+
+	@@map("users")
+}
+
+enum TagColor {
+  default
+  red
+  yellow
+  green
+  blue
+
+	@@map("tags_color_enum")
+}
+
+enum TagIcon {
+  GLOBE
+  STAR
+  WATER
+  ROCKET
+
+	@@map("tags_icon_enum")
+}
+
+enum ThemePreference {
+  DARK
+  DEVICE
+  HIGH_CONTRAST
+  LIGHT
+  OLED
+
+	@@map("user_settings_themepreference_enum")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+
+	@@map("users_role_enum")
+}

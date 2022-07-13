@@ -26,6 +26,7 @@
         "@nestjs/typeorm": "^8.1.4",
         "@nyoomy/common": "workspace:*",
         "@nyoomy/global": "workspace:*",
+        "@prisma/client": "^4.0.0",
         "apollo-server-express": "^3.9.0",
         "apollo-server-plugin-base": "^3.6.1",
         "bcryptjs": "^2.4.3",
@@ -79,6 +80,7 @@
         "jest-config": "^28.1.0",
         "nodemon": "^2.0.15",
         "pactum": "^3.1.12",
+        "prisma": "^4.0.0",
         "supertest": "^6.2.2",
         "ts-node": "^10.8.2"
     },
