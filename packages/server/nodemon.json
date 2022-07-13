@@ -1,6 +1,0 @@
-{
-    "watch": ["src", "../global/src", "../common/src"],
-    "ext": "ts",
-    "ignore": [],
-    "exec": "yarn start"
-}

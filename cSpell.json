@@ -79,6 +79,7 @@
         "testid",
         "timestamptz",
         "Todos",
+        "trpc",
         "tsbuildinfo",
         "typeorm",
         "yarnpkg"
