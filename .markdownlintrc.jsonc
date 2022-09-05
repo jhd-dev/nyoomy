@@ -1,22 +1,22 @@
 {
-    // Activates all rules with default options
-    "default": true,
+  // Activates all rules with default options
+  "default": true,
 
-    // Enforces ATX-style headings (#)
-    "MD003": { "style": "atx" },
+  // Enforces ATX-style headings (#)
+  "MD003": { "style": "atx" },
 
-    // Indent unordered lists using 4 spaces
-    "MD007": { "indent": 4, "start_indented": false },
+  // Indent unordered lists using 4 spaces
+  "MD007": { "indent": 4, "start_indented": false },
 
-    // Line length
-    "MD013": { "stern": true, "strict": false },
+  // Line length
+  "MD013": { "stern": true, "strict": false },
 
-    // Ordered lists should have multiple, numerically sequential entries
-    "MD029": { "style": "ordered" },
+  // Ordered lists should have multiple, numerically sequential entries
+  "MD029": { "style": "ordered" },
 
-    // Enforce use of fence notation (```) for code blocks instead of 4 spaces
-    "MD046": { "style": "fenced" },
+  // Enforce use of fence notation (```) for code blocks instead of 4 spaces
+  "MD046": { "style": "fenced" },
 
-    // Enforce backticks (```) instead of tildes (~~~) for code blocks
-    "MD048": { "style": "backtick" }
+  // Enforce backticks (```) instead of tildes (~~~) for code blocks
+  "MD048": { "style": "backtick" }
 }
