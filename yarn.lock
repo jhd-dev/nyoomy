@@ -3277,6 +3277,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@nyoomy/db@workspace:packages/db":
+  version: 0.0.0-use.local
+  resolution: "@nyoomy/db@workspace:packages/db"
+  dependencies:
+    "@prisma/client": ^4.2.1
+    prisma: ^4.2.1
+    typescript: 4.7.4
+  languageName: unknown
+  linkType: soft
+
 "@nyoomy/eslint-config@portal:packages/eslint-config::locator=nyoomy%40workspace%3A.":
   version: 0.0.0-use.local
   resolution: "@nyoomy/eslint-config@portal:packages/eslint-config::locator=nyoomy%40workspace%3A."
@@ -3575,7 +3585,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prisma/client@npm:^4.0.0, @prisma/client@npm:^4.1.0":
+"@prisma/client@npm:^4.0.0, @prisma/client@npm:^4.1.0, @prisma/client@npm:^4.2.1":
   version: 4.3.1
   resolution: "@prisma/client@npm:4.3.1"
   dependencies:
@@ -13471,7 +13481,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prisma@npm:^4.0.0, prisma@npm:^4.1.0":
+"prisma@npm:^4.0.0, prisma@npm:^4.1.0, prisma@npm:^4.2.1":
   version: 4.3.1
   resolution: "prisma@npm:4.3.1"
   dependencies:
