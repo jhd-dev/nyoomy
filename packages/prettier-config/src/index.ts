@@ -1,6 +1,6 @@
 module.exports = {
     printWidth: 80,
-    tabWidth: 4,
+    tabWidth: 2,
     singleQuote: true,
     semi: true,
     quoteProps: 'consistent',
@@ -10,7 +10,6 @@ module.exports = {
         {
             files: ['**/*.yml', '**/*.yaml'],
             options: {
-                tabWidth: 2,
                 singleQuote: false,
             },
         },
