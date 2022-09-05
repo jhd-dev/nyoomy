@@ -21,7 +21,6 @@ module.exports = {
         'promise',
         'regexp',
         'node',
-        'type-graphql',
         'sonarjs',
         'security-node',
         'array-func',
