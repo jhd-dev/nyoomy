@@ -1,9 +1,0 @@
-fragment AllSettings on UserSettingsDto {
-    language
-    themePreference
-    audioEnabled
-    globalVolume
-    pin
-    pinTimeout
-    isPublic
-}

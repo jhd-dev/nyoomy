@@ -1,4 +1,0 @@
-type Dose {
-    amount: Float!
-    unit: String!
-}

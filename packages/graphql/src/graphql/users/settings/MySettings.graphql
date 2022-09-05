@@ -1,5 +1,0 @@
-query MySettings {
-    mySettings {
-        ...AllSettings
-    }
-}

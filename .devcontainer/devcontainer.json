@@ -28,16 +28,15 @@
 
     // Add the IDs of extensions you want installed when the container is created.
     "extensions": [
-		"mtxr.sqltools",
-		"mtxr.sqltools-driver-pg",
-		"dbaeumer.vscode-eslint",
-		"esbenp.prettier-vscode",
-		"streetsidesoftware.code-spell-checker",
-		"davidanson.vscode-markdownlint",
-		"editorconfig.editorconfig",
-		"stylelint.vscode-stylelint",
-		"Prisma.prisma"
-	],
+        "mtxr.sqltools",
+        "mtxr.sqltools-driver-pg",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "streetsidesoftware.code-spell-checker",
+        "davidanson.vscode-markdownlint",
+        "editorconfig.editorconfig",
+        "Prisma.prisma"
+    ],
 
     // Use 'forwardPorts' to make a list of ports inside the container available locally.
     "forwardPorts": [4000, 5432, 6379],

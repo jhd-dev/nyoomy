@@ -1,5 +1,0 @@
-type DoseInstance {
-    id: ID!
-    dose: Dose!
-    time: Date!
-}

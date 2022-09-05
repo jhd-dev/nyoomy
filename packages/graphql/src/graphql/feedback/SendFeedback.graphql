@@ -1,5 +1,0 @@
-mutation SendFeedback($input: CreateFeedbackInput!) {
-    sendFeedback(input: $input) {
-        success
-    }
-}

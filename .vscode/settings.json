@@ -1,8 +1,7 @@
 {
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": true,
-        "source.fixAll.markdownlint": true,
-        "source.fixAll.stylelint": true
+        "source.fixAll.markdownlint": true
     },
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true,
@@ -31,9 +30,6 @@
         "**/*.lock": true
     },
     "search.followSymlinks": false,
-    "stylelint.packageManager": "yarn",
-    "stylelint.stylelintPath": "node_modules/stylelint/lib",
-    "stylelint.validate": ["css", "html", "postcss", "scss"],
     "tslint.enable": false,
     "typescript.preferences.quoteStyle": "single",
     "typescript.tsdk": "node_modules/typescript/lib",

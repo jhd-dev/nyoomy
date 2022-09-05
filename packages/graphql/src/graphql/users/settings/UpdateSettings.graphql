@@ -1,5 +1,0 @@
-mutation UpdateSettings($input: UpdateUserSettingsInput!) {
-    updateSettings(input: $input) {
-        ...AllSettings
-    }
-}

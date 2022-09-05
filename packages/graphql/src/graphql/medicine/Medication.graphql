@@ -1,8 +1,0 @@
-type Medication {
-    id: ID!
-    name: String!
-    notes: String!
-    reminderTimes: [Date!]!
-    expectedDose: Dose
-    doseEntries: [DoseInstance!]!
-}
