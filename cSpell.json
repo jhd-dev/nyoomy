@@ -21,7 +21,9 @@
     "**/.github/workflows/**",
     "**/.vscode/**"
   ],
-  "ignoreRegExpList": ["<?[\\w.\\-+]+@\\w+(\\.\\w+)+>?"],
+  "ignoreRegExpList": [
+    "<?[\\w.\\-+]+@\\w+(\\.\\w+)+>?"
+  ],
   "maxDuplicateProblems": 1,
   "words": [
     "backticks",
@@ -56,6 +58,7 @@
     "markdownlintignore",
     "markdownlintrc",
     "nestjs",
+    "nextjs",
     "nohoist",
     "nonwords",
     "Nyoomy",
