@@ -17,17 +17,6 @@ export interface IDictionary<T> {
     [key: string]: T;
 }
 
-// /**
-//  * An enum representing the potential NODE_ENV values.
-//  *
-//  * @enum {NodeEnvString}
-//  */
-// export enum NodeEnv {
-//     PRODUCTION = 'production',
-//     DEVELOPMENT = 'development',
-//     TEST = 'test',
-// }
-
 export type NodeEnvString = 'production' | 'development' | 'test';
 
 export interface IAccessTokenResponse {
@@ -40,3 +29,13 @@ export interface IInputEvent {
 }
 
 export type EmailAddress = `${string}@${string}`;
+
+export enum UserRole {
+    GUEST,
+    USER,
+    ADMIN,
+}
+
+export interface IInputEvent {
+    target: Pick<HTMLInputElement, 'value'>;
+}

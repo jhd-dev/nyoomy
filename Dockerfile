@@ -14,7 +14,6 @@ COPY packages/client/package.json ./packages/client/
 COPY packages/common/package.json ./packages/common/
 COPY packages/eslint-config/package.json ./packages/eslint-config/
 COPY packages/extension/package.json ./packages/extension/
-COPY packages/global/package.json ./packages/global/
 COPY packages/prettier-config/package.json ./packages/prettier-config/
 COPY packages/server/package.json ./packages/server/
 COPY packages/web/package.json ./packages/web/

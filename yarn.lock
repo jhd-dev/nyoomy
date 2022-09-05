@@ -3506,35 +3506,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@nyoomy/global@portal:packages/global::locator=nyoomy%40workspace%3A.":
-  version: 0.0.0-use.local
-  resolution: "@nyoomy/global@portal:packages/global::locator=nyoomy%40workspace%3A."
-  dependencies:
-    "@types/dotenv-webpack": ^7.0.3
-    class-transformer: ^0.5.1
-    class-validator: ^0.13.2
-    dotenv: ^10.0.0
-    reflect-metadata: ^0.1.13
-  peerDependencies:
-    typescript: ~4.2.4
-  languageName: node
-  linkType: soft
-
-"@nyoomy/global@workspace:packages/global":
-  version: 0.0.0-use.local
-  resolution: "@nyoomy/global@workspace:packages/global"
-  dependencies:
-    "@types/dotenv-webpack": ^7.0.3
-    class-transformer: ^0.5.1
-    class-validator: ^0.13.2
-    dotenv: ^10.0.0
-    jest: ^27.0.0
-    reflect-metadata: ^0.1.13
-  peerDependencies:
-    typescript: ~4.2.4
-  languageName: unknown
-  linkType: soft
-
 "@nyoomy/prettier-config@portal:packages/prettier-config::locator=nyoomy%40workspace%3A.":
   version: 0.0.0-use.local
   resolution: "@nyoomy/prettier-config@portal:packages/prettier-config::locator=nyoomy%40workspace%3A."
@@ -3619,7 +3590,6 @@ __metadata:
     "@mui/x-date-pickers": ^5.0.0-alpha.4
     "@nyoomy/client": "workspace:*"
     "@nyoomy/common": "workspace:*"
-    "@nyoomy/global": "workspace:*"
     "@testing-library/dom": ^8.13.0
     "@testing-library/jest-dom": ^5.16.4
     "@testing-library/react": ^13.3.0
@@ -4074,17 +4044,6 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: fe81351470f2d3165e8b12ce33542eef89ea893e36dd62e8f7d72566dfb7e448376ae962f9f3ea888547ce8b55a40020ca0e01d637fab5d99567673084542641
-  languageName: node
-  linkType: hard
-
-"@types/dotenv-webpack@npm:^7.0.3":
-  version: 7.0.3
-  resolution: "@types/dotenv-webpack@npm:7.0.3"
-  dependencies:
-    "@types/node": "*"
-    tapable: ^2.2.0
-    webpack: ^5
-  checksum: db5401515df936615447364da0ced0ffcc458f83ac1a4f5c52d9285b88471c5fd9272d9bef56a2514a9b47cef482636f8032c346d1a2605b77b3a55741a7be0b
   languageName: node
   linkType: hard
 
@@ -7643,13 +7602,6 @@ __metadata:
   peerDependencies:
     webpack: ^4 || ^5
   checksum: 5022e0c52d04980cc04469131baf7104e59563c9562df53baca32a9313f7d711559de8392087233ba028fef38403982b7155570a6bd9adaeb0826db79a61d6ed
-  languageName: node
-  linkType: hard
-
-"dotenv@npm:^10.0.0":
-  version: 10.0.0
-  resolution: "dotenv@npm:10.0.0"
-  checksum: f412c5fe8c24fbe313d302d2500e247ba8a1946492db405a4de4d30dd0eb186a88a43f13c958c5a7de303938949c4231c56994f97d05c4bc1f22478d631b4005
   languageName: node
   linkType: hard
 

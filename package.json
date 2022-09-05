@@ -45,7 +45,6 @@
         "@nyoomy/common": "portal:packages/common",
         "@nyoomy/eslint-config": "portal:packages/eslint-config",
         "@nyoomy/extension": "portal:packages/extension",
-        "@nyoomy/global": "portal:packages/global",
         "@nyoomy/prettier-config": "portal:packages/prettier-config",
         "@nyoomy/server": "portal:packages/server",
         "@nyoomy/web": "portal:packages/web",
