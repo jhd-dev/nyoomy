@@ -3218,6 +3218,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@nyoomy/api@workspace:packages/api":
+  version: 0.0.0-use.local
+  resolution: "@nyoomy/api@workspace:packages/api"
+  dependencies:
+    "@nyoomy/db": "*"
+    "@trpc/client": 10.0.0-proxy-alpha.64
+    "@trpc/server": 10.0.0-proxy-alpha.64
+    superjson: ^1.9.1
+    typescript: 4.8.2
+    zod: ^3.18.0
+  languageName: unknown
+  linkType: soft
+
 "@nyoomy/cli@workspace:packages/cli":
   version: 0.0.0-use.local
   resolution: "@nyoomy/cli@workspace:packages/cli"
@@ -3277,7 +3290,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@nyoomy/db@workspace:packages/db":
+"@nyoomy/db@*, @nyoomy/db@workspace:packages/db":
   version: 0.0.0-use.local
   resolution: "@nyoomy/db@workspace:packages/db"
   dependencies:
@@ -3798,6 +3811,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@trpc/client@npm:10.0.0-proxy-alpha.64":
+  version: 10.0.0-proxy-alpha.64
+  resolution: "@trpc/client@npm:10.0.0-proxy-alpha.64"
+  peerDependencies:
+    "@trpc/server": 10.0.0-proxy-alpha.64
+  checksum: 276a1c24ef3129ca57c9c6794ebe75da66bbd240719a3c729e052aad0b5840b88489d3d93e628cb14a068e1a59c0b342516595269335b01c97a900f211850a09
+  languageName: node
+  linkType: hard
+
 "@trpc/client@npm:10.0.0-proxy-alpha.69":
   version: 10.0.0-proxy-alpha.69
   resolution: "@trpc/client@npm:10.0.0-proxy-alpha.69"
@@ -3878,6 +3900,13 @@ __metadata:
     react-dom: ">=16.8.0"
     react-query: ^3.37.0
   checksum: 776d25f9460440ec01bf8178dcc7cc2b2ccc7aea2d5ec19a503c718ad5a42a814de1dbb40ac11d894d862225ede349508ddf6be49af11be3c41b1a1a69a190be
+  languageName: node
+  linkType: hard
+
+"@trpc/server@npm:10.0.0-proxy-alpha.64":
+  version: 10.0.0-proxy-alpha.64
+  resolution: "@trpc/server@npm:10.0.0-proxy-alpha.64"
+  checksum: 169ccca743f5b890f1b6376ef7585fe3a213192dd4e8fe7fe4da7078b42c450443bd36de959dae88e81bb469b0d32c59ea6682bd4a6226c87992f53d19a0f33d
   languageName: node
   linkType: hard
 
@@ -15764,7 +15793,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^4.7.4, typescript@npm:^4.8.2":
+"typescript@npm:4.8.2, typescript@npm:^4.7.4, typescript@npm:^4.8.2":
   version: 4.8.2
   resolution: "typescript@npm:4.8.2"
   bin:
@@ -15794,7 +15823,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^4.7.4#~builtin<compat/typescript>, typescript@patch:typescript@^4.8.2#~builtin<compat/typescript>":
+"typescript@patch:typescript@4.8.2#~builtin<compat/typescript>, typescript@patch:typescript@^4.7.4#~builtin<compat/typescript>, typescript@patch:typescript@^4.8.2#~builtin<compat/typescript>":
   version: 4.8.2
   resolution: "typescript@patch:typescript@npm%3A4.8.2#~builtin<compat/typescript>::version=4.8.2&hash=7ad353"
   bin:
