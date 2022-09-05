@@ -10,7 +10,7 @@ export default {
     'default-param-last': ERROR,
     'eqeqeq': [ERROR, 'always', { null: 'ignore' }],
     'max-classes-per-file': [WARN, 1],
-    'max-len': [WARN, { code: 100, tabWidth: 4, ignoreStrings: false }],
+    'max-len': [WARN, { code: 100, tabWidth: 2, ignoreStrings: false }],
     'no-eval': ERROR,
     'no-invalid-this': [ERROR, { capIsConstructor: false }],
     'no-lonely-if': WARN,
