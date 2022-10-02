@@ -1,12 +1,12 @@
 {
-    "recommendations": [
-        "dbaeumer.vscode-eslint",
-        "esbenp.prettier-vscode",
-        "streetsidesoftware.code-spell-checker",
-        "davidanson.vscode-markdownlint",
-        "editorconfig.editorconfig",
-        "ms-vscode-remote.remote-containers",
-        "ms-azuretools.vscode-docker",
-        "Prisma.prisma"
-    ]
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "streetsidesoftware.code-spell-checker",
+    "davidanson.vscode-markdownlint",
+    "editorconfig.editorconfig",
+    "ms-vscode-remote.remote-containers",
+    "ms-azuretools.vscode-docker",
+    "Prisma.prisma"
+  ]
 }
