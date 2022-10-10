@@ -7,16 +7,9 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Example {
-  id String @id @default(cuid())
-
-  @@map("examples")
-}
-
 // Necessary for Next auth
 model Account {
   id                String  @id @default(cuid())
-  userId            String  @map("user_id")
   type              String
   provider          String
   providerAccountId String  @map("provider_account_id")
@@ -28,6 +21,7 @@ model Account {
   id_token          String? // @db.Text
   session_state     String?
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            String  @map("user_id")
 
   @@unique([provider, providerAccountId])
   @@map("accounts")
@@ -51,6 +45,7 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  todo          Todo[]
 
   @@map("users")
 }
@@ -62,4 +57,29 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map("verification_tokens")
+}
+
+model Todo {
+  id          String           @id @default(cuid())
+  title       String
+  description String
+  occurrences TodoOccurrence[]
+  owner       User             @relation(fields: [ownerId], references: [id])
+  ownerId     String           @map("owner_id")
+
+  @@map("todos")
+}
+
+model TodoOccurrence {
+  id     String @id @default(cuid())
+  todo   Todo   @relation(fields: [todoId], references: [id])
+  todoId String @map("todo_id")
+
+  @@map("todo_occurrences")
+}
+
+model Example {
+  id String @id @default(cuid())
+
+  @@map("examples")
 }

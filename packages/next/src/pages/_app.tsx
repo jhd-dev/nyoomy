@@ -7,12 +7,10 @@ import { trpc } from '../utils/trpc';
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
-}) => {
-  return (
-    <SessionProvider session={session}>
-      <Component {...pageProps} />
-    </SessionProvider>
-  );
-};
+}) => (
+  <SessionProvider session={session}>
+    <Component {...pageProps} />
+  </SessionProvider>
+);
 
 export default trpc.withTRPC(MyApp);
