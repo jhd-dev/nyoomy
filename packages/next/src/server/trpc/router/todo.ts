@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { t, authedProcedure } from '../trpc';
+import { authedProcedure, router } from '../trpc';
 
-export const todoRouter = t.router({
+export const todoRouter = router({
   getTodoItems: authedProcedure.query(async ({ ctx }) => {
     const occurrences = await ctx.prisma.todoOccurrence.findMany({
       include: { todo: true },
@@ -26,6 +26,39 @@ export const todoRouter = t.router({
 
     return newTodoOccurrence;
   }),
+  updateTodo: authedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        title: z.string(),
+        description: z.string(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const userId = ctx.session.user.id;
+      const { ownerId } = await ctx.prisma.todo.findUniqueOrThrow({
+        where: { id: input.id },
+        select: { ownerId: true },
+      });
+
+      if (ownerId !== userId) {
+        throw new Error(
+          `User ${userId} does not have access to Owner ${ownerId}'s data.`
+        );
+      }
+
+      const res = await ctx.prisma.todoOccurrence.update({
+        where: { id: input.id },
+        data: {
+          todo: {
+            update: {
+              title: input.title,
+              description: input.description,
+            },
+          },
+        },
+      });
+    }),
   deleteTodo: authedProcedure
     .input(z.string())
     .mutation(async ({ input: id, ctx }) => {
